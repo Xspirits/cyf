@@ -99,7 +99,6 @@
     term: "soccer",
     location: "San Francisco",
     limit: "1"
-  }, function(error, stream) {
     return console.log("INSERTED - " + data.businesses.name + " with " + data.businesses.review_count + " reviews");
   });
 
