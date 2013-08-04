@@ -1,0 +1,8 @@
+ul.nav
+	each vid,i in list
+		- var srt = vid.url.replace('.mp4','.srt')
+		li(data-url=vid.url,data-srt=srt)
+			h5= vid.title
+			figure
+				img(src='/images/snaps/'+vid.img)
+			//a(href='#{url}') #{val}

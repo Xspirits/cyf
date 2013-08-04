@@ -1,0 +1,19 @@
+Error: /var/www/sd/views/index.jade:17
+    15| 			h3.demo-panel-title Input
+    16| 			.row
+  > 17| 			  .span3
+    18| 				input.span3(type='text', value='', placeholder='Inactive')
+    19| 			  .span3
+    20| 				.control-group.error
+
+Invalid indentation, you can use tabs or spaces but not both
+    at Object.Lexer.indent (/var/www/sd/node_modules/jade/lib/lexer.js:679:15)
+    at Object.Lexer.next (/var/www/sd/node_modules/jade/lib/lexer.js:777:15)
+    at Object.Lexer.lookahead (/var/www/sd/node_modules/jade/lib/lexer.js:107:46)
+    at Object.Parser.lookahead (/var/www/sd/node_modules/jade/lib/parser.js:115:23)
+    at Object.Parser.peek (/var/www/sd/node_modules/jade/lib/parser.js:92:17)
+    at Object.Parser.tag (/var/www/sd/node_modules/jade/lib/parser.js:637:22)
+    at Object.Parser.parseTag (/var/www/sd/node_modules/jade/lib/parser.js:622:17)
+    at Object.Parser.parseExpr (/var/www/sd/node_modules/jade/lib/parser.js:198:21)
+    at Object.Parser.parseExpr (/var/www/sd/node_modules/jade/lib/parser.js:239:21)
+    at Object.Parser.block (/var/www/sd/node_modules/jade/lib/parser.js:590:25)

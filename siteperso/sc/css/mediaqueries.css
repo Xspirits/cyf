@@ -1,0 +1,83 @@
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+
+    .sub_c{ 
+	width: 100%;
+    }
+    .tickL, .tickR {
+	display:none !important;
+	visibilty:hidden !important;
+    }
+    .menu li a {
+	-webkit-transition:none;;
+	-moz-transition:none;;
+	-ms-transition:none;;
+	-o-transition:none;;
+	transition: none;
+    }
+    #showOff {
+	width: 100%;
+	height:100%;
+	background:white;
+    }
+    article#sCurr, article#sNext {
+	width: 100%;
+	margin: 0 ;
+    }
+    #showOff header h2 {
+	font-weight: 300;
+	font-size: 2em;
+	padding: .5em 0;
+	color: #333;
+	margin: 0 .8em;
+	text-align: center;
+	box-shadow: 0 10px 0 rgba(0,0,0,0.03);
+	text-shadow: 0 0 2px #fff;
+    }
+
+    #showOff figure img{
+	max-width: 55px;
+    }
+    .content {
+	padding: 0;
+	background:white;
+	width:80%;
+    }
+    .topMenu{
+	font-weight: 700;
+	font-size: 1.3em;
+	padding: .95em 0;
+    }
+    /* = ITEM 1 */
+    .content article{
+	display: block;
+	width: 100%;
+
+    }
+    #g_picture {
+	display: block;
+	width: 100%;
+    }
+    #g-plus {
+	width:100%;
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (min-width : 321px) {
+    /* Styles */
+}
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) {
+    /* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) {
+    /* Styles */
+}

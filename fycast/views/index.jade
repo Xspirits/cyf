@@ -1,0 +1,29 @@
+extends layout
+
+block content
+
+	section#content.left.col.row.scroll-y
+		section
+			article#html5_player
+				div.round-top.bg1#head
+					h1  video Title
+				div.container.shadow-box-strong
+					video#player.video-js.vjs-default-skin(controls, preload="no",data-setup="{}",data-subtitles='./subs/Game.of.Thrones.S03E01.HDTV.x264-2HD.srt')
+						source(src='./dl/Game.of.Thrones.S03E01.HDTV.x264-2HD.mp4', type='video/mp4')
+						track(kind='captions', src='./subs/Game.of.Thrones.S03E01.HDTV.x264-2HD.srt',srclang='fr',label='fr')
+
+			aside.shadow-box.round
+				header
+					h1 videos' information or some stuff
+	
+					//source(src='http://176.31.190.5/torrent/public/dl/Game.Of.Thrones.S03E01.FASTSUB.VOSTFR.HDTV.x264.mp4', type='video/mp4')
+
+	nav#menu.right.col
+		div#sfilter
+		header.header.row
+			h1 FyCast
+		section.body.row.scroll-y
+			include includes/menu
+		footer.footer.row
+			p Icons go here            
+
