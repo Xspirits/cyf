@@ -1,6 +1,3 @@
-<?php
- $ip = $_SERVER["REMOTE_ADDR"]; 
-?>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -18,8 +15,7 @@
 	    timer = Date.now();
 	    var css = ['normalize','main','style','mediaqueries'];
 	    for (var i in css) document.write('<' + 'link rel="stylesheet" href="./css/'+css[i]+'.css"' + ' />');
-	    
-	    console.log("Welcome <?= $ip; ?> on my website, I hope you'll enjoy your visit.");	    
+	        
 	</script>
     </head>
     <body>
