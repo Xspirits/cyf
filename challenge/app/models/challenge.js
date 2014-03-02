@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 // define the schema for our user model
 var challengeSchema = mongoose.Schema({
+	idCool   		: String,
 	title           : String,
 	description     : String,
 	game            : String,

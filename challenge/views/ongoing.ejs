@@ -9,14 +9,276 @@
 	<% include statics/navTop %>
 	<div class="container">
 
+		<!-- Modal templates -->
+
+		<!-- Validation -->
+		<div class="modal fade" id="validation" tabindex="-1" role="dialog" aria-labelledby="validationModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Challenge <strong id="vId"></strong>'s decision</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<h4>Proof 1</h4>
+								<span id="vP1"></span>
+							</div>
+							<div class="col-lg-12">
+								<h4>Proof 2</h4>
+								<span id="vP2"></span>
+							</div>
+							<div class="col-lg-12">	
+								<h4>Comment</h4>
+								<span id="vPc"></span>
+							</div>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-9">
+										<span class="glyphicon glyphicon-calendar"></span>
+										Completed by 
+										<a href='' class="vChallengedLink">
+											<span class="vChallenged"></span>
+										</a> in <span id="vDiff"></span> (Given time was <span class="givenTime"></span>)
+									</div>
+
+									<div class="col-lg-3">
+										<div class="pull-left">
+											<span class="speedRate small"></span><span class="glyphicon glyphicon-fire"></span> 	
+										</div>									 	
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" id="vPg" role="progressBar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+												<span class="sr-only"><span></span> Complete</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="well well-sm">
+									<p>
+										from <span id="vDs"></span>
+									</p>
+									<p>
+										to <span id="vDe"></span>
+									</p>
+									<p>
+										deadline was <span id="vDl"></span>
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="modal-footer">
+						Time to make a decision: 
+						<button type="button" class="btn btn-default btn-punch" data-dismiss="modal">not now</button>
+						<div class="btn-group" id="decision">
+							<button type="button" data-tarId="" class="btn btn-danger btn-punch denying">
+								<span class="glyphicon glyphicon-remove"></span>
+								Deny
+							</button>
+							<button type="button" data-tarId="" class="btn btn-success btn-punch validating">
+								<span class="glyphicon glyphicon-ok"></span>
+								validate
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /Validation -->
+
+		<!-- Details -->
+		<div class="modal fade" id="details" tabindex="-1" role="dialog" aria-labelledby="detailsModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Challenge <strong id="dId"></strong>'s decision</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<h4>Proof 1</h4>
+								<span id="dP1"></span>
+							</div>
+							<div class="col-lg-12">
+								<h4>Proof 2</h4>
+								<span id="dP2"></span>
+							</div>
+							<div class="col-lg-12">	
+								<h4>Comment</h4>
+								<span id="dPc"></span>
+							</div>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-9">
+										<span class="glyphicon glyphicon-calendar"></span>
+										Completed by 
+										<a href='' class="dChallengedLink">
+											<span class="dChallenged"></span>
+										</a> in <span id="dDiff"></span> (Given time was <span class="givenTime"></span>)
+									</div>
+
+									<div class="col-lg-3">
+										<div class="pull-left">
+											<span class="speedRate small"></span><span class="glyphicon glyphicon-fire"></span> 	
+										</div>									 	
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" id="dPg" role="progressBar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+												<span class="sr-only"><span></span> Complete</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="well well-sm">
+									<p>
+										from <span id="dDs"></span>
+									</p>
+									<p>
+										to <span id="dDe"></span>
+									</p>
+									<p>
+										deadline was <span id="dDl"></span>
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /Detalis -->
+		<!-- /Modal templates -->
+
 		<div class="page-header text-center">
-			<h1>Accepted challenges</h1>
+			<h1>Challenges center</h1>
 		</div>
 
 		<div class="row">
-			<div class="col-md-4">
+			<% if ( toValidate.length > 0 ) { %>
+			<div class="col-lg-6">
+				<h4>Challenge validation</h4>
+				<div class="row">
+					<div class="col-lg-10">
+						<% for(var i=0; i< toValidate.length; i++) { %>
+						<div class="panel panel-default">
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th>N°</th>
+										<th>From</th>
+										<th>Requested</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<a href='/o/<%= toValidate[i].idCool %>'>
+												<%= toValidate[i].idCool %>
+											</a>
+										</td>
+										<td>		
+											<% if (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ) { %>									
+											<a href='/u/<%= toValidate[i]._idChallenged.idCool %>'>
+												<%= toValidate[i]._idChallenged.local.pseudo  %>
+											</a>
+											<% }  else { %>									
+											<a href='/u/<%= toValidate[i]._idChallenger.idCool %>'>
+												<%= toValidate[i]._idChallenger.local.pseudo  %>
+											</a>
+											<% } %>		
+										</td>
+										<td><span class="dateReadability" data-date="<%= toValidate[i].confirmAsk %>"></span></td>
+										<td>
+
+											<button type="button" id="<%= toValidate[i].idCool %>" data-p1="<%= toValidate[i].confirmLink1 %>" data-p2="<%= toValidate[i].confirmLink2 %>" data-com="<%= toValidate[i].confirmComment %>"  data-title="<%= toValidate[i]._idChallenge.title %>"  data-launched="<%= toValidate[i].launchDate %>" data-ended="<%= toValidate[i].confirmAsk %>" data-deadLine="<%= toValidate[i].deadLine %>" data-challenged="<%= toValidate[i]._idChallenged._id %>" data-challengedCool="<%= toValidate[i]._idChallenged.idCool %>" data-challengedPseudo="<%= toValidate[i]._idChallenged.local.pseudo %>"class="btn btn-<%= (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ? "warning" : "default" )  %> btn-punch btn-sm <%= (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ? "validationBox" : "detailsBox" )  %>">
+												<%= (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ? "Decide" : "Details" )  %>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>						
+						</div>	
+						<% } %>						
+					</div>							
+				</div>
+			</div>	
+			<% } %>
+
+			<div class="col-lg-6">
 				<div class="text-center">
-					<h2>Upcomings</h2>
+					<h4>Ongoings</h4>
+				</div>
+				<% if ( onChallenges.length > 0 ) { %>					
+
+				<% for(var i=0; i< onChallenges.length; i++) { %>
+				<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>">
+					<div class="panel-heading">
+						<div class="panel-title text-right">
+							<span class="pull-left panel-title">
+
+								<span class="glyphicon glyphicon-star-empty"></span>
+								<a href='/u/<%= onChallenges[i]._idChallenger.idCool %>'>
+									<%= onChallenges[i]._idChallenger.local.pseudo  %>
+								</a>
+								<span class="glyphicon glyphicon-flash"></span>
+								<a href='/u/<%= onChallenges[i]._idChallenged.idCool %>'>
+									<%= onChallenges[i]._idChallenged.local.pseudo  %>
+								</a>
+
+							</span>
+							<a href='/o/<%= onChallenges[i].idCool %>'>
+								<%= onChallenges[i]._idChallenge.title %>
+							</a>
+
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<p class="lead text-center">
+								<%= onChallenges[i]._idChallenge.description  %>
+							</p>									
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<p>
+									<span class="glyphicon glyphicon-calendar"></span>
+									<span class="dateReadability" data-date="<%= onChallenges[i].launchDate %>"></span>
+								</p>
+								<p>
+									<span class="glyphicon glyphicon-calendar"></span>
+									<span class="dateReadability" data-date="<%= onChallenges[i].deadLine %>"></span>
+								</p>										
+							</div>
+							<div class="col-sm-6 text-right">
+								Value: <%= onChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+							</div>									
+						</div>								
+					</div>
+					<div class="panel-footer">
+						<% if(onChallenges[i].waitingConfirm === true) { %>
+						<%= ((onChallenges[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  onChallenges[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= onChallenges[i].confirmAsk %>"></span>
+
+						<% } else { %>
+						<strong class="convertEnd" data-tEnd="<%= onChallenges[i].deadLine %>"></strong>
+						<% } %>
+					</div>
+				</div>
+				<% } %>
+
+				<% } %>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="text-center">
+					<h4>Upcomings</h4>
 				</div>
 				<% if ( upChallenges.length > 0 ) { %>
 
@@ -24,11 +286,54 @@
 				<div class="panel panel-default">
 
 					<div class="panel-heading">
-						
+
 
 						<h3 class="panel-title">
-							<a href='/o/<%= upChallenges[i]._id %>'>
+							<a href='/o/<%= upChallenges[i].idCool %>'>
 								<span class="<%= upChallenges[i]._idChallenge.icon %>"></span> <%= upChallenges[i]._idChallenge.title %>
+							</a>
+						</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<span class="col-sm-5"><strong>Challenger</strong></span>
+							<span class="col-sm-2">&nbsp;</span>
+							<span class="col-sm-5"><strong>Challenged</strong></span>
+						</div>
+
+						<div class="row">
+							<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenger.idCool %>'>
+								<%= upChallenges[i]._idChallenger.local.pseudo  %>
+							</a></span>
+							<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
+							<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenged.idCool %>'>
+								<%= upChallenges[i]._idChallenged.local.pseudo  %>
+							</a></span>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<strong class="convertUp" data-tStart="<%= upChallenges[i].launchDate %>"></strong>
+					</div>
+				</div>
+				<% } %>
+
+				<% } %>
+			</div>
+			<div class="col-lg-6">
+				<div class="text-center">
+					<h4>Expired & completed</h4>
+				</div>
+				<% if ( endChallenges.length > 0 ) { %>
+
+				<% for(var i=0; i< endChallenges.length; i++) { %>
+				<div class="panel panel-success">
+
+					<div class="panel-heading">
+
+
+						<h3 class="panel-title">
+							<a href='/o/<%= endChallenges[i].idCool %>'>
+								<span class="<%= endChallenges[i]._idChallenge.icon %>"></span> <%= endChallenges[i]._idChallenge.title %>
 							</a></h3>
 						</div>
 						<div class="panel-body">
@@ -39,174 +344,247 @@
 							</div>
 
 							<div class="row">
-								<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenger._id %>'>
-									<%= upChallenges[i]._idChallenger.local.pseudo  %>
-								</a></span>
-								<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
-								<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenged._id %>'>
-									<%= upChallenges[i]._idChallenged.local.pseudo  %>
-								</a></span>
-							</div>
-						</div>
-						<div class="panel-footer">
-							<strong class="convertUp" data-tStart="<%= upChallenges[i].launchDate %>"></strong>
-						</div>
-					</div>
-					<% } %>
-
-					<% } %>
-				</div>
-
-				<div class="col-md-8">
-					<div class="text-center">
-						<h2>Ongoings</h2>
-					</div>
-					<% if ( onChallenges.length > 0 ) { %>					
-
-					<% for(var i=0; i< onChallenges.length; i++) { %>
-					<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>">
-						<div class="panel-heading">
-							<div class="panel-title text-right">
-								<span class="pull-left panel-title">
-
-									<span class="glyphicon glyphicon-star-empty"></span>
-									<a href='/u/<%= onChallenges[i]._idChallenger._id %>'>
-										<%= onChallenges[i]._idChallenger.local.pseudo  %>
+								<span class="col-sm-5 ">
+									<span class="glyphicon glyphicon-tower"></span>
+									<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
+										<strong>
+											<%= endChallenges[i]._idChallenger.local.pseudo  %>
+										</strong>
 									</a>
-									<span class="glyphicon glyphicon-flash"></span>
-									<a href='/u/<%= onChallenges[i]._idChallenged._id %>'>
-										<%= onChallenges[i]._idChallenged.local.pseudo  %>
-									</a>
-
 								</span>
-								<a href='/o/<%= onChallenges[i]._id %>'>
-									<%= onChallenges[i]._idChallenge.title %>
-								</a>
-
+								<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
+								<span class="col-sm-5"><a href='/u/<%= endChallenges[i]._idChallenged.idCool %>'>
+									<%= endChallenges[i]._idChallenged.local.pseudo  %>
+								</a></span>
 							</div>
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<p class="lead text-center">
-									<%= onChallenges[i]._idChallenge.description  %>
-								</p>									
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<p>
-										<span class="glyphicon glyphicon-calendar"></span>
-										<span class="dateReadability" data-date="<%= onChallenges[i].launchDate %>"></span>
-									</p>
-									<p>
-										<span class="glyphicon glyphicon-calendar"></span>
-										<span class="dateReadability" data-date="<%= onChallenges[i].deadLine %>"></span>
-									</p>										
-								</div>
-								<div class="col-sm-6 text-right">
-									Value: <%= onChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
-								</div>									
-							</div>								
-						</div>
-						<div class="panel-footer">
-							<% if(onChallenges[i].waitingConfirm === true) { %>
-							<%= ((onChallenges[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  onChallenges[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= onChallenges[i].confirmAsk %>"></span>
-
-							<% } else { %>
-							<strong class="convertEnd" data-tEnd="<%= onChallenges[i].deadLine %>"></strong>
-							<% } %>
+							<p>
+								<strong>Ended:</strong> <%= endChallenges[i].deadLine %>
+							</p>
 						</div>
 					</div>
 					<% } %>
 
 					<% } %>
 				</div>
-
-				<div class="col-md-4">
-					<div class="text-center">
-						<h2>Expired & completed</h2>
-					</div>
-					<% if ( endChallenges.length > 0 ) { %>
-
-					<% for(var i=0; i< endChallenges.length; i++) { %>
-					<div class="panel panel-success">
-
-						<div class="panel-heading">
-
-
-							<h3 class="panel-title">
-								<a href='/o/<%= endChallenges[i]._id %>'>
-									<span class="<%= endChallenges[i]._idChallenge.icon %>"></span> <%= endChallenges[i]._idChallenge.title %>
-								</a></h3>
-							</div>
-							<div class="panel-body">
-								<div class="row">
-									<span class="col-sm-5"><strong>Challenger</strong></span>
-									<span class="col-sm-2">&nbsp;</span>
-									<span class="col-sm-5"><strong>Challenged</strong></span>
-								</div>
-
-								<div class="row">
-									<span class="col-sm-5 ">
-										<span class="glyphicon glyphicon-tower"></span>
-										<a href='/u/<%= endChallenges[i]._idChallenger._id %>'>
-											<strong>
-												<%= endChallenges[i]._idChallenger.local.pseudo  %>
-											</strong>
-										</a>
-									</span>
-									<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
-									<span class="col-sm-5"><a href='/u/<%= endChallenges[i]._idChallenged._id %>'>
-										<%= endChallenges[i]._idChallenged.local.pseudo  %>
-									</a></span>
-								</div>
-								<p>
-									<strong>Ended:</strong> <%= endChallenges[i].deadLine %>
-								</p>
-							</div>
-						</div>
-						<% } %>
-
-						<% } %>
-					</div>
-
-				</div>
-
 			</div>
 
-			<% include statics/footers %>
-			<script type="text/javascript">
+		</div>
 
-				$(function() {
-					updateUp();
-					updateEnd();
-					readability();
+		<% include statics/footers %>
+		<script type="text/javascript">
 
-					setInterval(function(){
-						updateUp();
-						updateEnd();
-					},1000);
+			$(function() {
+				var confirmCounter = 0;
+
+				updateUp();
+				updateEnd();
+				readability();
+
+				$('.denying,.validating').click(function(e){
+					var _this = $(this),
+					isDeny = ((_this.hasClass('denying')) ? false : true),
+					replaceHTML = '<span class="glyphicon glyphicon-chevron-right"></span> Confirm? <span class="glyphicon glyphicon-chevron-left"></span>';
+					if(confirmCounter === 0) {
+						++confirmCounter;
+
+						console.log(confirmCounter);
+
+						$('.denying,.validating').fadeOut(800, function(){
+							_this.html(replaceHTML).fadeIn(800);
+						});
+					} else if (confirmCounter === 1) {
+
+						console.log(confirmCounter);
+
+						var target = {};
+
+						target.id = _this.attr('data-tarId');
+						target.deny = isDeny;
+
+						console.log(target);
+
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(target),
+							contentType: 'application/json',
+							url: 'http://localhost:8080/validateChallenge',						
+							success: function(data) {
+								console.log(data);
+
+								if(data === true) {
+
+									$('#validation').modal('hide');
+									$('#validation').on('hidden.bs.modal', function (e) {
+										e.preventDefault();
+
+										$('#successModal').modal('show');
+
+										window.setTimeout(function(){
+											window.location.href = "./profile";
+										}, 5000);
+									});
+								}
+							}
+						});
+					}
 				});
-				var readability = function(){
-					$('.dateReadability').each( function () {
-						var date = $(this).attr('data-date');
-							var converted = moment(date).format('dddd DD MMMM HH[h]mm[m]'); //.endOf('hours').fromNow();
-							$(this).text(converted);
-						})
-				}
-				var updateUp = function(){
-					$('.convertUp').each( function () {
-						var start = $(this).attr('data-tStart');
-							var converted = moment(start).countdown().toString(); //.endOf('hours').fromNow();
-							$(this).text('Start in ' +converted);
-						})
-				}
-				var updateEnd = function(){
-					$('.convertEnd').each( function () {
-						var end = $(this).attr('data-tEnd');
-							var converted = moment(end).countdown().toString(); //.endOf('hours').fromNow();
-							$(this).text('End in ' +converted);
-						})
-				}
-			</script>
-		</body>
-		</html>
+
+$('.validationBox').click(function (e) {
+	e.preventDefault();
+
+	idBox = $(this).attr('id');
+
+	populateValidation(idBox, function() {
+		$('#validation').modal('show');
+
+	});
+});
+
+$('.detailsBox').click(function (e) {
+	e.preventDefault();
+
+	idBox = $(this).attr('id');
+
+	populateDetails(idBox, function() {
+		$('#details').modal('show');
+	});
+
+});
+
+setInterval(function(){
+	updateUp();
+	updateEnd();
+},1000);
+
+})
+
+var populateDetails = function( id, cb ) {
+	var dP1,dP2,dPc,dDs,dDe,diff,dChallengedId,dChallenged,dDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
+	_this = $('#'+id);
+
+	dP1               = _this.attr('data-p1');
+	dP2               = _this.attr('data-p2');
+	dPc               = _this.attr('data-com');
+	dDs               = _this.attr('data-launched');
+	dDe               = _this.attr('data-ended');
+	dDeadLine         = _this.attr('data-deadLine');
+	dChallengedId     = _this.attr('data-challenged');
+	dChallengedIdCool = _this.attr('data-challengedCool');
+	dChallenged       = _this.attr('data-challengedPseudo');
+	
+	
+	_dDs              = moment(dDs).format('dddd DD MMMM HH[h]mm[m]');
+	_dDe              = moment(dDe).format('dddd DD MMMM HH[h]mm[m]');
+	_dDeadLine        = moment(dDeadLine).format('dddd DD MMMM HH[h]mm[m]');
+
+	diff = moment(dDe).from(dDs, true);
+	diffMax = moment(dDeadLine).from(dDs, true);
+
+	// Calculate the speed %
+	sSpeed = moment(dDs).unix();
+	cSpeed = moment(dDe).unix();
+	dSpeed = moment(dDeadLine).unix();
+
+	chompi = (1- ((cSpeed - sSpeed) / (dSpeed - sSpeed)) ) * 100;
+	sRate = Math.round(chompi * 100) / 100 ;
+	console.log(sRate + '%');
+
+	$('#dId').text(id);
+	$('#dP1').text(dP1);
+	$('#dP2').text(dP2);
+	$('#dPc').text(dPc);
+	$('#dDs').text(_dDs);
+	$('#dDe').text(_dDe);
+	$('#dDl').text(_dDeadLine);
+	$('#dDiff').text(diff);
+
+	$('#vPg')
+	.attr('aria-valuenow', sRate )
+	.css('width', sRate+'%');
+	$('#vPg > .sr-only > span').text(sRate+'%');
+	$('.speedRate').text(sRate+'%');
+
+	$('.givenTime').text(diffMax);
+	$('.dChallenged').text(dChallenged);
+	$('.dChallengedLink').attr("href", '/u/'+dChallengedIdCool);
+	cb();
+
+};
+var populateValidation = function( id, cb ) {
+	var vP1,vP2,vPc,vDs,vDe,diff,vChallengedId,vChallenged,vDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
+	_this = $('#'+id);
+
+	vP1               = _this.attr('data-p1');
+	vP2               = _this.attr('data-p2');
+	vPc               = _this.attr('data-com');
+	vDs               = _this.attr('data-launched');
+	vDe               = _this.attr('data-ended');
+	vDeadLine         = _this.attr('data-deadLine');
+	vChallengedId     = _this.attr('data-challenged');
+	vChallengedIdCool = _this.attr('data-challengedCool');
+	vChallenged       = _this.attr('data-challengedPseudo');
+	
+	
+	_vDs              = moment(vDs).format('dddd DD MMMM HH[h]mm[m]');
+	_vDe              = moment(vDe).format('dddd DD MMMM HH[h]mm[m]');
+	_vDeadLine        = moment(vDeadLine).format('dddd DD MMMM HH[h]mm[m]');
+
+	diff = moment(vDe).from(vDs, true);
+	diffMax = moment(vDeadLine).from(vDs, true);
+
+	// Calculate the speed %
+	sSpeed = moment(vDs).unix();
+	cSpeed = moment(vDe).unix();
+	dSpeed = moment(vDeadLine).unix();
+
+	chompi = (1- ((cSpeed - sSpeed) / (dSpeed - sSpeed)) ) * 100;
+	sRate = Math.round(chompi * 100) / 100 ;
+	console.log(sRate + '%');
+
+	$('#vId').text(id);
+	$('#vP1').text(vP1);
+	$('#vP2').text(vP2);
+	$('#vPc').text(vPc);
+	$('#vDs').text(_vDs);
+	$('#vDe').text(_vDe);
+	$('#vDl').text(_vDeadLine);
+	$('#vDiff').text(diff);
+
+
+	$('#vPg')
+	.attr('aria-valuenow', sRate )
+	.css('width', sRate+'%');
+	$('#vPg > .sr-only > span').text(sRate+'%');
+	$('.speedRate').text(sRate+'%');
+
+	$('.givenTime').text(diffMax);
+	$('.vChallenged').text(vChallenged);
+	$('.vChallengedLink').attr("href", '/u/'+vChallengedIdCool);
+	$('#decision > button').attr('data-tarId', id);
+	cb();
+
+};
+var readability = function(){
+	$('.dateReadability').each( function () {
+		var date = $(this).attr('data-date');
+					var converted = moment(date).format('dddd DD MMMM HH[h]mm[m]'); //.endOf('hours').fromNow();
+					$(this).text(converted);
+				})
+}
+var updateUp = function(){
+	$('.convertUp').each( function () {
+		var start = $(this).attr('data-tStart');
+					var converted = moment(start).countdown().toString(); //.endOf('hours').fromNow();
+					$(this).text('Start in ' +converted);
+				})
+}
+var updateEnd = function(){
+	$('.convertEnd').each( function () {
+		var end = $(this).attr('data-tEnd');
+					var converted = moment(end).countdown().toString(); //.endOf('hours').fromNow();
+					$(this).text('End in ' +converted);
+				})
+}
+</script>
+</body>
+</html>

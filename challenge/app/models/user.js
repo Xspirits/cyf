@@ -4,7 +4,7 @@ var bcrypt   = require('bcrypt-nodejs');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
-
+    idCool           : String,
     local            : {
         email        : String,
         password     : String,
@@ -32,13 +32,15 @@ var userSchema = mongoose.Schema({
     friends            : [ 
     {
         idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' }, 
+        idCool   : String,
         date     : {type: Date, default: Date.now}, 
         userName : String
     }
     ],
     sentRequests : [ 
     {
-        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },        
+        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },     
+        idCool   : String,   
         date     : {type: Date, default: Date.now}, 
         userName : String
     }
@@ -46,6 +48,7 @@ var userSchema = mongoose.Schema({
     pendingRequests : [ 
     {
         idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },    
+        idCool   : String,
         date     : {type: Date, default: Date.now}, 
         userName : String
     }
@@ -53,6 +56,7 @@ var userSchema = mongoose.Schema({
     followers : [ 
     {
         idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },  
+        idCool   : String,
         date     : {type: Date, default: Date.now}, 
         userName : String
     }

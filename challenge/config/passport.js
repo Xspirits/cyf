@@ -4,11 +4,12 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 
-// load up the user model
-var User       = require('../app/models/user');
+// load up the user model & challenge
+var User             = require('../app/models/user'),
+challenge            = require('../config/challenge');
 
 // load the auth variables
-var configAuth = require('./auth'); // use this one for testing
+var configAuth       = require('./auth'); // use this one for testing
 
 module.exports = function(passport) {
 
@@ -88,9 +89,12 @@ module.exports = function(passport) {
                         return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
                     } else {
 
+
+                    challenge.generateUID('users', function(uID) {
                         // create the user
                         var newUser            = new User();
 
+                        newUser.idCool         = uID;
                         newUser.local.email    = email;
                         newUser.local.password = newUser.generateHash(password);
                         newUser.local.pseudo   = req.body.pseudo;
@@ -101,26 +105,28 @@ module.exports = function(passport) {
 
                             return done(null, newUser);
                         });
+
+                    });
                     }
 
                 });
-            } else {
+} else {
 
-                var user            = req.user;
+    var user            = req.user;
 
-                user.local.email    = email;
-                user.local.password = user.generateHash(password);
-                user.local.pseudo   = req.body.pseudo;
-                user.save(function(err) {
-                    if (err)
-                        throw err;
-                    return done(null, user);
-                });
+    user.local.email    = email;
+    user.local.password = user.generateHash(password);
+    user.local.pseudo   = req.body.pseudo;
+    user.save(function(err) {
+        if (err)
+            throw err;
+        return done(null, user);
+    });
 
-            }
-        });
+}
+});
 
-    }));
+}));
 
     // =========================================================================
     // FACEBOOK ================================================================
@@ -178,7 +184,7 @@ module.exports = function(passport) {
                     }
                 });
 
-            } else {
+} else {
                 // user already exists and is logged in, we have to link accounts
                 var user            = req.user; // pull the user out of the session
 
@@ -196,7 +202,7 @@ module.exports = function(passport) {
             }
         });
 
-    }));
+}));
 
     // =========================================================================
     // TWITTER =================================================================
@@ -253,7 +259,7 @@ module.exports = function(passport) {
                     }
                 });
 
-            } else {
+} else {
                 // user already exists and is logged in, we have to link accounts
                 var user                 = req.user; // pull the user out of the session
 
@@ -271,7 +277,7 @@ module.exports = function(passport) {
 
         });
 
-    }));
+}));
 
     // =========================================================================
     // GOOGLE ==================================================================
@@ -328,7 +334,7 @@ module.exports = function(passport) {
                     }
                 });
 
-            } else {
+} else {
                 // user already exists and is logged in, we have to link accounts
                 var user               = req.user; // pull the user out of the session
 
@@ -347,6 +353,6 @@ module.exports = function(passport) {
 
         });
 
-    }));
+}));
 
 };

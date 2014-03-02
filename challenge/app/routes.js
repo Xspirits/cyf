@@ -26,6 +26,7 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 
 		//get Ongoing challenges for the current user
 
+		// @todo : merge this shit
 		challenge.challengerRequests(req.user._id, function ( dataChallenger ) { 
 
 			challenge.challengedRequests(req.user._id, function ( dataChallenged ) { 
@@ -37,7 +38,6 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 
 				res.render('request.ejs', {
 					currentUser : (req.isAuthenticated()) ? req.user : false,
-					user : req.user,
 					challenges : obj
 				});
 			})
@@ -61,61 +61,79 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 
 		});
 	});	
+
 	app.get('/ongoing', isLoggedIn, function(req, res) {
 
 		//get Ongoing challenges for the current user
-
-
 		challenge.userAcceptedChallenge(req.user._id, function ( data ) { 
-
 
 			var cStart, eStart,
 			upcomingChall = [],
 			ongoingChall = [],
-			endedChall = [];
+			endedChall = [],
+			reqValidation = [];
 
 			for(var i = 0; i < data.length || function(){
 
-				console.log('Going to RES');
-
 				res.render('ongoing.ejs', {
-					currentUser : (req.isAuthenticated()) ? req.user : false,
-					user : req.user,
-					upChallenges : upcomingChall,
-					onChallenges : ongoingChall,
-					endChallenges : endedChall
+					currentUser    : (req.isAuthenticated()) ? req.user : false,
+					toValidate 	   : reqValidation,
+					upChallenges   : upcomingChall,
+					onChallenges   : ongoingChall,
+					endChallenges  : endedChall
 				});
-
 				return false;}();i++){
 
 				cStart = data[i].launchDate;
 				cEnd = data[i].deadLine;
 
+				// Challenge is awaiting validation
+				// To determine if its belong to the current user or not will be done client-side.
+				if(data[i].waitingConfirm === true && data[i].progress < 100) {
+
+					reqValidation.push(data[i]);
+					console.log('parsed reqValidation : ' + data[i].waitingConfirm);
+				}
 				// Start hasn't been reached
-				if(!moment(cStart).isBefore() && !moment(cEnd).isBefore()) {
+				else if(!moment(cStart).isBefore() && !moment(cEnd).isBefore()  && data[i].progress < 100) {
+
 					upcomingChall.push(data[i]);
 					console.log('parsed upcoming : ' + data[i]._id);
-
 				}
 				// Start has been reached but not end
-				else if (data[i].waitingConfirm || moment(cStart).isBefore() && !moment(cEnd).isBefore()) {
+				else if (moment(cStart).isBefore() && !moment(cEnd).isBefore()  && data[i].progress < 100) {
+
 					ongoingChall.push(data[i]);
 					console.log('parsed ongoing : ' + data[i]._id);
-
 				}
 				// end has been reached
 				else {
-
-					console.log('This must be true: ' + moment(cStart).isBefore());
-					console.log('This must be true: ' + moment(cEnd).isBefore());
-
 					endedChall.push(data[i]);
 					console.log('parsed ended : ' + data[i]._id);
 
 				}
 			}
-		})
+		});
 });
+
+app.post('/validateChallenge', isLoggedIn, function(req, res) {
+
+	var data = {
+		oId : req.body.id,
+		deny : req.body.deny
+	};
+
+	if(typeof data.deny == 'boolean' || data.deny instanceof Boolean) {
+		challenge.validateOngoing(data, function(done){	
+
+			res.send(done);
+		})
+
+	} else {
+		res.send(false, 'not a boolean');
+	}
+});
+
 	// PROFILE SECTION - USER Challenges =========================
 	app.get('/myChallenges', isLoggedIn, function(req, res) {
 
@@ -151,7 +169,6 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 
 			res.render('challengeDetails.ejs', {
 				currentUser : (req.isAuthenticated()) ? req.user : false,
-				user : req.user,
 				challenge: data
 			});
 
@@ -162,7 +179,6 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 	app.get('/newChallenge', isLoggedIn, function(req, res) {
 		res.render('newChallenge.ejs', {
 			currentUser : (req.isAuthenticated()) ? req.user : false,
-			user : req.user,
 			challenge: false
 		});
 	});
@@ -172,8 +188,7 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 		challenge.create(req, function(done){	
 
 			res.render('newChallenge.ejs', {
-				currentUser : (req.isAuthenticated()) ? req.user : false, 
-				user : req.user,
+				currentUser : (req.isAuthenticated()) ? req.user : false,
 				challenge: done 
 			});
 		})
@@ -197,11 +212,17 @@ module.exports = function(app, passport, moment, challenge, users, relations) {
 		challenge.getList(function( challenges ) {
 
 			//Get the users' friend list, because we need one which is up to date
-			users.getUser(req.user._id, function( newUser ) {
+			users.getUser(req.user.idCool, function( newUser ) {
+
+				if(newUser.friends.length > 0) {
+					var friends = newUser.friends;
+				} else {
+					var friends = {};
+				}
 				res.render('launchChallenge.ejs', {
 					currentUser : (req.isAuthenticated()) ? req.user : false,
 					user: req.user,
-					userList: newUser.friends,
+					userList: friends,
 					challenges: challenges
 				});
 			})
@@ -267,7 +288,7 @@ app.get('/users', function(req, res) {
 
 		users.getUser(req.params.id, function(returned) {
 
-			console.log(req.user.local.pseudo)
+			console.log(returned);
 			res.render('userDetails.ejs', {
 				currentUser : (req.isAuthenticated()) ? req.user : false,
 				user: returned
@@ -282,14 +303,18 @@ app.get('/users', function(req, res) {
 		// process the login form
 		app.post('/askFriend', function(req, res){
 			var idFriend = req.body.id,
+			idCoolFriend = req.body.idCool,
 			nameFriend = req.body.pseudo;
+
 			var obj = {
 				from : {
 					id: req.user._id,
+					idCool: req.user.idCool,
 					userName : req.user.local.pseudo
 				},
 				to : {
 					id : idFriend,
+					idCool: idCoolFriend,
 					userName: nameFriend
 				}
 			};

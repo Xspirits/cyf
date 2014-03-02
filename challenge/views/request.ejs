@@ -21,16 +21,16 @@
 					</div>
 					<div class="panel-body">
 						<ul class="list-group">
-							<% if ( user.pendingRequests.length > 0 ) { %>
-							<% for(var i=0; i< user.pendingRequests.length; i++) { %>
+							<% if ( currentUser.pendingRequests.length > 0 ) { %>
+							<% for(var i=0; i< currentUser.pendingRequests.length; i++) { %>
 							<li class="list-group-item">
 								<span class="btn-group">
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= user.pendingRequests[i].idUser %>" data-nameFrom="<%= user.pendingRequests[i].userName %>">confirm</a>
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= user.pendingRequests[i].idUser %>" data-nameFrom="<%= user.pendingRequests[i].userName %>">delete</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">confirm</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">delete</a>
 								</span>
-								<a href='/u/<%= user.pendingRequests[i].idUser %>'>
-									<%= user.pendingRequests[i].userName %>
-								</a> <%= user.pendingRequests[i].date %>
+								<a href='/u/<%= currentUser.pendingRequests[i].idCool %>'>
+									<%= currentUser.pendingRequests[i].userName %>
+								</a> <%= currentUser.pendingRequests[i].date %>
 							</li>
 							<% } %>
 							<% } %>
@@ -45,13 +45,13 @@
 					</div>
 					<div class="panel-body">
 						<ul class="list-group">
-							<% if ( user.sentRequests.length > 0 ) { %>
-							<% for(var i=0; i< user.sentRequests.length; i++) { %>
+							<% if ( currentUser.sentRequests.length > 0 ) { %>
+							<% for(var i=0; i< currentUser.sentRequests.length; i++) { %>
 							<li class="list-group-item">
-								<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="cancelFriend" data-idFrom="<%= user.sentRequests[i].idUser %>" data-nameFrom="<%= user.sentRequests[i].userName %>">cancel</a>
-								<a href='/u/<%= user.sentRequests[i].idUser %>'>
-									<%= user.sentRequests[i].userName %>
-								</a> <%= user.sentRequests[i].date %>
+								<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="cancelFriend" data-idFrom="<%= currentUser.sentRequests[i].idUser %>" data-nameFrom="<%= currentUser.sentRequests[i].userName %>">cancel</a>
+								<a href='/u/<%= currentUser.sentRequests[i].idCool %>'>
+									<%= currentUser.sentRequests[i].userName %>
+								</a> <%= currentUser.sentRequests[i].date %>
 							</li>
 							<% } %>
 							<% } %>
@@ -76,7 +76,7 @@
 							<li class="list-group-item">
 								<span class="<%= challenges.sent[i]._idChallenge.icon %>"></span>
 								<strong> <%= challenges.sent[i]._idChallenge.title %></strong>
-								<a href='/u/<%= challenges.sent[i]._idChallenged._id %>'>
+								<a href='/u/<%= challenges.sent[i]._idChallenged.idCool %>'>
 									<%= challenges.sent[i]._idChallenged.local.pseudo %>
 								</a>
 							</li>
@@ -104,7 +104,7 @@
 							<li class="list-group-item">
 								<span class="<%= challenges.request[i]._idChallenge.icon %>"></span>
 								<strong> <%= challenges.request[i]._idChallenge.title %></strong>
-								<a href='/u/<%= challenges.request[i]._idChallenger._id %>'>
+								<a href='/u/<%= challenges.request[i]._idChallenger.idCool %>'>
 									<%= challenges.request[i]._idChallenger.local.pseudo %>
 								</a>
 								<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmChallenge" data-id="<%= challenges.request[i]._id %>">Accept</a>
@@ -171,10 +171,28 @@
 				url: 'http://localhost:8080/' + going,						
 				success: function(data) {
 
-					// Stop loading
-					// l.stop();
-					currButton.removeClass('btn-default').addClass('btn-success');
-					console.log('success');
+
+					if(going === 'denyChallenge' || going === 'cancelFriend' || going === 'denyFriend' )
+					{
+						currButton.removeClass('btn-default').addClass('btn-danger');
+
+						currButton
+						.parent('li')
+						.addClass('list-group-item-danger')
+						.fadeOut( "slow", function(){
+							currButton.parent('li').remove();
+						} )
+					} else {
+						currButton.removeClass('btn-default').addClass('btn-success');
+						currButton
+						.parent('li')
+						.addClass('list-group-item-success')
+						.fadeOut( "slow", function(){
+							currButton.parent('li').remove();
+						} )
+
+
+					}
 					console.log(JSON.stringify(data));
 				}
 			});

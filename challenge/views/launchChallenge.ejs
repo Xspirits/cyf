@@ -175,31 +175,31 @@
 				linkFormat: "yyyy-mm-ddThh:ii:ssZ"
 			});*/
 
-$('.list-group > a').click(function(e) {
-	e.preventDefault();
-	$(this).siblings().removeClass('active');
-	$(this).toggleClass('active');
+		$('.list-group > a').click(function(e) {
+			e.preventDefault();
+			$(this).siblings().removeClass('active');
+			$(this).toggleClass('active');
 
-	upFriends();
-})
+			upFriends();
+		})
 
-$('#timeConfirm').click( function(e) {
-	e.preventDefault();
-	$('#timeModal').modal('hide');
-	$('#timeModal').on('hidden.bs.modal', function (e) {
-		e.preventDefault();
+		$('#timeConfirm').click( function(e) {
+			e.preventDefault();
+			$('#timeModal').modal('hide');
+			$('#timeModal').on('hidden.bs.modal', function (e) {
+				e.preventDefault();
 
-		var sDate = $('#DTPKStart').find("input").val();
-							// eDate     = $('#DTPKEnd').find("input").val();
+				var sDate = $('#DTPKStart').find("input").val();
+									// eDate     = $('#DTPKEnd').find("input").val();
 
-							console.log(sDate);
-				// console.log(eDate);
-				populateModal(sDate,function() {
-					$('#lastStep').modal('show');
-				});
-			});
+									console.log(sDate);
+						// console.log(eDate);
+						populateModal(sDate,function() {
+							$('#lastStep').modal('show');
+						});
+					});
 
-});
+		});
 
 		// Bind normal buttons
 		$("#TOR").click( function(e){

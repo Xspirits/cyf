@@ -39,7 +39,7 @@ module.exports = {
 	 	// console.log(arg);
 
 	 	User
-	 	.findOne({'_id' : id})
+	 	.findOne({idCool : id})
 	 	.exec(function(err, data) {
 	 		if(err)
 	 			throw err;
@@ -65,7 +65,7 @@ module.exports = {
 
 	 	//Check if the targeted user exist
 	 	User
-	 	.findOne({'_id' : uTo.id})
+	 	.findById(uTo.id)
 	 	.exec( function (err, data) {
 	 		if(err)
 	 			throw err;

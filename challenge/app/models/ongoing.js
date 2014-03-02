@@ -7,6 +7,7 @@ var ongoingSchema = mongoose.Schema({
 	_idChallenge 	: { type: mongoose.Schema.Types.ObjectId, ref: 'Challenge'  },
 	_idChallenger   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },
 	_idChallenged   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },
+	idCool   		: String,
 	launchDate     	: Date,
 	deadLine 		: Date,
 	progress        : {type: Number, default: 0},

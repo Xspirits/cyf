@@ -39,7 +39,7 @@ module.exports = {
 	 	if(thisIsSend) {
 
 	 		User
-	 		.findByIdAndUpdate(from.id,{ sentRequests : [{ idUser : to.id, userName : to.userName }]}, {upsert:true}, function(err, relation) {
+	 		.findByIdAndUpdate(from.id,{ sentRequests : [{ idUser : to.id,idCool : to.idCool, userName : to.userName }]}, {upsert:true}, function(err, relation) {
 
 	 			if(err)
 	 				throw err;
@@ -52,7 +52,7 @@ module.exports = {
 	 	else {
 
 	 		User
-	 		.findByIdAndUpdate(from.id,{ pendingRequests : [{ idUser : to.id, userName : to.userName }]}, {upsert:true}, function(err, relation) {
+	 		.findByIdAndUpdate(from.id,{ pendingRequests : [{ idUser : to.id,idCool : to.idCool, userName : to.userName }]}, {upsert:true}, function(err, relation) {
 
 	 			if(err)
 	 				throw err;
@@ -76,7 +76,7 @@ module.exports = {
 	 	User
 	 	.findByIdAndUpdate(from.id,
 	 		{ $pull: { sentRequests : { idUser : to.id }},
-	 		friends : [{ idUser : to.id, userName : to.userName }] },
+	 		friends : [{ idUser : to.id, idCool : to.idCool, userName : to.userName }] },
 	 		{upsert:true},
 	 		function(err, relation) {
 
@@ -88,7 +88,7 @@ module.exports = {
 	 			User
 	 			.findByIdAndUpdate(to.id,
 	 				{ $pull: { pendingRequests : { idUser : from.id }}, 
-	 				friends : [{ idUser : from.id, userName : from.userName }] }, 
+	 				friends : [{ idUser : from.id ,idCool : to.idCool, userName : from.userName }] }, 
 	 				{upsert:true},
 	 				function(err, relation) {
 

@@ -96,7 +96,8 @@
 				e.preventDefault();
 				
 				var target = {};
-				target.id = '<%= user._id %>'
+				target.id = '<%= user._id %>';
+				target.idCool = '<%= user.idCool %>';
 				target.pseudo = '<%= user.local.pseudo %>';
 				console.log(target);
 

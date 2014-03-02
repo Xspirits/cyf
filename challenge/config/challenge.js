@@ -1,12 +1,64 @@
 
 // load up the user model
-var moment     = require('moment');
-var User       = require('../app/models/user'),
-Challenge      = require('../app/models/challenge'),
-Ongoing        = require('../app/models/ongoing');
+var moment = require('moment');
+var User   = require('../app/models/user'),
+Challenge  = require('../app/models/challenge'),
+Ongoing    = require('../app/models/ongoing');
 
 module.exports = {
 
+    /**
+     * Generate an unique ID for readability.
+     * Max 1.6 Millions
+     * @return {String} [String UID]
+     */
+     generateUID : function(collection, returned) {
+
+     	var nUID = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
+
+     	if(collection === 'ongoings') {
+     		
+     		Ongoing
+     		.where('idCool', nUID)
+     		.count(function (err, count) {
+     			if (err) return handleError(err);
+     			if(count === 0) {
+     				console.log(nUID);
+     				returned(nUID);
+     			}
+     			else
+     				this.generateUID('ongoings');
+     		})
+     	}
+     	if(collection === 'challenges') {
+     		
+     		Challenge
+     		.where('idCool', nUID)
+     		.count(function (err, count) {
+     			if (err) return handleError(err);
+     			if(count === 0) {
+     				console.log(nUID);
+     				returned(nUID);
+     			}
+     			else
+     				this.generateUID('challenges');
+     		})
+     	}
+     	if(collection === 'users') {
+     		
+     		User
+     		.where('idCool', nUID)
+     		.count(function (err, count) {
+     			if (err) return handleError(err);
+     			if(count === 0) {
+     				console.log(nUID);
+     				returned(nUID);
+     			}
+     			else
+     				this.generateUID('users');
+     		})
+     	}
+     },
 	/**
 	 * Create a new challenge
 	 * @param  {array}   req  [form variables]
@@ -27,7 +79,8 @@ module.exports = {
 			icon            : String,
 			rateNumber      : Number,
 			rateValue       : Number*/
-			var title   = data['title'],
+			var _this = this,
+			title   = data['title'],
 			durationH   = data['durationH'],
 			durationD   = data['durationD'],
 			description = data['description'],
@@ -46,35 +99,39 @@ module.exports = {
                 	return done(null, false, req.flash('createMessage', 'That challenge already exists.'));
                 } else {
 
-                	var generateDate = new Date;
+					// create the challenge
+					
+					_this.generateUID('challenges', function(uID) {
+
+						var generateDate = new Date;
 
                 	// Store the data for the upcoming callback
                 	var returned = { title : title, description : description,durationH : durationH,durationD : durationD, game : game, creation : generateDate};
 
-					// create the challenge
-					var newChallenge            = new Challenge();
-					
-					newChallenge.title       = title;
-					newChallenge.description = description;
-					newChallenge.game        = game;
-					newChallenge.creation    = generateDate;
-					newChallenge.durationH   = durationH;
-					newChallenge.durationD   = durationD;
-					newChallenge.author      = user._id;
-					newChallenge.value       = 0;
-					newChallenge.icon        = 'glyphicon glyphicon-bookmark';
-					newChallenge.rateNumber  = 0;
-					newChallenge.rateValue   = 0;
-					
-					newChallenge.save(function(err) {
+                	var newChallenge            = new Challenge();
+                	newChallenge.idCool = uID;
+                	newChallenge.title       = title;
+                	newChallenge.description = description;
+                	newChallenge.game        = game;
+                	newChallenge.creation    = generateDate;
+                	newChallenge.durationH   = durationH;
+                	newChallenge.durationD   = durationD;
+                	newChallenge.author      = user._id;
+                	newChallenge.value       = 0;
+                	newChallenge.icon        = 'glyphicon glyphicon-bookmark';
+                	newChallenge.rateNumber  = 0;
+                	newChallenge.rateValue   = 0;
 
-						if (err)
-							throw err;
+                	newChallenge.save(function(err) {
 
-						return done(returned);
-					});
-				}
-			});
+                		if (err)
+                			throw err;
+
+                		return done(returned);
+                	});
+                });
+}
+});
 },
 
 		/**
@@ -172,7 +229,8 @@ module.exports = {
 	  	 getChallenge : function (id, done) {
 
 	  	 	Challenge
-	  	 	.findOne({ '_id' :  id })
+	  	 	.findOne({idCool : id})
+	  	 	.populate('author')
 	  	 	.exec(function(err, data) {
 
                 // if there are any errors, return the error
@@ -195,7 +253,8 @@ module.exports = {
 	  	 getUserChallenges : function (id, done) {
 
 	  	 	Challenge
-	  	 	.find({ 'author' :  id })
+	  	 	.find({ author :  id })
+	  	 	.populate('author')
 	  	 	.sort('-creation')
 	  	 	.exec(function(err, data) {
 
@@ -216,15 +275,15 @@ module.exports = {
 
 
 	  	/**
-	  	 * Return the challenges accepted by a given user
-	  	 * @param  {ObjectId}   id  [_id of the creator]
+	  	 * Return a challenge's details
+	  	 * @param  {ObjectId}   id  [idCool of the challenge]
 	  	 * @param  {Function} done [callback]
 	  	 * @return {Object}        [List of challenges]
 	  	 */
 	  	 ongoingDetails : function (id, done) {
 
 	  	 	Ongoing
-	  	 	.findById(id)
+	  	 	.findOne({idCool : id})
 	  	 	.populate('_idChallenge _idChallenger _idChallenged')
 	  	 	.exec( function( err, data ) {
 
@@ -331,22 +390,28 @@ module.exports = {
             // console.log('=====')
             var oCha           = new Ongoing();
 
-            oCha._idChallenge  = data.idChallenge;
-            oCha._idChallenger = data.from;
-            oCha._idChallenged = data.idChallenged;
+            this.generateUID('ongoings', function(uID) {
 
-            oCha.launchDate    = moment(data.launchDate).utc();
-            oCha.deadLine      = moment(data.launchDate).utc().add(query);
+            	oCha._idChallenge  = data.idChallenge;
+            	oCha._idChallenger = data.from;
+            	oCha._idChallenged = data.idChallenged; 
+            	oCha.idCool        = uID;
 
-            // console.log(oCha.deadLine);
-            // console.log(moment(oCha.deadLine).utc());
-            // console.log(moment(oCha.deadLine).isValid());
+            	oCha.launchDate    = moment(data.launchDate).utc();
+            	oCha.deadLine      = moment(data.launchDate).utc().add(query);
 
-            oCha.save(function(err, result) {
-            	if (err)
-            		throw err;
-            	return done(result);
-            });
+	            // console.log(oCha.deadLine);
+	            // console.log(moment(oCha.deadLine).utc());
+	            // console.log(moment(oCha.deadLine).isValid());
+	            // console.log(oCha);
+
+	            oCha.save(function(err, result) {
+	            	if (err)
+	            		throw err;
+	            	return done(result);
+	            });
+
+	        });
         },
 
 	  	/**
@@ -406,21 +471,21 @@ module.exports = {
                 if (err)
                 	throw err;
 
-                console.log(chall);
                 console.log(chall._idChallenged + ' <> ' + idUser);
+                console.log((chall._idChallenged.toString() === idUser.toString()));
 
 
-                if(chall._idChallenged = idUser) {
+                if(chall._idChallenged.toString() === idUser.toString()) {
 
                 	chall
-                	.remove()
-                	.exec(done(true));
+                	.remove();
+                	done(true);
+
                 } else 
                 return done(false, 'you are not the person challenged on this challenge')
             });
 
 	  	 },
-
 
 	  	 requestValidation : function(data, done ) {
 
@@ -448,5 +513,37 @@ module.exports = {
             });
 
 	  	 },
+	  	 /**
+	  	  * [validateOngoing description]
+	  	  * @param  {Object}   data [oId : req.params.id, deny : req.body.deny]
+	  	  * @param  {Function} done [description]
+	  	  * @return {[type]}        [description]
+	  	  */
+	  	  validateOngoing : function(data, done ) {
+
+	  	  	Ongoing
+	  	  	.findOne({idCool : data.oId})
+	  	  	.exec(function(err, ongoing) {
+
+                // if there are any errors, return the error
+                if (err)
+                	throw err;
+
+                console.log(data);
+
+                ongoing.waitingConfirm = false;
+                ongoing.validated      = data.deny;
+                ongoing.progress       = 100;
+
+                ongoing.save(function(err, result) {
+                	if (err)
+                		throw err;
+                	return done(result);
+                });
+            });
+
+	  	  },
+
+
 
 	  	};
