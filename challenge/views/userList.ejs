@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+
+	<div class="container">
+		<div class="row">
+			<h1><span class="fa fa-sign-in"></span> Users list</h1>
+
+			<ul>
+				<% for(var i=0; i< users.length; i++) { %>
+				<li>
+					<span class="glyphicon glyphicon-plus"></span>
+					<a href='/u/<%= users[i]._id %>'>
+						<%= users[i].local.pseudo %>
+					</a> -- <%= users[i].local.email %>
+				</li>
+				<% } %>
+			</ul>
+			<hr>
+		</div>
+
+	</div>
+	<% include statics/footers %>
+</body>
+</html>

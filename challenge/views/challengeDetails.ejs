@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="container">
+
+		<div class="row">
+			<h1><span class="<%= challenge.icon %>"></span> <%= challenge.title %> <small> <%= challenge.game %></small></h1>
+			<hr>
+			<p>
+				<strong>Description :</strong> <%= challenge.description %>
+			</p>
+			<p>
+				<strong>author :</strong> <%= challenge.author %>
+			</p>
+			<p>
+				<strong>value :</strong> <%= challenge.value %>
+			</p>
+			<p>
+				<strong>Rated :</strong> <%= challenge.rateNumber %> times
+			</p>
+			<p>
+				<strong>Currently rated :</strong> <%= challenge.rateValue %>
+			</p>
+			<p>
+				<strong>Created :</strong> <%= challenge.creation %>
+			</p>
+		</div>
+
+	</div>
+	<% include statics/footers %>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="container">
+
+		<div class="page-header text-center">
+
+			
+			<% if (currentUser) { %>
+
+			<%
+			var lookup = {};
+			for (var i = 0, len = currentUser.friends.length; i < len; i++) {
+				lookup[currentUser.friends[i].idUser] = currentUser.friends[i];
+			}
+			%>
+			<div class="pull-left">
+
+				<% if (currentUser._id.toString() === user._id.toString()) { %>
+				<div class="btn btn-punch btn-default disabled" >
+					<span class="ladda-label">
+						<span class="glyphicon glyphicon-info-sign"></span> It's you!
+					</span>
+				</div>
+				<% } else if(!lookup[user._id]) { %>
+
+				<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
+					<span class="ladda-label">
+						<span class="glyphicon glyphicon-plus"></span> Add Friend
+					</span>
+				</button>
+
+				<% } else { %>
+				<div class="btn btn-punch btn-success" >
+					<span class="ladda-label">
+						<span class="glyphicon glyphicon-ok"></span> Friend
+					</span>
+				</div>
+				<% } %>
+			</div>
+			<% } %>
+			<div class="pull-right">	
+				<p class="text-right"><small>Accounts</small>	</p>
+				<% if (user.local.pseudo) { %>
+				<span class="label label-default">CyF</span>
+				<% } %>
+				<% if (user.facebook.name) { %>
+				<span class="label label-primary">Facebook</span>
+				<% } %>
+				<% if (user.google.name) { %>
+				<span class="label label-danger">Google</span>
+				<% } %>
+				<% if (user.twitter.username) { %>
+				<span class="label label-info">Twitter</span>
+				<% } %>
+			</div>
+			<h1>
+				<% if (user.local) {%>
+				<%= user.local.pseudo %>
+				<% } else if (user.facebook) { %>
+				<%= user.facebook.name %>
+				<% } else if (user.google) { %>
+				<%= user.google.name %>
+				<% } else if (user.twitter) { %>
+				<%= user.twitter.username %>
+				<% } %>
+				Profile Page
+			</h1>
+		</div>
+
+		<div class="row">
+
+			<!-- LOCAL INFORMATION -->
+			<div class="col-sm-6">
+				<div class="well">
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<% include statics/footers %>
+
+
+	<script type="text/javascript">
+
+			// Bind normal buttons
+			Ladda.bind( 'button', { timeout: 2000 } );
+			$("#newFriend").click( function(e){
+				e.preventDefault();
+				
+				var target = {};
+				target.id = '<%= user._id %>'
+				target.pseudo = '<%= user.local.pseudo %>';
+				console.log(target);
+
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(target),
+					contentType: 'application/json',
+					url: 'http://localhost:8080/askFriend',						
+					success: function(data) {
+						console.log('success');
+						console.log(JSON.stringify(data));
+					}
+				});
+
+			});
+		</script>
+	</body>
+	</html>

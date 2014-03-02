@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="container">
+
+		<div class="page-header text-center">
+			<h1>Accepted challenges</h1>
+		</div>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="text-center">
+					<h2>Upcomings</h2>
+				</div>
+				<% if ( upChallenges.length > 0 ) { %>
+
+				<% for(var i=0; i< upChallenges.length; i++) { %>
+				<div class="panel panel-default">
+
+					<div class="panel-heading">
+						
+
+						<h3 class="panel-title">
+							<a href='/o/<%= upChallenges[i]._id %>'>
+								<span class="<%= upChallenges[i]._idChallenge.icon %>"></span> <%= upChallenges[i]._idChallenge.title %>
+							</a></h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<span class="col-sm-5"><strong>Challenger</strong></span>
+								<span class="col-sm-2">&nbsp;</span>
+								<span class="col-sm-5"><strong>Challenged</strong></span>
+							</div>
+
+							<div class="row">
+								<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenger._id %>'>
+									<%= upChallenges[i]._idChallenger.local.pseudo  %>
+								</a></span>
+								<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
+								<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenged._id %>'>
+									<%= upChallenges[i]._idChallenged.local.pseudo  %>
+								</a></span>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<strong class="convertUp" data-tStart="<%= upChallenges[i].launchDate %>"></strong>
+						</div>
+					</div>
+					<% } %>
+
+					<% } %>
+				</div>
+
+				<div class="col-md-8">
+					<div class="text-center">
+						<h2>Ongoings</h2>
+					</div>
+					<% if ( onChallenges.length > 0 ) { %>					
+
+					<% for(var i=0; i< onChallenges.length; i++) { %>
+					<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>">
+						<div class="panel-heading">
+							<div class="panel-title text-right">
+								<span class="pull-left panel-title">
+
+									<span class="glyphicon glyphicon-star-empty"></span>
+									<a href='/u/<%= onChallenges[i]._idChallenger._id %>'>
+										<%= onChallenges[i]._idChallenger.local.pseudo  %>
+									</a>
+									<span class="glyphicon glyphicon-flash"></span>
+									<a href='/u/<%= onChallenges[i]._idChallenged._id %>'>
+										<%= onChallenges[i]._idChallenged.local.pseudo  %>
+									</a>
+
+								</span>
+								<a href='/o/<%= onChallenges[i]._id %>'>
+									<%= onChallenges[i]._idChallenge.title %>
+								</a>
+
+							</div>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<p class="lead text-center">
+									<%= onChallenges[i]._idChallenge.description  %>
+								</p>									
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<p>
+										<span class="glyphicon glyphicon-calendar"></span>
+										<span class="dateReadability" data-date="<%= onChallenges[i].launchDate %>"></span>
+									</p>
+									<p>
+										<span class="glyphicon glyphicon-calendar"></span>
+										<span class="dateReadability" data-date="<%= onChallenges[i].deadLine %>"></span>
+									</p>										
+								</div>
+								<div class="col-sm-6 text-right">
+									Value: <%= onChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+								</div>									
+							</div>								
+						</div>
+						<div class="panel-footer">
+							<% if(onChallenges[i].waitingConfirm === true) { %>
+							<%= ((onChallenges[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  onChallenges[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= onChallenges[i].confirmAsk %>"></span>
+
+							<% } else { %>
+							<strong class="convertEnd" data-tEnd="<%= onChallenges[i].deadLine %>"></strong>
+							<% } %>
+						</div>
+					</div>
+					<% } %>
+
+					<% } %>
+				</div>
+
+				<div class="col-md-4">
+					<div class="text-center">
+						<h2>Expired & completed</h2>
+					</div>
+					<% if ( endChallenges.length > 0 ) { %>
+
+					<% for(var i=0; i< endChallenges.length; i++) { %>
+					<div class="panel panel-success">
+
+						<div class="panel-heading">
+
+
+							<h3 class="panel-title">
+								<a href='/o/<%= endChallenges[i]._id %>'>
+									<span class="<%= endChallenges[i]._idChallenge.icon %>"></span> <%= endChallenges[i]._idChallenge.title %>
+								</a></h3>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<span class="col-sm-5"><strong>Challenger</strong></span>
+									<span class="col-sm-2">&nbsp;</span>
+									<span class="col-sm-5"><strong>Challenged</strong></span>
+								</div>
+
+								<div class="row">
+									<span class="col-sm-5 ">
+										<span class="glyphicon glyphicon-tower"></span>
+										<a href='/u/<%= endChallenges[i]._idChallenger._id %>'>
+											<strong>
+												<%= endChallenges[i]._idChallenger.local.pseudo  %>
+											</strong>
+										</a>
+									</span>
+									<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
+									<span class="col-sm-5"><a href='/u/<%= endChallenges[i]._idChallenged._id %>'>
+										<%= endChallenges[i]._idChallenged.local.pseudo  %>
+									</a></span>
+								</div>
+								<p>
+									<strong>Ended:</strong> <%= endChallenges[i].deadLine %>
+								</p>
+							</div>
+						</div>
+						<% } %>
+
+						<% } %>
+					</div>
+
+				</div>
+
+			</div>
+
+			<% include statics/footers %>
+			<script type="text/javascript">
+
+				$(function() {
+					updateUp();
+					updateEnd();
+					readability();
+
+					setInterval(function(){
+						updateUp();
+						updateEnd();
+					},1000);
+				});
+				var readability = function(){
+					$('.dateReadability').each( function () {
+						var date = $(this).attr('data-date');
+							var converted = moment(date).format('dddd DD MMMM HH[h]mm[m]'); //.endOf('hours').fromNow();
+							$(this).text(converted);
+						})
+				}
+				var updateUp = function(){
+					$('.convertUp').each( function () {
+						var start = $(this).attr('data-tStart');
+							var converted = moment(start).countdown().toString(); //.endOf('hours').fromNow();
+							$(this).text('Start in ' +converted);
+						})
+				}
+				var updateEnd = function(){
+					$('.convertEnd').each( function () {
+						var end = $(this).attr('data-tEnd');
+							var converted = moment(end).countdown().toString(); //.endOf('hours').fromNow();
+							$(this).text('End in ' +converted);
+						})
+				}
+			</script>
+		</body>
+		</html>

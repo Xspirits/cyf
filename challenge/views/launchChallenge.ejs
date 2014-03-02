@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title>Launch a challenge</title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+
+	<div class="container">
+		<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content panel panel-success">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<span class="glyphicon glyphicon-ok"></span>
+							Challenge launched !</h3>
+						</div>
+						<div class="panel-body">
+							You will be redirected to your divrofile in 5 seconds.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="lastStep" tabindex="-1" role="dialog" aria-labelledby="lastStep" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title">Let's challenge <strong id="mUTitle"></strong></h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-6">
+									<h4 id="mCTitle"></h4>
+									<hr>
+									<p id="mCDesc"></p>
+									<div id="mCGame" class="label label-warning"></div>
+								</div>
+								<div class="col-md-6">
+									<h4 >Time Frame</h4>
+									<hr>
+									<dl>
+										<dt> Start</dt>
+										<dd id="dateStart"></dd>
+										<dt> Deadline</dt>
+										<dd id="dateEnd"></dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="TOR" type="button" class="ladda-button btn btn-punch btn-danger btn-lg btn-block" data-style="expand-right">
+								<span class="ladda-label">
+									<span class="glyphicon glyphicon-plus"></span> Challenge
+								</span>
+								<span class="ladda-spinner"></span>
+								<div class="ladda-progress" style="width: 91px;"></div>
+							</button>
+							<button type="button" class="btn btn-punch btn-default btn-lg btn-block" data-dismiss="modal">Close</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">What is the time frame for your challenge?</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<label>Begin the:</label>
+								<div class='input-group date' id='DTPKStart' data-date="" data-format="MM dd yyyy, hh:ii">
+									<input type='text' class="form-control">
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+								<input type="text" id="DTPKStart_formated" value="" class="hidden"  />
+								<input type="text" id="DTPKEnd_formated" value="" class="hidden"  />
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-punch btn-default" data-dismiss="modal">Close</button>
+							<button type="button" id="timeConfirm" class="btn btn-punch btn-info">Ready to rumble</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="page-header text-center">
+				<h1>Make a challenge request</h1>
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Select Challenge</h3>
+						</div>
+						<div class="panel-body">
+							<div class="list-group challenge">
+								<% for(var i=0; i< challenges.length; i++) { %>
+								<a href="#" class="list-group-item" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">
+									<span class="badge"><%= challenges[i].game %></span>
+									<h4 class="list-group-item-heading"><%= challenges[i].title %> </h4>
+									<p class="list-group-item-text"><%= challenges[i].description %></p>
+									<p class="list-group-item-text">
+										Allowed time:
+										<span class="badge"><%= challenges[i].durationH %></span> Hours
+										<% if (challenges[i].durationD > 0 ) { %> 
+										<span class="badge"><%= challenges[i].durationD %></span> Days
+										<% } %></p>
+									</a>
+									<% } %>
+								</div >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Select a friend</h3>
+							</div>
+							<div class="panel-body">
+								<div class="list-group friends">
+									<% for(var i=0; i< userList.length; i++) { %>
+									<a href="#" class="list-group-item btn btn-punch clearfix"  id="<%= userList[i].idUser %>" data-pseudo="<%= userList[i].userName %>">
+										<span class="badge">mutual friends!</span>
+										<strong class="pull-left"><%= userList[i].userName %></strong>
+									</a>
+									<% } %>
+								</div >
+							</div>
+						</div>
+					</div>
+
+					<hr>
+				</div>
+
+			</div>
+
+			<% include statics/footers %>
+
+			<script type="text/javascript">
+
+				$(function() {
+					var cStartDate, cEndDate;
+
+					$('#DTPKStart')
+					.datetimepicker({
+						format: "MM dd yyyy, hh:ii",
+						autoclose: true,
+						todayHighlight: true,
+						linkField: "DTPKStart_formated",
+						linkFormat: "yyyy-mm-ddThh:ii:ss"
+					});
+
+			/*$('#DTPKEnd')
+			.datetimepicker({
+				format: "dd MM - hh:ii",
+				autoclose: true,
+				todayHighlight: true,
+				linkField: "DTPKEnd_formated",
+				linkFormat: "yyyy-mm-ddThh:ii:ssZ"
+			});*/
+
+$('.list-group > a').click(function(e) {
+	e.preventDefault();
+	$(this).siblings().removeClass('active');
+	$(this).toggleClass('active');
+
+	upFriends();
+})
+
+$('#timeConfirm').click( function(e) {
+	e.preventDefault();
+	$('#timeModal').modal('hide');
+	$('#timeModal').on('hidden.bs.modal', function (e) {
+		e.preventDefault();
+
+		var sDate = $('#DTPKStart').find("input").val();
+							// eDate     = $('#DTPKEnd').find("input").val();
+
+							console.log(sDate);
+				// console.log(eDate);
+				populateModal(sDate,function() {
+					$('#lastStep').modal('show');
+				});
+			});
+
+});
+
+		// Bind normal buttons
+		$("#TOR").click( function(e){
+			e.preventDefault();
+
+			var cBox = $('.challenge a.active'),
+			uBox = $('.friends a.active');
+			
+			var challengeId = cBox.attr('id'),
+			challenged      = uBox.attr('id');
+
+			var target = {};
+			target.idChallenge = challengeId;
+			target.idChallenged = challenged;
+			target.deadLine = {
+				h:cBox.attr('data-durationH'),
+				d:cBox.attr('data-durationD')
+			};
+			target.launchDate = $('#DTPKStart_formated').val();
+			// target.timeFrame = '<%= user.local.pseudo %>';
+			console.log(target);
+
+			$.ajax({
+				type: 'POST',
+				data: JSON.stringify(target),
+				contentType: 'application/json',
+				url: 'http://localhost:8080/launchChallenge',						
+				success: function(data) {
+					console.log('success');
+
+					$('#lastStep').modal('hide');
+					$('#lastStep').on('hidden.bs.modal', function (e) {
+						e.preventDefault();
+
+						$('#successModal').modal('show');
+
+						window.setTimeout(function(){
+							window.location.href = "./profile";
+						}, 5000);
+					});
+				}
+			});
+		});
+
+upFriends();
+});
+
+	// Bind progress buttons
+	Ladda.bind( '.ladda-button.btn-block', {
+		callback: function( instance ) {
+			var progress = 0;
+			var interval = setInterval( function() {
+				progress = Math.min( progress + Math.random() * 0.12, 1 );
+				instance.setProgress( progress );
+
+				if( progress === 1 ) {
+					instance.stop();
+					clearInterval( interval );
+				}
+			}, 35 );
+		}
+	});
+
+	var populateModal = function (sDate, complete) {
+		var query, fStart, fEnd,
+		cBox = $('.challenge a.active'),
+		uBox = $('.friends a.active');
+
+
+		if (cBox.attr('data-durationD') > 0 ) {
+			query = {hours:cBox.attr('data-durationH'),days:cBox.attr('data-durationD')};
+		} else {
+			query = {hours:cBox.attr('data-durationH')};
+		}
+
+		fStart = $('#DTPKStart_formated').val();
+		fEnd = moment(fStart).add(query); //.format('YYYY-MM-DDTHH:mm:ss.SSSZZ'
+
+			$('#DTPKEnd_formated').val(fEnd.format("YYYY-MM-DDTHH:mm:ssZZ"));
+
+			var challengeTitle = cBox.attr('data-title'),
+			challengeDesc      = cBox.attr('data-description'),
+			challengeId        = cBox.attr('id'),
+			challengeGame      = cBox.attr('data-game'),
+			uName              = uBox.attr('data-pseudo'),
+		dateStart          = sDate, // moment(sDate,'MMMM Do YYYY, h:mm:ss a'),
+		dateEnd            = fEnd.format('MMMM Do YYYY, hh:mm');
+
+		console.log('Start: ' +$('#DTPKStart_formated').val()+ ' End ' + $('#DTPKEnd_formated').val())
+
+		$('#mCTitle').text(challengeTitle);
+		$('#mCDesc').text(challengeDesc);
+		$('#mCGame').text(challengeGame);
+		$('#mUTitle').text(uName);
+		$('#dateStart').text(dateStart);
+		$('#dateEnd').text(dateEnd);
+		complete();
+	};
+
+	var upFriends = function (){
+
+		var numCa = $(".challenge a.active").length,
+		numFa = $(".friends a.active").length;
+
+		if(numCa > 0) {
+			$('.friends > a').removeClass('disabled');
+			console.log($(".challenge a.active").length);
+		} else {
+			$('.friends > a').addClass('disabled');
+		}
+
+		// Pop the launch button
+		if(numCa > 0 && numFa > 0) {
+			console.log('go');
+
+			$('#timeModal').modal('show');
+
+		}
+	};
+
+
+
+</script>
+</body>
+</html>

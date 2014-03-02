@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="container">
+
+		<div class="page-header text-center">
+			<h1>Current requests</h1>
+		</div>
+
+		<div class="row">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Pending requests</h3>
+					</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							<% if ( user.pendingRequests.length > 0 ) { %>
+							<% for(var i=0; i< user.pendingRequests.length; i++) { %>
+							<li class="list-group-item">
+								<span class="btn-group">
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= user.pendingRequests[i].idUser %>" data-nameFrom="<%= user.pendingRequests[i].userName %>">confirm</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= user.pendingRequests[i].idUser %>" data-nameFrom="<%= user.pendingRequests[i].userName %>">delete</a>
+								</span>
+								<a href='/u/<%= user.pendingRequests[i].idUser %>'>
+									<%= user.pendingRequests[i].userName %>
+								</a> <%= user.pendingRequests[i].date %>
+							</li>
+							<% } %>
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Sent requests</h3>
+					</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							<% if ( user.sentRequests.length > 0 ) { %>
+							<% for(var i=0; i< user.sentRequests.length; i++) { %>
+							<li class="list-group-item">
+								<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="cancelFriend" data-idFrom="<%= user.sentRequests[i].idUser %>" data-nameFrom="<%= user.sentRequests[i].userName %>">cancel</a>
+								<a href='/u/<%= user.sentRequests[i].idUser %>'>
+									<%= user.sentRequests[i].userName %>
+								</a> <%= user.sentRequests[i].date %>
+							</li>
+							<% } %>
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Challenges sent</h3>
+					</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							<% if ( challenges.sent.length > 0 ) { %>
+
+							<% for(var i=0; i< challenges.sent.length; i++) { %>
+							<% if ( challenges.sent[i].accepted === false ) { %>
+							
+
+							<li class="list-group-item">
+								<span class="<%= challenges.sent[i]._idChallenge.icon %>"></span>
+								<strong> <%= challenges.sent[i]._idChallenge.title %></strong>
+								<a href='/u/<%= challenges.sent[i]._idChallenged._id %>'>
+									<%= challenges.sent[i]._idChallenged.local.pseudo %>
+								</a>
+							</li>
+							<% } %>
+							<% } %>
+
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Challenges received</h3>
+					</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							<% if ( challenges.request.length > 0 ) { %>
+
+							<% for(var i=0; i< challenges.request.length; i++) { %>
+							<% if ( challenges.request[i].accepted === false ) { %>
+
+							<li class="list-group-item">
+								<span class="<%= challenges.request[i]._idChallenge.icon %>"></span>
+								<strong> <%= challenges.request[i]._idChallenge.title %></strong>
+								<a href='/u/<%= challenges.request[i]._idChallenger._id %>'>
+									<%= challenges.request[i]._idChallenger.local.pseudo %>
+								</a>
+								<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmChallenge" data-id="<%= challenges.request[i]._id %>">Accept</a>
+								<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="rejectChallenge" data-id="<%= challenges.request[i]._id %>">Deny</a>
+							</li>
+							<% } %>
+							<% } %>
+
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<% include statics/footers %>
+	<script type="text/javascript">
+
+		$(".answerCall").click( function(e){
+			e.preventDefault();
+
+			// Create a new instance of ladda for the specified button
+			var currButton = $(this);
+			//var l = Ladda.create( currButton );
+			var going;
+			// Start loading
+			// l.start();
+
+			var target = {};
+			if($(this).attr('data-action') === 'confirmFriend'){
+
+				going = 'confirmFriend';
+				target.id = $(this).attr('data-idfrom');
+				target.pseudo = $(this).attr('data-nameFrom');
+			}
+			else if($(this).attr('data-action') === 'confirmChallenge'){
+
+				going = 'acceptChallenge';
+				target.id = $(this).attr('data-id');
+			}
+			else if($(this).attr('data-action') === 'rejectChallenge'){
+
+				going = 'denyChallenge';
+				target.id = $(this).attr('data-id');
+			}
+			else if($(this).attr('data-action') === 'cancelFriend'){
+
+				going = 'cancelFriend';
+				target.id = $(this).attr('data-idfrom');
+				target.pseudo = $(this).attr('data-nameFrom');
+			}
+			else
+				going = 'denyFriend';
+
+			console.log(target);
+
+			$.ajax({
+				type: 'POST',
+				data: JSON.stringify(target),
+				contentType: 'application/json',
+				url: 'http://localhost:8080/' + going,						
+				success: function(data) {
+
+					// Stop loading
+					// l.stop();
+					currButton.removeClass('btn-default').addClass('btn-success');
+					console.log('success');
+					console.log(JSON.stringify(data));
+				}
+			});
+
+		});
+</script>
+</body>
+</html>

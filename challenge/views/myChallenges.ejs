@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="container">
+
+		<div class="page-header text-center">
+			<h1>Submit a new challenge</h1>
+		</div>
+
+		<div class="row">
+			<h1><span class="fa fa-sign-in"></span> My challenges</h1>
+
+			<ul>
+				<% for(var i=0; i< challenges.length; i++) { %>
+				<li>
+					<span class="<%= challenges[i].icon %>"></span>
+					<a href='/c/<%= challenges[i]._id %>'>
+						<%= challenges[i].title %>
+					</a> -- <%= challenges[i].creation %>
+					<a href="/removeChallenge/<%= challenges[i]._id %>" class="btn btn-punch btn-warning"> Delete</a>
+				</li>
+				<% } %>
+			</ul>
+			<hr>
+		</div>
+
+	</div>
+</body>
+</html>
