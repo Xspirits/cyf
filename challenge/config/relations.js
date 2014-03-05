@@ -35,34 +35,45 @@ module.exports = {
 	 */
 	 create : function (from, to, thisIsSend, done) {
 	 	//Check if the relation exist or not.
-	 	//
-	 	if(thisIsSend) {
+	 	//For an unknown reason, couldn't addtoset or upsert document :(.
+	 		var query,pushing;
+
+	 		if(thisIsSend){
+	 			pushing = 'sentRequests';
+	 			query = {$push: { sentRequests : { idUser : to.id,idCool : to.idCool, userName : to.userName  }}};
+	 		}
+	 		else{
+
+	 			pushing = 'pendingRequests';
+	 			query = {$push: { pendingRequests : { idUser : to.id,idCool : to.idCool, userName : to.userName  }}};
+	 		}
 
 	 		User
-	 		.findByIdAndUpdate(from.id,{ sentRequests : [{ idUser : to.id,idCool : to.idCool, userName : to.userName }]}, {upsert:true}, function(err, relation) {
+	 		.findOne({_id : from.id, $or: [{ 'sentRequests.idUser': to.id }, { 'pendingRequests.idUser': to.id }]})
+	 		.exec(function(err, relation) {
 
 	 			if(err)
 	 				throw err;
 
-	 			console.log('Pending: '+thisIsSend+' relation updated');
-	 			done(true);
+	 			console.log(relation);
+
+	 			if(!relation) {
+	 				console.log('Lets update');
+
+	 				User
+	 				.findByIdAndUpdate(from.id, query)
+	 				.exec(function(err, updated) {
+	 					console.log('sentRequests: '+thisIsSend+' relation updated');
+	 					done(true);
+	 				});
+	 			} else {
+	 				console.log('already asked');
+	 				done(false, 'already asked');
+	 			}
 
 	 		});
-	 	}
-	 	else {
 
-	 		User
-	 		.findByIdAndUpdate(from.id,{ pendingRequests : [{ idUser : to.id,idCool : to.idCool, userName : to.userName }]}, {upsert:true}, function(err, relation) {
-
-	 			if(err)
-	 				throw err;
-
-	 			console.log('Pending: '+thisIsSend+' relation updated');
-	 			done(true);
-
-	 		});
-	 	}
-	 },
+	 	},
 
 	/**
 	 * Accept a relation: add a new row and delete the pending ones
@@ -75,30 +86,32 @@ module.exports = {
 
 	 	User
 	 	.findByIdAndUpdate(from.id,
-	 		{ $pull: { sentRequests : { idUser : to.id }},
-	 		friends : [{ idUser : to.id, idCool : to.idCool, userName : to.userName }] },
-	 		{upsert:true},
+	 	{ 
+	 		$pull: { sentRequests : { idUser : to.id }},
+	 		$push: { friends : { idUser : to.id, idCool : to.idCool, userName : to.userName }}
+	 	},
+	 	function(err, relation) {
+
+	 		if(err)
+	 			throw err;
+	 		console.log(relation);
+	 		console.log('Pending: relation updated  idUser :'+ from.id);
+
+	 		User
+	 		.findByIdAndUpdate(to.id,
+	 		{ 
+	 			$pull: { pendingRequests : { idUser : from.id }},
+	 			$push: { friends : { idUser : from.id ,idCool : to.idCool, userName : from.userName }}
+	 		},
 	 		function(err, relation) {
 
 	 			if(err)
 	 				throw err;
 	 			console.log(relation);
 	 			console.log('Pending: relation updated  idUser :'+ from.id);
-
-	 			User
-	 			.findByIdAndUpdate(to.id,
-	 				{ $pull: { pendingRequests : { idUser : from.id }}, 
-	 				friends : [{ idUser : from.id ,idCool : to.idCool, userName : from.userName }] }, 
-	 				{upsert:true},
-	 				function(err, relation) {
-
-	 					if(err)
-	 						throw err;
-	 					console.log(relation);
-	 					console.log('Pending: relation updated  idUser :'+ from.id);
-	 					done(true);
-	 				});
+	 			done(true);
 	 		});
+	 	});
 
 	 },
 

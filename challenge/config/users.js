@@ -7,6 +7,59 @@ relations = require('./relations');
 module.exports = {
 
 	/**
+	 * Return NUMBER users whom will be used as judge in the tribunal
+	 * for a given ongoing case.
+	 * @param  {Object}   exclude [_id of users to exclude: the challenger and challenged]
+	 * @param  {Number}   number  [number of judges we want]
+	 * @param  {Function} done    [callback]
+	 * @return {Array}           [Array of users' object]
+	 */
+	 pickTribunalUsers : function(exclude, number, done) {
+	 	var num = ((number) ? number : 1)
+	 	nearNum = [Math.random(), 0];
+
+	 	User
+	 	.find( {
+	 		$and: [ { _id: { $ne: exclude.one } }, { _id: { $ne: exclude.two } } ],
+	 		userRand : { $near : nearNum } 
+	 	} )
+	 	.limit( num )
+	 	.exec(function (err, randomUser) {
+
+	 		if(err)
+	 			throw err;
+
+	 		return done(randomUser);
+
+	 	});
+
+	 },
+
+	 setJudges : function(id, users, done) {
+	 	var query = [];
+
+	 	for (var i = users.length - 1; i >= 0; i--) {
+	 		query.push(users[i]._id);
+	 	};
+
+	 	console.log(query);
+
+	 	User
+	 	.update(
+	 		{ _id: { $in: query } },
+	 		{ $addToSet: { tribunal : id} })
+	 	.exec(function (err, randomUser) {
+
+	 		if(err)
+	 			throw err;
+
+	 		return done(true);
+
+	 	});
+
+	 },
+
+	/**
 	 * Return the list of existing users
 	 * @param  {String} arg    [(optional) parameters]
 	 * @param  {[type]} return [description]

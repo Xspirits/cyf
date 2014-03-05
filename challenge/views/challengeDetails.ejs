@@ -16,25 +16,20 @@
 				<strong>Description :</strong> <%= challenge.description %>
 			</p>
 			<p>
-				<strong>author :</strong> <a href='/u/<%= challenge.author.idCool %>'>
-				<%= challenge.author.local.pseudo %>
-			</a>
-		</p>
-		<p>
-			<strong>value :</strong> <%= challenge.value %>
-		</p>
-		<p>
-			<strong>Rated :</strong> <%= challenge.rateNumber %> times
-		</p>
-		<p>
-			<strong>Currently rated :</strong> <%= challenge.rateValue %>
-		</p>
-		<p>
-			<strong>Created :</strong> <%= challenge.creation %>
-		</p>
-	</div>
+				<strong>value :</strong> <%= challenge.value %>
+			</p>
+			<p>
+				<strong>Rated :</strong> <%= challenge.rateNumber %> times
+			</p>
+			<p>
+				<strong>Currently rated :</strong> <%= challenge.rateValue %>
+			</p>
+			<p>
+				<strong>Created :</strong> <%= challenge.creation %>
+			</p>
+		</div>
 
-</div>
-<% include statics/footers %>
+	</div>
+	<% include statics/footers %>
 </body>
 </html>

@@ -3,62 +3,63 @@
 var moment = require('moment');
 var User   = require('../app/models/user'),
 Challenge  = require('../app/models/challenge'),
-Ongoing    = require('../app/models/ongoing');
+Ongoing    = require('../app/models/ongoing'),
+users      = require('./users');
 
 module.exports = {
 
-    /**
-     * Generate an unique ID for readability.
-     * Max 1.6 Millions
-     * @return {String} [String UID]
-     */
-     generateUID : function(collection, returned) {
+	/**
+	 * Generate an unique ID for readability.
+	 * Max 1.6 Millions
+	 * @return {String} [String UID]
+	 */
+	 generateUID : function(collection, returned) {
 
-     	var nUID = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
+	 	var nUID = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
 
-     	if(collection === 'ongoings') {
-     		
-     		Ongoing
-     		.where('idCool', nUID)
-     		.count(function (err, count) {
-     			if (err) return handleError(err);
-     			if(count === 0) {
-     				console.log(nUID);
-     				returned(nUID);
-     			}
-     			else
-     				this.generateUID('ongoings');
-     		})
-     	}
-     	if(collection === 'challenges') {
-     		
-     		Challenge
-     		.where('idCool', nUID)
-     		.count(function (err, count) {
-     			if (err) return handleError(err);
-     			if(count === 0) {
-     				console.log(nUID);
-     				returned(nUID);
-     			}
-     			else
-     				this.generateUID('challenges');
-     		})
-     	}
-     	if(collection === 'users') {
-     		
-     		User
-     		.where('idCool', nUID)
-     		.count(function (err, count) {
-     			if (err) return handleError(err);
-     			if(count === 0) {
-     				console.log(nUID);
-     				returned(nUID);
-     			}
-     			else
-     				this.generateUID('users');
-     		})
-     	}
-     },
+	 	if(collection === 'ongoings') {
+
+	 		Ongoing
+	 		.where('idCool', nUID)
+	 		.count(function (err, count) {
+	 			if (err) return handleError(err);
+	 			if(count === 0) {
+	 				console.log(nUID);
+	 				returned(nUID);
+	 			}
+	 			else
+	 				this.generateUID('ongoings');
+	 		})
+	 	}
+	 	if(collection === 'challenges') {
+
+	 		Challenge
+	 		.where('idCool', nUID)
+	 		.count(function (err, count) {
+	 			if (err) return handleError(err);
+	 			if(count === 0) {
+	 				console.log(nUID);
+	 				returned(nUID);
+	 			}
+	 			else
+	 				this.generateUID('challenges');
+	 		})
+	 	}
+	 	if(collection === 'users') {
+
+	 		User
+	 		.where('idCool', nUID)
+	 		.count(function (err, count) {
+	 			if (err) return handleError(err);
+	 			if(count === 0) {
+	 				console.log(nUID);
+	 				returned(nUID);
+	 			}
+	 			else
+	 				this.generateUID('users');
+	 		})
+	 	}
+	 },
 	/**
 	 * Create a new challenge
 	 * @param  {array}   req  [form variables]
@@ -84,20 +85,20 @@ module.exports = {
 			durationH   = data['durationH'],
 			durationD   = data['durationD'],
 			description = data['description'],
-			game        = 'League of Legend';/*data['game'];*/
+			game = data['game'];
 
 			Challenge
 			.findOne({ 'title' :  title })
 			.exec(function(err, challenge) {
 
-                // if there are any errors, return the error
-                if (err)
-                	throw err;
+				// if there are any errors, return the error
+				if (err)
+					throw err;
 
-                // check to see if theres already a user with that email
-                if (challenge) {
-                	return done(null, false, req.flash('createMessage', 'That challenge already exists.'));
-                } else {
+				// check to see if theres already a user with that email
+				if (challenge) {
+					return done(null, false, req.flash('createMessage', 'That challenge already exists.'));
+				} else {
 
 					// create the challenge
 					
@@ -105,33 +106,33 @@ module.exports = {
 
 						var generateDate = new Date;
 
-                	// Store the data for the upcoming callback
-                	var returned = { title : title, description : description,durationH : durationH,durationD : durationD, game : game, creation : generateDate};
+					// Store the data for the upcoming callback
+					var returned = { title : title, description : description,durationH : durationH,durationD : durationD, game : game, creation : generateDate};
 
-                	var newChallenge            = new Challenge();
-                	newChallenge.idCool = uID;
-                	newChallenge.title       = title;
-                	newChallenge.description = description;
-                	newChallenge.game        = game;
-                	newChallenge.creation    = generateDate;
-                	newChallenge.durationH   = durationH;
-                	newChallenge.durationD   = durationD;
-                	newChallenge.author      = user._id;
-                	newChallenge.value       = 0;
-                	newChallenge.icon        = 'glyphicon glyphicon-bookmark';
-                	newChallenge.rateNumber  = 0;
-                	newChallenge.rateValue   = 0;
+					var newChallenge            = new Challenge();
+					newChallenge.idCool = uID;
+					newChallenge.title       = title;
+					newChallenge.description = description;
+					newChallenge.game        = game;
+					newChallenge.creation    = generateDate;
+					newChallenge.durationH   = durationH;
+					newChallenge.durationD   = durationD;
+					newChallenge.author      = user._id;
+					newChallenge.value       = 0;
+					// newChallenge.icon        = 'glyphicon glyphicon-bookmark';
+					newChallenge.rateNumber  = 0;
+					newChallenge.rateValue   = 0;
 
-                	newChallenge.save(function(err) {
+					newChallenge.save(function(err) {
 
-                		if (err)
-                			throw err;
+						if (err)
+							throw err;
 
-                		return done(returned);
-                	});
-                });
-}
-});
+						return done(returned);
+					});
+				});
+				}
+			});
 },
 
 		/**
@@ -170,102 +171,102 @@ module.exports = {
 
 			var currentUser = data.user.local.email;
 
-	  	/**
-	  	 * Select the challenge and remove it from our model
-	  	 */
-	  	 Challenge
-	  	 .find({ '_id' :  data.id })
-	  	 .limit(1)
-	  	 .exec(function(err, doc) {
+		/**
+		 * Select the challenge and remove it from our model
+		 */
+		 Challenge
+		 .find({ '_id' :  data.id })
+		 .limit(1)
+		 .exec(function(err, doc) {
 
-                // if there are any errors, return the error
-                if (err)
-                	return done(err);
+				// if there are any errors, return the error
+				if (err)
+					return done(err);
 
-                var chall = doc[0];
+				var chall = doc[0];
 
-                console.log(chall);
-                console.log(chall.author + ' <> ' + currentUser);
+				console.log(chall);
+				console.log(chall.author + ' <> ' + currentUser);
 
-                if(chall.author === currentUser) 
-                	return chall.remove(done);
+				if(chall.author === currentUser) 
+					return chall.remove(done);
 
-                else 
-                	return done(false, 'you are not the owner of this challenge')
-                
+				else 
+					return done(false, 'you are not the owner of this challenge')
+				
 
-            });
+			});
 
-	  	},
+		},
 
-	  	/**
-	  	 * Return all the details for a given challenge
-	  	 * @param  {String}   id   [id of the challenge]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [Object containing all the challenge data]
-	  	 */
-	  	 getList : function (done) {
+		/**
+		 * Return all the details for a given challenge
+		 * @param  {String}   id   [id of the challenge]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [Object containing all the challenge data]
+		 */
+		 getList : function (done) {
 
-	  	 	Challenge
-	  	 	.find({})
-	  	 	.sort('-_id')
-	  	 	.exec(function(err, data) {
-	  	 		if(err)
-	  	 			throw err;
+		 	Challenge
+		 	.find({})
+		 	.sort('-_id')
+		 	.exec(function(err, data) {
+		 		if(err)
+		 			throw err;
 
 				// console.log(data);
 
 				return done(data);
 			});
 
-	  	 },
+		 },
 
-	  	/**
-	  	 * Return all the details for a given challenge
-	  	 * @param  {String}   id   [id of the challenge]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [Object containing all the challenge data]
-	  	 */
-	  	 getChallenge : function (id, done) {
+		/**
+		 * Return all the details for a given challenge
+		 * @param  {String}   id   [id of the challenge]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [Object containing all the challenge data]
+		 */
+		 getChallenge : function (id, done) {
 
-	  	 	Challenge
-	  	 	.findOne({idCool : id})
-	  	 	.populate('author')
-	  	 	.exec(function(err, data) {
+		 	Challenge
+		 	.findOne({idCool : id})
+		 	.populate('author')
+		 	.exec(function(err, data) {
 
-                // if there are any errors, return the error
-                if (err)
-                	throw err;
+				// if there are any errors, return the error
+				if (err)
+					throw err;
 
-                // else we return the data
-                return done(data);
-            });
+				// else we return the data
+				return done(data);
+			});
 
-	  	 },
+		 },
 
 
-	  	/**
-	  	 * Return all the challenges created byt a given user
-	  	 * @param  {String}   email  [email of the creator]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [List of challenges]
-	  	 */
-	  	 getUserChallenges : function (id, done) {
+		/**
+		 * Return all the challenges created byt a given user
+		 * @param  {String}   email  [email of the creator]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [List of challenges]
+		 */
+		 getUserChallenges : function (id, done) {
 
-	  	 	Challenge
-	  	 	.find({ author :  id })
-	  	 	.populate('author')
-	  	 	.sort('-creation')
-	  	 	.exec(function(err, data) {
+		 	Challenge
+		 	.find({ author :  id })
+		 	.populate('author')
+		 	.sort('-creation')
+		 	.exec(function(err, data) {
 
-                // if there are any errors, return the error
-                if (err)
-                	return done(err);
-                // else we return the data
-                return done(data);
-            });
+				// if there are any errors, return the error
+				if (err)
+					return done(err);
+				// else we return the data
+				return done(data);
+			});
 
-	  	 },
+		 },
 
 
 // =============================================================================
@@ -274,39 +275,18 @@ module.exports = {
 
 
 
-	  	/**
-	  	 * Return a challenge's details
-	  	 * @param  {ObjectId}   id  [idCool of the challenge]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [List of challenges]
-	  	 */
-	  	 ongoingDetails : function (id, done) {
+		/**
+		 * Return a challenge's details
+		 * @param  {ObjectId}   id  [idCool of the challenge]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [List of challenges]
+		 */
+		 ongoingDetails : function (id, done) {
 
-	  	 	Ongoing
-	  	 	.findOne({idCool : id})
-	  	 	.populate('_idChallenge _idChallenger _idChallenged')
-	  	 	.exec( function( err, data ) {
-
-				// if there are any errors, return the error
-				if (err)
-					throw err;
-				// else we return the data
-				return done(data);
-			})
-
-	  	 },
-	  	/**
-	  	 * Return the challenges accepted by a given user
-	  	 * @param  {ObjectId}   id  [_id of the creator]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [List of challenges]
-	  	 */
-	  	 userAcceptedChallenge : function (id, done) {
-
-	  	 	Ongoing
-	  	 	.find({ accepted: true, $or: [ { _idChallenger: id }, { _idChallenged: id } ] })
-	  	 	.populate('_idChallenge _idChallenger _idChallenged')
-	  	 	.exec( function( err, data ) {
+		 	Ongoing
+		 	.findOne({idCool : id})
+		 	.populate('_idChallenge _idChallenger _idChallenged')
+		 	.exec( function( err, data ) {
 
 				// if there are any errors, return the error
 				if (err)
@@ -315,41 +295,40 @@ module.exports = {
 				return done(data);
 			})
 
-	  	 },
-	  	/**
-	  	 * Return all the challenges (request and received) for a given user
-	  	 * @param  {ObjectId}   id  [_id of the creator]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [List of challenges]
-	  	 */
-	  	 challengerRequests : function (id, done) {
+		 },
+		/**
+		 * Return the challenges accepted by a given user
+		 * @param  {ObjectId}   id  [_id of the creator]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [List of challenges]
+		 */
+		 userAcceptedChallenge : function (id, done) {
 
-	  	 	Ongoing
-	  	 	.find({_idChallenger : id})
-	  	 	.populate('_idChallenge _idChallenger _idChallenged')
-	  	 	.exec( function( err, data ) {
+		 	Ongoing
+		 	.find({ accepted: true, $or: [ { _idChallenger: id }, { _idChallenged: id } ] })
+		 	.populate('_idChallenge _idChallenger _idChallenged')
+		 	.exec( function( err, data ) {
 
 				// if there are any errors, return the error
 				if (err)
 					throw err;
 				// else we return the data
-				console.log(data);
 				return done(data);
 			})
 
-	  	 },
-	  	/**
-	  	 * Return all the challenges (request and received) for a given user
-	  	 * @param  {ObjectId}   id  [_id of the creator]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Object}        [List of challenges]
-	  	 */
-	  	 challengedRequests : function (id, done) {
+		 },
+		/**
+		 * Return all the challenges (request and received) for a given user
+		 * @param  {ObjectId}   id  [_id of the creator]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [List of challenges]
+		 */
+		 challengerRequests : function (id, done) {
 
-	  	 	Ongoing
-	  	 	.find({_idChallenged : id})
-	  	 	.populate('_idChallenge _idChallenger _idChallenged')
-	  	 	.exec( function( err, data ) {
+		 	Ongoing
+		 	.find({_idChallenger : id})
+		 	.populate('_idChallenge _idChallenger _idChallenged')
+		 	.exec( function( err, data ) {
 
 				// if there are any errors, return the error
 				if (err)
@@ -359,7 +338,29 @@ module.exports = {
 				return done(data);
 			})
 
-	  	 },
+		 },
+		/**
+		 * Return all the challenges (request and received) for a given user
+		 * @param  {ObjectId}   id  [_id of the creator]
+		 * @param  {Function} done [callback]
+		 * @return {Object}        [List of challenges]
+		 */
+		 challengedRequests : function (id, done) {
+
+		 	Ongoing
+		 	.find({_idChallenged : id})
+		 	.populate('_idChallenge _idChallenger _idChallenged')
+		 	.exec( function( err, data ) {
+
+				// if there are any errors, return the error
+				if (err)
+					throw err;
+				// else we return the data
+				console.log(data);
+				return done(data);
+			})
+
+		 },
 
 		/**
 		 * Challenge another user !
@@ -370,180 +371,261 @@ module.exports = {
 		 launch : function (data, done) {
 
 
-            // Store the data for the upcoming callback
-            var returned = { 
-            	idChallenge : data.idChallenge,            	
-            	challenger : data.from,
-            	challenged : data.idChallenged,
-            	deadLine : data.deadLine
-            };
+			// Store the data for the upcoming callback
+			var returned = { 
+				idChallenge : data.idChallenge,            	
+				challenger : data.from,
+				challenged : data.idChallenged,
+				deadLine : data.deadLine
+			};
 
-            if (data.deadLine.d > 0 ) {
-            	query = {hours:data.deadLine.h,days:data.deadLine.d};
-            } else {
-            	query = {hours:data.deadLine.h};
-            }
+			if (data.deadLine.d > 0 ) {
+				query = {hours:data.deadLine.h,days:data.deadLine.d};
+			} else {
+				query = {hours:data.deadLine.h};
+			}
 
-            // console.log(data.launchDate);
-            // console.log(moment(data.launchDate).utc());
-            // console.log(moment(data.launchDate).isValid());
-            // console.log('=====')
-            var oCha           = new Ongoing();
+			// console.log(data.launchDate);
+			// console.log(moment(data.launchDate).utc());
+			// console.log(moment(data.launchDate).isValid());
+			// console.log('=====')
+			var oCha           = new Ongoing();
 
-            this.generateUID('ongoings', function(uID) {
+			this.generateUID('ongoings', function(uID) {
 
-            	oCha._idChallenge  = data.idChallenge;
-            	oCha._idChallenger = data.from;
-            	oCha._idChallenged = data.idChallenged; 
-            	oCha.idCool        = uID;
+				oCha._idChallenge  = data.idChallenge;
+				oCha._idChallenger = data.from;
+				oCha._idChallenged = data.idChallenged; 
+				oCha.idCool        = uID;
 
-            	oCha.launchDate    = moment(data.launchDate).utc();
-            	oCha.deadLine      = moment(data.launchDate).utc().add(query);
+				oCha.launchDate    = moment(data.launchDate).utc();
+				oCha.deadLine      = moment(data.launchDate).utc().add(query);
 
-	            // console.log(oCha.deadLine);
-	            // console.log(moment(oCha.deadLine).utc());
-	            // console.log(moment(oCha.deadLine).isValid());
-	            // console.log(oCha);
+				// console.log(oCha.deadLine);
+				// console.log(moment(oCha.deadLine).utc());
+				// console.log(moment(oCha.deadLine).isValid());
+				// console.log(oCha);
 
-	            oCha.save(function(err, result) {
-	            	if (err)
-	            		throw err;
-	            	return done(result);
-	            });
+				oCha.save(function(err, result) {
+					if (err)
+						throw err;
+					return done(result);
+				});
 
-	        });
-        },
+			});
+		},
 
-	  	/**
-	  	 * accept an ongoing challenge's request, setting "accepted" to true
-	  	 * @param  {Object}   data [id challenge and id of user]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Boolean}       [true or false]
-	  	 */
-	  	 accept : function(data, done ) {
-
-
-	  	 	var idChallenge = data.id,
-	  	 	idUser = data.idUser;
-
-	  	/**
-	  	 * Select the challenge and remove it from our model
-	  	 */
-	  	 Ongoing
-	  	 .findOne({ _id :  idChallenge })
-	  	 .exec(function(err, chall) {
-
-                // if there are any errors, return the error
-                if (err)
-                	throw err;
-
-                if(chall._idChallenged = idUser) {
-                	chall.accepted = true;
-
-                	chall.save(function(err, result) {
-                		if (err)
-                			throw err;
-                		return done(result);
-                	});
-                } else 
-                return done(false, 'you are not the person challenged on this challenge')
-            });
-
-	  	},
-
-	  	/**
-	  	 * Deny an ongoing challenge's request by deleting it.
-	  	 * @param  {Object}   data [id challenge and id of user]
-	  	 * @param  {Function} done [callback]
-	  	 * @return {Boolean}       [true or false]
-	  	 */
-	  	 deny : function(data, done ) {
+		/**
+		 * accept an ongoing challenge's request, setting "accepted" to true
+		 * @param  {Object}   data [id challenge and id of user]
+		 * @param  {Function} done [callback]
+		 * @return {Boolean}       [true or false]
+		 */
+		 accept : function(data, done ) {
 
 
-	  	 	var idChallenge = data.id,
-	  	 	idUser = data.idUser;
+		 	var idChallenge = data.id,
+		 	idUser = data.idUser;
 
-	  	 	Ongoing
-	  	 	.findOne({ _id :  idChallenge })
-	  	 	.exec(function(err, chall) {
+		/**
+		 * Select the challenge and remove it from our model
+		 */
+		 Ongoing
+		 .findOne({ _id :  idChallenge })
+		 .exec(function(err, chall) {
 
-                // if there are any errors, return the error
-                if (err)
-                	throw err;
+				// if there are any errors, return the error
+				if (err)
+					throw err;
 
-                console.log(chall._idChallenged + ' <> ' + idUser);
-                console.log((chall._idChallenged.toString() === idUser.toString()));
+				if(chall._idChallenged = idUser) {
+					chall.accepted = true;
 
+					chall.save(function(err, result) {
+						if (err)
+							throw err;
+						return done(result);
+					});
+				} else 
+				return done(false, 'you are not the person challenged on this challenge')
+			});
 
-                if(chall._idChallenged.toString() === idUser.toString()) {
+		},
 
-                	chall
-                	.remove();
-                	done(true);
-
-                } else 
-                return done(false, 'you are not the person challenged on this challenge')
-            });
-
-	  	 },
-
-	  	 requestValidation : function(data, done ) {
-
-	  	 	Ongoing
-	  	 	.findOne({ _id :  data.idChallenge, _idChallenged : data.idUser  })
-	  	 	.exec(function(err, ongoing) {
-
-                // if there are any errors, return the error
-                if (err)
-                	throw err;
-
-                console.log(ongoing);
-
-                ongoing.waitingConfirm	= true;
-                ongoing.confirmAsk		= new Date;
-                ongoing.confirmLink1	= data.proofLink1;
-                ongoing.confirmLink2	= (data.proofLink2) ? data.proofLink2 : '';
-                ongoing.confirmComment	= (data.confirmComment) ? data.confirmComment : '';
-
-                ongoing.save(function(err, result) {
-                	if (err)
-                		throw err;
-                	return done(result);
-                });
-            });
-
-	  	 },
-	  	 /**
-	  	  * [validateOngoing description]
-	  	  * @param  {Object}   data [oId : req.params.id, deny : req.body.deny]
-	  	  * @param  {Function} done [description]
-	  	  * @return {[type]}        [description]
-	  	  */
-	  	  validateOngoing : function(data, done ) {
-
-	  	  	Ongoing
-	  	  	.findOne({idCool : data.oId})
-	  	  	.exec(function(err, ongoing) {
-
-                // if there are any errors, return the error
-                if (err)
-                	throw err;
-
-                console.log(data);
-
-                ongoing.waitingConfirm = false;
-                ongoing.validated      = data.deny;
-                ongoing.progress       = 100;
-
-                ongoing.save(function(err, result) {
-                	if (err)
-                		throw err;
-                	return done(result);
-                });
-            });
-
-	  	  },
+		/**
+		 * Deny an ongoing challenge's request by deleting it.
+		 * @param  {Object}   data [id challenge and id of user]
+		 * @param  {Function} done [callback]
+		 * @return {Boolean}       [true or false]
+		 */
+		 deny : function(data, done ) {
 
 
+		 	var idChallenge = data.id,
+		 	idUser = data.idUser;
 
-	  	};
+		 	Ongoing
+		 	.findOne({ _id :  idChallenge })
+		 	.exec(function(err, chall) {
+
+				// if there are any errors, return the error
+				if (err)
+					throw err;
+
+				console.log(chall._idChallenged + ' <> ' + idUser);
+				console.log((chall._idChallenged.toString() === idUser.toString()));
+
+
+				if(chall._idChallenged.toString() === idUser.toString()) {
+
+					chall
+					.remove();
+					done(true);
+
+				} else 
+				return done(false, 'you are not the person challenged on this challenge')
+			});
+
+		 },
+
+		 requestValidation : function(data, done ) {
+
+		 	Ongoing
+		 	.findOne({ _id :  data.idChallenge, _idChallenged : data.idUser  })
+		 	.exec(function(err, ongoing) {
+
+				// if there are any errors, return the error
+				if (err)
+					throw err;
+
+				console.log(ongoing);
+
+				ongoing.waitingConfirm	= true;
+				ongoing.confirmAsk		= new Date;
+				ongoing.confirmLink1	= data.proofLink1;
+				ongoing.confirmLink2	= (data.proofLink2) ? data.proofLink2 : '';
+				ongoing.confirmComment	= (data.confirmComment) ? data.confirmComment : '';
+
+				ongoing.save(function(err, result) {
+					if (err)
+						throw err;
+					return done(result);
+				});
+			});
+
+		 },
+		 /**
+		  * [validateOngoing description]
+		  * @param  {Object}   data [oId : req.params.id, deny : req.body.deny]
+		  * @param  {Function} done [description]
+		  * @return {[type]}        [description]
+		  */
+		  validateOngoing : function(data, done ) {
+
+		  	Ongoing
+		  	.findOne({idCool : data.oId})
+		  	.exec(function(err, ongoing) {
+
+				// if there are any errors, return the error
+				if (err)
+					throw err;
+
+				ongoing.waitingConfirm = false;
+				ongoing.validated      = data.deny;
+				ongoing.progress       = 100;
+
+				ongoing.save(function(err, result) {
+					if (err)
+						throw err;
+					return done(true);
+				});
+			});
+
+		  },
+
+		 /**
+		  * Send an Ongoing event (actually closed) to the tribunal
+		  * @param  {Object}   data [oId]
+		  * @param  {Function} done [description]
+		  * @return {[type]}        [description]
+		  */
+		  sendTribunal : function(data, done ) {
+
+		  	Ongoing
+		  	.findById(data.id)
+		  	.exec(function(err, ongoing) {
+
+				// if there are any errors, return the error
+				if (err)
+					throw err;
+
+				//Does this ongoing already has an opened case? 
+				//if yes, we do nothing.
+				if(ongoing.tribunal === false) {
+				// console.log(ongoing);
+				//Is the person who ask the same as the challenged ?
+				if( data.idUser.toString() === ongoing._idChallenged.toString()) {
+
+				// tribunal 		: {type: Boolean, default: false},
+				// tribunalVote	: [{
+					/*idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },
+					hasVoted : {type: Boolean, default: false},
+					answer   : {type: Boolean, default: false},
+				}]*/
+				var exclude = {
+					one : ongoing._idChallenger,
+					two : ongoing._idChallenged
+				};
+
+				console.log('Going to exclude and pick');
+				console.log(exclude);
+
+				users.pickTribunalUsers(exclude, 3, function(pickedUser) {
+
+					console.log(pickedUser);
+
+					users.setJudges(ongoing._id, pickedUser, function( completed ) {
+
+						if(completed) {
+							var judges = [];
+
+							for (var i = pickedUser.length - 1; i >= 0; i--) {
+								aJudge = {
+									idUser   : pickedUser[i]._id,
+									hasVoted : false,
+									answer   : false
+								};
+								judges.push(aJudge);
+							};
+
+							ongoing.tribunal = true;
+							ongoing.tribunalVote = judges;
+
+							console.log(ongoing);
+							ongoing.save(function(err, result) {
+								if (err)
+									throw err;
+
+
+								return done(true);
+							});		
+
+						} else
+						throw 'something went wrong here';
+					});
+				});
+
+			} else {
+				done(false, "Case already taken in account");
+
+			}
+		} else {
+			done(false, "not the challenged");
+		}
+
+	});
+
+},
+
+
+};

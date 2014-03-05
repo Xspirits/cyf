@@ -4,7 +4,8 @@ var bcrypt   = require('bcrypt-nodejs');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
-    idCool           : String,
+    idCool           : {type: String, index: true },
+    userRand         : {lat: Number,  lng: Number },
     local            : {
         email        : String,
         password     : String,
@@ -31,7 +32,7 @@ var userSchema = mongoose.Schema({
     },
     friends            : [ 
     {
-        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' }, 
+        idUser   : {type : mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, 
         idCool   : String,
         date     : {type: Date, default: Date.now}, 
         userName : String
@@ -39,7 +40,7 @@ var userSchema = mongoose.Schema({
     ],
     sentRequests : [ 
     {
-        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },     
+        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User', index: true },     
         idCool   : String,   
         date     : {type: Date, default: Date.now}, 
         userName : String
@@ -47,7 +48,7 @@ var userSchema = mongoose.Schema({
     ],
     pendingRequests : [ 
     {
-        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },    
+        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User', index: true },    
         idCool   : String,
         date     : {type: Date, default: Date.now}, 
         userName : String
@@ -55,12 +56,13 @@ var userSchema = mongoose.Schema({
     ],
     followers : [ 
     {
-        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },  
+        idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User', index: true },  
         idCool   : String,
         date     : {type: Date, default: Date.now}, 
         userName : String
     }
-    ]
+    ],
+    tribunal : [ { type : mongoose.Schema.Types.ObjectId, ref: 'Ongoing', index: true } ]
 
 });
 
@@ -74,5 +76,6 @@ userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
 };
 
+userSchema.index( { userRand: '2d' } );
 // create the model for users and expose it to our app
 module.exports = mongoose.model('User', userSchema);

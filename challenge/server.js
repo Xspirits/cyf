@@ -13,7 +13,8 @@ var moment   = require('moment');
 var configDB = require('./config/database.js'),
 challenge    = require('./config/challenge'),
 users        = require('./config/users'),
-relations    = require('./config/relations');
+relations    = require('./config/relations'),
+games        = require('./config/game');
 
 
 // configuration ===============================================================
@@ -40,7 +41,7 @@ app.configure(function() {
 });
 
 // routes ======================================================================
-require('./app/routes.js')(app, passport, moment, challenge, users, relations); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, passport, moment, challenge, users, relations,games); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
 app.listen(port);

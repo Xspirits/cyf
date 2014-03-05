@@ -1,4 +1,4 @@
-module.exports = function(app, passport, moment, challenge, users, relations) {
+module.exports = function(app, passport, moment, challenge, users, relations, games) {
 
 // normal routes ===============================================================
 
@@ -177,6 +177,7 @@ app.post('/validateChallenge', isLoggedIn, function(req, res) {
 
 	// CREATE CHALLENGE SECTION =========================
 	app.get('/newChallenge', isLoggedIn, function(req, res) {
+
 		res.render('newChallenge.ejs', {
 			currentUser : (req.isAuthenticated()) ? req.user : false,
 			challenge: false
@@ -300,6 +301,32 @@ app.get('/users', function(req, res) {
 // AJAX CALLS ==================================================================
 // =============================================================================
 
+		// Game autocomplete research
+		app.get('/search_game', function(req, res) {
+
+			var lookFor = req.query['term'];
+
+			games.regexFind(lookFor, function(returned){
+				res.send(returned.data, {'Content-Type': 'application/json'}, returned.go);
+			});
+		});
+
+
+
+		app.post('/sendTribunal', function(req, res){
+
+			var obj = {
+				idUser : req.user._id,
+				id : req.body.id
+			};
+
+			challenge.sendTribunal(obj, function( result ) {
+
+				res.send(true);
+				//TODO
+			})
+
+		});
 		// process the login form
 		app.post('/askFriend', function(req, res){
 			var idFriend = req.body.id,

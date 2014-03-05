@@ -9,11 +9,11 @@ var challengeSchema = mongoose.Schema({
 	game            : String,
 	durationH       : Number,
 	durationD       : Number,
-	game            : String,
+	game            : {type : String, ref: 'Game' },
 	creation     	: {type: Date, default: Date.now}, 
 	author          : {type : mongoose.Schema.Types.ObjectId, ref: 'User' },
 	value           : Number,
-	icon            : String,
+	icon            : {type: String, default: 'glyphicon glyphicon-certificate'},
 	rateNumber      : Number,
 	rateValue       : Number,
 	completedBy		: [mongoose.Schema.Types.ObjectId]

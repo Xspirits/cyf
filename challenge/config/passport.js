@@ -94,10 +94,16 @@ module.exports = function(passport) {
                         // create the user
                         var newUser            = new User();
 
-                        newUser.idCool         = uID;
-                        newUser.local.email    = email;
-                        newUser.local.password = newUser.generateHash(password);
-                        newUser.local.pseudo   = req.body.pseudo;
+                        newUser.idCool                = uID;
+                        newUser.userRand              = [Math.random(), 0];
+                        newUser.local.email           = email;
+                        newUser.local.password        = newUser.generateHash(password);
+                        newUser.local.friends         = [];
+                        newUser.local.pseudo          = req.body.pseudo;
+                        newUser.local.sentRequests    = [];
+                        newUser.local.pendingRequests = [];
+                        newUser.local.followers       = [];
+
 
                         newUser.save(function(err) {
                             if (err)

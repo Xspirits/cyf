@@ -272,3 +272,18 @@ input.gStyle:focus {
   to  { background-position: 40px 0; }
   from    { background-position: 0 0; }
 }
+
+
+/* JUI fixes */
+.ui-autocomplete {
+  background: white;
+  border-bottom: 1px solid #c4c4c4;
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+    background-color: #c4c4c4;
+    cursor: pointer;
+    background-image: none;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 0;
+}

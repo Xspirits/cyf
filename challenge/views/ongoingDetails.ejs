@@ -24,11 +24,11 @@
 					<% } %>
 					<p>
 
-						<a href='/u/<%= ongoing._idChallenger._id %>'>
+						<a href='/u/<%= ongoing._idChallenger.idCool %>'>
 							<%= ongoing._idChallenger.local.pseudo  %>
 						</a>
 						<span class="glyphicon glyphicon-arrow-right"></span>
-						<a href='/u/<%= ongoing._idChallenged._id %>'>
+						<a href='/u/<%= ongoing._idChallenged.idCool %>'>
 							<%= ongoing._idChallenged.local.pseudo  %>
 						</a>
 
@@ -54,7 +54,7 @@
 				</div>
 
 				<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() ) { %>
-				<div class="col-lg-4">
+				<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
 					<div class="well">
 						<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
 						<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
@@ -123,6 +123,9 @@
 
 		<script type="text/javascript">
 			$(function() {
+
+				openedCompletion();
+
 				$("#IDidIt").click( function(e){
 					e.preventDefault();
 					$('#processConfirm').modal('show');
@@ -178,6 +181,16 @@
 				}
 			});
 		});
+
+		var openedCompletion = function() {
+			var div = $('#mayIask'),
+			isItOpen = moment(div.attr('data-launchDate')).isBefore();
+
+			// The challenge hasn't started yet.
+			if(isItOpen === false) {
+				div.remove();
+			}
+		}
 </script>
 </body>
 </html>
