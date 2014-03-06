@@ -13,6 +13,12 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 			res.render('index.ejs');
 	});
 
+	// LOGOUT ==============================
+	app.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
+
 	// PROFILE SECTION =========================
 	app.get('/profile', isLoggedIn, function(req, res) {
 		res.render('profile.ejs', {
@@ -43,8 +49,39 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 			})
 		})
 	});
+// =============================================================================
+// TRIBUNAL   ==================================================================
+// =============================================================================
 
-	// CHALLENGE DETAILS SECTION =========================
+	// USER TRIBUNAL'S CASES SECTION =========================
+	app.get('/tribunal', isLoggedIn, function(req, res) {
+
+		challenge.userWaitingCases(req.user , function (data) {
+
+			// console.log(data);
+
+			res.render('tribunal.ejs', {
+				currentUser : req.user,
+				cases: data
+			});
+
+		});
+	});
+
+	// CASE DETAIL SECTION =========================
+	// @TODO
+	app.get('/t/:id', isLoggedIn, function(req, res) {
+
+		var id = req.params.id;
+
+
+	});	
+
+// =============================================================================
+// ONGOINGS   ==================================================================
+// =============================================================================
+
+	// ONGOING DETAILS SECTION =========================
 	app.get('/o/:id', function(req, res) {
 
 		var id = req.params.id;
@@ -62,6 +99,7 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 		});
 	});	
 
+	// USER'S ONGOINGS SECTION =========================
 	app.get('/ongoing', isLoggedIn, function(req, res) {
 
 		//get Ongoing challenges for the current user
@@ -76,7 +114,7 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 			for(var i = 0; i < data.length || function(){
 
 				res.render('ongoing.ejs', {
-					currentUser    : (req.isAuthenticated()) ? req.user : false,
+					currentUser    : req.user,
 					toValidate 	   : reqValidation,
 					upChallenges   : upcomingChall,
 					onChallenges   : ongoingChall,
@@ -116,48 +154,10 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 		});
 });
 
-app.post('/validateChallenge', isLoggedIn, function(req, res) {
-
-	var data = {
-		oId : req.body.id,
-		deny : req.body.deny
-	};
-
-	if(typeof data.deny == 'boolean' || data.deny instanceof Boolean) {
-		challenge.validateOngoing(data, function(done){	
-
-			res.send(done);
-		})
-
-	} else {
-		res.send(false, 'not a boolean');
-	}
-});
-
-	// PROFILE SECTION - USER Challenges =========================
-	app.get('/myChallenges', isLoggedIn, function(req, res) {
-
-		challenge.getUserChallenges(req.user._id, function( data ) {
-
-			res.render('myChallenges.ejs', {
-				currentUser : (req.isAuthenticated()) ? req.user : false,
-				user : req.user,
-				challenges : data
-			});
-
-		})
-	});
-
-	// LOGOUT ==============================
-	app.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
-
 // =============================================================================
 // CHALLENGES ==================================================================
 // =============================================================================
-// 
+
 	// CHALLENGE DETAILS SECTION =========================
 	app.get('/c/:id', function(req, res) {
 
@@ -179,7 +179,7 @@ app.post('/validateChallenge', isLoggedIn, function(req, res) {
 	app.get('/newChallenge', isLoggedIn, function(req, res) {
 
 		res.render('newChallenge.ejs', {
-			currentUser : (req.isAuthenticated()) ? req.user : false,
+			currentUser    : req.user,
 			challenge: false
 		});
 	});
@@ -192,6 +192,38 @@ app.post('/validateChallenge', isLoggedIn, function(req, res) {
 				currentUser : (req.isAuthenticated()) ? req.user : false,
 				challenge: done 
 			});
+		})
+	});
+
+	app.post('/validateChallenge', isLoggedIn, function(req, res) {
+
+		var data = {
+			oId : req.body.id,
+			deny : req.body.deny
+		};
+
+		if(typeof data.deny == 'boolean' || data.deny instanceof Boolean) {
+			challenge.validateOngoing(data, function(done){	
+
+				res.send(done);
+			})
+
+		} else {
+			res.send(false, 'not a boolean');
+		}
+	});
+
+	// PROFILE SECTION - USER Challenges =========================
+	app.get('/myChallenges', isLoggedIn, function(req, res) {
+
+		challenge.getUserChallenges(req.user._id, function( data ) {
+
+			res.render('myChallenges.ejs', {
+				currentUser    : req.user,
+				user : req.user,
+				challenges : data
+			});
+
 		})
 	});
 
@@ -221,7 +253,7 @@ app.post('/validateChallenge', isLoggedIn, function(req, res) {
 					var friends = {};
 				}
 				res.render('launchChallenge.ejs', {
-					currentUser : (req.isAuthenticated()) ? req.user : false,
+					currentUser    : req.user,
 					user: req.user,
 					userList: friends,
 					challenges: challenges
@@ -241,9 +273,8 @@ app.post('/validateChallenge', isLoggedIn, function(req, res) {
 		};
 		
 		challenge.launch(data, function( result ) {
-
 			res.send(result);
-			//TODO
+			// @TODO
 		})
 
 	});
@@ -261,7 +292,6 @@ app.post('/validateChallenge', isLoggedIn, function(req, res) {
 		};
 		
 		challenge.requestValidation(data, function( result ) {
-
 			res.send(result);
 			//TODO
 		})
@@ -279,7 +309,7 @@ app.get('/users', function(req, res) {
 			currentUser : (req.isAuthenticated()) ? req.user : false,
 			users: returned
 		});
-	})
+	});
 });
 
 	/*
@@ -312,8 +342,7 @@ app.get('/users', function(req, res) {
 		});
 
 
-
-		app.post('/sendTribunal', function(req, res){
+		app.post('/sendTribunal', isLoggedIn, function(req, res){
 
 			var obj = {
 				idUser : req.user._id,
@@ -327,8 +356,28 @@ app.get('/users', function(req, res) {
 			})
 
 		});
+
+		//A judge give his vote regarding to an open Tribunal's case
+		app.post('/voteCase', isLoggedIn, function(req, res){
+
+			var obj = {
+				id : req.body.id, // idCool of the Ongoing
+				idUser : req.user._id,
+				answer : req.body.answer, //Boolean false to deny, true to validate
+			};
+
+			challenge.voteCase(obj, function( result ) {
+
+				res.send(true);
+				//Loop and check if all vote have been processed. then close the case.
+			})
+
+		});
+
+
+
 		// process the login form
-		app.post('/askFriend', function(req, res){
+		app.post('/askFriend', isLoggedIn, function(req, res){
 			var idFriend = req.body.id,
 			idCoolFriend = req.body.idCool,
 			nameFriend = req.body.pseudo;
@@ -354,7 +403,7 @@ app.get('/users', function(req, res) {
 
 		});
 
-		app.post('/confirmFriend', function(req, res){
+		app.post('/confirmFriend', isLoggedIn, function(req, res){
 
 			var idFriend = req.body.id,
 			nameFriend = req.body.pseudo;
@@ -380,7 +429,7 @@ app.get('/users', function(req, res) {
 		});
 
 
-		app.post('/cancelFriend', function(req, res){
+		app.post('/cancelFriend', isLoggedIn, function(req, res){
 
 			var idFriend = req.body.id,
 			nameFriend = req.body.pseudo;
@@ -405,8 +454,7 @@ app.get('/users', function(req, res) {
 		});
 
 
-
-		app.post('/denyFriend', function(req, res) {
+		app.post('/denyFriend', isLoggedIn, function(req, res) {
 
 			var idFriend = req.body.id,
 			nameFriend = req.body.pseudo;
@@ -430,7 +478,7 @@ app.get('/users', function(req, res) {
 			})
 		});
 
-		app.post('/acceptChallenge', function(req, res) {
+		app.post('/acceptChallenge', isLoggedIn, function(req, res) {
 
 			var obj = {
 				id : req.body.id,
@@ -447,7 +495,7 @@ app.get('/users', function(req, res) {
 				//TODO
 			})
 		});
-		app.post('/denyChallenge', function(req, res) {
+		app.post('/denyChallenge', isLoggedIn, function(req, res) {
 
 			var obj = {
 				id : req.body.id,

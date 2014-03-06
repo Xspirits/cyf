@@ -47,7 +47,9 @@ module.exports = {
 	 	User
 	 	.update(
 	 		{ _id: { $in: query } },
-	 		{ $addToSet: { tribunal : id} })
+	 		{ $addToSet: { tribunal : id} },
+	 		{ multi: true }
+	 		)
 	 	.exec(function (err, randomUser) {
 
 	 		if(err)
@@ -58,7 +60,59 @@ module.exports = {
 	 	});
 
 	 },
+	 /**
+	  * Delete the ongoing Case and add an item in the tribunalHistoric
+	  * @param  {[type]}   data [description]
+	  * @param  {Function} done [description]
+	  * @return {[type]}        [description]
+	  */
+	  votedOnCase : function(data, done) {
+	  	var query = []
+	  	currentDate = new Date(),
+	  	idSplice = data.id;
 
+	  	User
+	  	.findByIdAndUpdate(data.idUser,
+	  		{ $push : 
+	  			{ tribunalHistoric : {
+	  				idCase: data.id,
+	  				answer: data.answer,
+	  				voteDate: currentDate
+	  			}} 
+	  		}
+	  		)
+	  	.exec(function (err, doc) {
+
+	  		if(err)
+	  			throw err;
+
+	  		console.log(doc);
+
+	  		var idx = doc.tribunal ? doc.tribunal.indexOf(idSplice) : -1;
+            // is it valid?
+            if (idx !== -1) {
+
+                // remove it from the array.
+                doc.tribunal.splice(idx, 1);
+
+                // save the doc
+                doc.save(function(err, doc) {
+                	if (err) {
+                		throw err;
+                	} else {
+
+                		return done(true);
+                	}
+                });
+                // stop here, otherwise 404
+                return;
+            }
+            throw 'wrong whilst splicing';
+
+
+        });
+
+	  },
 	/**
 	 * Return the list of existing users
 	 * @param  {String} arg    [(optional) parameters]

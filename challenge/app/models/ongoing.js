@@ -22,11 +22,12 @@ var ongoingSchema = mongoose.Schema({
 	tribunalVote	: [{
 		_id 	 : false,
 		idUser   : { type : mongoose.Schema.Types.ObjectId, index: true, ref: 'User' },
+		voteDate : Date,
 		hasVoted : {type: Boolean, default: false},
 		answer   : {type: Boolean, default: false},
 	}]
 
 });
- 
+
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Ongoing', ongoingSchema);

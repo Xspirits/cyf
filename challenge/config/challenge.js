@@ -543,42 +543,64 @@ module.exports = {
 
 		  },
 
-		 /**
-		  * Send an Ongoing event (actually closed) to the tribunal
-		  * @param  {Object}   data [oId]
-		  * @param  {Function} done [description]
-		  * @return {[type]}        [description]
-		  */
-		  sendTribunal : function(data, done ) {
+// =============================================================================
+// TRIBUNAL CASES     ==========================================================
+// =============================================================================
 
-		  	Ongoing
-		  	.findById(data.id)
-		  	.exec(function(err, ongoing) {
+	/**
+	 * [userWaitingCases description]
+	 * @param  {[type]}   user [description]
+	 * @param  {Function} done [description]
+	 * @return {[type]}        [description]
+	 */
+	 userWaitingCases : function(user,done) {
 
-				// if there are any errors, return the error
-				if (err)
-					throw err;
+	 	var loadCases = user.tribunal;
 
-				//Does this ongoing already has an opened case? 
-				//if yes, we do nothing.
-				if(ongoing.tribunal === false) {
-				// console.log(ongoing);
-				//Is the person who ask the same as the challenged ?
-				if( data.idUser.toString() === ongoing._idChallenged.toString()) {
+	 	console.log(loadCases);
 
-				// tribunal 		: {type: Boolean, default: false},
-				// tribunalVote	: [{
-					/*idUser   : { type : mongoose.Schema.Types.ObjectId, ref: 'User' },
-					hasVoted : {type: Boolean, default: false},
-					answer   : {type: Boolean, default: false},
-				}]*/
+	 	Ongoing
+	 	.find({ _id: { $in: loadCases }})
+	 	.populate('_idChallenge _idChallenger _idChallenged')
+	 	.exec( function(err, cases) {
+
+	 		console.log(cases);
+	 		done(cases);
+	 	});
+
+	 },
+
+	/**
+	 * Send an Ongoing event (actually closed) to the tribunal
+	 * @param  {Object}   data [oId]
+	 * @param  {Function} done [description]
+	 * @return {[type]}        [description]
+	 **/
+	 sendTribunal : function(data,done) {
+
+	 	Ongoing
+	 	.findById(data.id)
+	 	.exec(function(err, ongoing) {
+
+			// if there are any errors, return the error
+			if (err)
+				throw err;
+
+			//Does this ongoing already has an opened case? 
+			//if yes, we do nothing.
+			if(ongoing.tribunal === false) {
+
+			//Is the person who ask the same as the challenged ?
+			if( data.idUser.toString() === ongoing._idChallenged.toString()) {
+
+
 				var exclude = {
 					one : ongoing._idChallenger,
 					two : ongoing._idChallenged
 				};
 
-				console.log('Going to exclude and pick');
-				console.log(exclude);
+				// console.log('Going to exclude and pick');
+				// console.log(exclude);
 
 				users.pickTribunalUsers(exclude, 3, function(pickedUser) {
 
@@ -601,7 +623,7 @@ module.exports = {
 							ongoing.tribunal = true;
 							ongoing.tribunalVote = judges;
 
-							console.log(ongoing);
+							// console.log(ongoing);
 							ongoing.save(function(err, result) {
 								if (err)
 									throw err;
@@ -609,23 +631,52 @@ module.exports = {
 
 								return done(true);
 							});		
-
 						} else
 						throw 'something went wrong here';
 					});
 				});
-
-			} else {
-				done(false, "Case already taken in account");
-
-			}
-		} else {
-			done(false, "not the challenged");
-		}
-
+			} else 
+			done(false, "Case already taken in account");
+		} else 
+		done(false, "not the challenged");
 	});
-
 },
 
+	/**
+	 * Register a vote on a tribunal case given by an user
+	 * @param  {Object}   data [id (String; idCool of an Ongoing), idUser(ObjectId), answer(Boolean)]
+	 * @param  {Function} done [callback]
+	 * @return {Boolean}       
+	 */
+	 voteCase : function (data, done) {
 
-};
+	 	Ongoing
+	 	.findOneAndUpdate(
+	 		{idCool : data.id, 'tribunalVote.idUser' : data.idUser},
+	 		{'$set':  {
+	 			'tribunalVote.$.answer': data.answer ,
+	 			'tribunalVote.$.hasVoted': true,
+	 			'tribunalVote.$.voteDate': new Date
+	 		}}
+	 		)
+	 	.exec( function( err, req ) {
+
+	 		if (err)
+	 			throw err;
+
+	 		console.log(req);
+	 		var userData = {
+	 			id : req._id,
+	 			idUser :data.idUser,
+	 			answer : data.answer
+	 		};
+	 		console.log(userData);
+
+	 		users.votedOnCase(userData, function( ret ){
+
+	 			return done(ret);
+
+	 		});
+	 	});
+	 },
+	};

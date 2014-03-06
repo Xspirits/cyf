@@ -45,4 +45,4 @@ require('./app/routes.js')(app, passport, moment, challenge, users, relations,ga
 
 // launch ======================================================================
 app.listen(port);
-console.log('The magic happens on port ' + port);
+console.log('I challenge you to watch on port ' + port);

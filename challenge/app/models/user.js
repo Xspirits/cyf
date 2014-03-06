@@ -62,7 +62,14 @@ var userSchema = mongoose.Schema({
         userName : String
     }
     ],
-    tribunal : [ { type : mongoose.Schema.Types.ObjectId, ref: 'Ongoing', index: true } ]
+    tribunal : [ { type : mongoose.Schema.Types.ObjectId, ref: 'Ongoing', index: true } ],
+    tribunalHistoric : [ 
+    {
+        idCase   : {type : mongoose.Schema.Types.ObjectId, ref: 'Ongoing'},
+        answer   : {type: Boolean, default: false},
+        voteDate : Date
+    }
+    ]
 
 });
 

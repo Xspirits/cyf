@@ -94,17 +94,24 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							Time to make a decision: 
-							<button type="button" class="btn btn-default btn-punch" data-dismiss="modal">not now</button>
-							<div class="btn-group" id="decision">
-								<button type="button" data-tarId="" class="btn btn-danger btn-punch denying">
-									<span class="glyphicon glyphicon-remove"></span>
-									Deny
-								</button>
-								<button type="button" data-tarId="" class="btn btn-success btn-punch validating">
-									<span class="glyphicon glyphicon-ok"></span>
-									validate
-								</button>
+							
+							<button type="button" class="btn btn-default btn-punch pull-left" data-dismiss="modal">not now</button>	
+							<div class="btn-group" id="decision" data-tarId="">
+								Time to make a decision: 
+								<div id="firstChoice">
+									<button type="button" class="btn btn-danger btn-punch denying">
+										<span class="glyphicon glyphicon-remove"></span>
+										Deny
+									</button>
+									<button type="button"class="btn btn-success btn-punch validating">
+										<span class="glyphicon glyphicon-ok"></span>
+										validate
+									</button>
+								</div>
+								<div id="confirmationReq" class="hidden">
+									<button type="button" class="hidden btn btn-danger btn-punch denying"> Do you confirm you vote to <strong>Invalidate</strong> this case?</button>
+									<button type="button" class="hidden btn btn-success btn-punch validating"> Do you confirm you vote to <strong>validate</strong> this case?</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -355,7 +362,7 @@
 								<span class="pull-left panel-title">
 
 									<% if(endChallenges[i].tribunal === true) { %>
-									<span class="glyphicon glyphicon-stats"></span>
+									<i class="fa fa-exclamation"></i>
 									<strong>Case Under Review</strong> 
 
 									<% } else { %>
@@ -420,135 +427,152 @@
 		<script type="text/javascript">
 
 			$(function() {
-				var confirmCounter = 0;
+				var confirmCounter = 0,
+				originalHTML ='<button type="button" class="btn btn-danger btn-punch denying"><span class="glyphicon glyphicon-remove"></span>Deny</button><button type="button" class="btn btn-success btn-punch validating"><span class="glyphicon glyphicon-ok"></span>validate</button>';
 
 				tribunalRequest();
 				updateUp();
 				updateEnd();
 				readability();
 
-				$('.denying,.validating').click(function(e){
-					var _this = $(this),
-					isDeny = ((_this.hasClass('denying')) ? false : true),
-					replaceHTML = '<span class="glyphicon glyphicon-chevron-right"></span> Confirm? <span class="glyphicon glyphicon-chevron-left"></span>';
-					if(confirmCounter === 0) {
-						++confirmCounter;
+				$('#validation').on('hidden.bs.modal', function (e) {
+					e.preventDefault();
+					confirmCounter = 0;
+					console.log(confirmCounter);
 
-						console.log(confirmCounter);
+					$('#firstChoice').removeClass('hidden');
+					$('#confirmationReq button:first-child').addClass('hidden');
+					$('#confirmationReq button:nth-child(2)').addClass('hidden');
+					$('#confirmationReq').addClass('hidden');
 
-						$('.denying,.validating').fadeOut(800, function(){
-							_this.html(replaceHTML).fadeIn(800);
-						});
-					} else if (confirmCounter === 1) {
+				});
 
-						console.log(confirmCounter);
+				$('#firstChoice > button').click(function(e){
+					e.preventDefault();
 
-						var target = {};
+					var _this   = $(this),
+					isDeny      = ((_this.hasClass('denying')) ? true : false);		
 
-						target.id = _this.attr('data-tarId');
-						target.deny = isDeny;
+					$('#firstChoice').addClass('hidden', function(){
+						if(isDeny) 
+							$('#confirmationReq button:first-child').removeClass('hidden');
+						else 
+							$('#confirmationReq button:nth-child(2)').removeClass('hidden');
+						$('#confirmationReq').removeClass('hidden');
+					});
+				});
 
-						console.log(target);
+				$('#confirmationReq > button').click(function(e){
+					e.preventDefault();
 
-						$.ajax({
-							type: 'POST',
-							data: JSON.stringify(target),
-							contentType: 'application/json',
-							url: 'http://localhost:8080/validateChallenge',						
-							success: function(data) {
-								console.log(data);
+					var _this   = $(this),
+					tarId       = $('#decision').attr('data-tarId'),
+					isDeny      = ((_this.hasClass('denying')) ? true : false);			
 
-								if(data === true) {
+					var target = {};
 
-									$('#validation').modal('hide');
-									$('#validation').on('hidden.bs.modal', function (e) {
-										e.preventDefault();
+					target.id = tarId;
+					target.deny = (isDeny)? false : true; // Must reverse the value
 
-										$('#successModal').modal('show');
+					console.log(target);
 
-										window.setTimeout(function(){
-											window.location.href = "./profile";
-										}, 5000);
-									});
-								}
+					$.ajax({
+						type: 'POST',
+						data: JSON.stringify(target),
+						contentType: 'application/json',
+						url: 'http://localhost:8080/validateChallenge',						
+						success: function(data) {
+							console.log(data);
+
+							if(data === true) {
+								$('#validation').modal('hide');
+								$('#validation').on('hidden.bs.modal', function (e) {
+									e.preventDefault();
+									resetButtons();
+									console.log('coucou');
+								});
 							}
-						});
-					}
+						}
+					});
+				});
+				$('.sendTribunal').click(function (e) {
+					e.preventDefault();
+					var target = {}
+					_this = $(this);
+					target.id = $(this).attr('data-oId');
+
+					$.ajax({
+						type: 'POST',
+						data: JSON.stringify(target),
+						contentType: 'application/json',
+						url: 'http://localhost:8080/sendTribunal',						
+						success: function(data) {
+							console.log(data);
+
+							if(data === true) {
+
+								_this
+								.removeClass('btn-warning')
+								.addClass('btn-danger disabled');
+								_this.text('Case sent to the tribunal!');
+
+								$('#reqTribu').modal('show');
+							}
+						}
+					})
 				});
 
 
-$('.sendTribunal').click(function (e) {
-	e.preventDefault();
-	var target = {}
-	_this = $(this);
-	target.id = $(this).attr('data-oId');
+				$('.validationBox').click(function (e) {
+					e.preventDefault();
 
-	$.ajax({
-		type: 'POST',
-		data: JSON.stringify(target),
-		contentType: 'application/json',
-		url: 'http://localhost:8080/sendTribunal',						
-		success: function(data) {
-			console.log(data);
+					idBox = $(this).attr('id');
 
-			if(data === true) {
+					populateValidation(idBox, function() {
+						$('#validation').modal('show');
 
-				_this
-				.removeClass('btn-warning')
-				.addClass('btn-danger disabled');
-				_this.text('Case sent to the tribunal!');
+					});
+				});
 
-				$('#reqTribu').modal('show');
-			}
-		}
-	})
-});
+				$('.detailsBox').click(function (e) {
+					e.preventDefault();
 
+					idBox = $(this).attr('id');
 
-$('.validationBox').click(function (e) {
-	e.preventDefault();
+					populateDetails(idBox, function() {
+						$('#details').modal('show');
+					});
 
-	idBox = $(this).attr('id');
+				});
 
-	populateValidation(idBox, function() {
-		$('#validation').modal('show');
+				Ladda.bind( '.ladda-button', {
+					callback: function( instance ) {
+						var progress = 0;
+						var interval = setInterval( function() {
+							progress = Math.min( progress + Math.random() * 0.12, 1 );
+							instance.setProgress( progress );
 
-	});
-});
+							if( progress === 1 ) {
+								instance.stop();
+								clearInterval( interval );
+							}
+						}, 35 );
+					}
+				});
+				setInterval(function(){
+					updateUp();
+					updateEnd();
+					tribunalRequest();
+				},2200);
 
-$('.detailsBox').click(function (e) {
-	e.preventDefault();
+			});
+var resetButtons = function() {
 
-	idBox = $(this).attr('id');
-
-	populateDetails(idBox, function() {
-		$('#details').modal('show');
-	});
-
-});
-
-Ladda.bind( '.ladda-button', {
-	callback: function( instance ) {
-		var progress = 0;
-		var interval = setInterval( function() {
-			progress = Math.min( progress + Math.random() * 0.12, 1 );
-			instance.setProgress( progress );
-
-			if( progress === 1 ) {
-				instance.stop();
-				clearInterval( interval );
-			}
-		}, 35 );
-	}
-});
-setInterval(function(){
-	updateUp();
-	updateEnd();
-	tribunalRequest();
-},2200);
-
-});
-
+	$('#firstChoice').removeClass('hidden');
+	$('#confirmationReq button:first-child').addClass('hidden');
+	$('#confirmationReq button:nth-child(2)').addClass('hidden');
+	$('#confirmationReq').addClass('hidden');
+};
 var populateDetails = function( id, cb ) {
 	var dP1,dP2,dPc,dDs,dDe,diff,dChallengedId,dChallenged,dDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
 	_this = $('#'+id);
@@ -571,7 +595,6 @@ var populateDetails = function( id, cb ) {
 	diff = moment(dDe).from(dDs, true);
 	diffMax = moment(dDeadLine).from(dDs, true);
 
-	// Calculate the speed %
 	sSpeed = moment(dDs).unix();
 	cSpeed = moment(dDe).unix();
 	dSpeed = moment(dDeadLine).unix();
@@ -601,6 +624,7 @@ var populateDetails = function( id, cb ) {
 	cb();
 
 };
+
 var populateValidation = function( id, cb ) {
 	var vP1,vP2,vPc,vDs,vDe,diff,vChallengedId,vChallenged,vDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
 	_this = $('#'+id);
@@ -641,6 +665,7 @@ var populateValidation = function( id, cb ) {
 	$('#vDl').text(_vDeadLine);
 	$('#vDiff').text(diff);
 
+	$('#decision').attr('data-tarId', id);
 
 	$('#vPg')
 	.attr('aria-valuenow', sRate )
