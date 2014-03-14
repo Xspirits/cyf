@@ -29,9 +29,6 @@
 	$(function() {
 
 		var isMobile = ($(window).width() < 800) ? true : false;
-
-
-		// Identicons. md5 hash browser-side + identicon making
 		
 		$('.identicon').each( function(){
 			var _this = $(this);
@@ -51,31 +48,6 @@
 		NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
 		NProgress.set( myLevel );
 
-		//socket io client
-		// var socket = io.connect('http://challenge-friends.herokuapp.com/');
-
-		//on connetion, updates connection state and sends subscribe request
-		// socket.on('connect', function(data){
-		// 	setStatus('connected');
-		// 	// socket.emit('subscribe', {channel:'notif'});
-		// });
-
-		//when reconnection is attempted, updates status 
-		// socket.on('reconnecting', function(data){
-		// 	setStatus('reconnecting');
-		// });
-
-		//on new message adds a new message to display
-		// socket.on('message', function (data) {
-		// 	var msg = "";
-		// 	if (data.channel) {
-		// 		msg += 'Channel:' + data.channel + ', ' + data.text; 
-		// 	} else {
-		// 		msg = data.text;
-		// 	}
-		// 	notif(msg);
-		// });
-
 		// NOTIFICATIONS =========================
 		alertify.set({ delay : 12000 });
 		var queue = [];
@@ -83,9 +55,12 @@
 		<% if (currentUser) { 
 
 			if (currentUser.notifications) { 
-				var notif = currentUser.notifications;
-				var limit = 9;
+
+				var notif = currentUser.notifications
+				, limit = 9;
+
 				for (var i = 0; i < notif.length; i++) {
+
 					if(notif[i].isSeen === false) { 
 						--limit;
 
@@ -96,31 +71,42 @@
 								message : '<%= notif[i].title %>'
 							}
 							hasCSuccess.push(obj_<%= i %>);
-							<% } %>
-							queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a><a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>', '<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>]);
-							console.log(<%= i %> + ' ' + <%= limit %>)
-							<% if(i == notif.length || limit == 0){ %> 
-								notif(queue.length -1); 
-								challengeAlert(); 
-								<% }
-							}
+							<%
+						} %>
+
+						queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a><a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>','<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>]);
+
+						console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>);
+						<%
+						if(limit == 0){ %> 
+							notif(queue.length -1); 
+							challengeAlert(); 
+							<% 
 						}
 					} 
-				} %>
+					if(i+1 == notif.length ) { %> 
+						console.log('done')
+						notif(queue.length - 1); 
+						challengeAlert(); 
+						<% 
+					}
+				}
+			} 
+		} %>
 
-				readability();
+		readability();
 
-				setTimeout(function(){
-					$('.odometer').each(function(){
-						var number = Math.floor(parseInt($(this).attr('data-number')));
+		setTimeout(function(){
+			$('.odometer').each(function(){
+				var number = Math.floor(parseInt($(this).attr('data-number')));
 
-						$(this).html(number);
-					});
-				}, 1000);
+				$(this).html(number);
+			});
+		}, 1000);
 
-				$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-					animateProgress();
-				});
+		$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+			animateProgress();
+		});
 
 			// Progress animation
 			function animateProgress() {
@@ -180,15 +166,15 @@
 
 			}
 			function notif (i) {          
-				//setTimeout(function () {  
-				//	console.log(i) 
-				//	console.log(queue[i]) 
-				//	sendNotif(queue[i][0],queue[i][1],queue[i][2])
-//
-				//	if (--i) notif(i);      			
-				//}, 220)
-}
-});
+				setTimeout(function () {  
+					console.log(i) 
+					console.log(queue[i]) 
+					sendNotif(queue[i][0],queue[i][1],queue[i][2])
+
+					if (--i) notif(i);      			
+				}, 220)
+			}
+		});
 
 var readability = function(){
 	$('.dateReadability').each( function () {
