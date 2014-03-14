@@ -52,7 +52,7 @@
 		NProgress.set( myLevel );
 
 		//socket io client
-		var socket = io.connect('http://challenge-friends.herokuapp.com/');
+		// var socket = io.connect('http://challenge-friends.herokuapp.com/');
 
 		//on connetion, updates connection state and sends subscribe request
 		// socket.on('connect', function(data){
@@ -66,15 +66,15 @@
 		// });
 
 		//on new message adds a new message to display
-		socket.on('message', function (data) {
-			var msg = "";
-			if (data.channel) {
-				msg += 'Channel:' + data.channel + ', ' + data.text; 
-			} else {
-				msg = data.text;
-			}
-			notif(msg);
-		});
+		// socket.on('message', function (data) {
+		// 	var msg = "";
+		// 	if (data.channel) {
+		// 		msg += 'Channel:' + data.channel + ', ' + data.text; 
+		// 	} else {
+		// 		msg = data.text;
+		// 	}
+		// 	notif(msg);
+		// });
 
 		// NOTIFICATIONS =========================
 		alertify.set({ delay : 12000 });

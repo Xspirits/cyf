@@ -7,7 +7,7 @@ var express  = require('express')
 
 var app      = express();
 var server   = http.createServer(app);
-var io       = require('socket.io').listen(server);
+// var io       = require('socket.io').listen(server);
 var redis    = require('redis');
 
 var port     = process.env.PORT || 8080
@@ -89,21 +89,21 @@ server.listen(port);
  * socket io client, which listens for new websocket connection
  * and then handles various requests
  */
- io.sockets.on('connection', function (socket) {
+ // io.sockets.on('connection', function (socket) {
 
   //on connect send a welcome message
 
   //on subscription request joins specified room
   //later messages are broadcasted on the rooms
-  socket.on('subscribe', function (data) {
-  	socket.join(data.channel);
-  });
+  // socket.on('subscribe', function (data) {
+  // 	socket.join(data.channel);
+  // });
 
-  socket.on('disconnect', function () {
-  	// users.logout();
-  	// io.sockets.emit('user disconnected');
-  });
-});
+//   socket.on('disconnect', function () {
+//   	// users.logout();
+//   	// io.sockets.emit('user disconnected');
+//   });
+// });
 
 /**
  * subscribe to redis channel when client in ready
