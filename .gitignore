@@ -57,6 +57,7 @@ lib-cov
 pids
 logs
 results
+sass
 
 config/secretDatabase.js
 config/secretAuth.js
@@ -73,7 +74,7 @@ Thumbs.db
 
 # Generated CSS output
 #######################
-public/stylesheets/*.css
+#public/stylesheets/*.css
 
 # Package dependencies
 ######################
