@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+<head>
+	<meta property="og:title" content="<%= currentUser.local.pseudo %>, challenger level <%= currentUser.level %>" />
+	<meta property="og:type" content="profile:<%= currentUser.local.idCool %>" />
+	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
+	<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" />
+	<% include statics/headers %>
+	<title>Settings</title>
+</head>
+<body>
+	<% include statics/navTop %>
+	<div class="canvas">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 ">
+					<div class="well">
+						<h3><%= currentUser.local.pseudo %> <small>(id: <%= currentUser.idCool %> )</small></h3> 
+						<h6 class="text-right">
+							You are level <%= currentUser.level %> and currently have <%= currentUser.friends.length %> friends
+						</h6>
+
+					</div>
+				</div>
+				<div class="col-md-12 col-lg-12">
+					<div class="panel settingsTab">
+						<div class="tabbable tabs-left clearfix">
+							<ul id="myTab1" class="nav nav-tabs nav-justified">
+								<li class="active"><a href="#sharingSocial" data-toggle="tab">Sharing</a></li>
+								<li><a href="#connectNetworks" data-toggle="tab">Connect accounts</a></li>
+								<li><a href="#linkGames" data-toggle="tab">Games accounts</a></li>
+
+							</ul>
+							<div id="myTabContent" class="tab-content">
+								<div class="tab-pane fade active in " id="sharingSocial">
+									<div class="row">
+										<div class="col-md-6">
+											<p>
+												Share on facebook automatically												
+											</p>
+										</div>
+										<div class="col-md-2">
+											<p>
+												<input type="checkbox" class="pull-right" id="facebook" name="autosharefacebook" <%= (currentUser.share.facebook) ? 'checked' : '' %> data-on-color="info" data-off-color="default" data-size="small" data-label-text="<span class='fa fa-facebook'></span>" >										
+											</p>
+										</div>
+
+										<div class="col-md-6">
+											<p>
+												Share on twitter automatically										
+											</p>
+										</div>
+										<div class="col-md-2">
+											<p>
+												<input type="checkbox" class="pull-right" id="twitter" name="autosharetwitter" <%= (currentUser.share.twitter) ? 'checked' : '' %> data-on-color="info" data-off-color="default" data-size="small" data-label-text="<span class='fa fa-twitter'></span>">										
+											</p>
+										</div>
+										<div class="col-md-12">
+											<p>
+												<small><strong>Note:</strong> we will only tweet when you validate a challenge.</small>					
+												<small><strong>Exemple:</strong> "I just completed a challenge (//Link//) on League of Legend! Join me now @cyf_app #challenge."</small>												
+											</p>
+
+											
+										</div>
+									</div>
+								</div>
+
+								<div class="tab-pane fade in" id="connectNetworks">
+									<div class="row">
+										<div class="col-md-6 col-xs-6 col-lg-5">
+											<h4><i class="fa fa-facebook"></i> Facebook</h4>
+											<% if (currentUser.facebook.token) { %>
+											<span class="linked label label-default">
+												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.facebook.name %>
+												<a href="/unlink/facebook" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
+											</span>
+											<% } else { %>
+											<a href="/connect/facebook" class="label label-primary">
+												<i class="fa fa-facebook"></i>
+												Connect facebook
+											</a>
+											<% } %>
+										</div>
+										<div class="col-md-6 col-xs-6 col-lg-5">
+											<h4><i class="fa fa-google-plus"></i> Google+</h4>
+											<% if (currentUser.google.token) { %>
+											<span class="linked label label-default">
+												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.google.name %>
+												<a href="/unlink/google" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
+											</span>
+											<% } else { %>
+											<a href="/connect/google" class="label label-danger">
+												<i class="fa fa-google-plus"></i>
+												Connect google+
+											</a>
+											<% } %>
+										</div>
+
+										<div class="col-md-6 col-xs-6 col-lg-5">
+											<h4><i class="fa fa-twitter"></i> Twitter</h4>
+											<% if (currentUser.twitter.token) { %>
+											<span class="linked label label-default">
+												<i class="fa fa-twitter"></i> <i class="fa fa-check-square meany"></i> Connected as <%= currentUser.twitter.username %>
+												<a href="/unlink/twitter" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
+											</span>
+											<% } else { %>
+											<a href="/connect/twitter" class="label label-info">
+												<i class="fa fa-twitter"></i>
+												Connect Twitter
+											</a>
+											<% } %>
+										</div>
+									</div>
+								</div>
+
+								<div class="tab-pane fade in" id="linkGames">
+									<div class="row">
+										<div class="col-md-6 col-xs-6 col-lg-5">
+											<h4><i class="fa fa-link"></i> League of Legend</h4>
+											<% if (currentUser.leagueoflegend.idProfile) { %>
+											<span class="linked label label-success">
+												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.leagueoflegend.name %>
+												<a href="/unlink/game_lol" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
+											</span>
+											<h4><%= currentUser.leagueoflegend.name %> - Summoner level <%= currentUser.leagueoflegend.summonerLevel %></h4>
+											<% } else { %>
+											<div class="row" id="linkingLoL">
+												<div class="col-xs-4">
+													<select name="region" id="lol_region" class="form-control">
+														<option value="na">na</option>
+														<option value="br">br</option>
+														<option value="euw">euw</option>
+														<option value="eune">eune</option>
+														<option value="lan">lan</option>
+														<option value="las">las</option>
+														<option value="oce">oce</option>											
+													</select>
+												</div>
+												<div class="col-xs-4">
+													<input type="text" class="form-control" id="lol_name" placeholder="Summoner name">
+												</div>
+												<div class="col-xs-4">
+													<button type="button" id="lol_link" class="btn btn-default">Link!</button>
+
+												</div>
+											</div>
+											<% } %>
+										</div>
+									</div>
+								</div>
+
+
+
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% include statics/footers %>
+	<script type="text/javascript">
+
+		$(function() {
+
+			$(".settingsTab input[type=checkbox]").bootstrapSwitch();
+
+			$('.settingsTab input').on('switchChange', function (e, data) {
+				var $element = $(data.el),
+				value = data.value;
+
+				console.log($(this).attr('id'), value);
+				var target = {};
+				target.target = $(this).attr('id');
+				target.value = value; 
+
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(target),
+					contentType: 'application/json',
+					url: './updateSettings',						
+					success: function(data) {
+						console.log('done !');
+					}
+				});
+			});
+
+			$('#lol_link').click(function(e) {
+				e.preventDefault();
+
+				var target          = {};
+				target.region       = $('#lol_region').val();
+				target.summonerName = $('#lol_name').val(); 
+
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(target),
+					contentType: 'application/json',
+					url: './linkLol',						
+					success: function(data) {
+						var newContent = '<div class="alert alert-success"><i class="fa facheck"></i><strong>Success!</strong> Your account has been linked!</div>'
+						$('#linkingLoL')
+						.addClass('animated flipOutX')
+						.html(newContent)
+						.addClass('flipInX')
+						.removeClass('flipOutX');
+					}
+				});
+			});
+
+			var meNot = false;
+			$('.linked').hover(function(){
+				var _this = $(this);
+				_this.children('a').removeClass('hidden');
+
+			}, function(){
+				var _this = $(this);
+				_this.children('a').addClass('hidden');
+			});
+		});
+
+</script>
+</body>
+</html>

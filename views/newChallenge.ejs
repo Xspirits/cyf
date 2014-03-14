@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="canvas">
+		<div class="container">
+
+			<div class="page-header text-center">
+				<h1>Submit a new challenge</h1>
+			</div>
+
+			<div class="row">
+
+				<% if (challenge.title) { %>
+				<div class="alert alert-success">challenge Created successfully!</div>
+				<dl class="dl-horizontal">
+					<dt>Title</dt>
+					<dd><%= challenge.title %></dd>
+					<dt>Description</dt>
+					<dd><%= challenge.description %></dd>
+					<dt>Duration</dt>
+					<dd><%= challenge.durationD %> day(s) and <%= challenge.durationH %> hours max</dd>
+				</dl>
+				<% } else { %>
+				<div class="row">
+
+					<div class="form-group col-md-8 col-md-offset-2">
+						<form action="/newChallenge" method="post">
+							<div class="form-group col-md-6">
+								<label>Title</label>
+								<input type="text" class="form-control" name="title">
+							</div>
+							<div class="form-group col-md-6">
+								<label>Pick a Game</label>
+								<input id="gamePicker" type="text" class="form-control" name="game" autocomplete="off"  >
+							</div>
+							<div class="form-group col-md-6">
+								<label>Description</label>
+								<textarea class="form-control" rows="6" name="description"></textarea>
+							</div>
+
+
+
+							<div class="form-group col-md-6">
+								<div class="row">
+									<div class="col-md-12">
+										<label>Define a time limit</label>
+										<input id="durationH" type="text" value="0" name="durationH" class="form-control">
+
+										<input id="durationD" type="text" value="0" name="durationD" class="form-control">
+									</div>
+									<div class="col-md-12">
+										<hr>
+										<button type="submit" class="btn btn-punch btn-warning btn-block">Submit this new challenge</button>
+									</div>
+
+								</div>
+							</div>
+
+
+						</form>
+						<% } %>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<% include statics/footers %>
+
+		<script src="./js/bloodhound.js"></script>
+		<script src="./js/typeahead.js"></script>
+
+		<script type="text/javascript">
+
+			$(function(){
+
+				$("#gamePicker").autocomplete({
+					source: function (request, response) {
+						$.ajax({
+							url: "/search_game",
+							type: "GET",
+			 			data: request,  // request is the value of search input
+			 			success: function (data) {
+						// Map response values to fiedl label and value
+						response($.map(data, function (el) {
+							return {
+								label: el.title,
+								value: el.type
+							};
+						}));
+					}
+				});
+					},
+					// The minimum number of characters a user must type before a search is performed.
+					minLength: 3, 					
+					// set an onFocus event to show the result on input field when result is focused
+					focus: function (event, ui) { 
+						this.value = ui.item.label; 
+					// Prevent other event from not being execute
+					event.preventDefault();
+				},
+				select: function (event, ui) {
+					// Prevent value from being put in the input:
+					this.value = ui.item.label;
+					// Set the id to the next input hidden field
+					$(this).next("input").val(ui.item.value); 
+					// Prevent other event from not being execute		
+					event.preventDefault();
+					// optionnal: submit the form after field has been filled up
+					$('#quicksearch').submit();
+				}
+			});
+$("#durationH").TouchSpin({
+	min: 0,
+	max: 24,
+	stepinterval: 1,
+	postfix: 'hours'
+});
+$("#durationD").TouchSpin({
+	min: 0,
+	max: 24,
+	stepinterval: 1,
+	postfix: 'days'
+});
+});
+</script>
+</body>
+</html>

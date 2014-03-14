@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="canvas">
+		<div class="container">
+
+			<div class="page-header text-center">
+				<h1>Challenges created</h1>
+			</div>
+
+			<div class="row">
+
+				<ul>
+					<% for(var i=0; i< challenges.length; i++) { %>
+					<li>
+						<span class="<%= challenges[i].icon %>"></span>
+						<a href='/c/<%= challenges[i].idCool %>'>
+							<%= challenges[i].title %>
+						</a> -- <span class="dateReadability" data-date="<%= challenges[i].creation %>"></span>
+						
+						<a href="/removeChallenge/<%= challenges[i]._id %>" class="btn btn-punch btn-warning btn-xs"> Delete</a>
+					</li>
+					<% } %>
+				</ul>
+			</div>
+		</div>
+
+		<% include statics/footers %>
+
+		<script type="text/javascript">
+
+			$(function() {
+				readability();
+			});
+
+			var readability = function(){
+				$('.dateReadability').each( function () {
+					var date = $(this).attr('data-date');
+							var converted = moment(date).format('dddd DD MMMM HH[h]mm[m]'); //.endOf('hours').fromNow();
+							$(this).text(converted);
+						})
+			}
+		</script>
+
+
+
+	</body>
+	</html>

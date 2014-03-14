@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="canvas">
+		<div class="container">
+<!-- rating	: {
+		difficulty 	: {			
+			count: Number,
+			max: Number,
+			min: Number,
+			sum: Number,
+			avg: Number,
+			distribution: {
+				one: Number,
+				two: Number,
+				three: Number,
+				four: Number,
+				five: Number
+			}
+		}, -->
+		<div class="row">
+			<h1><span class="<%= challenge.icon %>"></span> <%= challenge.title %> <small> <%= challenge.game %></small></h1>
+			<hr>
+			<p>
+				<strong>Description :</strong> <%= challenge.description %>
+			</p>
+			<p>
+				<strong>value :</strong> <%= challenge.value %>
+			</p>
+			<p> 
+				<strong>Rated :</strong> <span class="odometer" data-number="<%= challenge.rating.difficulty.count %>">0</span> times
+			</p>
+			<ul>
+				<li>Difficulty : 
+					<span class="label label-danger odometer" data-number="<%= challenge.rating.difficulty.avg %>">0</span>
+				</li>
+				<li>Quickness : 
+					<span class="label label-info odometer" data-number="<%= challenge.rating.quickness.avg %>">0</span>
+				</li>
+				<li>fun : 
+					<span class="label label-success odometer" data-number="<%= challenge.rating.quickness.avg %>">0</span>
+				</li>
+			</ul>
+			<p>
+				<strong>Currently rated :</strong> <%= challenge.rateValue %>
+			</p>
+			<p>
+				<strong>Created :</strong> <span class="dateReadability" data-date="<%= challenge.creation %>"></span>
+			</p>
+		</div>
+
+	</div>
+	<% include statics/footers %>
+
+</body>
+</html>

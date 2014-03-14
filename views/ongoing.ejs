@@ -1,0 +1,736 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	
+	<!-- Modal templates -->
+
+	<!-- Tribunal -->
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="reqTribu" aria-labelledby="reqTribu" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<span class="glyphicon glyphicon-ok"></span>
+						Request sent successfully</h3>
+					</div>
+					<div class="panel-body">
+						<p>
+							Your case will be examined by 3 others members of our community.
+						</p>
+						<p>
+							If they decide you've been missjudged, the challenge will be validated.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end Tribunal -->
+		<!-- Validation -->
+		<div class="modal fade" id="validation" tabindex="-1" role="dialog" aria-labelledby="validationModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Challenge <strong id="vId"></strong>'s decision</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<h4>Proof 1</h4>
+								<span id="vP1"></span>
+							</div>
+							<div class="col-lg-12">
+								<h4>Proof 2</h4>
+								<span id="vP2"></span>
+							</div>
+							<div class="col-lg-12">	
+								<h4>Comment</h4>
+								<span id="vPc"></span>
+							</div>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-9">
+										<span class="glyphicon glyphicon-calendar"></span>
+										Completed by 
+										<a href='' class="vChallengedLink">
+											<span class="vChallenged"></span>
+										</a> in <span id="vDiff"></span> (Given time was <span class="givenTime"></span>)
+									</div>
+
+									<div class="col-lg-3">
+										<div class="pull-left">
+											<span class="speedRate small"></span><span class="glyphicon glyphicon-fire"></span> 	
+										</div>									 	
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" id="vPg" role="progressBar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+												<span class="sr-only"><span></span> Complete</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="well well-sm">
+									<p>
+										from <span id="vDs"></span>
+									</p>
+									<p>
+										to <span id="vDe"></span>
+									</p>
+									<p>
+										deadline was <span id="vDl"></span>
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="modal-footer">
+						
+						<button type="button" class="btn btn-default btn-punch pull-left" data-dismiss="modal">not now</button>	
+						<div class="btn-group" id="decision" data-tarId="">
+							Time to make a decision: 
+							<div id="firstChoice">
+								<button type="button" class="btn btn-danger btn-punch denying">
+									<span class="glyphicon glyphicon-remove"></span>
+									Deny
+								</button>
+								<button type="button"class="btn btn-success btn-punch validating">
+									<span class="glyphicon glyphicon-ok"></span>
+									validate
+								</button>
+							</div>
+							<div id="confirmationReq" class="hidden">
+								<button type="button" class="hidden btn btn-danger btn-punch denying"> Do you confirm you vote to <strong>Invalidate</strong> this case?</button>
+								<button type="button" class="hidden btn btn-success btn-punch validating"> Do you confirm you vote to <strong>validate</strong> this case?</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /Validation -->
+
+		<!-- Details -->
+		<div class="modal fade" id="details" tabindex="-1" role="dialog" aria-labelledby="detailsModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Challenge <strong id="dId"></strong>'s decision</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<h4>Proof 1</h4>
+								<span id="dP1"></span>
+							</div>
+							<div class="col-lg-12">
+								<h4>Proof 2</h4>
+								<span id="dP2"></span>
+							</div>
+							<div class="col-lg-12">	
+								<h4>Comment</h4>
+								<span id="dPc"></span>
+							</div>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-9">
+										<span class="glyphicon glyphicon-calendar"></span>
+										Completed by 
+										<a href='' class="dChallengedLink">
+											<span class="dChallenged"></span>
+										</a> in <span id="dDiff"></span> (Given time was <span class="givenTime"></span>)
+									</div>
+
+									<div class="col-lg-3">
+										<div class="pull-left">
+											<span class="speedRate small"></span><span class="glyphicon glyphicon-fire"></span> 	
+										</div>									 	
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" id="dPg" role="progressBar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+												<span class="sr-only"><span></span> Complete</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="well well-sm">
+									<p>
+										from <span id="dDs"></span>
+									</p>
+									<p>
+										to <span id="dDe"></span>
+									</p>
+									<p>
+										deadline was <span id="dDl"></span>
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /Detalis -->
+		<!-- /Modal templates -->
+
+		<div class="canvas">
+			<div class="container">
+
+				<div class="page-header text-center">
+					<h1>Challenges center</h1>
+				</div>
+
+				<div class="row">
+					<% if ( toValidate.length > 0 ) { %>
+					<div class="col-lg-6">
+						<h4>Challenge validation</h4>
+						<div class="row">
+							<div class="col-lg-10">
+								<div class="panel panel-default animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>N°</th>
+												<th>From</th>
+												<th>Requested</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<% for (var i = toValidate.length - 1; i >= 0; i--) { %>
+											<tr id="tr_<%= toValidate[i].idCool %>">
+												<td>
+													<a href='/o/<%= toValidate[i].idCool %>'>
+														<%= toValidate[i].idCool %>
+													</a>
+												</td>
+												<td>		
+													<% if (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ) { %>									
+													<a href='/u/<%= toValidate[i]._idChallenged.idCool %>'>
+														<%= toValidate[i]._idChallenged.local.pseudo  %>
+													</a>
+													<% }  else { %>									
+													<a href='/u/<%= toValidate[i]._idChallenger.idCool %>'>
+														<%= toValidate[i]._idChallenger.local.pseudo  %>
+													</a>
+													<% } %>		
+												</td>
+												<td><span class="dateReadability" data-date="<%= toValidate[i].confirmAsk %>"></span></td>
+												<td>
+
+													<button type="button" id="<%= toValidate[i].idCool %>" data-p1="<%= toValidate[i].confirmLink1 %>" data-p2="<%= toValidate[i].confirmLink2 %>" data-com="<%= toValidate[i].confirmComment %>"  data-title="<%= toValidate[i]._idChallenge.title %>"  data-launched="<%= toValidate[i].launchDate %>" data-ended="<%= toValidate[i].confirmAsk %>" data-deadLine="<%= toValidate[i].deadLine %>" data-challenged="<%= toValidate[i]._idChallenged._id %>" data-challengedCool="<%= toValidate[i]._idChallenged.idCool %>" data-challengedPseudo="<%= toValidate[i]._idChallenged.local.pseudo %>"class="btn btn-<%= (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ? "warning" : "default" )  %> btn-punch btn-sm <%= (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ? "validationBox" : "detailsBox" )  %>">
+														<%= (toValidate[i]._idChallenger._id.toString() === currentUser._id.toString() ? "Decide" : "Details" )  %>
+													</button>
+												</td>
+											</tr>
+											<% } %>	
+										</tbody>
+									</table>						
+								</div>						
+							</div>							
+						</div>
+					</div>	
+					<% } %>
+
+					<div class="col-lg-6">
+						<div class="text-center">
+							<h4>Ongoings</h4>
+						</div>
+						<% if ( onChallenges.length > 0 ) { %>					
+
+						<% for (var i = onChallenges.length - 1; i >= 0; i--) { %>
+						<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+							<div class="panel-heading">
+								<div class="panel-title text-right">
+									<span class="pull-left panel-title">
+
+										<span class="glyphicon glyphicon-star-empty"></span>
+										<a href='/u/<%= onChallenges[i]._idChallenger.idCool %>'>
+											<%= onChallenges[i]._idChallenger.local.pseudo  %>
+										</a>
+										<span class="glyphicon glyphicon-flash"></span>
+										<a href='/u/<%= onChallenges[i]._idChallenged.idCool %>'>
+											<%= onChallenges[i]._idChallenged.local.pseudo  %>
+										</a>
+
+									</span>
+									<a href='/o/<%= onChallenges[i].idCool %>'>
+										<%= onChallenges[i]._idChallenge.title %>
+									</a>
+
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<p class="lead text-center">
+										<%= onChallenges[i]._idChallenge.description  %>
+									</p>									
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<p>
+											<span class="glyphicon glyphicon-calendar"></span>
+											<span class="dateReadability" data-date="<%= onChallenges[i].launchDate %>"></span>
+										</p>
+										<p>
+											<span class="glyphicon glyphicon-calendar"></span>
+											<span class="dateReadability" data-date="<%= onChallenges[i].deadLine %>"></span>
+										</p>										
+									</div>
+									<div class="col-sm-6 text-right">
+										Value: <%= onChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+									</div>									
+								</div>								
+							</div>
+							<div class="panel-footer">
+								<% if(onChallenges[i].waitingConfirm === true) { %>
+								<%= ((onChallenges[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  onChallenges[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= onChallenges[i].confirmAsk %>"></span>
+
+								<% } else { %>
+								<strong class="convertEnd" data-tEnd="<%= onChallenges[i].deadLine %>"></strong>
+								<% } %>
+							</div>
+						</div>
+						<% } %>
+
+						<% } %>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="text-center">
+							<h4>Upcomings</h4>
+						</div>
+						<% if ( upChallenges.length > 0 ) { %>
+
+						<% for (var i = upChallenges.length - 1; i >= 0; i--) { %>
+						<div class="panel panel-default animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+
+							<div class="panel-heading">
+
+
+								<h3 class="panel-title">
+									<a href='/o/<%= upChallenges[i].idCool %>'>
+										<span class="<%= upChallenges[i]._idChallenge.icon %>"></span> <%= upChallenges[i]._idChallenge.title %>
+									</a>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<span class="col-sm-5"><strong>Challenger</strong></span>
+									<span class="col-sm-2">&nbsp;</span>
+									<span class="col-sm-5"><strong>Challenged</strong></span>
+								</div>
+
+								<div class="row">
+									<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenger.idCool %>'>
+										<%= upChallenges[i]._idChallenger.local.pseudo  %>
+									</a></span>
+									<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
+									<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenged.idCool %>'>
+										<%= upChallenges[i]._idChallenged.local.pseudo  %>
+									</a></span>
+								</div>
+							</div>
+							<div class="panel-footer">
+								<strong class="convertUp" data-tStart="<%= upChallenges[i].launchDate %>"></strong>
+							</div>
+						</div>
+						<% } %>
+
+						<% } %>
+					</div>
+					<div class="col-lg-6">
+						<div class="text-center">
+							<h4>Passed</h4>
+						</div>
+						<% if ( endChallenges.length > 0 ) { %>
+						<div class="row">
+							
+							<% for (var i = 0; i < endChallenges.length; i++) { %>
+
+							<div id="ended_<%= endChallenges[i]._id %>" class="col-sm-5 col-sm-offset-1 panel  animated <%- i % 2 ? ' fadeInLeft' : 'fadeInRight' %> panel-<%= (endChallenges[i].validated === true || endChallenges[i].tribunalAnswered === true) ? 'success' : ((endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false)? 'warning' : 'danger') %>" style="padding:0;">
+								<div class="panel-heading">
+									<div class="panel-title text-right">
+										<span class="pull-left panel-title">
+
+											<% if(endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false) { %>
+											<i class="fa fa-exclamation"></i>
+											<strong>Case Under Review</strong> 
+
+											<% } else { %>
+											<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === false) ) ? 'ok' : 'remove' %>"></span>
+											<% }  %>
+											<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
+												<%= endChallenges[i]._idChallenger.local.pseudo  %>
+											</a>
+											<span class="glyphicon glyphicon-flash"></span>
+											<a href='/u/<%= endChallenges[i]._idChallenged.idCool %>'>
+												<%= endChallenges[i]._idChallenged.local.pseudo  %>
+											</a>
+
+										</span>
+										<a href='/o/<%= endChallenges[i].idCool %>'>
+											<%= endChallenges[i]._idChallenge.title %>
+										</a>
+
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<p class="lead text-center">
+											<%= endChallenges[i]._idChallenge.description  %>
+										</p>									
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= endChallenges[i].launchDate %>"></span>
+											</p>
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
+											</p>										
+										</div>
+										<div class="col-sm-6 text-right">
+											Value: <%= endChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+										</div>									
+									</div>								
+								</div>
+								<% if(endChallenges[i].caseClosed === true) { %> 
+								<div class="panel-footer">							
+									<small>
+										This case has been reviewed by the tribunal. Others players voted this case as 
+										<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
+									</small>
+								</div>
+								<% } %>
+								<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal) { %>
+								<div class="panel-footer">
+									<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>
+									<small>
+										<strong class="tribunalRequestDate" data-date="<%= endChallenges[i].deadLine %>"></strong> left to make a reclaim
+									</small>
+								</div>
+								<% } %>
+							</div>
+							<% } %>
+						</div>
+
+
+						<% } %>
+					</div>
+				</div>
+
+			</div>
+
+			<% include statics/footers %>
+			<script type="text/javascript">
+
+				$(function() {
+					var confirmCounter = 0,
+					originalHTML ='<button type="button" class="btn btn-danger btn-punch denying"><span class="glyphicon glyphicon-remove"></span>Deny</button><button type="button" class="btn btn-success btn-punch validating"><span class="glyphicon glyphicon-ok"></span>validate</button>';
+
+					tribunalRequest();
+					updateUp();
+					updateEnd();
+					readability();
+
+					$('#validation').on('hidden.bs.modal', function (e) {
+						e.preventDefault();
+						confirmCounter = 0;
+						console.log(confirmCounter);
+
+						$('#firstChoice').removeClass('hidden');
+						$('#confirmationReq button:first-child').addClass('hidden');
+						$('#confirmationReq button:nth-child(2)').addClass('hidden');
+						$('#confirmationReq').addClass('hidden');
+
+					});
+
+					$('#firstChoice > button').click(function(e){
+						e.preventDefault();
+
+						var _this   = $(this),
+						isDeny      = ((_this.hasClass('denying')) ? true : false);		
+
+						$('#firstChoice').addClass('hidden', function(){
+							if(isDeny) 
+								$('#confirmationReq button:first-child').removeClass('hidden');
+							else 
+								$('#confirmationReq button:nth-child(2)').removeClass('hidden');
+							$('#confirmationReq').removeClass('hidden');
+						});
+					});
+
+					$('#confirmationReq > button').click(function(e){
+						e.preventDefault();
+
+						var _this   = $(this),
+						tarId       = $('#decision').attr('data-tarId'),
+						passOrFail      = _this.hasClass('denying') ? false : true;			
+
+						var target = {};
+
+						target.id = tarId;
+						target.pass = passOrFail; 
+
+
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(target),
+							contentType: 'application/json',
+							url: './validateChallenge',						
+							success: function(data) {
+								console.log(data);
+								if(data === true) {
+									$('#validation').modal('hide');
+									$('#validation').on('hidden.bs.modal', function (e) {
+										e.preventDefault();
+										resetButtons();
+										$('#tr_'+ tarId).addClass('animated fadeOutUp').delay( 800 ).remove();
+									});
+								}
+							}
+						});
+
+					});
+					$('.sendTribunal').click(function (e) {
+						e.preventDefault();
+						var target = {}
+						_this = $(this);
+						target.id = $(this).attr('data-oId');
+
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(target),
+							contentType: 'application/json',
+							url: './sendTribunal',						
+							success: function(data) {
+								console.log(data);
+
+								if(data === true) {
+
+									_this
+									.removeClass('btn-warning')
+									.addClass('btn-danger disabled');
+									_this.text('Case sent to the tribunal!');
+
+									$('#reqTribu').modal('show');
+								}
+							}
+						})
+					});
+
+
+					$('.validationBox').click(function (e) {
+						e.preventDefault();
+
+						idBox = $(this).attr('id');
+
+						populateValidation(idBox, function() {
+							$('#validation').modal('show');
+
+						});
+					});
+
+					$('.detailsBox').click(function (e) {
+						e.preventDefault();
+
+						idBox = $(this).attr('id');
+
+						populateDetails(idBox, function() {
+							$('#details').modal('show');
+						});
+
+					});
+
+					Ladda.bind( '.ladda-button', {
+						callback: function( instance ) {
+							var progress = 0;
+							var interval = setInterval( function() {
+								progress = Math.min( progress + Math.random() * 0.12, 1 );
+								instance.setProgress( progress );
+
+								if( progress === 1 ) {
+									instance.stop();
+									clearInterval( interval );
+								}
+							}, 35 );
+						}
+					});
+					setInterval(function(){
+						updateUp();
+						updateEnd();
+						tribunalRequest();
+					},2200);
+
+				});
+var resetButtons = function() {
+
+	$('#firstChoice').removeClass('hidden');
+	$('#confirmationReq button:first-child').addClass('hidden');
+	$('#confirmationReq button:nth-child(2)').addClass('hidden');
+	$('#confirmationReq').addClass('hidden');
+};
+var populateDetails = function( id, cb ) {
+	var dP1,dP2,dPc,dDs,dDe,diff,dChallengedId,dChallenged,dDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
+	_this = $('#'+id);
+
+	dP1               = _this.attr('data-p1');
+	dP2               = _this.attr('data-p2');
+	dPc               = _this.attr('data-com');
+	dDs               = _this.attr('data-launched');
+	dDe               = _this.attr('data-ended');
+	dDeadLine         = _this.attr('data-deadLine');
+	dChallengedId     = _this.attr('data-challenged');
+	dChallengedIdCool = _this.attr('data-challengedCool');
+	dChallenged       = _this.attr('data-challengedPseudo');
+	
+	
+	_dDs              = moment(dDs).format('dddd DD MMMM HH[h]mm[m]');
+	_dDe              = moment(dDe).format('dddd DD MMMM HH[h]mm[m]');
+	_dDeadLine        = moment(dDeadLine).format('dddd DD MMMM HH[h]mm[m]');
+
+	diff = moment(dDe).from(dDs, true);
+	diffMax = moment(dDeadLine).from(dDs, true);
+
+	sSpeed = moment(dDs).unix();
+	cSpeed = moment(dDe).unix();
+	dSpeed = moment(dDeadLine).unix();
+
+	chompi = (1- ((cSpeed - sSpeed) / (dSpeed - sSpeed)) ) * 100;
+	sRate = Math.round(chompi * 100) / 100 ;
+	console.log(sRate + '%');
+
+	$('#dId').text(id);
+	$('#dP1').text(dP1);
+	$('#dP2').text(dP2);
+	$('#dPc').text(dPc);
+	$('#dDs').text(_dDs);
+	$('#dDe').text(_dDe);
+	$('#dDl').text(_dDeadLine);
+	$('#dDiff').text(diff);
+
+	$('#vPg')
+	.attr('aria-valuenow', sRate )
+	.css('width', sRate+'%');
+	$('#vPg > .sr-only > span').text(sRate+'%');
+	$('.speedRate').text(sRate+'%');
+
+	$('.givenTime').text(diffMax);
+	$('.dChallenged').text(dChallenged);
+	$('.dChallengedLink').attr("href", '/u/'+dChallengedIdCool);
+	cb();
+
+};
+
+var populateValidation = function( id, cb ) {
+	var vP1,vP2,vPc,vDs,vDe,diff,vChallengedId,vChallenged,vDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
+	_this = $('#'+id);
+
+	vP1               = _this.attr('data-p1');
+	vP2               = _this.attr('data-p2');
+	vPc               = _this.attr('data-com');
+	vDs               = _this.attr('data-launched');
+	vDe               = _this.attr('data-ended');
+	vDeadLine         = _this.attr('data-deadLine');
+	vChallengedId     = _this.attr('data-challenged');
+	vChallengedIdCool = _this.attr('data-challengedCool');
+	vChallenged       = _this.attr('data-challengedPseudo');
+	
+	
+	_vDs              = moment(vDs).format('dddd DD MMMM HH[h]mm[m]');
+	_vDe              = moment(vDe).format('dddd DD MMMM HH[h]mm[m]');
+	_vDeadLine        = moment(vDeadLine).format('dddd DD MMMM HH[h]mm[m]');
+
+	diff = moment(vDe).from(vDs, true);
+	diffMax = moment(vDeadLine).from(vDs, true);
+
+	// Calculate the speed %
+	sSpeed = moment(vDs).unix();
+	cSpeed = moment(vDe).unix();
+	dSpeed = moment(vDeadLine).unix();
+
+	chompi = (1- ((cSpeed - sSpeed) / (dSpeed - sSpeed)) ) * 100;
+	sRate = Math.round(chompi * 100) / 100 ;
+	console.log(sRate + '%');
+
+	$('#vId').text(id);
+	$('#vP1').text(vP1);
+	$('#vP2').text(vP2);
+	$('#vPc').text(vPc);
+	$('#vDs').text(_vDs);
+	$('#vDe').text(_vDe);
+	$('#vDl').text(_vDeadLine);
+	$('#vDiff').text(diff);
+
+	$('#decision').attr('data-tarId', id);
+
+	$('#vPg')
+	.attr('aria-valuenow', sRate )
+	.css('width', sRate+'%');
+	$('#vPg > .sr-only > span').text(sRate+'%');
+	$('.speedRate').text(sRate+'%');
+
+	$('.givenTime').text(diffMax);
+	$('.vChallenged').text(vChallenged);
+	$('.vChallengedLink').attr("href", '/u/'+vChallengedIdCool);
+	$('#decision > button').attr('data-tarId', id);
+	cb();
+
+};
+
+var tribunalRequest = function () {
+	$('.tribunalRequestDate').each( function () {
+		var _this = $(this);
+		var deadLine = _this.attr('data-date');
+
+		var time = moment(deadLine);
+		var limit = moment(deadLine).add('m', 10); // 24h
+
+		var converted = time.countdown().toString();
+
+		if(time.isBefore(limit) || time.isSame(limit)) {
+			// console.log(moment(deadLine).format('dddd DD MMMM HH[h]mm[m]'))
+			_this.text(converted);
+		} else {
+			_this.closest('.panel-footer').remove();
+		}
+	})
+}
+var readability = function(){
+	$('.dateReadability').each( function () {
+		var date = $(this).attr('data-date');
+		var converted = moment(date).format('dddd DD MMMM HH[h]mm');
+		$(this).text(converted);
+	})
+}
+var updateUp = function(){
+	$('.convertUp').each( function () {
+		var start = $(this).attr('data-tStart');
+		var converted = moment(start).countdown().toString();
+		$(this).text('Start in ' +converted);
+	})
+}
+var updateEnd = function(){
+	$('.convertEnd').each( function () {
+		var end = $(this).attr('data-tEnd');
+		var converted = moment(end).countdown().toString();
+		$(this).text('End in ' +converted);
+	})
+}
+</script>
+</body>
+</html>

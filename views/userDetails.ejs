@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="canvas">
+		<div class="container">
+
+			<div class="page-header text-center">
+
+				
+				<% if (currentUser) { %>
+
+				<%
+				// Check if already friends
+				var lookupFriends = {};
+				for (var i = 0, len = currentUser.friends.length; i < len; i++) {
+					lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
+				}
+
+				// Check if already sent an Invite
+				var lookupSent = {};
+				for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
+					lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
+				}
+
+				// Check if already received an Invite from this user
+				var lookupPendings = {};
+				for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
+					lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
+				}
+				
+				%>
+				<div class="pull-left">
+
+					<% if (currentUser._id.toString() === user._id.toString()) { %>
+					<div class="btn btn-punch btn-default disabled" >
+						<span class="ladda-label">
+							<span class="glyphicon glyphicon-info-sign"></span> It's you!
+						</span>
+					</div>
+					<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
+
+					<button class="btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
+						<span class="ladda-label">
+							<span class="glyphicon glyphicon-time"></span> Pending, see your requests
+						</span>
+					</button> 
+					<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
+
+					<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
+						<span class="ladda-label">
+							<span class="glyphicon glyphicon-plus"></span> Add Friend
+						</span>
+					</button>
+
+
+					<% } else { %>
+					<div class="btn btn-punch btn-success" >
+						<span class="ladda-label">
+							<span class="glyphicon glyphicon-ok"></span> Friend
+						</span>
+					</div>
+					<% } %>
+				</div>
+				<% } %>
+				<div class="pull-right">	
+					<p class="text-right"><small>Accounts</small>	</p>
+					<% if (user.local.pseudo) { %>
+					<span class="label label-default">CyF</span>
+					<% } %>
+					<% if (user.facebook.name) { %>
+					<span class="label label-primary">Facebook</span>
+					<% } %>
+					<% if (user.google.name) { %>
+					<span class="label label-danger">Google</span>
+					<% } %>
+					<% if (user.twitter.username) { %>
+					<span class="label label-info">Twitter</span>
+					<% } %>
+				</div>
+				<h1>
+					<% if (user.local) {%>
+					<%= user.local.pseudo %>
+					<% } else if (user.facebook) { %>
+					<%= user.facebook.name %>
+					<% } else if (user.google) { %>
+					<%= user.google.name %>
+					<% } else if (user.twitter) { %>
+					<%= user.twitter.username %>
+					<% } %>
+					Profile Page
+				</h1>
+			</div>
+
+			<div class="row">
+
+				<!-- LOCAL INFORMATION -->
+				<div class="col-sm-6">
+					<div class="well">
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<% include statics/footers %>
+
+
+		<script type="text/javascript">
+
+			// Bind normal buttons
+			Ladda.bind( 'button', { timeout: 2000 } );
+			$("#newFriend").click( function(e){
+				e.preventDefault();
+				
+				var target = {},
+				_this = $(this),
+				pendingRequestshtml = '<span class="glyphicon glyphicon-time"></span> Pending, see your requests';
+
+				target.id = '<%= user._id %>';
+				target.idCool = '<%= user.idCool %>';
+				target.pseudo = '<%= user.local.pseudo %>';
+				console.log(target);
+
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(target),
+					contentType: 'application/json',
+					url: './askFriend',						
+					success: function(data) {
+						console.log('success');
+						_this.removeClass().addClass('btn btn-punch btn-warning disabled');
+						_this.find('.ladda-label').html(pendingRequestshtml);
+
+					}
+				});
+
+			});
+		</script>
+	</body>
+	</html>

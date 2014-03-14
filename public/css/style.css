@@ -1,0 +1,927 @@
+/* custom scrollbar */
+/* line 6, ../../sass/style.scss */
+::-webkit-scrollbar {
+  width: .95em;
+}
+
+/* line 10, ../../sass/style.scss */
+::-webkit-scrollbar-track {
+  background-color: rgba(217, 217, 217, 0.5);
+}
+
+/* line 14, ../../sass/style.scss */
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 184, 184, 0.5);
+  box-shadow: inset 0.05em 0.05em 0 rgba(0, 0, 0, 0.1), inset 0 -0.05em 0 rgba(0, 0, 0, 0.07);
+}
+
+/* line 21, ../../sass/style.scss */
+html, body {
+  height: 100%;
+}
+
+/* line 24, ../../sass/style.scss */
+.navbar-static-top {
+  margin-bottom: 19px;
+}
+
+/**
+ * CYF Styles
+ */
+/* line 32, ../../sass/style.scss */
+.userlist .media {
+  margin-top: 0;
+}
+
+/* line 42, ../../sass/style.scss */
+.online,
+.offline,
+.away,
+.busy {
+  display: inline-block;
+  padding-left: 1em;
+  position: relative;
+}
+
+/* line 52, ../../sass/style.scss */
+.online:before,
+.offline:before,
+.away:before,
+.busy:before {
+  border: .5px solid blue;
+  border-radius: 50%;
+  box-shadow: inset 0.5px 0 0 #fafafa, inset -0.5px 0 0 #fafafa, inset 0 0.5px 0 #fafafa, inset 0 -0.5px 0 #fafafa, 0 2px 0 rgba(255, 255, 255, 0.2);
+  content: "";
+  height: .5em;
+  margin-top: -.5em;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: .5em;
+}
+
+/* line 89, ../../sass/style.scss */
+.online:before {
+  background-color: #71d117;
+  border-color: #71d117;
+}
+
+/* line 91, ../../sass/style.scss */
+.online:after {
+  border-radius: 50%;
+  border: 1px solid #71d117;
+  box-shadow: 0 0 4px rgba(113, 209, 23, 0.6), inset 0 0 4px rgba(113, 209, 23, 0.6);
+  content: "";
+  height: 1em;
+  margin: -.78em 0 0 -.241em;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 1em;
+  -webkit-transform: scale(0);
+  -webkit-animation: online-ping 2.5s ease-in-out infinite;
+  animation: online-ping 2.5s ease-in-out infinite;
+}
+
+@-webkit-keyframes online-ping {
+  /* line 111, ../../sass/style.scss */
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(0);
+  }
+
+  /* line 112, ../../sass/style.scss */
+  50% {
+    opacity: .7;
+  }
+
+  /* line 113, ../../sass/style.scss */
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes online-ping {
+  /* line 117, ../../sass/style.scss */
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+
+  /* line 118, ../../sass/style.scss */
+  50% {
+    opacity: .6;
+  }
+
+  /* line 119, ../../sass/style.scss */
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* line 122, ../../sass/style.scss */
+.offline:before {
+  background-color: rgba(148, 137, 146, 0.2);
+  border-color: #948992;
+}
+
+/* line 124, ../../sass/style.scss */
+.away:before {
+  background-color: rgba(255, 230, 133, 0.8);
+  border-color: #ffe685;
+}
+
+/* line 126, ../../sass/style.scss */
+.busy:before {
+  background-color: rgba(197, 56, 91, 0.4);
+  border-color: #c5385b;
+  -webkit-animation: busy-pulse 3s ease-in-out infinite alternate;
+  animation: busy-pulse 3s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes busy-pulse {
+  /* line 137, ../../sass/style.scss */
+  0% {
+    background-color: rgba(197, 56, 91, 0.9);
+  }
+
+  /* line 138, ../../sass/style.scss */
+  50% {
+    background-color: rgba(197, 56, 91, 0.4);
+  }
+
+  /* line 139, ../../sass/style.scss */
+  100% {
+    background-color: rgba(197, 56, 91, 0.9);
+  }
+}
+
+@keyframes busy-pulse {
+  /* line 143, ../../sass/style.scss */
+  0% {
+    background-color: rgba(197, 56, 91, 0.9);
+  }
+
+  /* line 144, ../../sass/style.scss */
+  50% {
+    background-color: rgba(197, 56, 91, 0.4);
+  }
+
+  /* line 145, ../../sass/style.scss */
+  100% {
+    background-color: rgba(197, 56, 91, 0.9);
+  }
+}
+
+/**
+ * Profile
+ */
+/* line 151, ../../sass/style.scss */
+.xp {
+  font-size: 2.9em;
+  font-weight: bold;
+  color: #27a2c9;
+}
+
+/* CONTAINER */
+/* line 158, ../../sass/style.scss */
+.loaderProgress {
+  height: 2px;
+  background: #808080;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#666666), to(gray));
+  background: -webkit-linear-gradient(#666666, gray);
+  background: -moz-linear-gradient(#666666, gray);
+  background: -o-linear-gradient(#666666, gray);
+  background: linear-gradient(#666666, #808080);
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* PROGRESS BAR */
+/* line 176, ../../sass/style.scss */
+.tinyProgress {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  transition: width .8s ease;
+  /* css transition applied to width */
+}
+
+/* SPHERE */
+/* line 187, ../../sass/style.scss */
+.tinyProgress:after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: -4px;
+  height: 10px;
+  width: 10px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+/* line 199, ../../sass/style.scss */
+.tinyBlue {
+  background: #0080ff;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#0080ff), to(#0099ff));
+  background: -webkit-linear-gradient(#0080ff, #0099ff);
+  background: -moz-linear-gradient(#0080ff, #0099ff);
+  background: -o-linear-gradient(#0080ff, #0099ff);
+  background: linear-gradient(#0080ff, #0099ff);
+  -webkit-box-shadow: 0 0 20px #0080ff;
+  -moz-box-shadow: 0 0 20px #0080ff;
+  box-shadow: 0 0 20px #0080ff;
+}
+
+/* line 211, ../../sass/style.scss */
+.tinyBlue:after {
+  background: #3cf;
+  -webkit-box-shadow: 0 0 20px #0080ff;
+  -moz-box-shadow: 0 0 20px #0080ff;
+  box-shadow: 0 0 20px #0080ff;
+}
+
+/* line 218, ../../sass/style.scss */
+.tinyGreen {
+  background: #bfff00;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#bfff00), to(#99ff00));
+  background: -webkit-linear-gradient(#bfff00, #99ff00);
+  background: -moz-linear-gradient(#bfff00, #99ff00);
+  background: -o-linear-gradient(#bfff00, #99ff00);
+  background: linear-gradient(#bfff00, #99ff00);
+  -webkit-box-shadow: 0 0 20px #bfff00;
+  -moz-box-shadow: 0 0 20px #bfff00;
+  box-shadow: 0 0 20px #bfff00;
+}
+
+/* line 230, ../../sass/style.scss */
+.tinyGreen:after {
+  background: #bfff00;
+  -webkit-box-shadow: 0 0 20px #bfff00;
+  -moz-box-shadow: 0 0 20px #bfff00;
+  box-shadow: 0 0 20px #bfff00;
+}
+
+/* line 237, ../../sass/style.scss */
+.tinyRed {
+  background: #cd5c5c;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#b42000), to(#cc3300));
+  background: -webkit-linear-gradient(indianred, indianred);
+  background: -moz-linear-gradient(indianred, indianred);
+  background: -o-linear-gradient(indianred, indianred);
+  background: linear-gradient(#cd5c5c, #cd5c5c);
+  -webkit-box-shadow: 0 0 20px #cd5c5c;
+  -moz-box-shadow: 0 0 20px #cd5c5c;
+  box-shadow: 0 0 20px indianred;
+}
+
+/* line 249, ../../sass/style.scss */
+.tinyRed:after {
+  background: #cd5c5c;
+  -webkit-box-shadow: 0 0 20px #cd5c5c;
+  -moz-box-shadow: 0 0 20px #cd5c5c;
+  box-shadow: 0 0 20px indianred;
+}
+
+/* line 256, ../../sass/style.scss */
+.tinyPurple {
+  background: #cd00cd;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#cd00cd), to(#cc00cc));
+  background: -webkit-linear-gradient(#cd00cd, #cc00cc);
+  background: -moz-linear-gradient(#cd00cd, #cc00cc);
+  background: -o-linear-gradient(#cd00cd, #cc00cc);
+  background: linear-gradient(#cd00cd, #cc00cc);
+  box-shadow: 0 0 20px #cd00cd;
+}
+
+/* line 266, ../../sass/style.scss */
+.tinyPurple:after {
+  background: #cd00cd;
+  -webkit-box-shadow: 0 0 20px #cd00cd;
+  -moz-box-shadow: 0 0 20px #cd00cd;
+  box-shadow: 0 0 20px #cd00cd;
+}
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+/* line 278, ../../sass/style.scss */
+#headNav {
+  background: white;
+  margin-bottom: 0px;
+  border-bottom: 2px solid #f3f3f3;
+}
+
+/* line 283, ../../sass/style.scss */
+.navbar-toggle.lefty {
+  float: left;
+  margin-left: 15px;
+}
+
+/* line 288, ../../sass/style.scss */
+.navmenu {
+  z-index: 1;
+}
+
+/* line 292, ../../sass/style.scss */
+.canvas {
+  position: relative;
+  left: 0;
+  z-index: 2;
+  min-height: 100%;
+  padding: 50px 0 0 0;
+  background: #fff;
+}
+
+@media (min-width: 0) {
+  /* line 302, ../../sass/style.scss */
+  .navbar-toggle.lefty {
+    display: block;
+    /* force showing the toggle */
+  }
+}
+@media (min-width: 992px) {
+  /* line 308, ../../sass/style.scss */
+  body {
+    padding: 0;
+  }
+
+  /* line 311, ../../sass/style.scss */
+  .navbar {
+    right: auto;
+    background: none;
+    border: none;
+  }
+
+  /* line 316, ../../sass/style.scss */
+  .canvas {
+    padding: 0;
+  }
+}
+/* line 320, ../../sass/style.scss */
+.btn-punch {
+  position: relative;
+  z-index: 1;
+  outline: none !important;
+  color: #595959;
+  background: #fafafa;
+  box-shadow: inset 0 0px white, 0 1px #e1e1e1, 0 1px #d4d4d4, 0 0 #d4d4d4, 0 0 #d4d4d4, 0 0 #d4d4d4;
+  border: 1px solid #e1e1e1;
+}
+/* line 328, ../../sass/style.scss */
+.btn-punch:hover {
+  background: white;
+}
+
+/* line 333, ../../sass/style.scss */
+.btn-group > .btn-punch {
+  box-shadow: inset 0 0px white, 0 1px #e1e1e1, 0 1px #d4d4d4, 0 0 #d4d4d4;
+}
+/* line 335, ../../sass/style.scss */
+.btn-group > .btn-punch:first-child, .btn-group > .btn-punch:last-child {
+  box-shadow: inset 0 0px white, 0 1px #e1e1e1, 0 1px #d4d4d4, 0 0 #d4d4d4, 0 0 #d4d4d4;
+}
+
+/* line 340, ../../sass/style.scss */
+.open .btn-punch {
+  background: #ededed;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #e1e1e1, 0 0 #d4d4d4, 0 0 #d4d4d4;
+}
+
+/* line 348, ../../sass/style.scss */
+.btn-punch:hover:active, .btn-punch.active {
+  background: #ededed;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #e1e1e1, 0 0 #d4d4d4, 0 0 #d4d4d4;
+}
+
+/* line 357, ../../sass/style.scss */
+.btn-group > .btn-punch:hover:active, .btn-group > .btn-punch.active {
+  box-shadow: 0 0px #e1e1e1;
+}
+/* line 361, ../../sass/style.scss */
+.btn-group > .btn-punch:first-child:hover:active, .btn-group > .btn-punch:first-child.active {
+  box-shadow: 0 0px #e1e1e1, 0 0 #d4d4d4;
+}
+/* line 366, ../../sass/style.scss */
+.btn-group > .btn-punch:last-child:hover:active, .btn-group > .btn-punch:last-child.active {
+  box-shadow: 0 0px #e1e1e1, 0 0 #d4d4d4;
+}
+
+/* line 373, ../../sass/style.scss */
+.btn-punch.btn-alt, .btn-punch.btn-info {
+  color: white;
+  background: #0094ff;
+  box-shadow: inset 0 0px #309be8, 0 1px #1782cf, 0 1px #1473b8, 0 0 #1473b8, 0 0 #1473b8, 0 0 #1473b8;
+  border: 1px solid #0085e6;
+}
+/* line 379, ../../sass/style.scss */
+.btn-punch.btn-alt:hover, .btn-punch.btn-info:hover {
+  background: #1a9fff;
+}
+
+/* line 385, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-alt, .btn-group > .btn-punch.btn-info {
+  box-shadow: inset 0 0px #309be8, 0 1px #1782cf, 0 1px #1473b8, 0 0 #1473b8;
+}
+/* line 388, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-alt:first-child, .btn-group > .btn-punch.btn-info:first-child, .btn-group > .btn-punch.btn-alt:last-child, .btn-group > .btn-punch.btn-info:last-child {
+  box-shadow: inset 0 0px #309be8, 0 1px #1782cf, 0 1px #1473b8, 0 0 #1473b8, 0 0 #1473b8;
+}
+
+/* line 393, ../../sass/style.scss */
+.open .btn-punch.btn-alt {
+  background: #0085e6;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8, 0 0 #1473b8;
+}
+
+/* line 401, ../../sass/style.scss */
+.btn-punch.btn-alt:hover:active, .btn-punch.btn-alt.active {
+  background: #0085e6;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8, 0 0 #1473b8;
+}
+
+/* line 409, ../../sass/style.scss */
+.open .btn-punch.btn-info {
+  background: #0085e6;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8, 0 0 #1473b8;
+}
+
+/* line 417, ../../sass/style.scss */
+.btn-punch.btn-info:hover:active, .btn-punch.btn-info.active {
+  background: #0085e6;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8, 0 0 #1473b8;
+}
+
+/* line 427, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-alt:hover:active, .btn-group > .btn-punch.btn-alt.active {
+  box-shadow: 0 0px #1782cf;
+}
+/* line 432, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-info:hover:active, .btn-group > .btn-punch.btn-info.active {
+  box-shadow: 0 0px #1782cf;
+}
+/* line 437, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-alt:first-child:hover:active, .btn-group > .btn-punch.btn-alt:first-child.active {
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8;
+}
+/* line 442, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-info:first-child:hover:active, .btn-group > .btn-punch.btn-info:first-child.active {
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8;
+}
+/* line 447, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-alt:last-child:hover:active, .btn-group > .btn-punch.btn-alt:last-child.active {
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8;
+}
+/* line 452, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-info:last-child:hover:active, .btn-group > .btn-punch.btn-info:last-child.active {
+  box-shadow: 0 0px #1782cf, 0 0 #1473b8;
+}
+
+/* line 458, ../../sass/style.scss */
+.btn-punch.btn-success {
+  color: white;
+  background: #66cc00;
+  box-shadow: inset 0 0px #73cf17, 0 1px #59a112, 0 1px #4d8a0f, 0 0 #4d8a0f, 0 0 #4d8a0f, 0 0 #4d8a0f;
+  border: 1px solid #59b300;
+}
+/* line 463, ../../sass/style.scss */
+.btn-punch.btn-success:hover {
+  background: #73e600;
+}
+
+/* line 468, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-success {
+  box-shadow: inset 0 0px #73cf17, 0 1px #59a112, 0 1px #4d8a0f, 0 0 #4d8a0f;
+}
+/* line 470, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-success:first-child, .btn-group > .btn-punch.btn-success:last-child {
+  box-shadow: inset 0 0px #73cf17, 0 1px #59a112, 0 1px #4d8a0f, 0 0 #4d8a0f, 0 0 #4d8a0f;
+}
+
+/* line 475, ../../sass/style.scss */
+.open .btn-punch.btn-success {
+  background: #59b300;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #59a112, 0 0 #4d8a0f, 0 0 #4d8a0f;
+}
+
+/* line 483, ../../sass/style.scss */
+.btn-punch.btn-success:hover:active, .btn-punch.btn-success.active {
+  background: #59b300;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #59a112, 0 0 #4d8a0f, 0 0 #4d8a0f;
+}
+
+/* line 492, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-success:hover:active, .btn-group > .btn-punch.btn-success.active {
+  box-shadow: 0 0px #59a112;
+}
+/* line 496, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-success:first-child:hover:active, .btn-group > .btn-punch.btn-success:first-child.active {
+  box-shadow: 0 0px #59a112, 0 0 #4d8a0f;
+}
+/* line 501, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-success:last-child:hover:active, .btn-group > .btn-punch.btn-success:last-child.active {
+  box-shadow: 0 0px #59a112, 0 0 #4d8a0f;
+}
+
+/* line 507, ../../sass/style.scss */
+.btn-punch.btn-warning {
+  color: white;
+  background: #fbad17;
+  box-shadow: inset 0 0px #e6af45, 0 1px #db9a1d, 0 1px #c58a1a, 0 0 #c58a1a, 0 0 #c58a1a, 0 0 #c58a1a;
+  border: 1px solid #f4a204;
+}
+/* line 512, ../../sass/style.scss */
+.btn-punch.btn-warning:hover {
+  background: #fbb630;
+}
+
+/* line 517, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-warning {
+  box-shadow: inset 0 0px #e6af45, 0 1px #db9a1d, 0 1px #c58a1a, 0 0 #c58a1a;
+}
+/* line 519, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-warning:first-child, .btn-group > .btn-punch.btn-warning:last-child {
+  box-shadow: inset 0 0px #e6af45, 0 1px #db9a1d, 0 1px #c58a1a, 0 0 #c58a1a, 0 0 #c58a1a;
+}
+
+/* line 524, ../../sass/style.scss */
+.open .btn-punch.btn-warning {
+  background: #f4a204;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #db9a1d, 0 0 #c58a1a, 0 0 #c58a1a;
+}
+
+/* line 532, ../../sass/style.scss */
+.btn-punch.btn-warning:hover:active, .btn-punch.btn-warning.active {
+  background: #f4a204;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #db9a1d, 0 0 #c58a1a, 0 0 #c58a1a;
+}
+
+/* line 541, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-warning:hover:active, .btn-group > .btn-punch.btn-warning.active {
+  box-shadow: 0 0px #db9a1d;
+}
+/* line 545, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-warning:first-child:hover:active, .btn-group > .btn-punch.btn-warning:first-child.active {
+  box-shadow: 0 0px #db9a1d, 0 0 #c58a1a;
+}
+/* line 550, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-warning:last-child:hover:active, .btn-group > .btn-punch.btn-warning:last-child.active {
+  box-shadow: 0 0px #db9a1d, 0 0 #c58a1a;
+}
+
+/* line 556, ../../sass/style.scss */
+.btn-punch.btn-danger {
+  color: white;
+  background: #ee2724;
+  box-shadow: inset 0 0px #db5351, 0 1px #ce2d2b, 0 1px #b92926, 0 0 #b92926, 0 0 #b92926, 0 0 #b92926;
+  border: 1px solid #e71512;
+}
+/* line 561, ../../sass/style.scss */
+.btn-punch.btn-danger:hover {
+  background: #f03e3c;
+}
+
+/* line 566, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-danger {
+  box-shadow: inset 0 0px #db5351, 0 1px #ce2d2b, 0 1px #b92926, 0 0 #b92926;
+}
+/* line 568, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-danger:first-child, .btn-group > .btn-punch.btn-danger:last-child {
+  box-shadow: inset 0 0px #db5351, 0 1px #ce2d2b, 0 1px #b92926, 0 0 #b92926, 0 0 #b92926;
+}
+
+/* line 573, ../../sass/style.scss */
+.open .btn-punch.btn-danger {
+  background: #e71512;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #ce2d2b, 0 0 #b92926, 0 0 #b92926;
+}
+
+/* line 581, ../../sass/style.scss */
+.btn-punch.btn-danger:hover:active, .btn-punch.btn-danger.active {
+  background: #e71512;
+  top: 1px;
+  z-index: 3;
+  box-shadow: 0 0px #ce2d2b, 0 0 #b92926, 0 0 #b92926;
+}
+
+/* line 590, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-danger:hover:active, .btn-group > .btn-punch.btn-danger.active {
+  box-shadow: 0 0px #ce2d2b;
+}
+/* line 594, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-danger:first-child:hover:active, .btn-group > .btn-punch.btn-danger:first-child.active {
+  box-shadow: 0 0px #ce2d2b, 0 0 #b92926;
+}
+/* line 599, ../../sass/style.scss */
+.btn-group > .btn-punch.btn-danger:last-child:hover:active, .btn-group > .btn-punch.btn-danger:last-child.active {
+  box-shadow: 0 0px #ce2d2b, 0 0 #b92926;
+}
+
+/* FORM UPDATE */
+/* line 607, ../../sass/style.scss */
+input.gStyle {
+  padding: 8px;
+  box-shadow: none;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #c4c4c4;
+  background: none;
+  background-image: linear-gradient(90deg, #c4c4c4 1px, #c4c4c4 1px, rgba(0, 0, 0, 0) 0px), linear-gradient(90deg, #c4c4c4 1px, #c4c4c4 1px, rgba(0, 0, 0, 0) 0px);
+  background-position: bottom left, bottom right;
+  background-size: 1px 5px;
+  background-repeat: no-repeat;
+  font-weight: normal;
+  font-size: 16px;
+}
+/* line 620, ../../sass/style.scss */
+input.gStyle:focus {
+  box-shadow: none;
+  border-bottom-color: #0093c7;
+  background-image: linear-gradient(90deg, #00a3d9 1px, #00a3d9 1px, rgba(0, 0, 0, 0) 0px), linear-gradient(90deg, #00a3d9 1px, #00a3d9 1px, rgba(0, 0, 0, 0) 0px);
+}
+
+/* Button Progress */
+/********************/
+/* line 630, ../../sass/style.scss */
+.btn-progress {
+  cursor: default;
+  overflow: hidden;
+  position: relative;
+}
+/* line 634, ../../sass/style.scss */
+.btn-progress:after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  content: "Processing";
+  color: #ffffff;
+  background-color: #0b4986;
+  background-image: -moz-linear-gradient(top, #123b6e, #005dab);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#123b6e), to(#005dab));
+  background-image: -webkit-linear-gradient(top, #123b6e, #005dab);
+  background-image: -o-linear-gradient(top, #123b6e, #005dab);
+  background-image: linear-gradient(to bottom, #123b6e, #005dab);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff123b6e', endColorstr='#ff005dab', GradientType=0);
+  background-color: #005dab;
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  -webkit-background-size: 40px 40px;
+  -moz-background-size: 40px 40px;
+  -o-background-size: 40px 40px;
+  background-size: 40px 40px;
+  -webkit-animation: progress-bar-stripes 0.5s linear infinite;
+  -moz-animation: progress-bar-stripes 0.5s linear infinite;
+  -ms-animation: progress-bar-stripes 0.5s linear infinite;
+  -o-animation: progress-bar-stripes 0.5s linear infinite;
+  animation: progress-bar-stripes 0.5s linear infinite;
+}
+
+/* Animate Progress */
+/********************/
+/* Webkit */
+@-webkit-keyframes progress-bar-stripes {
+  /* line 673, ../../sass/style.scss */
+  to {
+    background-position: 40px 0;
+  }
+
+  /* line 676, ../../sass/style.scss */
+  from {
+    background-position: 0 0;
+  }
+}
+
+/* Firefox */
+@-moz-keyframes progress-bar-stripes {
+  /* line 684, ../../sass/style.scss */
+  to {
+    background-position: 40px 0;
+  }
+
+  /* line 687, ../../sass/style.scss */
+  from {
+    background-position: 0 0;
+  }
+}
+
+/* IE9 */
+@-ms-keyframes progress-bar-stripes {
+  /* line 695, ../../sass/style.scss */
+  from {
+    background-position: 40px 0;
+  }
+
+  /* line 698, ../../sass/style.scss */
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* Opera */
+@-o-keyframes progress-bar-stripes {
+  /* line 706, ../../sass/style.scss */
+  to {
+    background-position: 40px 0;
+  }
+
+  /* line 709, ../../sass/style.scss */
+  from {
+    background-position: 0 0;
+  }
+}
+
+/* Spec */
+@keyframes progress-bar-stripes {
+  /* line 717, ../../sass/style.scss */
+  to {
+    background-position: 40px 0;
+  }
+
+  /* line 720, ../../sass/style.scss */
+  from {
+    background-position: 0 0;
+  }
+}
+
+/* JUI fixes */
+/* line 728, ../../sass/style.scss */
+.ui-autocomplete {
+  background: white;
+  border-bottom: 1px solid #c4c4c4;
+}
+
+/* line 733, ../../sass/style.scss */
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+  background-color: #c4c4c4;
+  cursor: pointer;
+  background-image: none;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0;
+}
+
+/* EasyPie */
+/* line 744, ../../sass/style.scss */
+.chart {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  text-align: center;
+}
+/* line 750, ../../sass/style.scss */
+.chart canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* line 757, ../../sass/style.scss */
+.percent {
+  display: inline-block;
+  line-height: 110px;
+  z-index: 2;
+}
+
+/* Badge */
+/* line 765, ../../sass/style.scss */
+.badgeRateVal {
+  display: block;
+  background: #ff520f;
+  height: 4.7em;
+  width: 4.7em;
+  border-radius: 3.7em;
+  text-decoration: none;
+  text-align: center;
+  border: .25em solid white;
+  padding: 1em 0;
+  box-shadow: 0 0 0 0.5em #cfc6d8;
+  /*  box-shadow: 0 0 0 .1em white, 0 0 0 .35em red, 0 0 0 .45em white, 0 0 0 .7em red;*/
+}
+/* line 777, ../../sass/style.scss */
+.badgeRateVal p {
+  color: white;
+  margin: 0;
+  padding: 0;
+  font-family: helvetica;
+  font-size: 1.5em;
+  line-height: .65em;
+}
+/* line 778, ../../sass/style.scss */
+.badgeRateVal p:nth-child(2) {
+  font-size: 2.2em;
+}
+
+/* line 793, ../../sass/style.scss */
+.nut {
+  position: relative;
+  line-height: normal;
+  overflow: visible;
+  display: inline-block;
+  margin: 0 5px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 86.6665px;
+  height: 50px;
+  text-align: left;
+}
+/* line 804, ../../sass/style.scss */
+.nut:before {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -25px;
+  border-style: solid inset;
+  border-width: 0 43.333px 25px;
+}
+/* line 813, ../../sass/style.scss */
+.nut:after {
+  content: "";
+  width: 0;
+  position: absolute;
+  bottom: -25px;
+  border-style: solid inset;
+  border-width: 25px 43.333px 0;
+}
+/* line 821, ../../sass/style.scss */
+.nut > div {
+  border-radius: 50%;
+  background-color: #FFF;
+  position: absolute;
+  z-index: 9;
+  top: 50%;
+  left: 50%;
+  width: 65px;
+  height: 65px;
+  margin-left: -32.5px;
+  margin-top: -32.5px;
+}
+
+/* line 855, ../../sass/style.scss */
+.nut-list {
+  text-align: center;
+}
+
+/* line 859, ../../sass/style.scss */
+.nut {
+  background-color: #74cddb;
+}
+/* line 838, ../../sass/style.scss */
+.nut:before {
+  border-color: #74cddb rgba(0, 0, 0, 0);
+}
+/* line 841, ../../sass/style.scss */
+.nut:after {
+  border-color: #74cddb rgba(0, 0, 0, 0);
+}
+/* line 844, ../../sass/style.scss */
+.nut h3 {
+  margin: 0;
+  color: #74cddb;
+}
+/* line 848, ../../sass/style.scss */
+.nut small {
+  margin: 10px 0 5px;
+  display: block;
+  color: #74cddb;
+}
