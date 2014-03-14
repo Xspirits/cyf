@@ -35,7 +35,6 @@ module.exports = {
 	 	.exec(function(err, games) {
 	 		if (!err) {
 				// Method to construct the json result set
-				console.log(games)
 				var ret = {
 					data : games,
 					go : 200

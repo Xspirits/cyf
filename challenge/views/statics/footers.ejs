@@ -1,11 +1,136 @@
-	<script src="./js/jquery.min.js"></script>
-	<script src="./js/jquery-ui.min.js"></script>
-	<script src="./js/bootstrap.min.js"></script>
-	<script src="./js/spin.min.js"></script>
-	<script src="./js/ladda.min.js"></script>
-	<script src="./js/moment.min.js"></script>
-	<script src="./js/countdown.min.js"></script>
-	<script src="./js/moment-cd.js"></script>
-	<script src="./js/datePicker.js"></script>
-	<script src="./js/touchspin.js"></script>
-	<script src="./js/nouislider.min.js"></script>
+
+</div> <!-- End .canvas -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/jquery-ui.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/identicons.js"></script>
+<script src="./js/md5.js"></script>
+<script src="./js/navmenu.js"></script>
+<script src="./js/alertify.min.js"></script>
+<script src="./js/spin.min.js"></script>
+<script src="./js/ladda.min.js"></script>
+<script src="./js/moment.min.js"></script>
+<script src="./js/countdown.min.js"></script>
+<script src="./js/moment-cd.js"></script>
+<script src="./js/datePicker.js"></script>
+<script src="./js/touchspin.js"></script>
+<script src="./js/nouislider.min.js"></script>
+<script src="./js/odometer.min.js"></script>
+<script src="./js/nprogress.js"></script>
+<script>
+	window.odometerOptions = {
+		selector: '.odometer',
+		format: '(,ddd).dd'
+	};
+
+	$(function() {
+		var isMobile = ($(window).width() < 800) ? true : false;
+
+
+		// Identicons. md5 hash browser-side + identicon making
+		
+		$('.identicon').each( function(){
+			var _this = $(this);
+			var data = _this.attr('data-hashMe')
+			, size = _this.attr('data-size') ? _this.attr('data-size') : 100;
+
+			var hash = CryptoJS.MD5(data);
+
+			console.log('hashed ' + data + ' into ' + hash);
+			_this.text(hash);
+			_this.identicon5({
+				rotate: true,
+				size: size
+			});
+		})
+		// nprogress setup
+		var myLevel = Math.round((<%= currentUser.xp/currentUser.xpNext %>)*100)/100;
+
+		NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
+		NProgress.set( myLevel );
+
+		//socket io client
+		var socket = io.connect('');
+
+		//on connetion, updates connection state and sends subscribe request
+		// socket.on('connect', function(data){
+		// 	setStatus('connected');
+		// 	// socket.emit('subscribe', {channel:'notif'});
+		// });
+
+		//when reconnection is attempted, updates status 
+		// socket.on('reconnecting', function(data){
+		// 	setStatus('reconnecting');
+		// });
+
+		//on new message adds a new message to display
+		socket.on('message', function (data) {
+			var msg = "";
+			if (data.channel) {
+				msg += 'Channel:' + data.channel + ', ' + data.text; 
+			} else {
+				msg = data.text;
+			}
+			notif(msg);
+		});
+
+		// NOTIFICATIONS =========================
+		alertify.set({ delay : 12000 });
+
+		<% if (currentUser) { 
+
+			if (currentUser.notifications) { 
+				var notif = currentUser.notifications;
+				for (var i = 0; i < notif.length; i++) {
+					if(!notif[i].isSeen) {
+						%>
+
+						text = '<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a>';
+						message = ' <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>';
+
+						notif(text + message, '<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>);
+						<% }
+					}
+				} 
+			} 
+			%>
+
+			readability();
+
+			setTimeout(function(){
+				$('.odometer').each(function(){
+					var number = Math.floor(parseInt($(this).attr('data-number')));
+
+					$(this).html(number);
+				});
+			}, 1000);
+		});
+
+var readability = function(){
+	$('.dateReadability').each( function () {
+		var date = $(this).attr('data-date');
+		var converted = moment(date).format('dddd DD MMMM HH[h]mm');
+		$(this).text(converted);
+	})
+}
+var notif = function(msg, idNotif, del) {
+
+	alertify.log(msg, 'info');
+
+	var target = {					
+		delete : del,
+		id : idNotif
+	}
+	$.ajax({
+		type: 'POST',
+		data: JSON.stringify(target),
+		contentType: 'application/json',
+		url: './markNotifRead',						
+		success: function(data) {
+			console.log(data);
+		}
+	});				
+}
+</script>
+

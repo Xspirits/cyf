@@ -1,29 +1,38 @@
-module.exports = function(app, passport, moment, challenge, users, relations, games) {
-
-// normal routes ===============================================================
+module.exports = function(app, _, passport, genUID, xp, notifs, moment, challenge, users, relations, games) {
 
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
 		if (req.isAuthenticated())
 			res.render('index_logged.ejs', {
-				currentUser : req.user,
-				user : req.user
+				currentUser : req.user
 			});
 		else
-			res.render('index.ejs');
+			res.render('index.ejs', {
+				currentUser : false
+			});
 	});
 
 	// LOGOUT ==============================
-	app.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
+	app.get('/logout', isLoggedIn, function(req, res) {
+
+		notifs.logout(req.user);
+
+		users.setOffline(req.user, function( result ) {
+			if(result){
+				req.logout();
+				res.redirect('/');
+
+			}
+		});
+
 	});
 
 	// PROFILE SECTION =========================
 	app.get('/profile', isLoggedIn, function(req, res) {
+
+		// req.io.emit('message', { text: req.user.local.pseudo});
 		res.render('profile.ejs', {
-			currentUser : (req.isAuthenticated()) ? req.user : false,
-			user : req.user
+			currentUser : req.user
 		});
 	});
 
@@ -54,7 +63,7 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 // =============================================================================
 
 	// USER TRIBUNAL'S CASES SECTION =========================
-	app.get('/tribunal', isLoggedIn, function(req, res) {
+	app.get('/tribunal', isLoggedIn, function(req, res) {		
 
 		challenge.userWaitingCases(req.user , function (data) {
 
@@ -73,7 +82,6 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 	app.get('/t/:id', isLoggedIn, function(req, res) {
 
 		var id = req.params.id;
-
 
 	});	
 
@@ -184,12 +192,18 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 		});
 	});
 
-	app.post('/newChallenge', function(req, res) {
+	app.post('/newChallenge', isLoggedIn, function(req, res) {
 
 		challenge.create(req, function(done){	
 
+			console.log(done);
+
+			notifs.createdChallenge(req.user, done.idCool);
+
+			xp.xpReward(req.user, 'challenge.create');
+
 			res.render('newChallenge.ejs', {
-				currentUser : (req.isAuthenticated()) ? req.user : false,
+				currentUser    : req.user,
 				challenge: done 
 			});
 		})
@@ -199,28 +213,57 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 
 		var data = {
 			oId : req.body.id,
-			deny : req.body.deny
+			pass : req.body.pass
 		};
 
-		if(typeof data.deny == 'boolean' || data.deny instanceof Boolean) {
+		if(typeof data.pass == 'boolean' || data.pass instanceof Boolean) {
+			//Update the ongoing
 			challenge.validateOngoing(data, function(done){	
 
-				res.send(done);
-			})
+				// Ongoing has been updated;
+				// if the answer was "pass", mean it wasn't accepted, don't let people rate the challenge (yet).
+				if(data.pass === true) {
 
-		} else {
-			res.send(false, 'not a boolean');
-		}
+					var obj = {
+						id : done._idChallenge._id,
+						_idChallenged : done._idChallenged._id,
+						_idChallenger : done._idChallenger._id
+					}
+
+					xp.xpReward(done._idChallenger, 'ongoing.validate');
+					xp.xpReward(done._idChallenged, 'ongoing.succeed');
+					notifs.successChall(done);
+
+					//Ask the challenger and challenged to rate the challenge.
+					users.askRate(obj, function( done ) {
+						res.send(done);
+					});
+				} else 
+				res.send(true);
+			});
+		} else 
+		res.send(false, 'not a boolean');		
+	});
+
+	// USER CHALLENGE TO BE RATED (ask opinion) ==================
+	app.get('/rateChallenges', isLoggedIn, function(req, res) {
+
+		users.userToRateChallenges(req.user._id, function( data ) {
+			console.log(data);
+
+			res.render('rateChallenge.ejs', {
+				currentUser : req.user,
+				challenge: data 
+			});
+		});
 	});
 
 	// PROFILE SECTION - USER Challenges =========================
 	app.get('/myChallenges', isLoggedIn, function(req, res) {
 
-		challenge.getUserChallenges(req.user._id, function( data ) {
-
+		challenge.getUserChallenges(req.user._id, function( data ) {			
 			res.render('myChallenges.ejs', {
 				currentUser    : req.user,
-				user : req.user,
 				challenges : data
 			});
 
@@ -262,7 +305,6 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 		})
 	});
 
-	// process the login form
 	app.post('/launchChallenge', isLoggedIn, function(req, res){
 		var data = {
 			from : req.user._id,
@@ -272,8 +314,9 @@ module.exports = function(app, passport, moment, challenge, users, relations, ga
 			launchDate : req.body.launchDate
 		};
 		
+		notifs.launchChall(data.from,data.idChallenged);
 		challenge.launch(data, function( result ) {
-			res.send(result);
+			res.send(true);
 			// @TODO
 		})
 
@@ -342,6 +385,20 @@ app.get('/users', function(req, res) {
 		});
 
 
+		app.post('/markNotifRead', isLoggedIn, function(req, res){
+
+			var obj = {
+				idUser : req.user._id,
+				delete : req.body.delete,
+				idNotif : req.body.id
+			};
+
+			notifs.markRead(obj, function( result ) {
+				res.send(true);
+			})
+
+		});
+
 		app.post('/sendTribunal', isLoggedIn, function(req, res){
 
 			var obj = {
@@ -357,6 +414,26 @@ app.get('/users', function(req, res) {
 
 		});
 
+		app.post('/rateChallenges', isLoggedIn, function(req, res) {
+
+			var obj = {
+				id 			: req.body.id, // idCool of the Ongoing
+				idUser 		: req.user._id,
+				difficulty 	: req.body.difficulty,
+				quickness 	: req.body.quickness,
+				fun 		: req.body.fun,
+			};
+
+			challenge.rateChallenge(obj, function( data ) {
+
+				console.log(data);
+
+				xp.xpReward(req.user, 'challenge.rate');
+				notifs.ratedChall(data);
+				res.send(true);
+			});
+		});
+
 		//A judge give his vote regarding to an open Tribunal's case
 		app.post('/voteCase', isLoggedIn, function(req, res){
 
@@ -368,15 +445,37 @@ app.get('/users', function(req, res) {
 
 			challenge.voteCase(obj, function( result ) {
 
-				res.send(true);
+
+				xp.xpReward(req.user, 'tribunal.vote');
+
 				//Loop and check if all vote have been processed. then close the case.
+				challenge.remainingCaseVotes(obj.id, function( counter ) {
+
+					// Close the case
+					if(counter === 0) {
+						challenge.completeCase(obj.id, function( cases ) {
+
+							var obj = {
+								id : cases._idChallenge,
+								_idChallenged : cases._idChallenged,
+								_idChallenger : cases._idChallenger
+							}
+
+							notifs.caseClosed( cases );
+							//Ask the challenger and challenged to rate the challenge.
+							users.askRate(obj, function( done ) {
+
+								res.send(true);
+
+							});
+						});
+					} else 
+					res.send(true);
+				});
 			})
 
 		});
 
-
-
-		// process the login form
 		app.post('/askFriend', isLoggedIn, function(req, res){
 			var idFriend = req.body.id,
 			idCoolFriend = req.body.idCool,
@@ -422,6 +521,11 @@ app.get('/users', function(req, res) {
 			// console.log(obj);
 			relations.acceptRelation(obj.from, obj.to, function( result ) {
 
+
+				xp.xpReward(result[0], 'user.newFriend');
+				xp.xpReward(result[1], 'user.newFriend');
+
+				notifs.nowFriends(result);
 				res.send(true);
 				//TODO
 			})
@@ -485,13 +589,13 @@ app.get('/users', function(req, res) {
 				idUser : req.user._id
 			};
 
-			console.log(obj);
 			challenge.accept(obj, function( result ) {
 
-				if(result) 
-					res.send(true);
-				else
-					console.log(result);
+				xp.xpReward(result._idChallenged, 'ongoing.accept');
+				xp.xpReward(result._idChallenger, 'ongoing.accept');
+
+				notifs.acceptChall(result._idChallenger,result._idChallenged);
+				res.send(true);
 				//TODO
 			})
 		});
@@ -512,7 +616,7 @@ app.get('/users', function(req, res) {
 			})
 		});
 // =============================================================================
-// AUTHENTICATE (FIRST LOGIN) ==================================================
+// AUTHENTICATE (FIRST fnotif) ==================================================
 // =============================================================================
 
 	// locally --------------------------------

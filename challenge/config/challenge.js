@@ -1,65 +1,15 @@
 
 // load up the user model
-var moment = require('moment');
-var User   = require('../app/models/user'),
-Challenge  = require('../app/models/challenge'),
-Ongoing    = require('../app/models/ongoing'),
-users      = require('./users');
+var moment  = require('moment');
+var User    = require('../app/models/user')
+, Challenge = require('../app/models/challenge')
+, Ongoing   = require('../app/models/ongoing')
+, users     = require('./users')
+, genUID    = require('shortid');
+genUID.seed(664);
 
 module.exports = {
 
-	/**
-	 * Generate an unique ID for readability.
-	 * Max 1.6 Millions
-	 * @return {String} [String UID]
-	 */
-	 generateUID : function(collection, returned) {
-
-	 	var nUID = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
-
-	 	if(collection === 'ongoings') {
-
-	 		Ongoing
-	 		.where('idCool', nUID)
-	 		.count(function (err, count) {
-	 			if (err) return handleError(err);
-	 			if(count === 0) {
-	 				console.log(nUID);
-	 				returned(nUID);
-	 			}
-	 			else
-	 				this.generateUID('ongoings');
-	 		})
-	 	}
-	 	if(collection === 'challenges') {
-
-	 		Challenge
-	 		.where('idCool', nUID)
-	 		.count(function (err, count) {
-	 			if (err) return handleError(err);
-	 			if(count === 0) {
-	 				console.log(nUID);
-	 				returned(nUID);
-	 			}
-	 			else
-	 				this.generateUID('challenges');
-	 		})
-	 	}
-	 	if(collection === 'users') {
-
-	 		User
-	 		.where('idCool', nUID)
-	 		.count(function (err, count) {
-	 			if (err) return handleError(err);
-	 			if(count === 0) {
-	 				console.log(nUID);
-	 				returned(nUID);
-	 			}
-	 			else
-	 				this.generateUID('users');
-	 		})
-	 	}
-	 },
 	/**
 	 * Create a new challenge
 	 * @param  {array}   req  [form variables]
@@ -67,73 +17,40 @@ module.exports = {
 	 * @return {mixed}        [true or error]
 	 */
 	 create : function (req, done) {
-			// body...
-			var data = req.body
-			user     = req.user;
-			
-			/*title           : String,
-			description     : String,
-			game            : String,
-			creation        : Date,
-			author          : Number,
-			value           : Number,
-			icon            : String,
-			rateNumber      : Number,
-			rateValue       : Number*/
-			var _this = this,
-			title   = data['title'],
-			durationH   = data['durationH'],
-			durationD   = data['durationD'],
-			description = data['description'],
-			game = data['game'];
 
-			Challenge
-			.findOne({ 'title' :  title })
-			.exec(function(err, challenge) {
+	 	var data    = req.body
+	 	user        = req.user;
 
-				// if there are any errors, return the error
-				if (err)
-					throw err;
+	 	var _this   = this,
+	 	title       = data['title'],
+	 	durationH   = data['durationH'],
+	 	durationD   = data['durationD'],
+	 	description = data['description'],
+	 	game        = data['game'];
 
-				// check to see if theres already a user with that email
-				if (challenge) {
-					return done(null, false, req.flash('createMessage', 'That challenge already exists.'));
-				} else {
+	 	var uID = genUID.generate().substr(-6);
 
-					// create the challenge
-					
-					_this.generateUID('challenges', function(uID) {
+		// create the challenge
 
-						var generateDate = new Date;
+		var newChallenge         = new Challenge();
+		newChallenge.idCool      = uID;
+		newChallenge.title       = title;
+		newChallenge.description = description;
+		newChallenge.game        = game;
+		newChallenge.durationH   = durationH;
+		newChallenge.durationD   = durationD;
+		newChallenge.author      = user._id;
 
-					// Store the data for the upcoming callback
-					var returned = { title : title, description : description,durationH : durationH,durationD : durationD, game : game, creation : generateDate};
+		console.log(newChallenge);
 
-					var newChallenge            = new Challenge();
-					newChallenge.idCool = uID;
-					newChallenge.title       = title;
-					newChallenge.description = description;
-					newChallenge.game        = game;
-					newChallenge.creation    = generateDate;
-					newChallenge.durationH   = durationH;
-					newChallenge.durationD   = durationD;
-					newChallenge.author      = user._id;
-					newChallenge.value       = 0;
-					// newChallenge.icon        = 'glyphicon glyphicon-bookmark';
-					newChallenge.rateNumber  = 0;
-					newChallenge.rateValue   = 0;
+		newChallenge.save( function(err) {
+			if (err)
+				throw err;
 
-					newChallenge.save(function(err) {
+			return done(newChallenge);
 
-						if (err)
-							throw err;
-
-						return done(returned);
-					});
-				});
-				}
-			});
-},
+		});
+	},
 
 		/**
 		* Edit an existing challenge.
@@ -243,6 +160,181 @@ module.exports = {
 			});
 
 		 },
+
+		 /**
+		  * [rateChallenge description]
+		  * @param  {Object}   data [id String idCool, user ObjectId, difficulty Number, quickness Number, fun Number ]
+		  * @param  {Function} done [callback]
+		  * @return {Boolean}       
+		  */
+		  rateChallenge : function (data, done) {
+
+		  	Challenge
+		  	.findOne({idCool : data.id})
+		  	.exec(function(err, challenge) {
+
+				// if there are any errors, return the error
+				if (err)
+					throw err;
+
+				// Add this user on the users historical
+				challenge.completedBy = data.idUser;
+
+				var diff  = challenge.rating.difficulty,
+				diffiRate = data.difficulty,
+				quick     = challenge.rating.quickness,
+				quickRate = data.quickness,
+				fun       = challenge.rating.fun,
+				funRate   = data.fun;
+
+				var diffiFive = Math.round(diffiRate / 10),
+				quickFive = Math.round(quickRate / 10),
+				funFive = Math.round(funRate / 10);
+
+				// Do Some Maths youhou.
+				diffiFive  = (diffiFive < 1 ) ? 1 : diffiFive;
+				quickFive = (quickFive < 1 ) ? 1 : quickFive;
+				funFive   = (funFive < 1  ) ?1 : funFive;
+
+				console.log(diffiFive +' o ' +quickFive+' o ' +funFive );
+
+				// #DIFFICULTY
+				
+				var newDiffiCount = ((diff.count) ? diff.count : 0) + 1,
+				newDiffiSum = ((diff.sum) ? diff.sum : 0) + diffiRate;
+
+				if(diffiRate > ((diff.max) ? diff.max : 0))
+					diff.max = diffiRate;
+				
+				if(diffiRate < ((diff.min) ? diff.min : 0))
+					diff.min = diffiRate;
+				
+				diff.sum = newDiffiSum;
+				diff.avg = newDiffiSum / newDiffiCount;
+				diff.count = newDiffiCount;
+
+				switch(diffiFive)
+				{
+					case 1:
+					diff.distribution.one   = ((diff.distribution.one) ? diff.distribution.one : 0)  + 1;
+					break;
+					case 2:
+					diff.distribution.two   = ((diff.distribution.two) ? diff.distribution.two : 0)  + 1;
+					break;
+					case 3:
+					diff.distribution.three = ((diff.distribution.three) ? diff.distribution.three : 0) + 1;
+					break;
+					case 4:
+					diff.distribution.four  = ((diff.distribution.four) ? diff.distribution.four : 0) + 1;
+					break;
+					case 5:
+					diff.distribution.five  = ((diff.distribution.five) ? diff.distribution.five : 0)  + 1;
+					break;
+					default:
+					console.log('error with switch for ' + diffiFive);
+				}
+				// #QUICKNESS
+				
+				var newQuickCount = ((quick.count) ? quick.count : 0) + 1,
+				newQuickSum = ((quick.sum) ? quick.sum : 0) + quickRate;
+
+				if(quickRate > ((quick.max) ? quick.max : 0))
+					quick.max = quickRate;
+				
+				if(quickRate < ((quick.min) ? quick.min : 0))
+					quick.min = quickRate;
+				
+				quick.sum = newQuickSum;
+				quick.avg = newQuickSum / newQuickCount;
+				quick.count = newQuickCount;
+
+				switch(quickFive)
+				{
+					case 1:
+					quick.distribution.one   = ((quick.distribution.one) ? quick.distribution.one : 0)  + 1;
+					break;
+					case 2:
+					quick.distribution.two   = ((quick.distribution.two) ? quick.distribution.two : 0)  + 1;
+					break;
+					case 3:
+					quick.distribution.three = ((quick.distribution.three) ? quick.distribution.three : 0) + 1;
+					break;
+					case 4:
+					quick.distribution.four  = ((quick.distribution.four) ? quick.distribution.four : 0) + 1;
+					break;
+					case 5:
+					quick.distribution.five  = ((quick.distribution.five) ? quick.distribution.five : 0)  + 1;
+					break;
+					default:
+					console.log('error with switch for ' + quickFive);
+				}				
+				// #FUN
+				
+				var newFunCount = ((fun.count) ? fun.count : 0) + 1,
+				newFunSum = ((fun.sum) ? fun.sum : 0) + funRate;
+
+				if(funRate > ((fun.max) ? fun.max : 0))
+					fun.max = funRate;
+				
+				if(funRate < ((fun.min) ? fun.min : 0))
+					fun.min = funRate;
+				
+				fun.sum = newFunSum;
+				fun.avg = newFunSum / newFunCount;
+				fun.count = newFunCount;
+
+				switch(funFive)
+				{
+					case 1:
+					fun.distribution.one   = ((fun.distribution.one) ? fun.distribution.one : 0)  + 1;
+					break;
+					case 2:
+					fun.distribution.two   = ((fun.distribution.two) ? fun.distribution.two : 0)  + 1;
+					break;
+					case 3:
+					fun.distribution.three = ((fun.distribution.three) ? fun.distribution.three : 0) + 1;
+					break;
+					case 4:
+					fun.distribution.four  = ((fun.distribution.four) ? fun.distribution.four : 0) + 1;
+					break;
+					case 5:
+					fun.distribution.five  = ((fun.distribution.five) ? fun.distribution.five : 0)  + 1;
+					break;
+					default:
+					console.log('error with switch for ' + funRate);
+				}
+
+
+				challenge.save(function(err, result) {
+					if (err)
+						throw err;
+
+					var obj = {
+						id 		: result._id,
+						idUser 	: data.idUser,
+						rating 	: {
+							difficulty 	: data.difficulty,
+							quickness 	: data.quickness,
+							fun 		: data.fun
+						}
+					}
+					var theChallenge = result,
+					theNote = Math.round((data.difficulty + data.quickness + data.fun ) / 3);
+
+
+					users.ratedChallenge(obj, function( result ) {
+
+						var toNotify = {
+							challenge: theChallenge,
+							note : theNote,
+							user : result
+						}
+						console.log(toNotify);
+						return done(toNotify);
+					})
+				});
+			});
+},
 
 
 		/**
@@ -370,50 +462,30 @@ module.exports = {
 		 */
 		 launch : function (data, done) {
 
+		 	if (data.deadLine.d > 0 ) {
+		 		query = {hours:data.deadLine.h,days:data.deadLine.d};
+		 	} else {
+		 		query = {hours:data.deadLine.h};
+		 	}
 
-			// Store the data for the upcoming callback
-			var returned = { 
-				idChallenge : data.idChallenge,            	
-				challenger : data.from,
-				challenged : data.idChallenged,
-				deadLine : data.deadLine
-			};
+		 	var oCha           = new Ongoing();
 
-			if (data.deadLine.d > 0 ) {
-				query = {hours:data.deadLine.h,days:data.deadLine.d};
-			} else {
-				query = {hours:data.deadLine.h};
-			}
+		 	oCha._idChallenge  = data.idChallenge;
+		 	oCha._idChallenger = data.from;
+		 	oCha._idChallenged = data.idChallenged; 
+		 	oCha.idCool        = genUID.generate().substr(-6);
 
-			// console.log(data.launchDate);
-			// console.log(moment(data.launchDate).utc());
-			// console.log(moment(data.launchDate).isValid());
-			// console.log('=====')
-			var oCha           = new Ongoing();
+		 	oCha.launchDate    = moment(data.launchDate).utc();
+		 	oCha.deadLine      = moment(data.launchDate).utc().add(query);
 
-			this.generateUID('ongoings', function(uID) {
+		 	oCha.save(function(err) {
+		 		if (err)
+		 			throw err;
 
-				oCha._idChallenge  = data.idChallenge;
-				oCha._idChallenger = data.from;
-				oCha._idChallenged = data.idChallenged; 
-				oCha.idCool        = uID;
+		 		return done(oCha);
+		 	});
 
-				oCha.launchDate    = moment(data.launchDate).utc();
-				oCha.deadLine      = moment(data.launchDate).utc().add(query);
-
-				// console.log(oCha.deadLine);
-				// console.log(moment(oCha.deadLine).utc());
-				// console.log(moment(oCha.deadLine).isValid());
-				// console.log(oCha);
-
-				oCha.save(function(err, result) {
-					if (err)
-						throw err;
-					return done(result);
-				});
-
-			});
-		},
+		 },
 
 		/**
 		 * accept an ongoing challenge's request, setting "accepted" to true
@@ -421,36 +493,45 @@ module.exports = {
 		 * @param  {Function} done [callback]
 		 * @return {Boolean}       [true or false]
 		 */
-		 accept : function(data, done ) {
+		 accept : function( data, done ) {
 
 
 		 	var idChallenge = data.id,
 		 	idUser = data.idUser;
 
-		/**
-		 * Select the challenge and remove it from our model
-		 */
-		 Ongoing
-		 .findOne({ _id :  idChallenge })
-		 .exec(function(err, chall) {
+			/**
+			 * Select the challenge and remove it from our model
+			 */
+			 Ongoing
+			 .findOne({ _id :  idChallenge })
+			 .populate('_idChallenge _idChallenged _idChallenger')
+			 .exec( function(err, chall) {
 
+			 	var passing = chall;
 				// if there are any errors, return the error
 				if (err)
 					throw err;
 
-				if(chall._idChallenged = idUser) {
+				var testiD = chall._idChallenged._id.toString()
+				, uString = idUser.toString();
+
+				console.log(testiD + ' ' +uString);
+
+				if(testiD == uString) {
+
 					chall.accepted = true;
 
-					chall.save(function(err, result) {
+					chall.save(function(err) {
 						if (err)
 							throw err;
-						return done(result);
+
+						return done(passing);
 					});
 				} else 
 				return done(false, 'you are not the person challenged on this challenge')
 			});
 
-		},
+			},
 
 		/**
 		 * Deny an ongoing challenge's request by deleting it.
@@ -492,13 +573,12 @@ module.exports = {
 
 		 	Ongoing
 		 	.findOne({ _id :  data.idChallenge, _idChallenged : data.idUser  })
+		 	.populate('_idChallenge _idChallenged _idChallenger')
 		 	.exec(function(err, ongoing) {
 
 				// if there are any errors, return the error
 				if (err)
 					throw err;
-
-				console.log(ongoing);
 
 				ongoing.waitingConfirm	= true;
 				ongoing.confirmAsk		= new Date;
@@ -506,10 +586,11 @@ module.exports = {
 				ongoing.confirmLink2	= (data.proofLink2) ? data.proofLink2 : '';
 				ongoing.confirmComment	= (data.confirmComment) ? data.confirmComment : '';
 
-				ongoing.save(function(err, result) {
+				ongoing.save(function(err) {
 					if (err)
 						throw err;
-					return done(result);
+
+					return done(ongoing);
 				});
 			});
 
@@ -524,6 +605,7 @@ module.exports = {
 
 		  	Ongoing
 		  	.findOne({idCool : data.oId})
+		  	.populate('_idChallenged _idChallenger _idChallenge')
 		  	.exec(function(err, ongoing) {
 
 				// if there are any errors, return the error
@@ -534,10 +616,12 @@ module.exports = {
 				ongoing.validated      = data.deny;
 				ongoing.progress       = 100;
 
-				ongoing.save(function(err, result) {
+				ongoing.save(function(err) {
+
 					if (err)
 						throw err;
-					return done(true);
+
+					return done(ongoing);
 				});
 			});
 
@@ -557,14 +641,14 @@ module.exports = {
 
 	 	var loadCases = user.tribunal;
 
-	 	console.log(loadCases);
+	 	// console.log(loadCases);
 
 	 	Ongoing
 	 	.find({ _id: { $in: loadCases }})
 	 	.populate('_idChallenge _idChallenger _idChallenged')
 	 	.exec( function(err, cases) {
 
-	 		console.log(cases);
+	 		// console.log(cases);
 	 		done(cases);
 	 	});
 
@@ -659,24 +743,88 @@ module.exports = {
 	 			'tribunalVote.$.voteDate': new Date
 	 		}}
 	 		)
+	 	.exec( function( err, cases ) {
+
+	 		if (err)
+	 			throw err;
+
+	 		var userData = {
+	 			id : cases._id,
+	 			idUser :data.idUser,
+	 			answer : data.answer
+	 		};
+
+	 		console.log('Challenge.js l.673 - '+userData);
+	 		users.votedOnCase(userData, function( ret ){
+
+	 			//return the case
+	 			return done(cases);
+
+	 		});
+	 	});
+	 },
+
+	 completeCase : function (idCase, done) {
+
+	 	Ongoing
+	 	.findOne({idCool : idCase})
+	 	.populate('_idChallenged _idChallenger _idChallenge')
+	 	.exec( function( err, cases ) {
+
+	 		if (err)
+	 			throw err;
+
+	 		var deny = 0,
+	 		validate = 0,
+	 		judges = cases.tribunalVote;
+
+	 		for (var i = judges.length - 1; i >= 0; i--) {
+
+	 			//This shouldn't be needed but well, better be certain.
+	 			if(judges[i].hasVoted === true) {
+
+	 				if(judges[i].answer === true)  
+	 					validate++;
+	 				else 
+	 					deny++;
+	 			}
+	 		}
+	 		// The total of judge is never pair, so this can't be even.
+	 		console.log('case: ' + cases.idCool+' === ['+validate+']+1 ['+deny+']-1 Result: '+ (validate > deny)? 'validated' : 'denied');
+
+	 		cases.tribunalAnswered = (validate > deny) ? true : false;
+	 		cases.caseClosed       = true;
+	 		cases.caseClosedDate   = new Date;
+
+	 		cases.save(function(err) {
+	 			if (err)
+	 				throw err;
+
+	 			return done(cases);
+	 		});
+	 	});
+	 },
+
+	 remainingCaseVotes : function (idCase, done) {
+
+	 	Ongoing
+	 	.findOne({idCool : idCase})
 	 	.exec( function( err, req ) {
 
 	 		if (err)
 	 			throw err;
 
-	 		console.log(req);
-	 		var userData = {
-	 			id : req._id,
-	 			idUser :data.idUser,
-	 			answer : data.answer
-	 		};
-	 		console.log(userData);
+	 		var counter = 0,
+	 		judges = req.tribunalVote;
 
-	 		users.votedOnCase(userData, function( ret ){
+	 		for (var i = judges.length - 1; i >= 0; i--) {
+	 			if(judges[i].hasVoted === false)
+	 				counter++;
+	 		}
 
-	 			return done(ret);
-
-	 		});
+	 		done(counter);
 	 	});
 	 },
+
+
 	};

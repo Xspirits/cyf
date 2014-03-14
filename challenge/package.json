@@ -1,6 +1,9 @@
 {
-  "name": "node-authentication",
+  "name": "challenge-yout-friends",
   "main": "server.js",
+  "scripts": {
+    "start": "node server"
+  },
   "dependencies": {
     "express": "latest",
     "ejs": "~0.8.5",
@@ -12,6 +15,16 @@
     "passport-google-oauth": "~0.1.5",
     "connect-flash": "~0.1.1",
     "bcrypt-nodejs": "latest",
-    "moment": "~2.5.1"
+    "moment": "~2.5.1",
+    "redis": "~0.10.1",
+    "socket.io": "~0.9.16",
+    "underscore": "~1.6.0",
+    "shortid": "~2.0.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-sass": "~0.11.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-compass": "~0.7.2"
   }
 }

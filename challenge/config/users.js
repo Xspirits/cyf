@@ -2,10 +2,20 @@
 // load up the user model
 var User  = require('../app/models/user'),
 Challenge = require('../app/models/challenge'),
-relations = require('./relations');
+notifs    = require('../app/functions/notifications'),
+relations = require('./relations'),
+_         = require('underscore');
 
 module.exports = {
 
+	setOffline : function( user , done ) {
+		User.findByIdAndUpdate(user._id, {isOnline: false}, function( err ) {
+			if (err)
+				throw err;
+
+			done(true);
+		});
+	},
 	/**
 	 * Return NUMBER users whom will be used as judge in the tribunal
 	 * for a given ongoing case.
@@ -168,8 +178,6 @@ module.exports = {
 	 	var from = data.from,
 	 	uTo      = data.to;
 
-	 	console.log(data.from + ' (-- )'+data.to);
-
 	 	//Check if the targeted user exist
 	 	User
 	 	.findById(uTo.id)
@@ -202,9 +210,6 @@ module.exports = {
 
 	 	var from = data.from,
 	 	uTo      = data.to;
-
-	 	console.log(data.from + ' (-- )'+data.to);
-
 	 	relations.accept(from, uTo, function (result) {
 	 		
 	 		if(result) 
@@ -225,8 +230,6 @@ module.exports = {
 	 	var from = data.from,
 	 	uTo      = data.to;
 
-	 	console.log(data.from + ' (-- )'+data.to);
-
 	 	relations.deny(from, uTo, function (result) {
 	 		
 	 		if(result) 
@@ -234,4 +237,100 @@ module.exports = {
 	 	});
 
 	 },
+
+	 /**
+	  * Delete the rate request and add an item in challengeRateHistoric
+	  * @param  {[type]}   data [description]
+	  * @param  {Function} done [description]
+	  * @return {[type]}        [description]
+	  */
+	  ratedChallenge : function(data, done) { 
+	  	var query = []
+	  	currentDate = new Date(),
+	  	idSplice = data.id; //Challenge ID
+
+	  	User
+	  	.findByIdAndUpdate(data.idUser,
+	  		{ $push : 
+	  			{ challengeRateHistoric : {
+	  				_idChallenge: data.id,
+	  				rateDate: currentDate,
+	  				rating: data.rating,
+	  			}} 
+	  		}
+	  		)
+	  	.exec(function (err, doc) {
+
+	  		if(err)
+	  			throw err;
+
+	  		console.log(doc);
+
+	  		var idx = doc.challengeRate ? doc.challengeRate.indexOf(idSplice) : -1;
+            // is it valid?
+            if (idx !== -1) {
+
+                // remove it from the array.
+                doc.challengeRate.splice(idx, 1);
+
+                // save the doc
+                doc.save(function(err, doc) {
+                	if (err) {
+                		throw err;
+                	} else {
+
+                		return done(doc);
+                	}
+                });
+                // stop here, otherwise 404
+                return;
+            }
+            return done(false, 'wrong whilst splicing. users l.280');
+
+
+        });
+
+	  },
+	 /**
+	  * Ask users to review the challenge they've just done.
+	  * @param  {Object}   idChallenge [id : _idChallenge (Object),idChallenged (Object),idChallenger (Object)]
+	  * @param  {Function} done        [description]
+	  * @return {[type]}               [description]
+	  */
+	  askRate : function (data , done) {
+
+	  	var query = [data._idChallenger,data._idChallenged];
+
+	  	User
+	  	.update(
+	  		{ _id: { $in: query } },
+	  		{ $addToSet: { challengeRate : data.id} },
+	  		{ multi: true }
+	  		)
+	  	.exec(function (err, user) {
+
+	  		if(err)
+	  			throw err;
+	  		
+	  		console.log(user);
+	  		return done(true);
+
+	  	});
+	  },
+
+	  userToRateChallenges : function (idUser , done) {
+	  	User		 	
+	  	.findById(idUser)
+	  	.populate('challengeRate')
+	  	.exec(function(err, data) {
+
+				// if there are any errors, return the error
+				if (err)
+					return done(err);
+
+				return done(data);
+			});
+	  },
+
+
 	}

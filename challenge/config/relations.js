@@ -63,11 +63,9 @@ module.exports = {
 	 				User
 	 				.findByIdAndUpdate(from.id, query)
 	 				.exec(function(err, updated) {
-	 					console.log('sentRequests: '+thisIsSend+' relation updated');
 	 					done(true);
 	 				});
 	 			} else {
-	 				console.log('already asked');
 	 				done(false, 'already asked');
 	 			}
 
@@ -90,12 +88,11 @@ module.exports = {
 	 		$pull: { sentRequests : { idUser : to.id }},
 	 		$push: { friends : { idUser : to.id, idCool : to.idCool, userName : to.userName }}
 	 	},
-	 	function(err, relation) {
+	 	function(err, relationFrom) {
 
 	 		if(err)
 	 			throw err;
-	 		console.log(relation);
-	 		console.log('Pending: relation updated  idUser :'+ from.id);
+	 		console.log(relationFrom);
 
 	 		User
 	 		.findByIdAndUpdate(to.id,
@@ -103,13 +100,14 @@ module.exports = {
 	 			$pull: { pendingRequests : { idUser : from.id }},
 	 			$push: { friends : { idUser : from.id ,idCool : to.idCool, userName : from.userName }}
 	 		},
-	 		function(err, relation) {
+	 		function(err, relationTo) {
 
 	 			if(err)
 	 				throw err;
-	 			console.log(relation);
-	 			console.log('Pending: relation updated  idUser :'+ from.id);
-	 			done(true);
+
+	 			var newRelation = [relationFrom, relationTo];
+
+	 			return done(newRelation);
 	 		});
 	 	});
 
@@ -122,7 +120,6 @@ module.exports = {
 
 	 		if(err)
 	 			throw err;
-	 		console.log('Pending: relation canceled');
 
 	 		User
 	 		.findByIdAndUpdate(to.id,{ $pull: { sentRequests : { idUser : from.id }} }, function(err, relation) {
@@ -130,8 +127,7 @@ module.exports = {
 	 			if(err)
 	 				throw err;
 
-	 			console.log('Pending: relation canceled');
-	 			done(true);
+	 			return done(true);
 
 	 		});
 	 	});
@@ -152,8 +148,8 @@ module.exports = {
 
 	 		if(err)
 	 			throw err;
-	 		console.log('Pending: relation updated');
-	 		done(true);
+
+	 		return done(true);
 	 	});
 	 },
 	};

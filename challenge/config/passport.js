@@ -5,13 +5,12 @@ var TwitterStrategy  = require('passport-twitter').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model & challenge
-var User             = require('../app/models/user'),
-challenge            = require('../config/challenge');
-
+var User  = require('../app/models/user'),
+challenge = require('../config/challenge');
 // load the auth variables
 var configAuth       = require('./auth'); // use this one for testing
 
-module.exports = function(passport) {
+module.exports = function(passport, genUID, xp, notifs) {
 
     // =========================================================================
     // passport session setup ==================================================
@@ -44,21 +43,31 @@ module.exports = function(passport) {
 
         // asynchronous
         process.nextTick(function() {
-            User.findOne({ 'local.email' :  email }, function(err, user) {
+            User.findOne({ 'local.email' :  email }, function(err, userfound) {
                 // if there are any errors, return the error
                 if (err)
                     return done(err);
 
                 // if no user is found, return the message
-                if (!user)
+                if (!userfound)
                     return done(null, false, req.flash('loginMessage', 'No user found.'));
 
-                if (!user.validPassword(password))
+                if (!userfound.validPassword(password))
                     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
 
                 // all is well, return user
-                else
-                    return done(null, user);
+                else {
+                    userfound.isOnline = true;
+
+                    userfound.save(function(err) {
+                        if(err)
+                            throw err;
+
+                        notifs.login(userfound);
+                        return done(null, userfound);
+
+                    });
+                }
             });
         });
 
@@ -75,6 +84,8 @@ module.exports = function(passport) {
     },
     function(req, email, password, done) {
 
+        var uID = genUID.generate().substr(-6);
+
         // asynchronous
         process.nextTick(function() {
             // check if the user is already logged ina
@@ -89,8 +100,6 @@ module.exports = function(passport) {
                         return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
                     } else {
 
-
-                    challenge.generateUID('users', function(uID) {
                         // create the user
                         var newUser            = new User();
 
@@ -105,16 +114,14 @@ module.exports = function(passport) {
                         newUser.local.followers       = [];
 
 
-                        newUser.save(function(err) {
+                        newUser.save(function(err, user) {
                             if (err)
                                 throw err;
 
+                            xp.xpReward(user, 'user.register');
                             return done(null, newUser);
                         });
-
-                    });
                     }
-
                 });
 } else {
 

@@ -25,7 +25,10 @@ var ongoingSchema = mongoose.Schema({
 		voteDate : Date,
 		hasVoted : {type: Boolean, default: false},
 		answer   : {type: Boolean, default: false},
-	}]
+	}],
+	tribunalAnswered : {type: Boolean, default: false},
+	caseClosed       : {type: Boolean, default: false},
+	caseClosedDate   : {type: Date, default: Date.now}
 
 });
 

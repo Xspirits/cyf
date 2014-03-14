@@ -7,130 +7,132 @@
 <body>
 
 	<% include statics/navTop %>
-	<div class="container">
+	
 
-		<div class="row">
-			<h1>
-				<span class="<%= ongoing.icon %>"></span> 
-				<%= ongoing._idChallenge.title %> 
-				<small> <%= ongoing._idChallenge.game %></small>
-			</h1>
-			<hr>
-
-			<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() ) { %>
-			<div class="col-lg-8">	 			
-				<% } else { %>
-				<div class="col-lg-12">	 			
-					<% } %>
-					<p>
-
-						<a href='/u/<%= ongoing._idChallenger.idCool %>'>
-							<%= ongoing._idChallenger.local.pseudo  %>
-						</a>
-						<span class="glyphicon glyphicon-arrow-right"></span>
-						<a href='/u/<%= ongoing._idChallenged.idCool %>'>
-							<%= ongoing._idChallenged.local.pseudo  %>
-						</a>
-
-					</p>
-					<p>
-						<strong>Description :</strong> <%= ongoing._idChallenge.description %>
-					</p>
-					<p>
-						<strong>Start :</strong> <%= ongoing.launchDate %>
-					</p>
-					<p>
-						<strong>End by :</strong> <%= ongoing.deadLine %>
-					</p>
-					<p>
-						<strong>Created :</strong> <%= ongoing._idChallenge.creation %>
-					</p>
-					<p>
-						<strong>Challenge page :</strong>
-						<a href='/c/<%= ongoing._idChallenge.idCool %>'>
-							<%= ongoing._idChallenge.title  %>
-						</a>
-					</p>
+	<div class="modal fade" tabindex="-1" role="dialog" id="processConfirm" aria-labelledby="processConfirm" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Fill the form up to ask your challenger to confirm your success.
+					</h3>
 				</div>
+
+				<div class="panel-body">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="proofLink1" class="control-label">Proof link 1*</label>
+							<input type="text" class="form-control gStyle" id="proofLink1" placeholder="http://">
+						</div>
+						<div class="form-group">
+							<label for="proofLink2" class="control-label">Proof link 2</label>
+							<input type="text" class="form-control gStyle" id="proofLink2" placeholder="http://">
+						</div>
+
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="additionnalComment" class="control-label">Something to say?</label>
+							<textarea class="form-control" id="additionnalComment" rows="6"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" data-dismiss="modal" class="btn btn-punch btn-default" >Close</button>
+					<button type="button" id="valConfirm" data-idChallenge="<%= ongoing._id %>" class="btn btn-punch btn-success">Send the validation request</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<span class="glyphicon glyphicon-ok"></span>
+						Confirmation request sent!
+					</h3>
+				</div>
+				<div class="panel-body">
+					You will be redirected to your divrofile in 5 seconds.
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="canvas">
+		<div class="container">
+
+			<div class="row">
+				<h1>
+					<span class="<%= ongoing._idChallenge.icon %>"></span> 
+					<%= ongoing._idChallenge.title %> 
+					<small> <%= ongoing._idChallenge.game %></small>
+				</h1>
+				<hr>
 
 				<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() ) { %>
-				<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
-					<div class="well">
-						<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
-						<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
+				<div class="col-lg-8">	 			
+					<% } else { %>
+					<div class="col-lg-12">	 			
+						<% } %>
+						<p>
+
+							<a href='/u/<%= ongoing._idChallenger.idCool %>'>
+								<%= ongoing._idChallenger.local.pseudo  %>
+							</a>
+							<span class="glyphicon glyphicon-arrow-right"></span>
+							<a href='/u/<%= ongoing._idChallenged.idCool %>'>
+								<%= ongoing._idChallenged.local.pseudo  %>
+							</a>
+
+						</p>
+						<p>
+							<strong>Description :</strong> <%= ongoing._idChallenge.description %>
+						</p>
+						<p>
+							<strong>Start :</strong> <%= ongoing.launchDate %>
+						</p>
+						<p>
+							<strong>End by :</strong> <%= ongoing.deadLine %>
+						</p>
+						<p>
+							<strong>Created :</strong> <%= ongoing._idChallenge.creation %>
+						</p>
+						<p>
+							<strong>Challenge page :</strong>
+							<a href='/c/<%= ongoing._idChallenge.idCool %>'>
+								<%= ongoing._idChallenge.title  %>
+							</a>
+						</p>
 					</div>
-				</div>
 
-				<% } %>
-
-			</div>
-		</div>
-
-		<div class="modal fade" tabindex="-1" role="dialog" id="processConfirm" aria-labelledby="processConfirm" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							Fill the form up to ask your challenger to confirm your success.
-						</h3>
-					</div>
-
-					<div class="panel-body">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="proofLink1" class="control-label">Proof link 1*</label>
-								<input type="text" class="form-control gStyle" id="proofLink1" placeholder="http://">
-							</div>
-							<div class="form-group">
-								<label for="proofLink2" class="control-label">Proof link 2</label>
-								<input type="text" class="form-control gStyle" id="proofLink2" placeholder="http://">
-							</div>
-
+					<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() ) { %>
+					<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
+						<div class="well">
+							<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
+							<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
 						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="additionnalComment" class="control-label">Something to say?</label>
-								<textarea class="form-control" id="additionnalComment" rows="6"></textarea>
-							</div>
-						</div>
 					</div>
 
-					<div class="modal-footer">
-						<button type="button" data-dismiss="modal" class="btn btn-punch btn-default" >Close</button>
-						<button type="button" id="valConfirm" data-idChallenge="<%= ongoing._id %>" class="btn btn-punch btn-success">Send the validation request</button>
-					</div>
+					<% } %>
+
 				</div>
 			</div>
-		</div>
 
-		<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content panel panel-success">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							<span class="glyphicon glyphicon-ok"></span>
-							Confirmation request sent!
-						</h3>
-					</div>
-					<div class="panel-body">
-						You will be redirected to your divrofile in 5 seconds.
-					</div>
-				</div>
-			</div>
-		</div>
+			<% include statics/footers %>
 
-		<% include statics/footers %>
+			<script type="text/javascript">
+				$(function() {
 
-		<script type="text/javascript">
-			$(function() {
+					openedCompletion();
 
-				openedCompletion();
+					$("#IDidIt").click( function(e){
+						e.preventDefault();
+						$('#processConfirm').modal('show');
 
-				$("#IDidIt").click( function(e){
-					e.preventDefault();
-					$('#processConfirm').modal('show');
-
-				});
+					});
 			// Bind normal buttons
 			$("#valConfirm").click( function(e){
 				e.preventDefault();
@@ -149,7 +151,7 @@
 					type: 'POST',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
-					url: 'http://localhost:8080/validationRequest',						
+					url: './validationRequest',						
 					success: function(data) {
 						console.log('success');
 
@@ -182,15 +184,15 @@
 			});
 		});
 
-		var openedCompletion = function() {
-			var div = $('#mayIask'),
-			isItOpen = moment(div.attr('data-launchDate')).isBefore();
+var openedCompletion = function() {
+	var div = $('#mayIask'),
+	isItOpen = moment(div.attr('data-launchDate')).isBefore();
 
 			// The challenge hasn't started yet.
 			if(isItOpen === false) {
 				div.remove();
 			}
 		}
-</script>
+	</script>
 </body>
 </html>

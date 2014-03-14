@@ -3,46 +3,46 @@
 <head>
 
 	<% include statics/headers %>
-	<title>Wello <%= user.local.pseudo %></title>
+	<title>Wello <%= currentUser.local.pseudo %></title>
 </head>
 <body>
 
 	<% include statics/navTop %>
-	<div class="container">
+	<div class="canvas">
 
-		<div class="row">
-			<header class="col-md-12 text-center">
-				<h1>hello <%= user.local.pseudo %> </h1>
-			</header>
-			<nav class="col-md-3">
-				<p>
-					<a href="/newChallenge" class="btn btn-punch btn-info btn-lg btn-block"> 
-						<span class="glyphicon glyphicon-plus"></span> 
-						Create a challenge
-					</a>
-				</p>
-				<p>
-					<a href="/friendChallenge" class="btn btn-punch btn-info btn-lg btn-block"> 
-						<span class="glyphicon glyphicon-zoom-in"></span> 
-						Challenge a Friend
-					</a>
-				</p>
-				<p>
-					<a href="/inviteFriend" class="btn btn-punch btn-info btn-lg btn-block"> 
-						<span class="glyphicon glyphicon-tower"></span> 
-						Find friends
-					</a>
-				</p>
-				<p>
-					<a href="/logout" class="btn btn-punch btn-info btn-lg btn-block"> 
-						<span class="glyphicon glyphicon-plus"></span> 
-						Logout
-					</a>
-				</p>
-			</nav>
-		</div>
-
-	</div>
-	<% include statics/footers %>
-</body>
-</html>
+		<div class="container">
+			<div class="row">
+				<header class="col-md-12 text-center">
+					<h1>hello <%= currentUser.local.pseudo %> </h1>
+				</header>
+				<nav class="col-md-3">
+					<p>
+						<a href="/newChallenge" class="btn btn-punch btn-info btn-lg btn-block"> 
+							<span class="glyphicon glyphicon-plus"></span> 
+							Create a challenge
+						</a>
+					</p>
+					<p>
+						<a href="/friendChallenge" class="btn btn-punch btn-info btn-lg btn-block"> 
+							<span class="glyphicon glyphicon-zoom-in"></span> 
+							Challenge a Friend
+						</a>
+					</p>
+					<p>
+						<a href="/inviteFriend" class="btn btn-punch btn-info btn-lg btn-block"> 
+							<span class="glyphicon glyphicon-tower"></span> 
+							Find friends
+						</a>
+					</p>
+					<p>
+						<a href="/logout" class="btn btn-punch btn-info btn-lg btn-block"> 
+							<span class="glyphicon glyphicon-plus"></span> 
+							Logout
+						</a>
+					</p>
+				</nav>
+			</div>
+		</div><!-- /.container -->
+		<% include statics/footers %>
+	</body>
+	</html>
