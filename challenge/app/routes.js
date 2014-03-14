@@ -1,4 +1,4 @@
-module.exports = function(app, _, passport, genUID, xp, notifs, moment, challenge, users, relations, games) {
+module.exports = function(app, _, passport, genUID, xp, notifs, moment, challenge, users, relations, games,social) {
 
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
@@ -30,7 +30,6 @@ module.exports = function(app, _, passport, genUID, xp, notifs, moment, challeng
 	// PROFILE SECTION =========================
 	app.get('/profile', isLoggedIn, function(req, res) {
 
-		// req.io.emit('message', { text: req.user.local.pseudo});
 		res.render('profile.ejs', {
 			currentUser : req.user
 		});
@@ -232,8 +231,22 @@ module.exports = function(app, _, passport, genUID, xp, notifs, moment, challeng
 
 					xp.xpReward(done._idChallenger, 'ongoing.validate');
 					xp.xpReward(done._idChallenged, 'ongoing.succeed');
+
+
 					notifs.successChall(done);
 
+					//Automatically share on facebook
+					if(req.user.share.facebook === true && done._idChallenged.facebook.token){
+
+						var message = {
+							title : 'I won a challenge threw by '+done._idChallenger.local.pseudo + '!',
+							body : 'Hurray! I just completed a challenge on Challenge Your friends! I won ' + xp.getValue('ongoing.succeed') +
+							 'XP! the challenge : http://localhost:8080/o/'+done.idCool
+						};
+						social.postFbMessage(done._idChallenged.facebook.token,message, 'http://localhost:8080/o/'+done.idCool, function(data) {
+							console.log(data);
+						} )
+					}
 					//Ask the challenger and challenged to rate the challenge.
 					users.askRate(obj, function( done ) {
 						res.send(done);
@@ -494,6 +507,7 @@ app.get('/users', function(req, res) {
 				}
 			};
 
+			notifs.askFriend( req.user , obj.to );
 			users.askFriend(obj, function( result ) {
 
 				res.send(true);
@@ -649,7 +663,7 @@ app.get('/users', function(req, res) {
 	// facebook -------------------------------
 
 		// send to facebook to do the authentication
-		app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+		app.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email', 'publish_actions'] }));
 
 		// handle the callback after facebook has authenticated the user
 		app.get('/auth/facebook/callback',
@@ -700,7 +714,7 @@ app.get('/users', function(req, res) {
 	// facebook -------------------------------
 
 		// send to facebook to do the authentication
-		app.get('/connect/facebook', passport.authorize('facebook', { scope : 'email' }));
+		app.get('/connect/facebook', passport.authorize('facebook', { scope : ['email', 'publish_actions'] }));
 
 		// handle the callback after facebook has authorized the user
 		app.get('/connect/facebook/callback',

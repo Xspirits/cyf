@@ -26,7 +26,8 @@ var configDB = require('./config/database.js')
 , challenge  = require('./config/challenge')
 , users      = require('./config/users')
 , relations  = require('./config/relations')
-, games      = require('./config/game');
+, games      = require('./config/game')
+, social     = require('./config/social');
 
 var notifs   = require('./app/functions/notifications.js')
 , xp         = require('./app/functions/xp.js');
@@ -77,7 +78,7 @@ app.configure(function() {
 
 
 // routes ======================================================================
-require('./app/routes.js')(app, _, passport, genUID, xp, notifs, moment, challenge, users, relations, games); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, _, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
 server.listen(port);

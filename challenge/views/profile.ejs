@@ -2,6 +2,10 @@
 <html>
 <head>
 	<% include statics/headers %>
+	<meta property="og:title" content="<%= currentUser.local.pseudo %>, challenger level <%= currentUser.level %>" />
+	<meta property="og:type" content="profile:<%= currentUser.local.idCool %>" />
+	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
+	<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" />
 	<title></title>
 </head>
 <body>
@@ -10,12 +14,7 @@
 	<% xpPer = Math.round((currentUser.xp/currentUser.xpNext )*100); %>
 	<div class="canvas">
 		<div class="container">
-
-			<div class="page-header text-center">
-				<h1><span class="fa fa-anchor"></span> Profile Page</h1>
-				<a href="/logout" class="btn btn-punch btn-default btn-sm">Logout</a>
-			</div>
-
+			<hr>
 			<div class="row">
 				<div id="user_header" class="col-lg-12 media">
 					<a class="pull-left" href="#">
@@ -34,7 +33,7 @@
 							<%= currentUser.local.pseudo %> <small><i class="glyphicon glyphicon-ok-sign"></i></small>
 						</h2>
 						<div class="loaderProgress animated flipInY">
-							<div class="tinyProgress tinyBlue" style="width: <%= xpPer %>%"></div>
+							<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
 						</div>
 						<hr>
 						<ul class="list-inline animated bounceInDown">
@@ -50,106 +49,121 @@
 							</li>
 							<% } %>
 
-							<% if (currentUser.facebook.token) { %>
 							<li>
 								<h4>
-									<span class="label label-primary">
+									<% if (currentUser.facebook.token) { %>
+									<span class="linked active label label-primary">
 										<i class="fa fa-facebook"></i>
-										<i class="fa fa-check-square"></i>
+										<a href="/unlink/facebook" class="hidden">
+											<i class="fa fa-times"></i>
+										</a>				
+										<i class="fa fa-check-square meany"></i>
 										<%= currentUser.facebook.name %>
 									</span>
+									<% } else { %>
+									<a href="/connect/facebook" class="label label-primary">
+										<i class="fa fa-facebook"></i>
+										Connect facebook
+									</a>
+									<% } %>
 								</h4>
 							</li>
-							<% } %>
 
-							<% if (currentUser.google.token) { %>
 							<li>
 								<h4>
-									<span class="label label-danger">
+									<% if (currentUser.google.token) { %>
+									<span class="linked active label label-danger">
 										<i class="fa fa-google-plus"></i>
-										<i class="fa fa-check-square"></i>
+										<a href="/unlink/google" class="hidden">
+											<i class="fa fa-times"></i>
+										</a>
+										<i class="fa fa-check-square meany"></i>
 										<%= currentUser.google.name %>
 									</span>
+									<% } else { %>
+									<a href="/connect/google" class="label label-danger">
+										<i class="fa fa-google-plus"></i>
+										Connect google+
+									</a>
+									<% } %>
 								</h4>
 							</li>
-							<% } %>
 
 							<li>
-								<% if (currentUser.twitter.token) { %>
 								<h4>
-									<span class="label label-info">
+									<% if (currentUser.twitter.token) { %>
+									<span class="linked active label label-info">
 										<i class="fa fa-twitter"></i>
-										<i class="fa fa-check-square"></i>
+										<a href="/unlink/twitter" class="hidden">
+											<i class="fa fa-times"></i>
+										</a>
+										<i class="fa fa-check-square meany"></i>
 										<%= currentUser.twitter.username %>
 									</span>
-								</h4>
-								<% } else { %>
-								<h5>
-									<a href="" class="btn btn-info">
+									<% } else { %>
+									<a href="/connect/twitter" class="label label-info">
 										<i class="fa fa-twitter"></i>
-										Add Twitter
-
+										Connect Twitter
 									</a>
-								</h5>
-
-
-								<% } %>
+									<% } %>
+								</h4>
 
 							</li>
 
-							
+
 						</ul>
 
 					</div>
 				</div>
 
-
-				<!-- LOCAL INFORMATION -->
-				<div class="col-sm-6">
-					<div class="well">
-						<h3><span class="fa fa-user"></span> Local</h3>
-
-						<% if (currentUser.local.email) { %>
-						<p>
-							<strong>id</strong>: <%= currentUser._id %><br>
-							<strong>pseudo</strong>: <%= currentUser.local.pseudo %><br>
-							<strong>email</strong>: <%= currentUser.local.email %><br>
-							<strong>password</strong>: <%= currentUser.local.password %>
-						</p>
-
-						<a href="/unlink/local" class="btn btn-punch btn-default">Unlink</a>
-						<% } else { %>
-						<a href="/connect/local" class="btn btn-punch btn-default">Connect Local</a>
-						<% } %>
-
-					</div>
-				</div>
-
-				<!-- FACEBOOK INFORMATION -->
-				<div class="col-sm-6">
-					<div class="well">
-						<h3 class="text-primary"> Facebook</h3>
-
-						<!-- check if the user has this token (is the user authenticated with this social account) -->
-						<% if (currentUser.facebook.token) { %>
-						<p>
-							<strong>id</strong>: <%= currentUser.facebook.id %><br>
-							<strong>email</strong>: <%= currentUser.facebook.email %><br>
-							<strong>name</strong>: <%= currentUser.facebook.name %><br>
-						</p>
-
-						<a href="/unlink/facebook" class="btn btn-punch btn-info">Unlink</a>
-						<% } else { %>
-						<a href="/connect/facebook" class="btn btn-punch btn-info">Connect Facebook</a>
-						<% } %>
-
-					</div>
-				</div>
 			</div>
-			<div class="row">
+			<hr>
+		</div>
+	</div>
+	<!-- 	<div class="row"> -->
 
-				<!-- TWITTER INFORMATION -->
-				<div class="col-sm-6">
+	<!-- LOCAL INFORMATION -->
+		<!-- 	<div class="col-sm-6">
+				<div class="well">
+					<h3><span class="fa fa-user"></span> Local</h3>
+
+					<% if (currentUser.local.email) { %>
+					<p>
+						<strong>id</strong>: <%= currentUser._id %><br>
+						<strong>pseudo</strong>: <%= currentUser.local.pseudo %><br>
+						<strong>email</strong>: <%= currentUser.local.email %><br>
+						<strong>password</strong>: <%= currentUser.local.password %>
+					</p>
+
+					<a href="/unlink/local" class="btn btn-punch btn-default">Unlink</a>
+					<% } else { %>
+					<a href="/connect/local" class="btn btn-punch btn-default">Connect Local</a>
+					<% } %>
+
+				</div>
+			</div> -->
+
+			<!-- FACEBOOK INFORMATION -->
+		<!-- 	<div class="col-sm-6">
+				<div class="well">
+					<h3 class="text-primary"> Facebook</h3>
+
+					<% if (currentUser.facebook.token) { %>
+					<p>
+						<strong>id</strong>: <%= currentUser.facebook.id %><br>
+						<strong>email</strong>: <%= currentUser.facebook.email %><br>
+						<strong>name</strong>: <%= currentUser.facebook.name %><br>
+					</p>
+
+					<a href="/unlink/facebook" class="btn btn-punch btn-info">Unlink</a>
+					<% } else { %>
+					<a href="/connect/facebook" class="btn btn-punch btn-info">Connect Facebook</a>
+					<% } %>
+
+				</div>
+			</div> -->
+			<!-- TWITTER INFORMATION -->
+				<!-- <div class="col-sm-6">
 					<div class="well">
 						<h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
 
@@ -166,10 +180,10 @@
 						<% } %>
 
 					</div>
-				</div>
+				</div> -->
 
 				<!-- GOOGLE INFORMATION -->
-				<div class="col-sm-6">
+				<!-- <div class="col-sm-6">
 					<div class="well">
 						<h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
 
@@ -186,9 +200,26 @@
 						<% } %>
 
 					</div>
-				</div>
-			</div>
-		</div>
-		<% include statics/footers %>
-	</body>
-	</html>
+				</div> -->
+				<!-- </div> -->
+				<!-- </div> -->
+				<% include statics/footers %>
+				<script type="text/javascript">
+
+					$(function() {
+						var meNot = false;
+						$('.linked').hover(function(){
+							var _this = $(this);
+							_this.children('.meany').addClass('hidden');
+							_this.children('a').removeClass('hidden');
+
+						}, function(){
+							var _this = $(this);
+							_this.children('a').addClass('hidden');
+							_this.children('.meany').removeClass('hidden');
+						});
+					});
+
+				</script>
+			</body>
+			</html>

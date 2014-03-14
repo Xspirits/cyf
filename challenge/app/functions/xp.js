@@ -47,6 +47,17 @@
 
  module.exports = {	
 
+ 	/**
+ 	 * Return the value of an action
+ 	 * @param  {[type]} action [description]
+ 	 * @return {[type]}        [description]
+ 	 */
+ 	getValue : function(action){
+ 		return _.values(_.pick(xpRewardvalue, action))[0]
+ 	},
+ 	//
+ 	// 
+ 	//
  	isUp : function(xp, level) { 
  		var curLvL = level;
 

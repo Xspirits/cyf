@@ -43,6 +43,7 @@ module.exports = {
 	 	}
 
 	 	var notification = {
+	 		type 	 : notif.type ? notif.type : 'simple',
 	 		persist  : isPersistant,
 	 		idFrom   : notif.idFrom,
 	 		from     : notif.from,
@@ -155,6 +156,29 @@ module.exports = {
 
 	  	this.newNotif(toSelf, true, notif);
 	  },
+	 /**
+	  * I gained a level, this deserve a notification.
+	  * @param  {[type]} user     [description]
+	  * @param  {[type]} newLevel [description]
+	  * @return {[type]}          [description]
+	  */
+	  askFriend : function( user, to ) {
+
+	  	var toSelf = [user._id];
+
+	  	var notif = { 
+	  		idFrom   : user._id,
+	  		from     : to.userName, 
+	  		link1    : '/u/' + to.idCool,
+	  		to       : '', 
+	  		link2    : '',
+	  		icon	 : 'glyphicon glyphicon-heart', 
+	  		title    : 'You have sent a friend request to  '+to.userName +'.',
+	  		message  : ' '
+	  	};
+
+	  	this.newNotif(toSelf, true, notif);
+	  },
 
 // =============================================================================
 // SENDING NOTIFICATIONS TO FRIENDS     ========================================
@@ -169,7 +193,7 @@ module.exports = {
 	 * @return {[type]}      [description]
 	 */
 	 login : function( user ) {
-	 	var myFriends = _.map(user.friends, function(num){ return num.idUser; });
+	 	var myFriends = _.map(user.friends, function(num){ return num.idUser.toString(); });
 
 	 	var notif = { 
 	 		idFrom   : user._id,
@@ -191,7 +215,7 @@ module.exports = {
 	  */
 	  logout : function ( user ) {
 
-	  	var myFriends = _.map(user.friends, function(num){ return num.idUser; });
+	  	var myFriends = _.map(user.friends, function(num){ return num.idUser.toString(); });
 
 	  	var notif = { 
 	  		idFrom   : user._id,
@@ -222,10 +246,11 @@ module.exports = {
 	   	, friendsTo     = _.map(to.friends, function(num){ return num.idUser.toString(); });
 
 	   	var friendsList = _.union(friendsFrom, friendsTo);
+	   	console.log(friendsList);
 
-	   	friendsList = _.without(friendsList, from._id,to._id); 
+	   	friendsList = _.without(friendsList, from._id.toString(),to._id.toString()); 
 
-	   	console.log(from._id +' asked '+ to._id);
+	   	console.log(friendsList);
 
 	   	var notif = { 
 	   		idFrom   : from._id,
@@ -247,7 +272,7 @@ module.exports = {
 	   */
 	   levelUp : function( user ) {
 
-	   	var friends = _.map(user.friends, function(num){ return num.idUser; });
+	   	var friends = _.map(user.friends, function(num){ return num.idUser.toString(); });
 
 	   	var notif = { 
 	   		idFrom   : user._id,
@@ -274,7 +299,7 @@ module.exports = {
 	  */
 	  createdChallenge : function( user, idCool ) {
 
-	  	var myFriends = _.map(user.friends, function(num){ return num.idUser; });
+	  	var myFriends = _.map(user.friends, function(num){ return num.idUser.toString(); });
 
 	  	var notif = { 
 	  		idFrom   : user._id,
@@ -302,48 +327,58 @@ module.exports = {
 	  	var not = [ idChallenger, idChallenged];
 
 	  	User
-	  	.find({_id : { $in: not }})
-	  	.exec( function(err, users) {
+	  	.findById(idChallenger)
+	  	.exec( function(err, challenger) {
 
-	  		var challenger = users[0]
-	  		, challenged = users[1];
+	  		User
+	  		.findById(idChallenged)
+	  		.exec( function(err, challenged) {
 
-	  		var friends = _.map(challenger.friends, function(num){ return num.idUser; });
-	  		friends = _.without(friends, idChallenged);
+	  			var notif;
 
-	  		var notif = { 
-	  			idFrom   : challenger._id,
-	  			from     : challenger.local.pseudo, 
-	  			link1    : '/u/' + challenger.idCool,
-	  			to       : challenger.local.pseudo, 
-	  			link2    : '/u/' + challenger.idCool,
-	  			icon	 : 'glyphicon glyphicon-flash', 
-	  			title    : challenger.local.pseudo+ ' challenged',
-	  			message  : ''
-	  		};
+	  			var friends = _.map(challenger.friends, function(num){ return num.idUser.toString(); });
+	  			friends = _.without(friends, idChallenged.toString());
 
-			//Friends
-			_this.newNotif(friends, true, notif);
+	  			notif = { 
+	  				idFrom   : challenger._id,
+	  				from     : challenger.local.pseudo, 
+	  				link1    : '/u/' + challenger.idCool,
+	  				to       : challenged.local.pseudo, 
+	  				link2    : '/u/' + challenged.idCool,
+	  				icon	 : 'glyphicon glyphicon-flash', 
+	  				title    : challenger.local.pseudo+ ' challenged',
+	  				message  : ''
+	  			}
 
-			notif.to = '';
-			notif.link2 = '';
-			notif.message = 'you !';
-			//The challenged
-			_this.newNotif([idChallenged], true, notif);
+				//Friends
+				_this.newNotif(friends, true, notif);
 
-			notif.idFrom  = challenger._id;
-			notif.from    = challenger.local.pseudo;
-			notif.link1   = challenger.idCool;
-			notif.title   = challenged.local.pseudo + ' has been challenged!';
-			notif.to      = '';
-			notif.link2   = '';
-			notif.message = '';
-			//The challenger
-			_this.newNotif([idChallenger], true, notif);
+				notif = { 
+					idFrom   : challenger._id,
+					from     : challenger.local.pseudo, 
+					link1    : '/u/' + challenger.idCool,
+					to 		 : '',
+					link2 	 : '',
+					icon	 : 'glyphicon glyphicon-flash', 
+					title    : challenger.local.pseudo+ ' challenged',
+					message  : 'you !'
+				}
+				//The challenged
+				_this.newNotif([idChallenged], true, notif);
 
-
-
-		});
+				notif = { 
+					idFrom  : challenger._id,
+					from    : challenger.local.pseudo,
+					link1   : challenged.idCool,
+					title   : challenged.local.pseudo + ' has been challenged!',
+					to      : '',
+					link2   : '',
+					message : ''
+				}
+				//The challenger
+				_this.newNotif([idChallenger], true, notif);
+			});
+});
 },
 	  /**
 	   * When user Y accept the challenge of user X, let them friends know
@@ -358,49 +393,59 @@ module.exports = {
 	   		var not = [ idChallenger, idChallenged];
 
 	   		User
-	   		.find({_id : { $in: not }})
-	   		.exec( function(err, users) {
+	   		.findById(idChallenger)
+	   		.exec( function(err, challenger) {
 
-	   			var challenger = users[0],
-	   			challenged = users[1];
+	   			User
+	   			.findById(idChallenged)
+	   			.exec( function(err, challenged) {
 
-	   			var friends = _.map(challenged.friends, function(num){ return num.idUser; });
+	   				var notif;
 
-	   			friends = _.without(friends, idChallenged,idChallenger);
+	   				var friends = _.map(challenged.friends, function(num){ return num.idUser.toString(); });
 
-	   			var notif = { 
-	   				idFrom   : challenged._id,
-	   				from     : challenged.local.pseudo, 
-	   				link1    : '/u/' + challenged.idCool,
-	   				to       : challenger.local.pseudo, 
-	   				link2    : '/u/' + challenger.idCool,
-	   				icon	 : 'glyphicon glyphicon-flash', 
-	   				title    : challenged.local.pseudo + ' accepted a challenge from',
-	   				message  : ''
-	   			};
+	   				friends = _.without(friends, idChallenger.toString());
+
+	   				notif = { 
+	   					idFrom   : challenged._id,
+	   					from     : challenged.local.pseudo, 
+	   					link1    : '/u/' + challenged.idCool,
+	   					to       : challenger.local.pseudo, 
+	   					link2    : '/u/' + challenger.idCool,
+	   					icon	 : 'glyphicon glyphicon-flash', 
+	   					title    : challenged.local.pseudo + ' accepted a challenge from',
+	   					message  : ''
+	   				};
 
 	   			//Friends notif
 	   			_this.newNotif(friends, true, notif, not);
 
 		   		// It's up to the CHALLENGED to accept, thus "YOU" target the challenger.
 				//The challenged
-				notif.idFrom = challenger._id;
-				notif.from   = challenger.local.pseudo;
-				notif.link1  = challenger.idCool;
-				notif.title  = 'You accepted a challenge from';
-				message      = '';
+				notif = { 
+					idFrom : challenger._id,
+					from   : challenger.local.pseudo,
+					link1  : challenger.idCool,
+					to       : challenger.local.pseudo, 
+					link2    : '/u/' + challenger.idCool,
+					title  : 'You accepted a challenge from',
+					message      : ''
+				};
 				_this.newNotif([challenged], true, notif);
 				
 				//The challenged
-				notif.idFrom = challenged._id;
-				notif.from   = challenged.local.pseudo; 
-				notif.link1  = '/u/' + challenged.idCool;
-				notif.to     = 'challenge'; 
-				notif.link2  = '/o/' + challenge.idCool;
-				notif.title  = challenged.local.pseudo + ' accepted your';
-				message      = '';
+				notif = { 
+					idFrom : challenged._id,
+					from   : challenged.local.pseudo, 
+					link1  : '/u/' + challenged.idCool,
+					to     : 'challenge', 
+					link2  : '',
+					title  : challenged.local.pseudo + ' accepted your',
+					message      : ''
+				};
 				_this.newNotif([idChallenger], true, notif);
 			});
+});
 },
 	  /**
 	   * User Y successfully completed the challenge of X, notify people.
@@ -409,7 +454,7 @@ module.exports = {
 	   */
 	   successChall : function( challenge ) {
 
-	   	var friends = _.map(challenge._idChallenged.friends, function(num){ return num.idUser; });
+	   	var friends = _.map(challenge._idChallenged.friends, function(num){ return num.idUser.toString(); });
 
 	   	var notif = { 
 	   		idFrom   : challenge._idChallenged._id,
@@ -423,6 +468,20 @@ module.exports = {
 	   	}
 
 	   	this.newNotif(friends, true, notif);
+
+	   	var notif = { 
+	   		type	 : 'challengeSuccess',
+	   		idFrom   : challenge._idChallenger._id,
+	   		from     : challenge._idChallenger.local.pseudo, 
+	   		link1    : '/u/' + challenge._idChallenged.idCool,
+	   		to       : challenge._idChallenge.title, 
+	   		link2    : '/c/' + challenge._idChallenge.idCool,
+	   		icon	 : 'glyphicon glyphicon-tower', 
+	   		title    : 'You have completed the challenge '+challenge._idChallenge.title+' launched by '+challenge._idChallenger.local.pseudo,
+	   		message  : ''
+	   	}
+
+	   	this.newNotif([challenge._idChallenged._id], true, notif);
 	   },
 	  /**
 	   * User X rated a challenge he has been involved in, good news to share.
@@ -431,7 +490,7 @@ module.exports = {
 	   */
 	   ratedChall : function( challenge ) {
 
-	   	var friends = _.map(challenge.user.friends, function(num){ return num.idUser; });
+	   	var friends = _.map(challenge.user.friends, function(num){ return num.idUser.toString(); });
 
 	   	var notif = { 
 	   		idFrom   : challenge.user._id,

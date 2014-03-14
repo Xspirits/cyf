@@ -1,4 +1,4 @@
-
+<div id="sharePost"></div>
 </div> <!-- End .canvas -->
 <script src="/socket.io/socket.io.js"></script>
 <script src="./js/jquery.min.js"></script>
@@ -18,13 +18,16 @@
 <script src="./js/nouislider.min.js"></script>
 <script src="./js/odometer.min.js"></script>
 <script src="./js/nprogress.js"></script>
+<script src="./js/challengeBox.js"></script>
 <script>
+
 	window.odometerOptions = {
 		selector: '.odometer',
 		format: '(,ddd).dd'
 	};
 
 	$(function() {
+
 		var isMobile = ($(window).width() < 800) ? true : false;
 
 
@@ -36,8 +39,6 @@
 			, size = _this.attr('data-size') ? _this.attr('data-size') : 100;
 
 			var hash = CryptoJS.MD5(data);
-
-			console.log('hashed ' + data + ' into ' + hash);
 			_this.text(hash);
 			_this.identicon5({
 				rotate: true,
@@ -77,35 +78,114 @@
 
 		// NOTIFICATIONS =========================
 		alertify.set({ delay : 12000 });
-
+		var queue = [];
+		var hasCSuccess = [];
 		<% if (currentUser) { 
 
 			if (currentUser.notifications) { 
 				var notif = currentUser.notifications;
+				var limit = 9;
 				for (var i = 0; i < notif.length; i++) {
-					if(!notif[i].isSeen) {
-						%>
+					if(notif[i].isSeen === false) { 
+						--limit;
 
-						text = '<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a>';
-						message = ' <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>';
+						if(notif[i].type == 'challengeSuccess'){ %>
+							var obj_<%= i %> = {
+								title : '<%= notif[i].to %>',
+								link : '<%= notif[i].link2 %>',
+								message : '<%= notif[i].title %>'
+							}
+							hasCSuccess.push(obj_<%= i %>);
+							<% } %>
+							queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a><a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>', '<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>]);
+							console.log(<%= i %> + ' ' + <%= limit %>)
+							<% if(i == notif.length || limit == 0){ %> 
+								notif(queue.length -1); 
+								challengeAlert(); 
+								<% }
+							}
+						}
+					} 
+				} %>
 
-						notif(text + message, '<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>);
-						<% }
-					}
-				} 
-			} 
-			%>
+				readability();
 
-			readability();
+				setTimeout(function(){
+					$('.odometer').each(function(){
+						var number = Math.floor(parseInt($(this).attr('data-number')));
 
-			setTimeout(function(){
-				$('.odometer').each(function(){
-					var number = Math.floor(parseInt($(this).attr('data-number')));
+						$(this).html(number);
+					});
+				}, 1000);
 
-					$(this).html(number);
+				$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+					animateProgress();
 				});
-			}, 1000);
-		});
+
+			// Progress animation
+			function animateProgress() {
+
+				var progressNumber = $('.tinyProgress').length;
+				//All progress are now at their expected value, cast ou the setInterval
+				if(progressNumber <= 0 ){					
+					console.log(progressNumber)
+					clearInterval(timerId);
+				} else {
+
+					$('.tinyProgress').each(function(){
+
+						var _this   = $(this)
+						, currWidth = _this.width()/10
+						, tarWidth  = _this.attr('data-percent');
+
+						var currWidth = (currWidth === 0) ? 0.05 : currWidth;
+						var incVal 	= (currWidth + (tarWidth * Math.random()));	
+
+						if(incVal >= tarWidth) 
+							_this.width(tarWidth + '%');
+						else{
+							_this.width(incVal + '%');
+							setTimeout(animateProgress, 333);
+						}
+					});	
+				}
+			}	
+
+			$('#dismissBoxChall').click(function(e){
+				e.preventDefault();
+				$('#gotchaChallenge,#gotaBoxContent')
+				.removeClass('flipInX')
+				.addClass('flipOutX');
+
+				$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+
+					$('#gotchaChallenge,#gotaBoxContent')
+					.remove();
+				});
+			})
+			function challengeAlert (){
+				var number = hasCSuccess.length;
+
+				console.log(hasCSuccess)
+				if(number == 1 ){
+
+					var template = '<canvas id="gotchaChallenge" class="animated" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(38,38,38); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas><div id="gotaBoxContent" class="animated" style="margin: 0;  position: relative;z-index:99999991;height: 100%; width:100%"><div style="width: 50%;  height: 50%;  overflow: auto;  margin: auto;  position: absolute;  top: 0; left: 0; bottom: 0; right: 0;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
+					$("body").prepend(template);
+					popChallengeSuccessbox();
+
+				}
+
+			}
+			function notif (i) {          
+				//setTimeout(function () {  
+				//	console.log(i) 
+				//	console.log(queue[i]) 
+				//	sendNotif(queue[i][0],queue[i][1],queue[i][2])
+//
+				//	if (--i) notif(i);      			
+				//}, 220)
+}
+});
 
 var readability = function(){
 	$('.dateReadability').each( function () {
@@ -114,7 +194,7 @@ var readability = function(){
 		$(this).text(converted);
 	})
 }
-var notif = function(msg, idNotif, del) {
+var sendNotif= function(msg, idNotif, del) {
 
 	alertify.log(msg, 'info');
 

@@ -19,7 +19,8 @@
     "redis": "~0.10.1",
     "socket.io": "~0.9.16",
     "underscore": "~1.6.0",
-    "shortid": "~2.0.0"
+    "shortid": "~2.0.0",
+    "request": "~2.34.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

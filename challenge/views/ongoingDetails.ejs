@@ -72,7 +72,7 @@
 				</h1>
 				<hr>
 
-				<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() ) { %>
+				<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString()  && !ongoing.waitingConfirm) { %>
 				<div class="col-lg-8">	 			
 					<% } else { %>
 					<div class="col-lg-12">	 			
@@ -108,7 +108,7 @@
 						</p>
 					</div>
 
-					<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() ) { %>
+					<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() && !ongoing.waitingConfirm ) { %>
 					<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
 						<div class="well">
 							<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>

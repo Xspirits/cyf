@@ -613,7 +613,7 @@ module.exports = {
 					throw err;
 
 				ongoing.waitingConfirm = false;
-				ongoing.validated      = data.deny;
+				ongoing.validated      = data.pass;
 				ongoing.progress       = 100;
 
 				ongoing.save(function(err) {

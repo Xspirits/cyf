@@ -187,24 +187,11 @@
 				url: './' + going,						
 				success: function(data) {
 
-
-					if(going === 'denyChallenge' || going === 'cancelFriend' || going === 'denyFriend' )
-					{
-						currButton.removeClass('btn-default').addClass('btn-danger');
-
-						currButton
-						.parent('li')
-						.addClass('list-group-item-danger animated flipOutX')
-						.delay( 800 )
-						.remove();
-					} else {
-						currButton.removeClass('btn-default').addClass('btn-success');
-						currButton
-						.parent('li')
-						.addClass('list-group-item-success animated flipOutX')
-						.delay( 800 )
-						.remove();
-					}
+					currButton.removeClass('btn-default').addClass('btn-success');
+					currButton
+					.parent('li')
+					.addClass('list-group-item-success animated flipOutX');
+					setTimeout(function(){ currButton.parent('li').remove(); }, 800);
 					console.log(JSON.stringify(data));
 				}
 			});

@@ -355,77 +355,79 @@
 							<h4>Passed</h4>
 						</div>
 						<% if ( endChallenges.length > 0 ) { %>
+						<div class="row">
+							
+							<% for (var i = 0; i < endChallenges.length; i++) { %>
 
-						<% for (var i = endChallenges.length - 1; i >= 0; i--) { %>
+							<div id="ended_<%= endChallenges[i]._id %>" class="col-sm-5 col-sm-offset-1 panel  animated <%- i % 2 ? ' fadeInLeft' : 'fadeInRight' %> panel-<%= (endChallenges[i].validated === true || endChallenges[i].tribunalAnswered === true) ? 'success' : ((endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false)? 'warning' : 'danger') %>" style="padding:0;">
+								<div class="panel-heading">
+									<div class="panel-title text-right">
+										<span class="pull-left panel-title">
 
-						<div id="ended_<%= endChallenges[i]._id %>" class="panel  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %> panel-<%= (endChallenges[i].validated === true || endChallenges[i].tribunalAnswered === true) ? 'success' : ((endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false)? 'warning' : 'danger') %>">
-							<div class="panel-heading">
-								<div class="panel-title text-right">
-									<span class="pull-left panel-title">
+											<% if(endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false) { %>
+											<i class="fa fa-exclamation"></i>
+											<strong>Case Under Review</strong> 
 
-										<% if(endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false) { %>
-										<i class="fa fa-exclamation"></i>
-										<strong>Case Under Review</strong> 
+											<% } else { %>
+											<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === false) ) ? 'ok' : 'remove' %>"></span>
+											<% }  %>
+											<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
+												<%= endChallenges[i]._idChallenger.local.pseudo  %>
+											</a>
+											<span class="glyphicon glyphicon-flash"></span>
+											<a href='/u/<%= endChallenges[i]._idChallenged.idCool %>'>
+												<%= endChallenges[i]._idChallenged.local.pseudo  %>
+											</a>
 
-										<% } else { %>
-										<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === false) ) ? 'ok' : 'remove' %>"></span>
-										<% }  %>
-										<span class="glyphicon glyphicon-star-empty"></span>
-										<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
-											<%= endChallenges[i]._idChallenger.local.pseudo  %>
+										</span>
+										<a href='/o/<%= endChallenges[i].idCool %>'>
+											<%= endChallenges[i]._idChallenge.title %>
 										</a>
-										<span class="glyphicon glyphicon-flash"></span>
-										<a href='/u/<%= endChallenges[i]._idChallenged.idCool %>'>
-											<%= endChallenges[i]._idChallenged.local.pseudo  %>
-										</a>
 
-									</span>
-									<a href='/o/<%= endChallenges[i].idCool %>'>
-										<%= endChallenges[i]._idChallenge.title %>
-									</a>
-
-								</div>
-							</div>
-							<div class="panel-body">
-								<div class="row">
-									<p class="lead text-center">
-										<%= endChallenges[i]._idChallenge.description  %>
-									</p>									
-								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<p>
-											<span class="glyphicon glyphicon-calendar"></span>
-											<span class="dateReadability" data-date="<%= endChallenges[i].launchDate %>"></span>
-										</p>
-										<p>
-											<span class="glyphicon glyphicon-calendar"></span>
-											<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
-										</p>										
 									</div>
-									<div class="col-sm-6 text-right">
-										Value: <%= endChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
-									</div>									
-								</div>								
-							</div>
-							<% if(endChallenges[i].caseClosed === true) { %> 
-							<div class="panel-footer">							
-								<small>
-									This case has been reviewed by the tribunal. Others players voted this case as 
-									<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
-								</small>
-							</div>
-							<% } %>
-							<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal) { %>
-							<div class="panel-footer">
-								<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>
-								<small>
-									<strong class="tribunalRequestDate" data-date="<%= endChallenges[i].deadLine %>"></strong> left to make a reclaim
-								</small>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<p class="lead text-center">
+											<%= endChallenges[i]._idChallenge.description  %>
+										</p>									
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= endChallenges[i].launchDate %>"></span>
+											</p>
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
+											</p>										
+										</div>
+										<div class="col-sm-6 text-right">
+											Value: <%= endChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+										</div>									
+									</div>								
+								</div>
+								<% if(endChallenges[i].caseClosed === true) { %> 
+								<div class="panel-footer">							
+									<small>
+										This case has been reviewed by the tribunal. Others players voted this case as 
+										<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
+									</small>
+								</div>
+								<% } %>
+								<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal) { %>
+								<div class="panel-footer">
+									<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>
+									<small>
+										<strong class="tribunalRequestDate" data-date="<%= endChallenges[i].deadLine %>"></strong> left to make a reclaim
+									</small>
+								</div>
+								<% } %>
 							</div>
 							<% } %>
 						</div>
-						<% } %>
+
 
 						<% } %>
 					</div>

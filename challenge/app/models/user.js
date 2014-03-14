@@ -10,6 +10,9 @@ var userSchema = mongoose.Schema({
     level            : {type: Number, default: 1},
     xp               : {type: Number, default: 0},
     xpNext           : {type: Number, default: 100},
+    share          : {
+        facebook : {type: Boolean, default: true}
+    },
     local            : {
         email        : String,
         password     : String,
@@ -46,6 +49,7 @@ var userSchema = mongoose.Schema({
         link2    : {type: String, default: ''},
         notificationType: {type: String, default: 'info'},
         persist  : {type: Boolean, default: false},
+        type     : {type: String, default: 'simple'},
         isSeen   : {type: Boolean, default: false}        
     }],
     friends            : [{

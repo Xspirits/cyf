@@ -10,16 +10,16 @@
 	<script type="text/javascript">
 		var myFriendList = [];
 
-		<% if (currentUser) { 
-			var _friendList = [];
+		<%
+		var _friendList = [];
+		 if (currentUser) { 
 
 			if (currentUser.friends.length > 0) {
 
 				for (var i = 0; i < currentUser.friends.length; i++) {
 					_friendList.push(currentUser.friends[i].idUser.toString());
 					%>
-					console.log(<%= currentUser.friends[i].idUser.toString() %>);
-					myFriendList.push(<%= currentUser.friends[i].idUser.toString() %>);
+					myFriendList.push('<%= currentUser.friends[i].idUser.toString() %>');
 					<%
 				}
 			}
