@@ -122,67 +122,71 @@
 											<span class="badge"><%= challenges[i].durationH %></span> Hours
 											<% if (challenges[i].durationD > 0 ) { %> 
 											<span class="badge"><%= challenges[i].durationD %></span> Days
-											<% } %></p>
-										</a>
-										<% } %>
-									</div >
-								</div>
+											<% } %>
+											<span>
+												<i class="fa fa-fire text-danger"></i> <%= challenges[i].value %>
+											</span>	
+										</p>
+									</a>
+									<% } %>
+								</div >
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">Select a friend</h3>
-								</div>
-								<div class="panel-body">
-									<div class="list-group friends">
-										<% for(var i=0; i< userList.length; i++) { %>
-										<a href="#" class="list-group-item btn btn-punch clearfix"  id="<%= userList[i].idUser %>" data-pseudo="<%= userList[i].userName %>">
-											<span class="badge">mutual friends!</span>
-											<strong class="pull-left"><%= userList[i].userName %></strong>
-										</a>
-										<% } %>
-									</div >
-								</div>
+					</div>
+					<div class="col-md-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Select a friend</h3>
+							</div>
+							<div class="panel-body">
+								<div class="list-group friends">
+									<% for(var i=0; i< userList.length; i++) { %>
+									<a href="#" class="list-group-item btn btn-punch clearfix"  id="<%= userList[i].idUser %>" data-pseudo="<%= userList[i].userName %>">
+										<span class="badge">mutual friends!</span>
+										<strong class="pull-left"><%= userList[i].userName %></strong>
+									</a>
+									<% } %>
+								</div >
 							</div>
 						</div>
-
-						<hr>
 					</div>
 
+					<hr>
 				</div>
 
-				<% include statics/footers %>
+			</div>
 
-				<script type="text/javascript">
+			<% include statics/footers %>
 
-					$(function() {
-						var cStartDate, cEndDate;
+			<script type="text/javascript">
 
-						$('#DTPKStart')
-						.datetimepicker({
-							format: "MM dd yyyy, hh:ii",
-							autoclose: true,
-							todayHighlight: true,
-							linkField: "DTPKStart_formated",
-							linkFormat: "yyyy-mm-ddThh:ii:ss"
-						});
+				$(function() {
+					var cStartDate, cEndDate;
 
-						$('.list-group > a').click(function(e) {
+					$('#DTPKStart')
+					.datetimepicker({
+						format: "MM dd yyyy, hh:ii",
+						autoclose: true,
+						todayHighlight: true,
+						linkField: "DTPKStart_formated",
+						linkFormat: "yyyy-mm-ddThh:ii:ss"
+					});
+
+					$('.list-group > a').click(function(e) {
+						e.preventDefault();
+						$(this).siblings().removeClass('active');
+						$(this).toggleClass('active');
+
+						upFriends();
+					})
+
+					$('#timeConfirm').click( function(e) {
+						e.preventDefault();
+						$('#timeModal').modal('hide');
+						$('#timeModal').on('hidden.bs.modal', function (e) {
 							e.preventDefault();
-							$(this).siblings().removeClass('active');
-							$(this).toggleClass('active');
 
-							upFriends();
-						})
-
-						$('#timeConfirm').click( function(e) {
-							e.preventDefault();
-							$('#timeModal').modal('hide');
-							$('#timeModal').on('hidden.bs.modal', function (e) {
-								e.preventDefault();
-
-								var sDate = $('#DTPKStart').find("input").val();
+							var sDate = $('#DTPKStart').find("input").val();
 									// eDate     = $('#DTPKEnd').find("input").val();
 
 									console.log(sDate);
@@ -192,7 +196,7 @@
 									});
 								});
 
-						});
+					});
 
 						// Bind normal buttons
 						$("#TOR").click( function(e){

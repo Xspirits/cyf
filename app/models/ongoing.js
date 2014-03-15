@@ -10,6 +10,7 @@ var ongoingSchema = mongoose.Schema({
 	idCool   		: String,
 	launchDate     	: Date,
 	deadLine 		: Date,
+	crossedDeadline : {type: Boolean, default: false},
 	progress        : {type: Number, default: 0},
 	accepted        : {type: Boolean, default: false},
 	confirmAsk  	: Date,

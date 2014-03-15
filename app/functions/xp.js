@@ -82,9 +82,11 @@
  			return false; 
  	},
 
- 	xpReward : function(user, action) {
+ 	xpReward : function(user, action, bonus) {
 
- 		var value = _.values(_.pick(xpRewardvalue, action))[0]
+ 		var userDoubleXp = user.xpDouble ? true : false	
+ 		, bonus = (bonus ? bonus : 0)
+ 		, value = (_.values(_.pick(xpRewardvalue, action))[0] * (userDoubleXp ? 2 : 1 )) + bonus
  		, uXp     = user.xp
  		, uLvl    = user.level;
 
@@ -93,7 +95,7 @@
 
  		var levelUp = this.isUp(newXp, uLvl);
 
- 		console.log('add ' + value+ ' to xp ' + uXp + ' lvl ' + uLvl + '('+valueNext+') [levelUp]? ' + levelUp);
+ 		console.log('add ' + value+ ' (bonus: '+bonus+') to xp ' + uXp + ' lvl ' + uLvl + '('+valueNext+') [levelUp]? ' + levelUp + ' [XP x2]' + userDoubleXp);
 
  		var inc = levelUp ? { level : levelUp, xp : value, xpNext : valueNext } : { xp : value, xpNext : valueNext } ;
 
@@ -112,7 +114,7 @@
  				notifs.levelUp(userUpdated);
  			}
 
- 			notifs.gainedXp(userUpdated, value, text);
+ 			notifs.gainedXp(userUpdated, value, bonus, text);
 
  			return 'woo)';
  	});

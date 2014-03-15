@@ -52,12 +52,7 @@ app.configure(function() {
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions
 	app.use(express.compress());
-	app.use(express.static(path.join(__dirname, 'public')));
-	/*app.use(sass.middleware({
-			src: __dirname + '/sass', //where the sass files are 
-			dest: __dirname + '/public', //where css should go
-			debug: true // obvious
-		}));*/
+	app.use(express.static(path.join(__dirname, 'public'), { maxAge: 2592000000 }));
 	app.use(flash()); // use connect-flash for flash messages stored in session
 });
 

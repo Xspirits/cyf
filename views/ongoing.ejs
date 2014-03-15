@@ -365,11 +365,11 @@
 										<span class="pull-left panel-title">
 
 											<% if(endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false) { %>
-											<i class="fa fa-exclamation"></i>
+											<i class="fa fa-gavel"></i>
 											<strong>Case Under Review</strong> 
 
 											<% } else { %>
-											<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === false) ) ? 'ok' : 'remove' %>"></span>
+											<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === true) ) ? 'ok' : 'remove' %>"></span>
 											<% }  %>
 											<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
 												<%= endChallenges[i]._idChallenger.local.pseudo  %>
@@ -393,35 +393,49 @@
 										</p>									
 									</div>
 									<div class="row">
-										<div class="col-sm-6">
+										<div class="col-sm-12">
 											<p>
-												<span class="glyphicon glyphicon-calendar"></span>
+												<i class="fa fa-calendar"></i>
 												<span class="dateReadability" data-date="<%= endChallenges[i].launchDate %>"></span>
 											</p>
 											<p>
-												<span class="glyphicon glyphicon-calendar"></span>
+												<i class="fa fa-clock-o"></i>
 												<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
-											</p>										
-										</div>
-										<div class="col-sm-6 text-right">
-											Value: <%= endChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
-										</div>									
+											</p>	
+											<p>
+												<i class="fa fa-fire text-danger"></i> <%= endChallenges[i]._idChallenge.value %>
+											</p>									
+										</div>								
 									</div>								
 								</div>
-								<% if(endChallenges[i].caseClosed === true) { %> 
-								<div class="panel-footer">							
-									<small>
-										This case has been reviewed by the tribunal. Others players voted this case as 
-										<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
-									</small>
+								<% if(endChallenges[i].caseClosed === true && endChallenges[i].crossedDeadline === false) { %> 
+								<div class="panel-footer">	
+									<h3 class="fa fa-gavel pull-left"></h3>						
+									<p class="text-justify">
+										<small>
+											This case has been reviewed by the tribunal. Others players voted this case as 
+											<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
+										</small>
+									</p>
 								</div>
 								<% } %>
-								<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal) { %>
+								<% if(endChallenges[i].crossedDeadline === true) { %> 
+								<div class="panel-footer">						
+									<p class="text-justify">
+										<small>
+											Unfortunately you weren't able to complete this challenge before the deadline.
+										</small>
+									</p>
+								</div>
+								<% } %>
+								<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal  && !endChallenges[i].crossedDeadline) { %>
 								<div class="panel-footer">
-									<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>
-									<small>
+									<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>					
+									<p class="text-justify">
+										<small>
 										<strong class="tribunalRequestDate" data-date="<%= endChallenges[i].deadLine %>"></strong> left to make a reclaim
-									</small>
+										</small>
+									</p>
 								</div>
 								<% } %>
 							</div>

@@ -41,7 +41,7 @@ module.exports = {
 		newChallenge.durationD   = durationD;
 		newChallenge.author      = user._id;
 
-		console.log(newChallenge);
+		// console.log(newChallenge);
 
 		newChallenge.save( function(err) {
 			if (err)
@@ -102,7 +102,6 @@ module.exports = {
 
 				var chall = doc[0];
 
-				console.log(chall);
 				console.log(chall.author + ' <> ' + currentUser);
 
 				if(chall.author === currentUser) 
@@ -304,7 +303,23 @@ module.exports = {
 					console.log('error with switch for ' + funRate);
 				}
 
+				var difficultyCoeffs = [1.00,1.40,1.96,2.74,3.84]
+				, 	quicknessCoeffs = [2.67,2.09,1.64,1.28,1.00]
+				, 	funCoeffs = [1.00,1.29,1.72,2.50,4.12];
 
+				var ponderatedAvgDiff = (diff.distribution.one * difficultyCoeffs[0]) + (diff.distribution.two * difficultyCoeffs[1]) + (diff.distribution.three * difficultyCoeffs[2])  + (diff.distribution.four * difficultyCoeffs[3])  + (diff.distribution.five * difficultyCoeffs[4]);
+				var averageDifficulty = ponderatedAvgDiff/diff.count;
+
+				var ponderatedAvgQuick = (quick.distribution.one * quicknessCoeffs[0]) + (quick.distribution.two * quicknessCoeffs[1]) + (quick.distribution.three * quicknessCoeffs[2])  + (quick.distribution.four * quicknessCoeffs[3])  + (quick.distribution.five * quicknessCoeffs[4]);
+				var averageQuick = ponderatedAvgQuick/quick.count;
+
+				var ponderatedAvgFun = (fun.distribution.one * funCoeffs[0]) + (fun.distribution.two * funCoeffs[1]) + (fun.distribution.three * funCoeffs[2])  + (fun.distribution.four * funCoeffs[3])  + (fun.distribution.five * funCoeffs[4]);
+				var averagefun = ponderatedAvgFun/fun.count;
+
+				var bonusUpdated = Math.round( (averageDifficulty + averageQuick + averagefun)*1.61803398875 );
+				console.log('new averages d:'+averageDifficulty+' ('+ponderatedAvgDiff+'/'+diff.count+') q:'+averageQuick+' ('+ponderatedAvgQuick+'/'+quick.count+') f:'+averagefun +' ('+ponderatedAvgFun+'/'+fun.count+') New bonus :' + bonusUpdated);
+
+				challenge.value = bonusUpdated;
 				challenge.save(function(err, result) {
 					if (err)
 						throw err;
@@ -329,7 +344,6 @@ module.exports = {
 							note : theNote,
 							user : result
 						}
-						console.log(toNotify);
 						return done(toNotify);
 					})
 				});
@@ -426,7 +440,6 @@ module.exports = {
 				if (err)
 					throw err;
 				// else we return the data
-				console.log(data);
 				return done(data);
 			})
 
@@ -448,7 +461,6 @@ module.exports = {
 				if (err)
 					throw err;
 				// else we return the data
-				console.log(data);
 				return done(data);
 			})
 
@@ -596,6 +608,19 @@ module.exports = {
 
 		 },
 		 /**
+		  * A challenge has reached or crossed its deadline, invalidate it.
+		  * @param  {[type]} challenge [description]
+		  * @return {[type]}           [description]
+		  */
+		  crossedDeadline : function( challenge ) {
+		  	Ongoing.findByIdAndUpdate(challenge,{waitingConfirm : false,validated : false, progress : 100,crossedDeadline : true}).exec(function(err, done){
+		  		if(err)
+		  			console.log(err);
+
+		  		return true;
+		  	});
+		  },
+		 /**
 		  * [validateOngoing description]
 		  * @param  {Object}   data [oId : req.params.id, deny : req.body.deny]
 		  * @param  {Function} done [description]
@@ -688,7 +713,7 @@ module.exports = {
 
 				users.pickTribunalUsers(exclude, 3, function(pickedUser) {
 
-					console.log(pickedUser);
+					// console.log(pickedUser);
 
 					users.setJudges(ongoing._id, pickedUser, function( completed ) {
 

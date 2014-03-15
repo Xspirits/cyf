@@ -1,12 +1,14 @@
 <!doctype html>
 <html>
 <head>
-	<% include statics/headers %>
 	<meta property="og:title" content="<%= currentUser.local.pseudo %>, challenger level <%= currentUser.level %>" />
 	<meta property="og:type" content="profile:<%= currentUser.local.idCool %>" />
 	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
 	<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" />
+	<% include statics/headers %>
 	<title></title>
+	<link rel="stylesheet" href="./css/timeline.css">
+
 </head>
 <body>
 
@@ -118,32 +120,62 @@
 
 			</div>
 			<hr>
+			<ul class="timeline">
+
+				<% var notif = currentUser.notifications;
+				for (var i = notif.length - 1; i >= 0; i--) {
+					if(notif[i].persist === true) { 
+						var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
+						, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
+						%>
+						<li class="animated <%= isOdd %> ">
+							<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
+							<div class="timeline-panel">
+								<div class="timeline-heading">
+									<h4 class="timeline-title"><%= notif[i].title %></h4>
+									<p>
+										<small class="text-muted">
+											<i class="glyphicon glyphicon-time"></i>
+											<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
+										</small>
+									</p>
+								</div>
+								<div class="timeline-body">
+									<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
+								</div>
+							</div>
+						</li>
+						<% 
+					} 
+				} %>
+
+			</ul>
 		</div>
 	</div>
 	<!-- 	<div class="row"> -->
 
 	<!-- LOCAL INFORMATION -->
-		<!-- 	<div class="col-sm-6">
-				<div class="well">
-					<h3><span class="fa fa-user"></span> Local</h3>
+<!-- 	<div class="col-sm-6">
+	<div class="well">
+		<h3><span class="fa fa-user"></span> Local</h3>
 
-					<% if (currentUser.local.email) { %>
-					<p>
-						<strong>id</strong>: <%= currentUser._id %><br>
-						<strong>pseudo</strong>: <%= currentUser.local.pseudo %><br>
-						<strong>email</strong>: <%= currentUser.local.email %><br>
-						<strong>password</strong>: <%= currentUser.local.password %>
-					</p>
+		<% if (currentUser.local.email) { %>
+		<p>
+			<strong>id</strong>: <%= currentUser._id %><br>
+			<strong>pseudo</strong>: <%= currentUser.local.pseudo %><br>
+			<strong>email</strong>: <%= currentUser.local.email %><br>
+			<strong>password</strong>: <%= currentUser.local.password %>
+		</p>
 
-					<a href="/unlink/local" class="btn btn-punch btn-default">Unlink</a>
-					<% } else { %>
-					<a href="/connect/local" class="btn btn-punch btn-default">Connect Local</a>
-					<% } %>
+		<a href="/unlink/local" class="btn btn-punch btn-default">Unlink</a>
+		<% } else { %>
+		<a href="/connect/local" class="btn btn-punch btn-default">Connect Local</a>
+		<% } %>
 
-				</div>
-			</div> -->
+	</div>
+</div> -->
 
-			<!-- FACEBOOK INFORMATION -->
+<!-- FACEBOOK INFORMATION -->
 		<!-- 	<div class="col-sm-6">
 				<div class="well">
 					<h3 class="text-primary"> Facebook</h3>

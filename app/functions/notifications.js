@@ -78,7 +78,6 @@ module.exports = {
 	  	var nowSeen = { 'notifications.isSeen' : true}
 	  	, thisNotif = data.idNotif;
 
-	  	console.log(thisNotif);
 
 	  	if(data.delete === false){
 	  		User.findOneAndUpdate(
@@ -98,7 +97,6 @@ module.exports = {
 	  				if(err)
 	  					throw err;
 
-	  				console.log('deleted ' +thisNotif );
 	  				return done(true);
 	  			});
 	  		} else 
@@ -116,9 +114,10 @@ module.exports = {
 	 * @param  {[type]} fromAction [description]
 	 * @return {[type]}            [description]
 	 */
-	 gainedXp : function( user, amount, fromAction ) {
+	 gainedXp : function( user, amount, bonus, fromAction ) {
 
-	 	var toSelf = [user._id];
+	 	var toSelf = [user._id]
+	 	, isBonus = bonus > 0 ? ' (+'+bonus+' xp)' : '';
 
 	 	var notif = { 
 	 		idFrom   : user._id,
@@ -127,7 +126,7 @@ module.exports = {
 	 		to       : '', 
 	 		link2    : '',
 	 		icon	 : 'fa fa-plus-square-o', 
-	 		title    : 'You gained '+amount+' xp.',
+	 		title    : 'You gained '+amount+' xp'+isBonus+'.',
 	 		message  : 'by ' + fromAction
 	 	};
 
@@ -246,11 +245,9 @@ module.exports = {
 	   	, friendsTo     = _.map(to.friends, function(num){ return num.idUser.toString(); });
 
 	   	var friendsList = _.union(friendsFrom, friendsTo);
-	   	console.log(friendsList);
 
 	   	friendsList = _.without(friendsList, from._id.toString(),to._id.toString()); 
 
-	   	console.log(friendsList);
 
 	   	var notif = { 
 	   		idFrom   : from._id,
@@ -337,9 +334,10 @@ module.exports = {
 	  			var notif;
 
 	  			var friends = _.map(challenger.friends, function(num){ return num.idUser.toString(); });
-	  			friends = _.without(friends, idChallenged.toString());
+	  			friends = _.without(friends, challenged._id.toString());
 
 	  			notif = { 
+					type	 : 'challengeReceive',
 	  				idFrom   : challenger._id,
 	  				from     : challenger.local.pseudo, 
 	  				link1    : '/u/' + challenger.idCool,
@@ -354,6 +352,7 @@ module.exports = {
 				_this.newNotif(friends, true, notif);
 
 				notif = { 
+					type	 : 'challengeReceive',
 					idFrom   : challenger._id,
 					from     : challenger.local.pseudo, 
 					link1    : '/u/' + challenger.idCool,
@@ -367,6 +366,7 @@ module.exports = {
 				_this.newNotif([idChallenged], true, notif);
 
 				notif = { 
+					type	 : 'challengeReceive',
 					idFrom  : challenger._id,
 					from    : challenger.local.pseudo,
 					link1   : challenged.idCool,
@@ -404,7 +404,7 @@ module.exports = {
 
 	   				var friends = _.map(challenged.friends, function(num){ return num.idUser.toString(); });
 
-	   				friends = _.without(friends, idChallenger.toString());
+	   				friends = _.without(friends, challenger._id.toString());
 
 	   				notif = { 
 	   					idFrom   : challenged._id,
