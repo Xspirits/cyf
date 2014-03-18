@@ -54,7 +54,22 @@
 				<strong>Created :</strong> <span class="dateReadability" data-date="<%= challenge.creation %>"></span>
 			</p>
 		</div>
-
+		<div class="row">
+			<div class="col-xs-12 col-md-6">
+				<h1 class="rating-num">4.0</h1>
+				<h2 class="fa fa-fire pull-left"><%= challenge.value %></h2>
+				<div class="rating">
+					<span class="glyphicon glyphicon-star"></span>
+					<span class="glyphicon glyphicon-star"></span>
+					<span class="glyphicon glyphicon-star"></span>
+					<span class="glyphicon glyphicon-star"></span>
+					<span class="glyphicon glyphicon-star-empty"></span>
+				</div>
+				<div>
+					<span class="fa fa-pencil"></span> <%= challenge.rating.difficulty.count %> evaluations
+				</div>
+			</div>
+		</div>
 	</div>
 	<% include statics/footers %>
 

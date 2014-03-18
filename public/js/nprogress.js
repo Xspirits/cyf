@@ -168,7 +168,8 @@
     if (NProgress.isRendered()) return $("#nprogress");
     $('html').addClass('nprogress-busy');
 
-    var $el = $("<div id='nprogress'>")
+    var $hack = $("<div id='nprogressContainer'>")
+    , $el = $("<div id='nprogress'>")
       .html(Settings.template);
 
     var perc = fromStart ? '-100' : toBarPerc(NProgress.status || 0);
@@ -181,7 +182,8 @@
     if (!Settings.showSpinner)
       $el.find('[role="spinner"]').remove();
 
-    $el.appendTo(document.body);
+    $hack.html($el)
+    $hack.appendTo(document.body);
 
     return $el;
   };

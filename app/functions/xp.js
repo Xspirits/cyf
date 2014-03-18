@@ -45,33 +45,32 @@
  	return process;
  };
 
- module.exports = {	
+ module.exports = function(sio){
+
+ 	return {
 
  	/**
  	 * Return the value of an action
  	 * @param  {[type]} action [description]
  	 * @return {[type]}        [description]
  	 */
- 	getValue : function(action){
- 		return _.values(_.pick(xpRewardvalue, action))[0]
- 	},
- 	//
- 	// 
- 	//
- 	isUp : function(xp, level) { 
- 		var curLvL = level;
+ 	 getValue : function(action){
+ 	 	return _.values(_.pick(xpRewardvalue, action))[0]
+ 	 },
+ 	 isUp : function(xp, level) { 
+ 	 	var curLvL = level;
 
- 		var xpNeeded = getXp(curLvL + 1)
- 		, bugCheck = getXp(curLvL + 2);
+ 	 	var xpNeeded = getXp(curLvL + 1)
+ 	 	, bugCheck = getXp(curLvL + 2);
 
- 		console.log('Test ( '+curLvL+' to '+( curLvL + 1)+'): ?' +xp + ' <  ' + xpNeeded + ' || bugCheck  ( '+curLvL+' to '+( curLvL + 2)+')? ' +xp + ' <  ' + bugCheck);
+ 	 	console.log('Test ( '+curLvL+' to '+( curLvL + 1)+'): ?' +xp + ' <  ' + xpNeeded + ' || bugCheck  ( '+curLvL+' to '+( curLvL + 2)+')? ' +xp + ' <  ' + bugCheck);
 
- 		if(xp > xpNeeded) {
+ 	 	if(xp > xpNeeded) {
 
- 			if(xp > bugCheck) {
- 				var flatten = getLevel(xp) - curLvL;
+ 	 		if(xp > bugCheck) {
+ 	 			var flatten = getLevel(xp) - curLvL;
 
- 				console.log(xp +' > ' +bugCheck + ' ==> ' + xpNeeded +' inc '+curLvL+' of ' + flatten);
+ 	 			console.log(xp +' > ' +bugCheck + ' ==> ' + xpNeeded +' inc '+curLvL+' of ' + flatten);
 
  				return flatten; // $inc of the difference to make the level up to date
  			}
@@ -112,6 +111,7 @@
  			if(levelUp) {
  				notifs.gainedLevel(userUpdated, uLvl + 1);
  				notifs.levelUp(userUpdated);
+            	sio.glob('fa fa-angle-double-up',' <a href="/u/'+userUpdated.idCool+'">'+userUpdated.local.pseudo + '</a> is now level '+ userUpdated.level +' <i class="fa fa-exclamation"></i>');
  			}
 
  			notifs.gainedXp(userUpdated, value, bonus, text);
@@ -119,5 +119,5 @@
  			return 'woo)';
  	});
  	},
-
  }
+}

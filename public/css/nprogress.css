@@ -1,5 +1,13 @@
 /* Make clicks pass-through */
+#nprogressContainer {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+}
 #nprogress {
+  z-index: 1001;
+  position: relative;
   pointer-events: none;
   -webkit-pointer-events: none;
 }
@@ -7,32 +15,36 @@
 #nprogress .bar {
   background: #F98F22;
 
-  position: fixed;
+  position: absolute;
   z-index: 1001;
   top: 0;
-  left: 0;
 
   width: 100%;
-  height: 2px;
+  height: 3px;
 }
-
+@media (max-width: 768px) {
+  #nprogressContainer {top: 7px; }
+  #nprogress .bar {
+    top: 50px;
+  }
+}
 /* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #F98F22, 0 0 5px #F98F22;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-  -moz-transform: rotate(3deg) translate(0px, -4px);
-  -ms-transform: rotate(3deg) translate(0px, -4px);
-  -o-transform: rotate(3deg) translate(0px, -4px);
-  transform: rotate(3deg) translate(0px, -4px);
+#nprogress .bar  {
+  background: #ED8A00;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#ED8A00), to(#E08A00));
+  background: -webkit-linear-gradient(#ED8A00, #E08A00);
+  background: -moz-linear-gradient(#ED8A00, #E08A00);
+  background: -o-linear-gradient(#ED8A00, #E08A00);
+  background: linear-gradient(#ED8A00, #E08A00);
 }
 
+/* line 230, ../../sass/style.scss */
+#nprogress .bar:after {
+  background: #2F90C7;
+  -webkit-box-shadow: 0 0 9px #2F90C7;
+  -moz-box-shadow: 0 0 9px #2F90C7;
+  box-shadow: 0 0 9px #2F90C7;
+}
 /* Remove these to get rid of the spinner */
 #nprogress .spinner {
   display: block;

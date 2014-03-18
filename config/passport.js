@@ -57,6 +57,8 @@ module.exports = function(passport, genUID, xp, notifs) {
 
                 // all is well, return user
                 else {
+                    req.session.isLogged = true;
+                    req.session.user = userfound;
                     userfound.isOnline = true;
 
                     userfound.save(function(err) {
@@ -69,9 +71,9 @@ module.exports = function(passport, genUID, xp, notifs) {
                     });
                 }
             });
-        });
+});
 
-    }));
+}));
 
     // =========================================================================
     // LOCAL SIGNUP ============================================================
@@ -118,6 +120,9 @@ module.exports = function(passport, genUID, xp, notifs) {
                             if (err)
                                 throw err;
 
+                            req.session.user = user;
+                            req.session.isLogged = true;
+                            req.session.newUser = true;
                             xp.xpReward(user, 'user.register');
                             return done(null, newUser);
                         });
@@ -236,23 +241,23 @@ module.exports = function(passport, genUID, xp, notifs) {
             // check if the user is already logged in
             if (!req.user) {
 
-                User.findOne({ 'twitter.id' : profile.id }, function(err, user) {
-                    if (err)
-                        return done(err);
+                User.findOne({ 'twitter.id' : profile.id },
+                    function(err, user) {
+                        if (err)
+                            return done(err);
 
-                    if (user) {
+                        if (user) {
                         // if there is a user id already but no token (user was linked at one point and then removed)
-                        if (!user.twitter.token) {
-                            user.twitter.token       = token;
-                            user.twitter.username    = profile.username;
-                            user.twitter.displayName = profile.displayName;
+                        user.twitter.token       = token;
+                        user.twitter.tokenSecret = tokenSecret; 
+                        user.twitter.username    = profile.username;
+                        user.twitter.displayName = profile.displayName;
 
-                            user.save(function(err) {
-                                if (err)
-                                    throw err;
-                                return done(null, user);
-                            });
-                        }
+                        user.save(function(err) {
+                            if (err)
+                                throw err;
+                            return done(null, user);
+                        });
 
                         return done(null, user); // user found, return that user
                     } else {
@@ -261,6 +266,7 @@ module.exports = function(passport, genUID, xp, notifs) {
 
                         newUser.twitter.id          = profile.id;
                         newUser.twitter.token       = token;
+                        newUser.twitter.tokenSecret = tokenSecret;
                         newUser.twitter.username    = profile.username;
                         newUser.twitter.displayName = profile.displayName;
 
@@ -271,19 +277,21 @@ module.exports = function(passport, genUID, xp, notifs) {
                         });
                     }
                 });
-
-} else {
+                //
+            } else {
                 // user already exists and is logged in, we have to link accounts
                 var user                 = req.user; // pull the user out of the session
 
                 user.twitter.id          = profile.id;
                 user.twitter.token       = token;
+                user.twitter.tokenSecret = tokenSecret; 
                 user.twitter.username    = profile.username;
                 user.twitter.displayName = profile.displayName;
 
                 user.save(function(err) {
                     if (err)
                         throw err;
+                    console.log(user)
                     return done(null, user);
                 });
             }

@@ -17,7 +17,7 @@
 						Challenge launched !</h3>
 					</div>
 					<div class="panel-body">
-						You will be redirected to your divrofile in 5 seconds.
+						You will be redirected to your profile in 5 seconds.
 					</div>
 				</div>
 			</div>
@@ -75,8 +75,8 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label>Begin the:</label>
-							<div class='input-group date' id='DTPKStart' data-date="" data-format="MM dd yyyy, hh:ii">
+							<label>The challenge will begin:</label>
+							<div class='input-group date col-lg-5 col-xs-8 col-lg-offset-1 col-xs-offset-1' id='DTPKStart' data-date="" data-format="MM dd yyyy, hh:ii">
 								<input type='text' class="form-control">
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-calendar"></span>
@@ -85,6 +85,7 @@
 							<input type="text" id="DTPKStart_formated" value="" class="hidden"  />
 							<input type="text" id="DTPKEnd_formated" value="" class="hidden"  />
 						</div>
+						<p id="timeChallengeInfo" class="help-block"><span></span> will have <strong></strong> day(s) and <strong></strong> hour(s) to complete it.</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-punch btn-default" data-dismiss="modal">Close</button>
@@ -98,149 +99,175 @@
 
 			<div class="container">
 
-
-				<div class="page-header text-center">
-					<h1>Make a challenge request</h1>
-				</div>
-
 				<div class="row">
 
 					<div class="col-md-6">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Select Challenge</h3>
-							</div>
-							<div class="panel-body">
-								<div class="list-group challenge">
-									<% for(var i=0; i< challenges.length; i++) { %>
-									<a href="#" class="list-group-item" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">
+						<h3>Select a challenge
+							<div class="pull-right filter">
+								<input type="search" class="form-control" placeholder="Search a game">
+							</div>					
+						</h3>
+						<div class="row challenge">
+							<% for(var i=0; i< challenges.length; i++) { 
+								isOdd = i%2? 'col-xs-offset-1 col-lg-offset-0' : '';
+								%>
+								<div class="col-lg-6 col-xs-5 <%= isOdd %> imInABox animated flipInX" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+									<div class="rounded-2 glow-shad grad-blue-main card">
 										<span class="badge"><%= challenges[i].game %></span>
-										<h4 class="list-group-item-heading"><%= challenges[i].title %> </h4>
-										<p class="list-group-item-text"><%= challenges[i].description %></p>
-										<p class="list-group-item-text">
-											Allowed time:
-											<span class="badge"><%= challenges[i].durationH %></span> Hours
-											<% if (challenges[i].durationD > 0 ) { %> 
-											<span class="badge"><%= challenges[i].durationD %></span> Days
-											<% } %>
-											<span>
-												<i class="fa fa-fire text-danger"></i> <%= challenges[i].value %>
-											</span>	
-										</p>
-									</a>
-									<% } %>
-								</div >
+
+										<h3 class="hidden-xs"><%= challenges[i].title %></h3>
+										<h5 class="visible-xs"><%= challenges[i].title %></h5>
+
+										<p class="hidden-xs"><%= challenges[i].description %></p>
+
+										<hr class="subtle-divider">
+										<i class="fa fa-clock-o"></i>
+										<strong><%= challenges[i].durationH %></strong> Hours
+										<% if (challenges[i].durationD > 0 ) { %> 
+										<strong><%= challenges[i].durationD %></strong> Days
+										<% } %>
+										<span class="pull-right">
+											<i class="fa fa-fire text-danger"></i> <%= challenges[i].value %>
+										</span>
+									</div>
+								</div>
+								<% } %>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Select a friend</h3>
-							</div>
-							<div class="panel-body">
-								<div class="list-group friends">
-									<% for(var i=0; i< userList.length; i++) { %>
-									<a href="#" class="list-group-item btn btn-punch clearfix"  id="<%= userList[i].idUser %>" data-pseudo="<%= userList[i].userName %>">
-										<span class="badge">mutual friends!</span>
-										<strong class="pull-left"><%= userList[i].userName %></strong>
-									</a>
+						<div class="col-md-6">
+							<h3>target a friend
+								<div class="pull-right filter">
+									<input type="search" class="form-control" placeholder="Search a friend">
+								</div>
+							</h3>
+							<div class="row friends">
+
+								<% if(userList.length > 0) { %>
+								<% for(var i=0; i< userList.length; i++) { %>
+									<div class="col-lg-3 col-xs-3 col-sm-3 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 boxy rounded-2 animated flipInX" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
+										<div class="flatty">
+											<span class="level"><%= userList[i].idUser.level %></span>
+											<div class="vh-center">
+												<h5 class="label label-white"><%= userList[i].idUser.local.pseudo %></h5>
+											</div>
+
+										</div>
+										<span class="identicon" data-size="100" data-hashMe="<%= userList[i].idUser.idCool %>"></span>
+
+									</div>
 									<% } %>
-								</div >
+									<% } %>
+								</div>
 							</div>
+
+							<hr>
 						</div>
+
 					</div>
 
-					<hr>
-				</div>
+					<% include statics/footers %>
 
-			</div>
+					<script type="text/javascript">
 
-			<% include statics/footers %>
+						$(function() {
+							var cStartDate, cEndDate;
 
-			<script type="text/javascript">
+							$('#DTPKStart')
+							.datetimepicker({
+								format: "MM dd yyyy, hh:ii",
+								autoclose: true,
+								startDate : new Date,
+								todayHighlight: true,
+								linkField: "DTPKStart_formated",
+								linkFormat: "yyyy-mm-ddThh:ii:ss",
+								pickerPosition: 'bottom-left'
+							});
 
-				$(function() {
-					var cStartDate, cEndDate;
+							$('.imInABox,.friends .boxy').click(function(e) {
+								e.preventDefault();
+								$(this).siblings().removeClass('active');
+								$(this).toggleClass('active');
 
-					$('#DTPKStart')
-					.datetimepicker({
-						format: "MM dd yyyy, hh:ii",
-						autoclose: true,
-						todayHighlight: true,
-						linkField: "DTPKStart_formated",
-						linkFormat: "yyyy-mm-ddThh:ii:ss"
-					});
+								upFriends();
+							})
 
-					$('.list-group > a').click(function(e) {
-						e.preventDefault();
-						$(this).siblings().removeClass('active');
-						$(this).toggleClass('active');
+							$('#timeConfirm').click( function(e) {
+								e.preventDefault();
 
-						upFriends();
-					})
-
-					$('#timeConfirm').click( function(e) {
-						e.preventDefault();
-						$('#timeModal').modal('hide');
-						$('#timeModal').on('hidden.bs.modal', function (e) {
-							e.preventDefault();
-
-							var sDate = $('#DTPKStart').find("input").val();
-									// eDate     = $('#DTPKEnd').find("input").val();
-
-									console.log(sDate);
-									// console.log(eDate);
-									populateModal(sDate,function() {
-										$('#lastStep').modal('show');
-									});
-								});
-
-					});
-
-						// Bind normal buttons
-						$("#TOR").click( function(e){
-							e.preventDefault();
-
-							var cBox = $('.challenge a.active'),
-							uBox = $('.friends a.active');
-
-							var challengeId = cBox.attr('id'),
-							challenged      = uBox.attr('id');
-
-							var target = {};
-							target.idChallenge = challengeId;
-							target.idChallenged = challenged;
-							target.deadLine = {
-								h:cBox.attr('data-durationH'),
-								d:cBox.attr('data-durationD')
-							};
-							target.launchDate = $('#DTPKStart_formated').val();
-							// target.timeFrame = '<%= user.local.pseudo %>';
-							console.log(target);
-
-							$.ajax({
-								type: 'POST',
-								data: JSON.stringify(target),
-								contentType: 'application/json',
-								url: './launchChallenge',						
-								success: function(data) {
-									console.log('success');
-
-									$('#lastStep').modal('hide');
-									$('#lastStep').on('hidden.bs.modal', function (e) {
+								if($('#DTPKStart').find("input").val()) {
+									$('#timeModal').modal('hide');
+									$('#timeModal').on('hidden.bs.modal', function (e) {
 										e.preventDefault();
 
-										$('#successModal').modal('show');
-
-										window.setTimeout(function(){
-											window.location.href = "./profile";
-										}, 5000);
-									});
-								}
+										var sDate = $('#DTPKStart').find("input").val();
+										console.log(sDate);
+							// console.log(eDate);
+							populateModal(sDate,function() {
+								$('#lastStep').modal('show');
 							});
 						});
 
+								} else {
+									$('#DTPKStart').addClass('has-warning').append('<i class="fa fa-warning form-control-feedback" style="float: left;font-size: 2em;margin: 0 15px;"></i>');
+
+								}
+
+							});
+
+							$("#TOR").click( function(e){
+								e.preventDefault();
+
+								var cBox = $('.imInABox.active'),
+								uBox = $('.friends .boxy.active');
+
+								var challengeId = cBox.attr('id')
+								, challenged      = uBox.attr('id')
+								, challengedIdCool      = uBox.attr('data-idCool')
+								, challengedPseudo      = uBox.attr('data-pseudo')
+								, launchAt = $('#DTPKStart_formated').val();
+
+								if(moment(launchAt).isAfter()) {
+
+									var target = {};
+									target.idChallenge = challengeId;
+									target.idChallenged = challenged;
+									target.deadLine = {
+										h:cBox.attr('data-durationH'),
+										d:cBox.attr('data-durationD')
+									};
+									target.launchDate = launchAt;
+
+									console.log(target);
+
+									$.ajax({
+										type: 'POST',
+										data: JSON.stringify(target),
+										contentType: 'application/json',
+										url: './launchChallenge',						
+										success: function(data) {
+											console.log('success');
+
+											$('#lastStep').modal('hide');
+											$('#lastStep').on('hidden.bs.modal', function (e) {
+												e.preventDefault();
+
+												$('#successModal').modal('show');
+
+												socket.emit('just happened',{
+													icon: 'fa fa-bolt',
+													event: '<a href="/u/<%= currentUser.idCool %>" title="youhou"><%= currentUser.local.pseudo %></a> challenged <a href="/u/'+challengedIdCool+'">'+challengedPseudo+'</a>.'
+												});
+
+												window.setTimeout(function(){
+													window.location.href = "./profile";
+												}, 2333);
+											});
+										}
+									});
+								} else {
+									$('#TOR').text('The challenge cannot start immediatly after your lauched it.')
+								}
+							});
 upFriends();
 });
 
@@ -262,10 +289,10 @@ upFriends();
 
 	var populateModal = function (sDate, complete) {
 		var query, fStart, fEnd,
-		cBox = $('.challenge a.active'),
-		uBox = $('.friends a.active');
+		cBox = $('.imInABox.active'),
+		uBox = $('.friends .boxy.active');
 
-
+		console.log(cBox);
 		if (cBox.attr('data-durationD') > 0 ) {
 			query = {hours:cBox.attr('data-durationH'),days:cBox.attr('data-durationD')};
 		} else {
@@ -295,24 +322,35 @@ upFriends();
 		$('#dateEnd').text(dateEnd);
 		complete();
 	};
+	var populateTimeModal = function(){
+		var cBox = $('.imInABox.active')
+		, uBox   = $('.friends .active');
 
+		console.log(cBox.attr('data-durationD'))
+		console.log(cBox.attr('data-durationH'));
+		$('#timeChallengeInfo > span').text(uBox.attr('data-pseudo'));
+		$('#timeChallengeInfo > strong:nth-child(even)').text(cBox.attr('data-durationD'));
+		$('#timeChallengeInfo > strong:nth-child(odd)').text(cBox.attr('data-durationH'));;
+
+
+		$('#timeModal').modal('show');
+	}
 	var upFriends = function (){
 
-		var numCa = $(".challenge a.active").length,
-		numFa = $(".friends a.active").length;
+		var numCa = $(".imInABox.active").length,
+		numFa = $(".friends .boxy.active").length;
 
 		if(numCa > 0) {
-			$('.friends > a').removeClass('disabled');
-			console.log($(".challenge a.active").length);
+			$('.friends .boxy').removeClass('disabled');
 		} else {
-			$('.friends > a').addClass('disabled');
+			$('.friends .boxy').addClass('disabled');
 		}
 
 		// Pop the launch button
 		if(numCa > 0 && numFa > 0) {
 			console.log('go');
 
-			$('#timeModal').modal('show');
+			populateTimeModal();
 
 		}
 	};

@@ -21,12 +21,16 @@
 				<div class="panel-body">
 					<div class="col-md-6">
 						<div class="form-group">
+							<img id="imgp1" src="" >
 							<label for="proofLink1" class="control-label">Proof link 1*</label>
-							<input type="text" class="form-control gStyle" id="proofLink1" placeholder="http://">
+							<input type="file" title="Browse" id="proofLink1" class="file-inputs">
+							<span class="hidden" id="imNowb64_p1"></span>
 						</div>
 						<div class="form-group">
-							<label for="proofLink2" class="control-label">Proof link 2</label>
-							<input type="text" class="form-control gStyle" id="proofLink2" placeholder="http://">
+							<img id="imgp2" src="" >
+							<label for="proofLink2" class="control-label">Proof link 2 (optional)</label>
+							<input type="file" title="Browse" id="proofLink2" >
+							<span class="hidden" id="imNowb64_p2"></span>
 						</div>
 
 					</div>
@@ -133,56 +137,109 @@
 						$('#processConfirm').modal('show');
 
 					});
-			// Bind normal buttons
-			$("#valConfirm").click( function(e){
-				e.preventDefault();
-				
-				var idChallenge = $(this).attr('data-idChallenge');
+					function submitFinal(data) {
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(data),
+							dataType: 'json',
+							contentType: 'application/json',
+							url: './validationRequest',						
+							success: function(data) {
+								console.log('success');
 
-				var data = {};
-				data.idChallenge = idChallenge;
-				data.proofLink1 = $('#proofLink1').val();
-				data.proofLink2 = $('#proofLink2').val();
-				data.confirmComment = $('#additionnalComment').val();
+								$('#processConfirm').modal('hide');
+								$('#processConfirm').on('hidden.bs.modal', function (e) {
+									e.preventDefault();
 
-				console.log(data);
+									$('#successModal').modal('show');
 
-				$.ajax({
-					type: 'POST',
-					data: JSON.stringify(data),
-					contentType: 'application/json',
-					url: './validationRequest',						
-					success: function(data) {
-						console.log('success');
-
-						$('#processConfirm').modal('hide');
-						$('#processConfirm').on('hidden.bs.modal', function (e) {
-							e.preventDefault();
-
-							$('#successModal').modal('show');
-
-							window.setTimeout(function(){
-								window.location.href = "./profile";
-							}, 5000);
+									window.setTimeout(function(){
+										window.location.href = "./profile";
+									}, 5000);
+								});
+							}
 						});
 					}
-				});
-			});
-			Ladda.bind( '.ladda-button.btn-block', {
-				callback: function( instance ) {
-					var progress = 0;
-					var interval = setInterval( function() {
-						progress = Math.min( progress + Math.random() * 0.20, 1 );
-						instance.setProgress( progress );
-
-						if( progress === 1 ) {
-							instance.stop();
-							clearInterval( interval );
+					function sendToImgur(imgB64 , cb){
+						$.ajax({
+							url: 'https://api.imgur.com/3/image',
+							type: 'post',
+							headers: {
+								Authorization: 'Client-ID a10cc023eeaf638'
+							},
+							data: {
+								image: imgB64,
+								type :'base64'
+							},
+							dataType: 'json',
+							success: function(json) {
+								cb(json)
+							},
+							error: function(json) {
+								cb(json)
+							}
+						});
+					}
+					function getx64(input, type) {
+						if ( input.files && input.files[0] ) {
+							var FR= new FileReader();
+							FR.onload = function(e) {
+								$('#imgp'+type).width(50).height(50).attr( "src", e.target.result );
+								$('#imNowb64_p'+type).attr('data-b64', (e.target.result).replace(/^data:image\/(png|jpg|JPG|jpeg|gif);base64,/, "") );
+							};     
+							FR.readAsDataURL( input.files[0] );
 						}
-					}, 35 );
-				}
-			});
-		});
+					}
+					$("#proofLink1, #proofLink2").change(function(){
+						getx64($('#proofLink1').get(0), 1 );
+						getx64($('#proofLink2').get(0), 2 );
+
+					});
+					// Bind normal buttons
+					$("#valConfirm").click( function(e){
+						e.preventDefault();
+
+						var idChallenge = $(this).attr('data-idChallenge');
+						var data = {};
+						data.idChallenge = idChallenge;
+						data.confirmComment = $('#additionnalComment').val();
+
+						sendToImgur($('#imNowb64_p1').attr('data-b64'), function( imageA ) {
+
+							data.proofLink1 =  imageA.data.link;
+
+							if($('#imNowb64_p2').attr('data-b64')) {
+								sendToImgur($('#imNowb64_p2').attr('data-b64'), function( imageB ) {
+
+									console.log(imageA);
+									console.log(imageB);
+									data.proofLink2 =  imageB.data.link;
+									submitFinal(data);
+								});
+							} else {
+								console.log(imageA);
+								data.proofLink2 =  imageB.data.link;
+								submitFinal(data);
+							}
+						});
+						// console.log(imgData)
+
+					});
+					Ladda.bind( '.ladda-button.btn-block', {
+						callback: function( instance ) {
+							var progress = 0;
+							var interval = setInterval( function() {
+								progress = Math.min( progress + Math.random() * 0.20, 1 );
+								instance.setProgress( progress );
+
+								if( progress === 1 ) {
+									instance.stop();
+									clearInterval( interval );
+								}
+							}, 35 );
+						}
+					});
+				});
 
 var openedCompletion = function() {
 	var div = $('#mayIask'),

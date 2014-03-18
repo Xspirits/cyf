@@ -7,38 +7,40 @@
 <body>
 
 	<% include statics/navTopFix %>
-	<div class="container">
-		<div class="col-sm-6 col-sm-offset-3">
+	<div class="canvas">
+		<div class="container">
+			<div class="col-sm-6 col-sm-offset-3">
 
-			<h1>Signup</h1>
+				<h1>Signup</h1>
 
-			<% if (message.length > 0) { %>
-			<div class="alert alert-danger"><%= message %></div>
-			<% } %>
+				<% if (message.length > 0) { %>
+				<div class="alert alert-danger"><%= message %></div>
+				<% } %>
 
-			<!-- LOGIN FORM -->
-			<form action="/signup" method="post">
-				<div class="form-group">
-					<label>Pseudo</label>
-					<input type="text" class="form-control" name="pseudo">
-				</div>
-				<div class="form-group">
-					<label>Email</label>
-					<input type="text" class="form-control" name="email">
-				</div>
-				<div class="form-group">
-					<label>Password</label>
-					<input type="password" class="form-control" name="password">
-				</div>
+				<!-- LOGIN FORM -->
+				<form action="/signup" method="post">
+					<div class="form-group">
+						<label>Pseudo</label>
+						<input type="text" class="form-control" name="pseudo">
+					</div>
+					<div class="form-group">
+						<label>Email</label>
+						<input type="text" class="form-control" name="email">
+					</div>
+					<div class="form-group">
+						<label>Password</label>
+						<input type="password" class="form-control" name="password">
+					</div>
 
-				<button type="submit" class="btn btn-punch btn-warning btn-lg">Signup</button>
-			</form>
+					<button type="submit" class="btn btn-punch btn-warning btn-lg">Signup</button>
+				</form>
 
-			<hr>
+				<hr>
 
-			<p>Already have an account? <a href="/login">Login</a></p>
-			<p>Or go <a href="/">home</a>.</p>
+				<p>Already have an account? <a href="/login">Login</a></p>
+				<p>Or go <a href="/">home</a>.</p>
 
+			</div>
 		</div>
 	</div>
 	<% include statics/footersFix %>

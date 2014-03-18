@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-glob
-====
-
-Private but global rep
-=======
 # Easy Node Authentication
 
 Code for the entire scotch.io tutorial series: Complete Guide to Node Authentication
@@ -23,4 +17,3 @@ If you would like to download the code and try it for yourself:
 
 
 
->>>>>>> init

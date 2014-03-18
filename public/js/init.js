@@ -4,6 +4,7 @@
  src = [
  './js/main.js',
  './js/challengeBox.js',
+ './js/bootstrap.switch.js',
  './js/nprogress.js',
  './js/odometer.min.js',
  './js/nouislider.min.js',

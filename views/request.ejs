@@ -32,8 +32,8 @@
 										<span class="dateReadability" data-date="<%= currentUser.pendingRequests[i].date %>"></span>
 									</small>
 
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">confirm</a>
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">delete</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">confirm</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">delete</a>
 								</li>
 								<% } %>
 								<% } %>
@@ -111,8 +111,8 @@
 									<a href='/u/<%= challenges.request[i]._idChallenger.idCool %>'>
 										<%= challenges.request[i]._idChallenger.local.pseudo %>
 									</a>
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmChallenge" data-id="<%= challenges.request[i]._id %>">Accept</a>
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="rejectChallenge" data-id="<%= challenges.request[i]._id %>">Deny</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmChallenge" data-idCool="<%= challenges.request[i]._idChallenge.idCool %>" data-from="<%= challenges.request[i]._idChallenger.local.pseudo %>" data-fromCool="<%= challenges.request[i]._idChallenger.idCool %>" data-id="<%= challenges.request[i]._id %>">Accept</a>
+									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-idCool="<%= challenges.request[i]._idChallenge.idCool %>" data-action="rejectChallenge" data-from="<%= challenges.request[i]._idChallenger.local.pseudo %>" data-fromCool="<%= challenges.request[i]._idChallenger.idCool %>" data-id="<%= challenges.request[i]._id %>">Deny</a>
 								</li>
 								<% } %>
 								<% } %>
@@ -145,58 +145,57 @@
 				$(".answerCall").click( function(e){
 					e.preventDefault();
 
-			// Create a new instance of ladda for the specified button
-			var currButton = $(this);
-			//var l = Ladda.create( currButton );
-			var going;
-			// Start loading
-			// l.start();
+					// Create a new instance of ladda for the specified button
+					var _this = $(this);
+					//var l = Ladda.create( _this );
+					var going;
 
-			var target = {};
-			if($(this).attr('data-action') === 'confirmFriend'){
+					var target = {};
+					if(_this.attr('data-action') === 'confirmFriend'){
 
-				going = 'confirmFriend';
-				target.id = $(this).attr('data-idfrom');
-				target.pseudo = $(this).attr('data-nameFrom');
-			}
-			else if($(this).attr('data-action') === 'confirmChallenge'){
+						going = 'confirmFriend';
+						target.id = _this.attr('data-idfrom');
+						target.pseudo = _this.attr('data-nameFrom');
+					}
+					else if(_this.attr('data-action') === 'confirmChallenge'){
 
-				going = 'acceptChallenge';
-				target.id = $(this).attr('data-id');
-			}
-			else if($(this).attr('data-action') === 'rejectChallenge'){
+						going = 'acceptChallenge';
+						target.id = _this.attr('data-id');
+					}
+					else if(_this.attr('data-action') === 'rejectChallenge'){
 
-				going = 'denyChallenge';
-				target.id = $(this).attr('data-id');
-			}
-			else if($(this).attr('data-action') === 'cancelFriend'){
+						going = 'denyChallenge';
+						target.id = _this.attr('data-id');
+					}
+					else if(_this.attr('data-action') === 'cancelFriend'){
 
-				going = 'cancelFriend';
-				target.id = $(this).attr('data-idfrom');
-				target.pseudo = $(this).attr('data-nameFrom');
-			}
-			else
-				going = 'denyFriend';
+						going = 'cancelFriend';
+						target.id = _this.attr('data-idfrom');
+						target.pseudo = _this.attr('data-nameFrom');
+					}
+					else
+						going = 'denyFriend';
 
-			console.log(target);
+					console.log(target);
 
-			$.ajax({
-				type: 'POST',
-				data: JSON.stringify(target),
-				contentType: 'application/json',
-				url: './' + going,						
-				success: function(data) {
+					$.ajax({
+						type: 'POST',
+						data: JSON.stringify(target),
+						contentType: 'application/json',
+						url: './' + going,						
+						success: function(data) {
 
-					currButton.removeClass('btn-default').addClass('btn-success');
-					currButton
+					//Animate
+					_this.removeClass('btn-default').addClass('btn-success');
+					_this
 					.parent('li')
 					.addClass('list-group-item-success animated flipOutX');
-					setTimeout(function(){ currButton.parent('li').remove(); }, 800);
-					console.log(JSON.stringify(data));
+
+					setTimeout(function(){ _this.parent('li').remove(); }, 800);
 				}
 			});
 
-		});	
+});	
 });
 
 </script>

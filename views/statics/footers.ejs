@@ -1,14 +1,35 @@
 <div id="sharePost"></div>
 </div> <!-- End .canvas -->
-<!-- <script src="/socket.io/socket.io.js"></script> -->
+
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" id="jsLoader" src="./js/init.js"></script>
-
+<script type="text/javascript" src="./js/file-input.js"></script>
 <script type="text/javascript">
-
 	$(function() {
 
+		//Socket 
+		socket = io.connect('http://192.168.1.2');
+
+		socket.on('globalevent', function (data) {
+
+			console.log(data);
+			pushStream(data);
+		});
+		var pushStream = function(data) {
+			var target = $('#streams')
+			, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
+
+			console.log(data.date);
+			console.log(moment(data.date).fromNow());
+
+			target.prepend(template);
+
+		}
+
 		var isMobile = ($(window).width() < 800) ? true : false;
-		
+		$('.file-inputs').bootstrapFileInput();
+
+		//Avatars/identicons
 		$('.identicon').each( function(){
 			var _this = $(this);
 			var data = _this.attr('data-hashMe')
@@ -139,9 +160,19 @@
 
 
 				}
-
 			}
-
+			// Launch some fun timers
+			timeFromUp();
+			setInterval(function(){
+				timeFromUp();
+			},1000);
 		});
 
+var timeFromUp = function(){
+	$('.timeFromUp').each( function () {
+		var start = $(this).attr('data-date');
+		var converted = moment(start).countdown().toString();
+		$(this).text(converted);
+	})
+}
 </script>
