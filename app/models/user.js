@@ -11,6 +11,39 @@ var userSchema = mongoose.Schema({
     xpDouble         : {type: Boolean, default: false},
     xp               : {type: Number, default: 0},
     xpNext           : {type: Number, default: 100},
+    weeklyScore      : {type: Number, default: 0},
+    weekly           : {
+        xp      : {type: Number, default: 0},
+        level   : {type: Number, default: 0},
+        shareFB : {type: Number, default: 0},
+        shareTW : {type: Number, default: 0}
+    },
+    weeklyArchives : [{
+        xp      : {type: Number, default: 0},
+        level   : {type: Number, default: 0},
+        shareFB : {type: Number, default: 0},
+        shareTW : {type: Number, default: 0},
+        week    : Number,
+    }],
+    monthlyScore      : {type: Number, default: 0},
+    monthly           : {
+        xp      : {type: Number, default: 0},
+        level   : {type: Number, default: 0},
+        shareFB : {type: Number, default: 0},
+        shareTW : {type: Number, default: 0}
+    },
+    monthlyArchives : [{
+        xp      : {type: Number, default: 0},
+        level   : {type: Number, default: 0},
+        shareFB : {type: Number, default: 0},
+        shareTW : {type: Number, default: 0},
+        month   : Number,
+    }],
+    globalScore      : {type: Number, default: 0},
+    global           : {
+        shareFB : {type: Number, default: 0},
+        shareTW : {type: Number, default: 0},
+    },
     share          : {
         facebook    : {type: Boolean, default: true},
         twitter     : {type: Boolean, default: true}

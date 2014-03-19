@@ -30,36 +30,117 @@
 
 		<div class="container">
 			<div class="row well">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Rank</th>
-							<th>Challenger</th>
-							<th>Level</th>
-							<th>Experience</th>
-						</tr>
-					</thead>
-					<tbody>
 
-						<% for(var i=0; i< 20; i++) { %>
-						<tr class="animated flipInX">
-							<td class="ranking_<%= i+1 %>"><%= i+1 %></td>
-							<td>aka70</td>
-							<td>2</td>
-							<td>165</td>
-						</tr>
-						<% }%>
+				<div class="tabbable tabs-left clearfix">
+					<ul id="myTab1" class="nav nav-tabs nav-justified">
+						<li class="active"><a href="#weekly" data-toggle="tab">Weekly Ladder</a></li>
+						<li><a href="#monthly" data-toggle="tab">Monthly Ladder</a></li>
+						<li><a href="#general" data-toggle="tab">General Ladder</a></li>
 
-						<% for(var i=0; i< ranking.length; i++) { %>
-						<!-- <tr class="animated flipInX">
-							<td class="ranking"><%= i+1 %></td>
-							<td><%= ranking[i].local.pseudo %></td>
-							<td><%= ranking[i].level %></td>
-							<td><%= ranking[i].xp %></td>
-						</tr> -->
-						<% }%>
-					</tbody>
-				</table>
+					</ul>
+					<div id="leaderboardcontainer" class="tab-content">
+						<!-- weekly Leaderboard -->
+						<div class="tab-pane fade active in " id="sharingSocial">		
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Experience</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<% for(var i=0; i< 20; i++) { %>
+									<tr class="animated flipInX">
+										<td class="ranking_<%= i+1 %>"><%= i+1 %></td>
+										<td>aka70</td>
+										<td>2</td>
+										<td>165</td>
+									</tr>
+									<% }%>
+
+									<% for(var i=0; i< weekly.length; i++) { %>
+									<!-- <tr class="animated flipInX">
+										<td class="weekly"><%= i+1 %></td>
+										<td><%= weekly[i].local.pseudo %></td>
+										<td><%= weekly[i].level %></td>
+										<td><%= weekly[i].xp %></td>
+									</tr> -->
+									<% }%>
+								</tbody>
+							</table>
+						</div>
+						<!-- Monthly Leaderboard -->
+						<div class="tab-pane fade active in " id="sharingSocial">		
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Experience</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<% for(var i=0; i< 20; i++) { %>
+									<tr class="animated flipInX">
+										<td class="ranking_<%= i+1 %>"><%= i+1 %></td>
+										<td>aka70</td>
+										<td>2</td>
+										<td>165</td>
+									</tr>
+									<% }%>
+
+									<% for(var i=0; i< monthly.length; i++) { %>
+									<!-- <tr class="animated flipInX">
+										<td class="monthly"><%= i+1 %></td>
+										<td><%= monthly[i].local.pseudo %></td>
+										<td><%= monthly[i].level %></td>
+										<td><%= monthly[i].xp %></td>
+									</tr> -->
+									<% }%>
+								</tbody>
+							</table>
+						</div>
+						<!-- General Leaderboard -->
+						<div class="tab-pane fade active in " id="sharingSocial">		
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Experience</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<% for(var i=0; i< 20; i++) { %>
+									<tr class="animated flipInX">
+										<td class="ranking_<%= i+1 %>"><%= i+1 %></td>
+										<td>aka70</td>
+										<td>2</td>
+										<td>165</td>
+									</tr>
+									<% }%>
+
+									<% for(var i=0; i< global.length; i++) { %>
+									<!-- <tr class="animated flipInX">
+										<td class="global"><%= i+1 %></td>
+										<td><%= global[i].local.pseudo %></td>
+										<td><%= global[i].level %></td>
+										<td><%= global[i].xp %></td>
+									</tr> -->
+									<% }%>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
 			</div>
 
 		</div>

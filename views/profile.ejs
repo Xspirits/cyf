@@ -13,107 +13,110 @@
 <body>
 
 	<% include statics/navTop %>
-	<% xpPer = Math.round((currentUser.xp/currentUser.xpNext )*100); %>
+	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-12 well">
-					<h4>My informations</h4>
-					<a class="pull-left" href="#">
-						<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
-					</a>
-					<div id="scorebox" class="pull-right animated bounceInRight">
-						<div class="level text-center"><span class="odometer" data-number="<%= currentUser.level %>">0</span>
+				<div class="col-lg-12 ">
+					
+					<div id="user_header" class="well">
+						<h4>My informations</h4>
+						<a class="pull-left" href="#">
+							<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
+						</a>
+						<div id="scorebox" class="pull-right animated bounceInRight">
+							<div class="level text-center"><span class="odometer" data-number="<%= currentUser.level %>">0</span>
+							</div>
+							<div class="xp text-center">
+								<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+							</div>
 						</div>
-						<div class="xp text-center">
-							<%= currentUser.xp %>/<%= currentUser.xpNext %>
-						</div>
-					</div>
-					<div class="media-body">
-						<h2 class="animated bounceInUp">
-							<%= currentUser.local.pseudo %> 
-							<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
-						</h2>
-						<div class="loaderProgress animated flipInY">
-							<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-						</div>
-						<ul class="list-inline animated bounceInDown">
+						<div class="media-body">
+							<h2 class="animated bounceInUp">
+								<%= currentUser.local.pseudo %> 
+								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
+							</h2>
+							<div class="loaderProgress animated flipInY">
+								<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+							</div>
+							<ul class="list-inline animated bounceInDown">
 
-							<% if (currentUser.local.email) { %>
-							<li>
-								<h4>
-									<span class="label label-success">
-										<i class="fa fa-check-square"></i>
-										<%= currentUser.idCool %>
-									</span>
-								</h4>
-							</li>
-							<% } %>
+								<% if (currentUser.local.email) { %>
+								<li>
+									<h4>
+										<span class="label label-success">
+											<i class="fa fa-check-square"></i>
+											<%= currentUser.idCool %>
+										</span>
+									</h4>
+								</li>
+								<% } %>
 
-							<li>
-								<h4>
-									<% if (currentUser.facebook.token) { %>
-									<span class="linked active label label-primary">
-										<i class="fa fa-facebook"></i>
-										<a href="/unlink/facebook" class="hidden">
-											<i class="fa fa-times"></i>
-										</a>				
-										<i class="fa fa-check-square meany"></i>
-										<%= currentUser.facebook.name %>
-									</span>
-									<% } else { %>
-									<a href="/connect/facebook" class="label label-primary">
-										<i class="fa fa-facebook"></i>
-										Connect facebook
-									</a>
-									<% } %>
-								</h4>
-							</li>
-
-							<li>
-								<h4>
-									<% if (currentUser.google.token) { %>
-									<span class="linked active label label-danger">
-										<i class="fa fa-google-plus"></i>
-										<a href="/unlink/google" class="hidden">
-											<i class="fa fa-times"></i>
+								<li>
+									<h4>
+										<% if (currentUser.facebook.token) { %>
+										<span class="linked active label label-primary">
+											<i class="fa fa-facebook"></i>
+											<a href="/unlink/facebook" class="hidden">
+												<i class="fa fa-times"></i>
+											</a>				
+											<i class="fa fa-check-square meany"></i>
+											<%= currentUser.facebook.name %>
+										</span>
+										<% } else { %>
+										<a href="/connect/facebook" class="label label-primary">
+											<i class="fa fa-facebook"></i>
+											Connect facebook
 										</a>
-										<i class="fa fa-check-square meany"></i>
-										<%= currentUser.google.name %>
-									</span>
-									<% } else { %>
-									<a href="/connect/google" class="label label-danger">
-										<i class="fa fa-google-plus"></i>
-										Connect google+
-									</a>
-									<% } %>
-								</h4>
-							</li>
+										<% } %>
+									</h4>
+								</li>
 
-							<li>
-								<h4>
-									<% if (currentUser.twitter.token) { %>
-									<span class="linked active label label-info">
-										<i class="fa fa-twitter"></i>
-										<a href="/unlink/twitter" class="hidden">
-											<i class="fa fa-times"></i>
+								<li>
+									<h4>
+										<% if (currentUser.google.token) { %>
+										<span class="linked active label label-danger">
+											<i class="fa fa-google-plus"></i>
+											<a href="/unlink/google" class="hidden">
+												<i class="fa fa-times"></i>
+											</a>
+											<i class="fa fa-check-square meany"></i>
+											<%= currentUser.google.name %>
+										</span>
+										<% } else { %>
+										<a href="/connect/google" class="label label-danger">
+											<i class="fa fa-google-plus"></i>
+											Connect google+
 										</a>
-										<i class="fa fa-check-square meany"></i>
-										<%= currentUser.twitter.username %>
-									</span>
-									<% } else { %>
-									<a href="/connect/twitter" class="label label-info">
-										<i class="fa fa-twitter"></i>
-										Connect Twitter
-									</a>
-									<% } %>
-								</h4>
+										<% } %>
+									</h4>
+								</li>
 
-							</li>
+								<li>
+									<h4>
+										<% if (currentUser.twitter.token) { %>
+										<span class="linked active label label-info">
+											<i class="fa fa-twitter"></i>
+											<a href="/unlink/twitter" class="hidden">
+												<i class="fa fa-times"></i>
+											</a>
+											<i class="fa fa-check-square meany"></i>
+											<%= currentUser.twitter.username %>
+										</span>
+										<% } else { %>
+										<a href="/connect/twitter" class="label label-info">
+											<i class="fa fa-twitter"></i>
+											Connect Twitter
+										</a>
+										<% } %>
+									</h4>
+
+								</li>
 
 
-						</ul>
+							</ul>
 
+						</div>
 					</div>
 				</div>
 			</div>

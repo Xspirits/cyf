@@ -64,23 +64,25 @@
 
  	 	var xpNeeded = getXp(curLvL + 1)
  	 	, bugCheck = getXp(curLvL + 2);
+ 	 	var nextXpReq = xpNeeded - xp;
 
  	 	console.log('Test ( '+curLvL+' to '+( curLvL + 1)+'): ?' +xp + ' <  ' + xpNeeded + ' || bugCheck  ( '+curLvL+' to '+( curLvL + 2)+')? ' +xp + ' <  ' + bugCheck);
 
  	 	if(xp > xpNeeded) {
+ 	 		nextXpReq = bugCheck - xp;
 
  	 		if(xp > bugCheck) {
  	 			var flatten = getLevel(xp) - curLvL;
-
+ 	 			nextXpReq = getXp(flatten+curLvL) - xp;
  	 			console.log(xp +' > ' +bugCheck + ' ==> ' + xpNeeded +' inc '+curLvL+' of ' + flatten);
 
- 				return flatten; // $inc of the difference to make the level up to date
+ 				return [flatten, nextXpReq]; // $inc of the difference to make the level up to date
  			}
  			else
- 				return 1;
+ 				return [1, nextXpReq];
  		}
  		else
- 			return false; 
+ 			return [false, nextXpReq];
  	},
 
  	xpReward : function(user, action, bonus) {
@@ -92,17 +94,17 @@
  		, uLvl    = user.level;
 
  		var valueNext  = getXp(uLvl + 1)
+ 		, valueNext2  = getXp(uLvl + 2)
  		, newXp = uXp + value;
 
  		var levelUp = this.isUp(newXp, uLvl);
 
- 		console.log('add ' + value+ ' (bonus: '+bonus+') to xp ' + uXp + ' lvl ' + uLvl + '('+valueNext+') [levelUp]? ' + levelUp + ' [XP x2]' + userDoubleXp);
+ 		console.log('add ' + value+ ' (bonus: '+bonus+') to xp ' + uXp + ' lvl ' + uLvl + '(Lvl + 1 = '+valueNext+')[ to reach : '+levelUp[1]+'] [levelUp]? ' + levelUp[0] + ' [XP x2]' + userDoubleXp);
 
- 		var inc = levelUp ? { level : levelUp, xp : value, xpNext : valueNext } : { xp : value, xpNext : valueNext } ;
-
+ 		var inc = levelUp[0] ? { level : levelUp[0], xp : value, 'weekly.xp' : value, 'weekly.level' : levelUp[0], 'monthly.xp' : value, 'monthly.level' : levelUp[0] } : { xp : value, 'weekly.xp' : value, 'monthly.xp' : value } ;
 
  		User
- 		.findByIdAndUpdate(user._id, { $inc: inc } )
+ 		.findByIdAndUpdate(user._id, { $inc: inc, $set: {xpNext : levelUp[1]} })
  		.exec(function (err, userUpdated) {
 
  			if(err)
@@ -110,15 +112,16 @@
 
  			var text = _.values(_.pick(xpRewardAction, action))[0];
 
- 			if(levelUp) {
+ 			if(levelUp[0]) {
  				notifs.gainedLevel(userUpdated, uLvl + 1);
  				notifs.levelUp(userUpdated);
-            	sio.glob('fa fa-angle-double-up',' <a href="/u/'+userUpdated.idCool+'">'+userUpdated.local.pseudo + '</a> is now level '+ userUpdated.level +' <i class="fa fa-exclamation"></i>');
+ 				sio.glob('fa fa-angle-double-up',' <a href="/u/'+userUpdated.idCool+'">'+userUpdated.local.pseudo + '</a> is now level '+ userUpdated.level +' <i class="fa fa-exclamation"></i>');
  			}
 
  			notifs.gainedXp(userUpdated, value, bonus, text);
 
- 			return 'woo)';
+ 			//endpoint :(
+ 			return 'woo';
  	});
  	},
  }

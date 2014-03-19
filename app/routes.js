@@ -1,4 +1,4 @@
-module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, img) {
+module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social,ladder, img) {
 
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
@@ -34,6 +34,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 	app.get('/profile', isLoggedIn, function(req, res) {
 
 
+		// ladder.createWeeklyLadder();
 		res.render('profile.ejs', {
 			currentUser : req.user
 		});
@@ -264,6 +265,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 						social.postTwitter(req.user.twitter, twitt, function( data ){
 							var text = '<a href="/u/'+done._idChallenged.idCool+'" title="'+done._idChallenged.local.pseudo+'">'+done._idChallenged.local.pseudo+'</a> shared his success on <a target="_blank" href="https://twitter.com/'+data.user.screen_name+'/status/'+data.id_str+'" title="see tweet">@twitter</a>.'
 							sio.glob('fa fa-twitter', text);
+							ladder.actionInc(req.user,'twitter');
 						});
 					}
 
@@ -272,12 +274,13 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 
 						var message = {
 							title : 'I won a challenge threw by '+done._idChallenger.local.pseudo + '!',
-							body : 'Hurray! I just completed a challenge on Challenge Your friends! I won ' + xp.getValue('ongoing.succeed') +
-							'XP! the challenge : http://localhost:8080/o/'+done.idCool
+							body : 'Hurray! I just completed the challenge "'+done.title+'""  on Challenge Your friends! I won ' + xp.getValue('ongoing.succeed') +
+							'XP! http://localhost:8080/o/'+done.idCool
 						};
 						social.postFbMessage(done._idChallenged.facebook.token,message, 'http://localhost:8080/o/'+done.idCool, function(data) {
 							var text = '<a href="/u/'+done._idChallenged.idCool+'" title="'+done._idChallenged.local.pseudo+'">'+done._idChallenged.local.pseudo+'</a> shared his success on facebook.'
 							sio.glob('fa fa-facebook', text);
+							ladder.actionInc(req.user,'facebook');
 						} )
 					}
 					//Ask the challenger and challenged to rate the challenge.
@@ -423,7 +426,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 
 	// leader board
 	app.get('/leaderboard', function(req, res) {
-		users.getLeaderboard('xp' ,function(returned) {
+		users.getLeaderboards('xp' ,function(returned) {
 			res.render('leaderBoard.ejs', {
 				currentUser : (req.isAuthenticated()) ? req.user : false,
 				ranking: returned

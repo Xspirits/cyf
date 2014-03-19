@@ -424,34 +424,83 @@ module.exports = {
 	  //
 	  // LEADER BOARD
 	  //
+	  globalLeaderboard : function(type, done){
+	  	User		 	
+	  	.find()
+	  	.sort('xp')
+	  	.exec(function(err, challengers) {
 
-	  getLeaderboard : function (type , done) {
+	  		if (err)
+	  			return done(err);
 
+	  		return done(challengers);
+	  	});
+	  },
+	  globalLeaderboard : function(done){
+	  	User		 	
+	  	.find({})
+	  	.sort('globalScore')
+	  	.exec(function(err, challengers) {
+
+	  		if (err)
+	  			return done(err);
+
+	  		return done(challengers);
+	  	});
+	  },
+	  monthlyLeaderboard : function(done){
+	  	User		 	
+	  	.find({})
+	  	.sort('monthlyScore')
+	  	.exec(function(err, challengers) {
+
+	  		if (err)
+	  			return done(err);
+
+	  		return done(challengers);
+	  	});
+	  },
+	  weeklyLeaderboard : function(done){
+	  	User		 	
+	  	.find({})
+	  	.sort('weeklyScore')
+	  	.exec(function(err, challengers) {
+
+	  		if (err)
+	  			return done(err);
+
+	  		return done(challengers);
+	  	});
+	  },
+	  getLeaderboards : function (type , done) {
+	  	var buffer = {};
 	  	switch(type)
 	  	{
-	  		case 'xp':
-	  		User		 	
-	  		.find()
-	  		.sort('-xp')
-	  		.exec(function(err, challengers) {
+	  		case 'score':
+	  		globalLeaderboard(function( global ) {
+	  			monthlyLeaderboard(function( monthly ) {
+	  				weeklyLeaderboard(function( weekly ) {
+	  					
+	  					buffer.global = global;
+	  					buffer.monthly = monthly;
+	  					buffer.weekly = weekly;
 
-				if (err)
-					return done(err);
+	  					return done(buffer);
 
-				return done(challengers);
-			});
-	  		break;
+	  				});
+	  			});
+	  		});
 	  		default:
 	  		User		 	
-	  		.find()
+	  		.find({})
 	  		.sort('-xp')
 	  		.exec(function(err, challengers) {
 
-				if (err)
-					return done(err);
+	  			if (err)
+	  				return done(err);
 
-				return done(challengers);
-			});
+	  			return done(challengers);
+	  		});
 	  	}
 
 	  },

@@ -43,7 +43,7 @@
 			});
 		})
 		// nprogress setup
-		var myLevel = Math.round((<%= currentUser.xp/currentUser.xpNext %>)*100)/100;
+		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
 
 		NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
 		NProgress.set( myLevel );
