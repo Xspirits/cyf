@@ -80,7 +80,7 @@ app.configure(function() {
 require('./app/routes')(app, _,sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img); // load our routes and pass in our app and fully configured passport
 
 // Schedules, for the rankings
-require('./app/schedule')(scheduler);
+require('./app/schedule')(scheduler, ladder);
 
 // launch ======================================================================
 server.listen(port);

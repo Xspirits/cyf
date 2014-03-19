@@ -424,85 +424,85 @@ module.exports = {
 	  //
 	  // LEADER BOARD
 	  //
-	  globalLeaderboard : function(type, done){
-	  	User		 	
-	  	.find()
-	  	.sort('xp')
-	  	.exec(function(err, challengers) {
-
-	  		if (err)
-	  			return done(err);
-
-	  		return done(challengers);
-	  	});
-	  },
 	  globalLeaderboard : function(done){
 	  	User		 	
-	  	.find({})
-	  	.sort('globalScore')
+	  	.find()
+	  	.sort('-globalScore')
+	  	.where('globalScore').gte(1)
+	  	.select('-notifications -friends -challengeRateHistoric')
 	  	.exec(function(err, challengers) {
 
 	  		if (err)
-	  			return done(err);
+	  			throw err
 
-	  		return done(challengers);
+	  		done(challengers);
 	  	});
 	  },
 	  monthlyLeaderboard : function(done){
 	  	User		 	
-	  	.find({})
-	  	.sort('monthlyScore')
+	  	.find()
+	  	.sort('-monthlyScore')
+	  	.where('monthlyScore').gte(1)
+	  	.select('-notifications -friends -challengeRateHistoric')
 	  	.exec(function(err, challengers) {
 
 	  		if (err)
-	  			return done(err);
+	  			throw err
 
-	  		return done(challengers);
+	  		done(challengers);
 	  	});
 	  },
 	  weeklyLeaderboard : function(done){
 	  	User		 	
-	  	.find({})
-	  	.sort('weeklyScore')
+	  	.find()
+	  	.sort('-weeklyScore')
+	  	.where('weeklyScore').gte(1)
+	  	.select('-notifications -friends -challengeRateHistoric')
 	  	.exec(function(err, challengers) {
 
 	  		if (err)
-	  			return done(err);
+	  			throw err
 
-	  		return done(challengers);
+	  		done(challengers);
+	  	});
+	  },
+	  dailyLeaderboard : function(done){
+	  	User		 	
+	  	.find()
+	  	.sort('-dailyScore')
+	  	.where('dailyScore').gte(1)
+	  	.select('-notifications -friends -challengeRateHistoric')
+	  	.exec(function(err, challengers) {
+
+	  		if (err)
+	  			throw err
+
+	  		done(challengers);
 	  	});
 	  },
 	  getLeaderboards : function (type , done) {
-	  	var buffer = {};
-	  	switch(type)
-	  	{
-	  		case 'score':
-	  		globalLeaderboard(function( global ) {
-	  			monthlyLeaderboard(function( monthly ) {
-	  				weeklyLeaderboard(function( weekly ) {
-	  					
-	  					buffer.global = global;
-	  					buffer.monthly = monthly;
-	  					buffer.weekly = weekly;
+	  	var buffer = {}
+	  	, self = this;
 
-	  					return done(buffer);
+	  	if( type  === 'score') {
+	  		// I heard you like nested async functions?
+	  		self.globalLeaderboard(function( global ) {
+	  			buffer.global = global;
+	  			self.monthlyLeaderboard(function( monthly ) {
+	  				buffer.monthly = monthly;
+	  				self.weeklyLeaderboard(function( weekly ) {
+	  					buffer.weekly = weekly;	  					
+	  					self.dailyLeaderboard(function( daily ) {
+	  						buffer.daily = daily;
+
+	  						return done(buffer);
+
+	  					});
 
 	  				});
 	  			});
 	  		});
-	  		default:
-	  		User		 	
-	  		.find({})
-	  		.sort('-xp')
-	  		.exec(function(err, challengers) {
-
-	  			if (err)
-	  				return done(err);
-
-	  			return done(challengers);
-	  		});
 	  	}
-
 	  },
 
 

@@ -101,7 +101,7 @@
 
  		console.log('add ' + value+ ' (bonus: '+bonus+') to xp ' + uXp + ' lvl ' + uLvl + '(Lvl + 1 = '+valueNext+')[ to reach : '+levelUp[1]+'] [levelUp]? ' + levelUp[0] + ' [XP x2]' + userDoubleXp);
 
- 		var inc = levelUp[0] ? { level : levelUp[0], xp : value, 'weekly.xp' : value, 'weekly.level' : levelUp[0], 'monthly.xp' : value, 'monthly.level' : levelUp[0] } : { xp : value, 'weekly.xp' : value, 'monthly.xp' : value } ;
+ 		var inc = levelUp[0] ? { level : levelUp[0], xp : value, 'daily.xp' : value, 'daily.level' : levelUp[0], 'weekly.xp' : value, 'weekly.level' : levelUp[0], 'monthly.xp' : value, 'monthly.level' : levelUp[0] } : { xp : value, 'daily.xp' : value, 'weekly.xp' : value, 'monthly.xp' : value } ;
 
  		User
  		.findByIdAndUpdate(user._id, { $inc: inc, $set: {xpNext : levelUp[1]} })

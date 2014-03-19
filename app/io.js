@@ -1,6 +1,3 @@
-
-
-
 module.exports = function(io, cookieParser, sessionStore,EXPRESS_SID_KEY,COOKIE_SECRET, sio) {
 
 // 

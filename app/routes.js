@@ -33,8 +33,6 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 	// PROFILE SECTION =========================
 	app.get('/profile', isLoggedIn, function(req, res) {
 
-
-		// ladder.createWeeklyLadder();
 		res.render('profile.ejs', {
 			currentUser : req.user
 		});
@@ -426,7 +424,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 
 	// leader board
 	app.get('/leaderboard', function(req, res) {
-		users.getLeaderboards('xp' ,function(returned) {
+		users.getLeaderboards('score' ,function(returned) {
 			res.render('leaderBoard.ejs', {
 				currentUser : (req.isAuthenticated()) ? req.user : false,
 				ranking: returned

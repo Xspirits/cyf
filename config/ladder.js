@@ -6,17 +6,70 @@ var User = require('../app/models/user')
 var getScore = function (data, done) {
 	var finalScore;
 
-	finalScore = (data.xp * data.level) + (250* data.shareTW) + (250* data.shareFB);
+	console.log(data);
+	finalScore = (data.xp * (1 + data.level)) + (250* data.shareTW) + (250* data.shareFB);
 
 	return done(finalScore);
 }
 module.exports = {
 
+	dailyUpdate : function (user, done) {
+
+		var yesterday = user.daily;
+
+		//User calculate score
+		getScore(yesterday, function( score ) {
+			//Update daily score moment().week();
+			console.log('new score for '+user.local.pseudo+' today is ' +score);
+
+			var prepareGlobal = {}
+			prepareGlobal.xp = user.xp;
+			prepareGlobal.level = user.level;
+			prepareGlobal.shareTW = user.global.shareTW;
+			prepareGlobal.shareFB = user.global.shareFB;
+
+			getScore(prepareGlobal, function( globalScore ) {
+				console.log('new global score for '+user.local.pseudo+' is ' +globalScore);
+
+				User
+				.findById(user._id)
+				.exec( function (err, user) {
+
+					if (err)
+						throw err;
+
+					//Number of the week, for statistics purpose.
+					yesterday.day = moment().subtract('days', 1).day();
+
+					//update global score
+					user.globalScore    = globalScore;
+
+					//Last week score
+					user.dailyScore    = score;
+					//reset week
+					user.daily.xp      = 0;
+					user.daily.level   = 0;
+					user.daily.shareFB = 0;
+					user.daily.shareTW = 0;
+
+					//take weekly value and push them into the archives
+					user.dailyArchives.push(yesterday);
+					user.save(function(err) {
+						if (err)
+							throw err;
+
+						return done(user);
+
+					});
+				});
+			});
+		});
+		// 
+	},
 	weeklyUpdate : function (user, done) {
 
 		var lastWeek = user.weekly;
 
-		console.log(lastWeek);
 		//User calculate score
 		getScore(lastWeek, function( score ) {
 			//Update weekly score moment().week();
@@ -27,7 +80,7 @@ module.exports = {
 			prepareGlobal.level = user.level;
 			prepareGlobal.shareTW = user.global.shareTW;
 			prepareGlobal.shareFB = user.global.shareFB;
-			
+
 			getScore(prepareGlobal, function( globalScore ) {
 				console.log('new global score for '+user.local.pseudo+' is ' +globalScore);
 
@@ -60,41 +113,52 @@ module.exports = {
 
 						return done(user);
 
-					})
+					});
 				});
 			});
-		})
-},
-monthlyUpdate : function (user, done) {
+		});
+		// 
+	},
+	monthlyUpdate : function (user, done) {
 
-	var lastMonth = user.monthly;
+		var lastMonth = user.monthly;
 
 		//User calculate score
 		getScore(lastMonth, function( score ) {
-			//Update weekly score moment().month();
-			console.log('new score for '+user.local.pseudo+' is ' +score);
+			//Update weekly score moment().week();
+			console.log('new monthly score for '+user.local.pseudo+' is ' +score);
 
+			var prepareGlobal = {}
+			prepareGlobal.xp = user.xp;
+			prepareGlobal.level = user.level;
+			prepareGlobal.shareTW = user.global.shareTW;
+			prepareGlobal.shareFB = user.global.shareFB;
 
-			globalScore(user, function( globalScore ) {
+			getScore(prepareGlobal, function( globalScore ) {
+				console.log('new global score for '+user.local.pseudo+' is ' +globalScore);
 
 				User
 				.findById(user._id)
 				.exec( function (err, user) {
 
-					//Number of the month, for statistics purpose.
+					if (err)
+						throw err;
+
+					//Number of the week, for statistics purpose.
 					lastMonth.month = moment().subtract('months', 1).month();
 
 					//update global score
-					user.globalScore     = globalScore;
-					//Last month score
+					user.globalScore    = globalScore;
+
+					//Last week score
 					user.monthlyScore    = score;
-					//reset month
+					//reset week
 					user.monthly.xp      = 0;
 					user.monthly.level   = 0;
 					user.monthly.shareFB = 0;
 					user.monthly.shareTW = 0;
 
-					//take weekly value and push them into the archives
+					//take monthly value and push them into the archives
 					user.monthlyArchives.push(lastMonth);
 					user.save(function(err) {
 						if (err)
@@ -102,10 +166,33 @@ monthlyUpdate : function (user, done) {
 
 						return done(user);
 
-					})
+					});
 				});
 			});
-		})
+		});
+		//
+	},
+
+	/**
+	 * This will render the leaderboard for the week. Upgrade scores and res
+	 * @param  {Function} done [description]
+	 * @return {[type]}        [description]
+	 */
+	 createDailyLadder : function () {
+	 	var self = this;
+		//Users Loop
+		User
+		.find({})
+		.sort('-_id')
+		.exec( function (err, usersList) {
+
+			_.each(usersList, function(element, index, list) {
+				self.dailyUpdate(element, function( done ) {
+					console.log('User ' + done.local.pseudo +' has been updated day ' + done.dailyScore +' g ' + done.globalScore );
+				});
+			});
+
+		});
 	},
 	/**
 	 * This will render the leaderboard for the week. Upgrade scores and res
@@ -123,6 +210,27 @@ monthlyUpdate : function (user, done) {
 			_.each(usersList, function(element, index, list) {
 				self.weeklyUpdate(element, function( done ) {
 					console.log('User ' + done.local.pseudo +' has been updated w ' + done.weeklyScore +' g ' + done.globalScore );
+				});
+			});
+
+		});
+	},
+	/**
+	 * This will render the leaderboard for the week. Upgrade scores and res
+	 * @param  {Function} done [description]
+	 * @return {[type]}        [description]
+	 */
+	 createMonthlyLadder : function () {
+	 	var self = this;
+		//Users Loop
+		User
+		.find({})
+		.sort('-_id')
+		.exec( function (err, usersList) {
+
+			_.each(usersList, function(element, index, list) {
+				self.monthlyUpdate(element, function( done ) {
+					console.log('User ' + done.local.pseudo +' has been updated month ' + done.monthlyScore +' g ' + done.globalScore );
 				});
 			});
 
