@@ -176,15 +176,25 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 // =============================================================================
 // CHALLENGES ==================================================================
 // =============================================================================
+	
+	// CHALLENGE LIST SECTION =========================
+
+	app.get('/challenges', function (req, res) {
+		challenge.getList(function ( list ) {
+			res.render('challenges.ejs', {
+				currentUser : (req.isAuthenticated()) ? req.user : false,
+				challenges: list
+			});
+
+		})
+	});
 
 	// CHALLENGE DETAILS SECTION =========================
-	app.get('/c/:id', function(req, res) {
+	app.get('/c/:id', function (req, res) {
 
 		var cId = req.params.id;
 
 		challenge.getChallenge(cId , function (data) {
-
-			// console.log(data);
 
 			res.render('challengeDetails.ejs', {
 				currentUser : (req.isAuthenticated()) ? req.user : false,
@@ -277,9 +287,10 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 				} else 
 				res.send(true);
 			});
-} else 
-res.send(false, 'not a boolean');		
-});
+			//	
+		} else 
+		res.send(false, 'not a boolean');		
+	});
 
 	// USER CHALLENGE TO BE RATED (ask opinion) ==================
 	app.get('/rateChallenges', isLoggedIn, function(req, res) {
@@ -454,7 +465,16 @@ app.get('/users', function(req, res) {
 			};
 
 			users.linkLol(obj, function( result ) {
-				res.send(true);
+
+				if(result === true){
+
+					xp.xpReward(req.user, 'connect.game');
+					notifs.ratedChall(data);
+					res.send(true);
+				} else {
+					res.send(false);
+
+				}
 			})
 		});
 

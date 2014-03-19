@@ -56,6 +56,18 @@ body.modal-open .canvas{
   margin-top: 0;
 }
 
+.value-text {
+  color: rgb(240, 73,50);
+  line-height: 25px;
+  font-size: .875em;
+  font-weight: bolder;
+  vertical-align: top;
+}
+.value-text:before {
+  content: url('../img/value.png');
+  position:relative; /*or absolute*/
+  line-height: 25px;
+}
 /* line 42, ../../sass/style.scss */
 .online,
 .offline,
@@ -627,7 +639,7 @@ hr.subtle-divider {
 }
 
 @media (max-width: 767px) {
-  
+
   .navbar-default .navbar-nav .open .dropdown-menu>li>a {
     color: #fdfdfd;
   }

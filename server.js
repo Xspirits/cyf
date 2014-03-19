@@ -32,7 +32,6 @@ var port     = process.env.PORT || 8080
 , moment     = require('moment')
 , flash      = require('connect-flash')
 , _          = require('underscore');
-//var sass   = require('node-sass')
 
 var genUID   = require('shortid');
 genUID.seed(664);
@@ -84,8 +83,5 @@ require('./app/routes')(app, _,sio, passport, genUID, xp, notifs, moment, challe
 server.listen(port);
 
 require('./app/io')(io, cookieParser, sessionStore,EXPRESS_SID_KEY,COOKIE_SECRET, sio);
-
-
-// SEE https://github.com/aviddiviner/Socket.IO-sessions
 
 console.log('I challenge you to watch on port ' + port);

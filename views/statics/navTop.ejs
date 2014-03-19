@@ -1,7 +1,9 @@
 
 <!-- Static navbar -->
 <div class="navbar navbar-default navbar-static-top" id="headNav" role="navigation">
+		<% if (currentUser) { %>
 	<button type="button" class="navbar-toggle lefty hidden-xs hidden-sm" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas"><i class="fa fa-ellipsis-v"></i></button>
+	<% } %>
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -40,6 +42,9 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle animated bounceIn" data-toggle="dropdown">Challenges <b class="caret"></b></a>
 					<ul class="dropdown-menu">
+						<li>
+							<a href="/challenges">list</a>
+						</li>
 						<li>
 							<a href="/ongoing">Ongoing</a>
 						</li>

@@ -10,25 +10,27 @@
  , notifs = require('./notifications');
 
  const xpRewardvalue = {
- 	'user.register' : 55,
- 	'user.newFriend'   : 60,
- 	'challenge.create' : 110,
- 	'challenge.rate'   : 60,
- 	'ongoing.accept'   : 60,
- 	'ongoing.validate' : 200,
- 	'ongoing.succeed'  : 330,
+ 	'connect.game' 		: 100,
+ 	'user.register' 	: 55,
+ 	'user.newFriend'    : 60,
+ 	'challenge.create'  : 110,
+ 	'challenge.rate'    : 60,
+ 	'ongoing.accept'    : 60,
+ 	'ongoing.validate'  : 200,
+ 	'ongoing.succeed'  	: 330,
  	'tribunal.vote' 	: 80
  };
 
  const xpRewardAction = {
- 	'user.register' : 'creating an account',
- 	'user.newFriend'   : 'making a new friend',
- 	'challenge.create' : 'creating a new challenge',
- 	'challenge.rate'   : 'rating a challenge',
- 	'ongoing.accept'   : 'accepting a challenge',
- 	'ongoing.validate' : 'validating a challenge',
- 	'ongoing.succeed'  : 'completing successfully a challenge',
- 	'tribunal.vote'    : 'voting on a case in the Tribunal'
+ 	'connect.game' 		: 'linking a game account',
+ 	'user.register' 	: 'creating an account',
+ 	'user.newFriend'   	: 'making a new friend',
+ 	'challenge.create' 	: 'creating a new challenge',
+ 	'challenge.rate'   	: 'rating a challenge',
+ 	'ongoing.accept'   	: 'accepting a challenge',
+ 	'ongoing.validate' 	: 'validating a challenge',
+ 	'ongoing.succeed'  	: 'completing successfully a challenge',
+ 	'tribunal.vote'    	: 'voting on a case in the Tribunal'
  };
 
  var getLevel = function(xp) { 

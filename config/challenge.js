@@ -125,7 +125,7 @@ module.exports = {
 
 		 	Challenge
 		 	.find({})
-		 	.sort('-_id')
+		 	.sort('-value')
 		 	.exec(function(err, data) {
 		 		if(err)
 		 			throw err;
