@@ -176,7 +176,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 // =============================================================================
 // CHALLENGES ==================================================================
 // =============================================================================
-	
+
 	// CHALLENGE LIST SECTION =========================
 
 	app.get('/challenges', function (req, res) {
@@ -411,18 +411,26 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 // USERS PAGES (List and profiles===============================================
 // =============================================================================
 
-app.get('/users', function(req, res) {
-	users.getUserList(function(returned) {
-		res.render('userList.ejs', {
-			currentUser : (req.isAuthenticated()) ? req.user : false,
-			users: returned
+	// User list
+	app.get('/users', function(req, res) {
+		users.getUserList(function(returned) {
+			res.render('userList.ejs', {
+				currentUser : (req.isAuthenticated()) ? req.user : false,
+				users: returned
+			});
 		});
 	});
-});
 
-	/*
-	@todo : complete
-	*/
+	// leader board
+	app.get('/leaderboard', function(req, res) {
+		users.getLeaderboard('xp' ,function(returned) {
+			res.render('leaderBoard.ejs', {
+				currentUser : (req.isAuthenticated()) ? req.user : false,
+				ranking: returned
+			});
+		});
+	});
+
 	app.get('/u/:id', function(req, res) {
 
 		users.getUser(req.params.id, function(returned) {

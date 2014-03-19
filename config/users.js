@@ -421,5 +421,41 @@ module.exports = {
 			});
 	  },
 
+	  //
+	  // LEADER BOARD
+	  //
+
+	  getLeaderboard : function (type , done) {
+
+	  	switch(type)
+	  	{
+	  		case 'xp':
+	  		User		 	
+	  		.find()
+	  		.sort('-xp')
+	  		.exec(function(err, challengers) {
+
+				if (err)
+					return done(err);
+
+				return done(challengers);
+			});
+	  		break;
+	  		default:
+	  		User		 	
+	  		.find()
+	  		.sort('-xp')
+	  		.exec(function(err, challengers) {
+
+				if (err)
+					return done(err);
+
+				return done(challengers);
+			});
+	  	}
+
+	  },
+
+
 
 	}

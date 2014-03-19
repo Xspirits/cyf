@@ -1,0 +1,68 @@
+
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<script type="text/javascript">
+		var myFriendList = [];
+
+		<%
+		var _friendList = [];
+		if (currentUser) { 
+
+			if (currentUser.friends.length > 0) {
+
+				for (var i = 0; i < currentUser.friends.length; i++) {
+					_friendList.push(currentUser.friends[i].idUser.toString());
+					%>
+					myFriendList.push('<%= currentUser.friends[i].idUser.toString() %>');
+					<%
+				}
+			}
+		} %>
+	</script>
+	<div class="canvas">
+
+		<div class="container">
+			<div class="row well">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Rank</th>
+							<th>Challenger</th>
+							<th>Level</th>
+							<th>Experience</th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<% for(var i=0; i< 20; i++) { %>
+						<tr class="animated flipInX">
+							<td class="ranking_<%= i+1 %>"><%= i+1 %></td>
+							<td>aka70</td>
+							<td>2</td>
+							<td>165</td>
+						</tr>
+						<% }%>
+
+						<% for(var i=0; i< ranking.length; i++) { %>
+						<!-- <tr class="animated flipInX">
+							<td class="ranking"><%= i+1 %></td>
+							<td><%= ranking[i].local.pseudo %></td>
+							<td><%= ranking[i].level %></td>
+							<td><%= ranking[i].xp %></td>
+						</tr> -->
+						<% }%>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+		<% include statics/footers %>
+	</body>
+	</html>

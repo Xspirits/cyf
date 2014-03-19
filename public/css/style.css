@@ -62,8 +62,26 @@ body.modal-open .canvas{
 /**
  * CYF Styles
  */
- /* line 32, ../../sass/style.scss */
- .userlist .media {
+
+ .ranking_1 {
+  background: url('../img/rank1.png') top left repeat-y;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #F6BB42;
+}
+ .ranking_2 {
+  background: url('../img/rank2.png') top left repeat-y;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: rgb(160,160,160);
+}
+ .ranking_3 {
+  background: url('../img/rank3.png') top left repeat-y;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: rgb(139,94,60);
+}
+.userlist .media {
   margin-top: 0;
 }
 
