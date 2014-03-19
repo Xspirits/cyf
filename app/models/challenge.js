@@ -16,7 +16,7 @@ var challengeSchema = mongoose.Schema({
 	icon            : {type : String, default: 'glyphicon glyphicon-certificate'},
 	rateNumber      : {type : Number, default: 0 },
 	rateValue       : {type : Number, default: 0 },
-	completedBy		: [{ type : mongoose.Schema.Types.ObjectId, index: true, ref: 'User' }],	
+	completedBy		: [{ type : mongoose.Schema.Types.ObjectId, index: true, ref: 'User' }, {_id:false}],	
 	rating	: {
 		difficulty 	: {			
 			count: {type : Number, default: 0 },

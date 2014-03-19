@@ -159,7 +159,14 @@ module.exports = {
 			});
 
 		 },
+		 completedBy : function (id, userArray, done) {
 
+		 	Challenge
+		 	.findOneAndUpdate(id, { $addToSet: { 'completedBy': userArray} })
+		 	.exec(function(err, challenge) {
+
+		 	});
+		 },
 		 /**
 		  * [rateChallenge description]
 		  * @param  {Object}   data [id String idCool, user ObjectId, difficulty Number, quickness Number, fun Number ]
@@ -177,7 +184,7 @@ module.exports = {
 					throw err;
 
 				// Add this user on the users historical
-				challenge.completedBy = data.idUser;
+				// challenge.completedBy = data.idUser;
 
 				var diff  = challenge.rating.difficulty,
 				diffiRate = data.difficulty,
@@ -628,6 +635,7 @@ module.exports = {
 		  */
 		  validateOngoing : function(data, done ) {
 
+		  	var self = this;
 		  	Ongoing
 		  	.findOne({idCool : data.oId})
 		  	.populate('_idChallenged _idChallenger _idChallenge')
@@ -645,8 +653,10 @@ module.exports = {
 
 					if (err)
 						throw err;
-
-					return done(ongoing);
+					var completedByArr = [ongoing.idChallenged._id,ongoing.idChallenger._id];
+					self.completedBy(ongoing.idChallenge._id, completedByArr, function ( done ) {
+						return done(ongoing);
+					})
 				});
 			});
 

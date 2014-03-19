@@ -29,10 +29,14 @@
 							%>
 							<div class="col-lg-4 col-xs-4 <%= isOdd %> animated fadeInDown" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
 								<div class="rounded-2 well">
-									<h3><%= challenges[i].title %></h3>
+									<h4><%= challenges[i].title %></h4>
+									<% for(var z=0; z< challenges[z].completedBy.length; z++) { %>
+									<%= challenges[i].completedBy[z] %>
+
+									<% } %>
 									<p><%= challenges[i].description %></p>
 									<strong><small><%= challenges[i].game %></small></strong>
-									<hr>
+									<hr class="subtle-divider hr-white">
 									<i class="fa fa-clock-o"></i>
 									<strong><%= challenges[i].durationH %></strong> Hours
 									<% if (challenges[i].durationD > 0 ) { %> 
