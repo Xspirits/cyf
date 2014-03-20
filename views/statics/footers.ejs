@@ -7,15 +7,15 @@
 <script type="text/javascript">
 	$(function() {
 
-		var url = window.location.href;
-		var arr = url.split("/");
-		var result = arr[0] + "//" + arr[2];
-		console.log(arr)
-		console.log(result)
+		// var url = window.location.href;
+		// var arr = url.split("/");
+		// var result = arr[0] + "//" + arr[2];
+		// console.log(arr)
+		// console.log(result)
 
 		<% if (currentUser) { %>
 		//Socket 
-		socket = io.connect(result);
+		socket = io.connect('http://challenge-friends.herokuapp.com');
 
 		socket.on('globalevent', function (data) {
 
