@@ -1,8 +1,8 @@
 // config/database.js
 module.exports = {
 
-	// 'url' : 'mongodb://192.168.1.2', // looks like mongodb://<user>:<pass>@mongo.onmodulus.net:27017/Mikha4ot
-	'url' : 'mongodb://xspirits:221988@ds029787.mongolab.com:29787/heroku_app23193994', // looks like mongodb://<user>:<pass>@mongo.onmodulus.net:27017/Mikha4ot
+	'url' : 'mongodb://192.168.1.2', 
+	// 'url' : 'mongodb://xspirits:221988@ds029787.mongolab.com:29787/heroku_app23193994', 
 	'imgurSecret' : '82185b165dcaf5d138c352399b215fe481b1cb00',
 	'imgurClientId' : 'a10cc023eeaf638',
 	google : {

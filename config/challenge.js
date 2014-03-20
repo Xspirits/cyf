@@ -653,8 +653,8 @@ module.exports = {
 
 					if (err)
 						throw err;
-					var completedByArr = [ongoing.idChallenged._id,ongoing.idChallenger._id];
-					self.completedBy(ongoing.idChallenge._id, completedByArr, function ( done ) {
+					var completedByArr = [ongoing._idChallenged._id];
+					self.completedBy(ongoing._idChallenge._id, completedByArr, function ( done ) {
 						return done(ongoing);
 					})
 				});

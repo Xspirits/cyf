@@ -9,9 +9,11 @@
 
 		var url = window.location.href;
 		var arr = url.split("/");
-		var result = "http://" + arr[2];
+		var result = arr[0] + "//" + arr[2];
 		console.log(arr)
 		console.log(result)
+
+		<% if (currentUser) { %>
 		//Socket 
 		socket = io.connect(result);
 
@@ -20,6 +22,7 @@
 			console.log(data);
 			pushStream(data);
 		});
+		<% } %>
 		var pushStream = function(data) {
 			var target = $('#streams')
 			, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';

@@ -18,7 +18,7 @@
 						<div class="level text-center"><span class="odometer" data-number="<%= user.level %>">0</span>
 						</div>
 						<div class="xp text-center">
-							<%= user.xp %>/<%= user.xpNext %>
+							<%= user.xp %>/<%= (user.xp + user.xpNext) %>
 						</div>
 					</div>
 					<div class="media-body clearfix">
@@ -80,7 +80,7 @@
 							<% } %>
 						</h2>
 						<div class="loaderProgress animated flipInY">
-							<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+							<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= (user.xp + user.xpNext) %>"></div>
 						</div>
 						<div class="pull-right">	
 							<% if (user.local.pseudo) { %>

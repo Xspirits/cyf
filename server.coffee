@@ -1,12 +1,14 @@
 
-# Imports ======================================================================
+# Imports       ======================================================================
 express         = require("express")
 http            = require("http")
 socket          = require("socket.io")
 
+appKeys         = require("./config/auth")
+
 # We define the key of the cookie containing the Express SID
-EXPRESS_SID_KEY = "chachompcha.sid"
-COOKIE_SECRET   = "oneDoesNotSimplychompi"
+EXPRESS_SID_KEY = appKeys.express_sid_key
+COOKIE_SECRET   = appKeys.cookie_secret
 cookieParser    = express.cookieParser(COOKIE_SECRET)
 
 # Create a new store in memory for the Express sessions
@@ -27,7 +29,7 @@ genUID          = require("shortid")
 _               = require("underscore")
 
 # Config Import
-configDB        = require("./config/database.js")
+configDB        = require("./config/database")
 challenge       = require("./config/challenge")
 users           = require("./config/users")
 relations       = require("./config/relations")
@@ -37,9 +39,9 @@ ladder          = require("./config/ladder")
 img             = require("./config/img")
 
 # functions Import
-notifs          = require("./app/functions/notifications.js")
-sio             = require("./app/functions/sio.js")(io)
-xp              = require("./app/functions/xp.js")(sio)
+notifs          = require("./app/functions/notifications")
+sio             = require("./app/functions/sio")(io)
+xp              = require("./app/functions/xp")(sio)
 
 # generate a seed to build our UID (idCools)
 genUID.seed 664
@@ -78,7 +80,7 @@ app.configure ->
 require("./app/routes") app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img 
 
 # Schedules, for the rankings
-require("./app/schedule") scheduler, ladder
+require("./app/schedule") scheduler, _,  sio, ladder, moment, social, appKeys
 
 # launch ======================================================================
 server.listen port

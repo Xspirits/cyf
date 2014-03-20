@@ -11,6 +11,7 @@ var userSchema = mongoose.Schema({
     xpDouble         : {type: Boolean, default: false},
     xp               : {type: Number, default: 0},
     xpNext           : {type: Number, default: 100},
+    dailyRank        : {type: Number, default: 0},
     dailyScore       : {type: Number, default: 0},
     daily            : {
         xp      : {type: Number, default: 0},
@@ -19,12 +20,14 @@ var userSchema = mongoose.Schema({
         shareTW : {type: Number, default: 0}
     },
     dailyArchives    : [{
+        rank    : {type: Number, default: 0},
         xp      : {type: Number, default: 0},
         level   : {type: Number, default: 0},
         shareFB : {type: Number, default: 0},
         shareTW : {type: Number, default: 0},
-        week    : Number,
+        date    : {type: Date, default: Date.now}
     }],
+    weeklyRank       : {type: Number, default: 0},
     weeklyScore      : {type: Number, default: 0},
     weekly           : {
         xp      : {type: Number, default: 0},
@@ -33,12 +36,14 @@ var userSchema = mongoose.Schema({
         shareTW : {type: Number, default: 0}
     },
     weeklyArchives   : [{
+        rank    : {type: Number, default: 0},
         xp      : {type: Number, default: 0},
         level   : {type: Number, default: 0},
         shareFB : {type: Number, default: 0},
         shareTW : {type: Number, default: 0},
-        week    : Number,
+        week    : {type: Date, default: Date.now}
     }],
+    monthlyRank      : {type: Number, default: 0},
     monthlyScore     : {type: Number, default: 0},
     monthly          : {
         xp      : {type: Number, default: 0},
@@ -47,11 +52,12 @@ var userSchema = mongoose.Schema({
         shareTW : {type: Number, default: 0}
     },
     monthlyArchives  : [{
+        rank    : {type: Number, default: 0},
         xp      : {type: Number, default: 0},
         level   : {type: Number, default: 0},
         shareFB : {type: Number, default: 0},
         shareTW : {type: Number, default: 0},
-        month   : Number,
+        month   : {type: Date, default: Date.now}
     }],
     globalScore      : {type: Number, default: 0},
     global           : {

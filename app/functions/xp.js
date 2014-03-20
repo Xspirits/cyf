@@ -43,7 +43,7 @@
 
  	var process = ((( Math.pow(level,2) + level )/2 )*100 )-( level *100 );
 
- 	console.log('processing lvl ' + level +' ... Required xp : ' +process);
+ 	// console.log('processing lvl ' + level +' ... Required xp : ' +process);
  	return process;
  };
 
@@ -66,7 +66,7 @@
  	 	, bugCheck = getXp(curLvL + 2);
  	 	var nextXpReq = xpNeeded - xp;
 
- 	 	console.log('Test ( '+curLvL+' to '+( curLvL + 1)+'): ?' +xp + ' <  ' + xpNeeded + ' || bugCheck  ( '+curLvL+' to '+( curLvL + 2)+')? ' +xp + ' <  ' + bugCheck);
+ 	 	// console.log('Test ( '+curLvL+' to '+( curLvL + 1)+'): ?' +xp + ' <  ' + xpNeeded + ' || bugCheck  ( '+curLvL+' to '+( curLvL + 2)+')? ' +xp + ' <  ' + bugCheck);
 
  	 	if(xp > xpNeeded) {
  	 		nextXpReq = bugCheck - xp;
@@ -99,7 +99,7 @@
 
  		var levelUp = this.isUp(newXp, uLvl);
 
- 		console.log('add ' + value+ ' (bonus: '+bonus+') to xp ' + uXp + ' lvl ' + uLvl + '(Lvl + 1 = '+valueNext+')[ to reach : '+levelUp[1]+'] [levelUp]? ' + levelUp[0] + ' [XP x2]' + userDoubleXp);
+ 		// console.log('add ' + value+ ' (bonus: '+bonus+') to xp ' + uXp + ' lvl ' + uLvl + '(Lvl + 1 = '+valueNext+')[ to reach : '+levelUp[1]+'] [levelUp]? ' + levelUp[0] + ' [XP x2]' + userDoubleXp);
 
  		var inc = levelUp[0] ? { level : levelUp[0], xp : value, 'daily.xp' : value, 'daily.level' : levelUp[0], 'weekly.xp' : value, 'weekly.level' : levelUp[0], 'monthly.xp' : value, 'monthly.level' : levelUp[0] } : { xp : value, 'daily.xp' : value, 'weekly.xp' : value, 'monthly.xp' : value } ;
 

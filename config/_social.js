@@ -16,9 +16,7 @@
 
   exports.findSummonerLol = function(region, name, callback) {
     var buffer, url;
-    region = void 0;
-    name = void 0;
-    url = void 0;
+    region = name = url = void 0;
     buffer = {};
     api.getSummoner({
       region: region,

@@ -10,9 +10,8 @@
 	<div class="canvas">
 
 		<div class="container">
-			<div class="row well">
-
-				<div class="tabbable tabs-left clearfix">
+			<div class="row">
+				<div class="tabbable tabs-left col-lg-12 clearfix well">
 					<ul id="myTab1" class="nav nav-tabs nav-justified">
 						<li class="active"><a href="#daily" data-toggle="tab">Today's Ladder</a></li>
 						<li><a href="#weekly" 	data-toggle="tab">Weekly Ladder</a></li>
@@ -23,10 +22,6 @@
 					<div id="leaderboardcontainer" class="tab-content">
 						<!-- daily Leaderboard -->
 						<div class="tab-pane fade active in " id="daily">	
-							<p>
-								Rankings are updated each day at midnight. Challengers have 24 hours to gather the maximum of bonus points by completing challenge, gathering experience, level uping and sharing on social network.
-								<strong class id="updateDaily"></strong>
-							</p>	
 							<table class="table">
 								<thead>
 									<tr>
@@ -50,9 +45,12 @@
 									
 								</tbody>
 							</table>
+							<div class="text-right">
+								<small id="updateDaily"></small><i class="fa fa-clock-o"></i>
+							</div>	
 						</div>
 						<!-- weekly Leaderboard -->
-						<div class="tab-pane fade in " id="weekly">		
+						<div class="tab-pane fade in " id="weekly">	
 							<table class="table">
 								<thead>
 									<tr>
@@ -73,9 +71,11 @@
 									</tr>
 									<% }%>
 									<% }%>
-									
 								</tbody>
 							</table>
+							<div class="text-right">
+								<small id="updateWeekly"></small><i class="fa fa-clock-o"></i>
+							</div>	
 						</div>
 						<!-- Monthly Leaderboard -->
 						<div class="tab-pane fade in " id="monthly">		
@@ -101,6 +101,9 @@
 									<% }%>
 								</tbody>
 							</table>
+							<div class="text-right">
+								<small id="updateMonthly"></small><i class="fa fa-clock-o"></i>
+							</div>	
 						</div>
 						<!-- General Leaderboard -->
 						<div class="tab-pane fade in " id="global">		
@@ -130,7 +133,12 @@
 						</div>
 					</div>
 				</div>
-
+				<div class="col-lg-12 well">
+					
+					<p>
+						Rankings are updated each day, week and month at midnight. Challengers have 24 hours to gather the maximum of bonus points by completing challenge, gathering experience, level uping and sharing on social-networks.
+					</p>	
+				</div>
 			</div>
 
 		</div>
@@ -141,6 +149,9 @@
 
 				setInterval(function(){
 					day();
+					week();
+					month();
+
 				},1000);
 			});
 			var day = function (){				
@@ -148,6 +159,26 @@
 				d.setHours(24,1,0,0)
 				var converted = moment(d).countdown().toString();
 				$('#updateDaily').text(converted);
+			}
+			var week = function (){				
+				var d = new Date();
+
+				var day = d.getDay()
+				, diff = d.getDate() - day + (day == 0 ? -6:1); 
+				var w = new Date(d.setDate(diff))
+				
+				var converted = moment(w).countdown().toString();
+				$('#updateWeekly').text(converted);
+			}
+			var month = function (){		
+				var now = new Date();
+				if (now.getMonth() == 11) 
+					var current = new Date(now.getFullYear() + 1, 0, 1);
+				else 
+					var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+				var converted = moment(current).countdown().toString();
+				$('#updateMonthly').text(converted);
 			}
 		</script>
 	</body>
