@@ -7,8 +7,11 @@
 <script type="text/javascript">
 	$(function() {
 
+		var url = window.location.href;
+		var arr = url.split("/");
+		var result = arr[0] + "//" + arr[2];
 		//Socket 
-		socket = io.connect('http://192.168.1.2');
+		socket = io.connect(result);
 
 		socket.on('globalevent', function (data) {
 
