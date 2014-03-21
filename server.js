@@ -98,7 +98,7 @@
 
   require("./app/routes")(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img);
 
-  require("./app/schedule")(scheduler, _, sio, ladder, moment, social, appKeys);
+  require("./app/schedule")(scheduler, _, sio, ladder, moment, social, appKeys, notifs);
 
   server.listen(port);
 

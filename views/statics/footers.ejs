@@ -1,9 +1,11 @@
 <div id="sharePost"></div>
 </div> <!-- End .canvas -->
 
+	<script type="text/javascript">
+		var url = window.location.href;var arr = url.split("/");var result = arr[0] + "//" + arr[2];
+ 		document.write('<' + 'script type="text/javascript" src="' + result + '/js/init.js"></sc' + 'ript>');
+	</script>
 <script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" id="jsLoader" src="./js/init.js"></script>
-<script type="text/javascript" src="./js/file-input.js"></script>
 <script type="text/javascript">
 	$(function() {
 
@@ -50,11 +52,14 @@
 				size: size
 			});
 		})
-		// nprogress setup
+		// nprogress Is disabled for now, could be using it in the future though.
 		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
+		var flatten = Math.round((myLevel * .8)*100);
+		console.log(flatten)
 
-		NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
-		NProgress.set( myLevel );
+		$('#user-xpbar').width(flatten + '%')
+		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
+		// NProgress.set( myLevel );
 
 		// NOTIFICATIONS =========================
 		alertify.set({ delay : 12000 });

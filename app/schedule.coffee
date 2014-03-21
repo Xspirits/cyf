@@ -1,4 +1,4 @@
-module.exports = (schedule, _, sio, ladder, moment, social, appKeys) ->
+module.exports = (schedule, _, sio, ladder, moment, social, appKeys, notifs) ->
   
   # =============================================================================
   # LADDERS    ==================================================================
@@ -30,19 +30,35 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys) ->
           variable  = if wasRanked then '<i class="fa fa-' + diffIcon + '"></i> ' + diff else 'previously unranked'
           uText     = user.local.pseudo + ' is now ranked <strong>' + user.dailyRank + '</strong>, ' + variable + '! daily <i class="fa fa-list"></i>. ' 
           
+          #Send a Global message
+          sio.glob "fa fa-star", uText
+
+          # Prepare notification
+          notif =
+            type: 'newLadderRank'
+            idFrom: user._id
+            from: 'Challenge Master'
+            link1: './leaderboard'
+            title: 'Congratulation!! You are now ranked ' + user.dailyRank
+            icon: 'fa fa-star'
+            to: ''
+            link2: ''
+            message: ''
+              
+          notifs.newNotif([user._id], true, notif);
+
           #define the new leader
           if user.dailyRank == 1
             console.log user.twitter
             console.log user.local.pseudo
             newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
 
-          sio.glob "fa fa-star", uText
           if it + 1 >= top3.length
-            # Lets push on our timeline to let players now about the new Leaderboard
-            twitt     = "The daily #ranking for yesterday, "+yesterday+", is up! #GG "+newLeader+" who ranked First! http://goo.gl/3VjsJd #CYF_ladder #CYFDaily"
-            
-            console.log twitt
+            # Tweet
             if appKeys.twitterPushNews
+              # Lets push on our timeline to let players now about the new Leaderboard
+              twitt     = "The daily #ranking for yesterday, "+yesterday+", is up! #GG "+newLeader+" who ranked First! http://goo.gl/3VjsJd #CYF_ladder #CYFDaily"
+            
               social.postTwitter appKeys.twitterCyf, twitt, (data) ->
                 text = 'The ranking of yesterday <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text
@@ -75,6 +91,21 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys) ->
           variable  = if wasRanked then '<i class="fa fa-' + diffIcon + '"></i> ' + diff else 'previously unranked'
           uText     = user.local.pseudo + ' is now ranked <strong>' + user.weeklyRank + '</strong>, ' + variable + '! weekly <i class="fa fa-list"></i>. ' 
           
+
+          # Prepare notification
+          notif =
+            type: 'newLadderRank'
+            idFrom: user._id
+            from: 'Challenge Master'
+            link1: './leaderboard'
+            title: 'Congratulation!! You are now ranked ' + user.dailyRank
+            icon: 'fa fa-star'
+            to: ''
+            link2: ''
+            message: ''
+              
+          notifs.newNotif([user._id], true, notif);
+
           #define the new leader
           if user.weeklyRank == 1
             newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
@@ -118,6 +149,21 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys) ->
           diff      = Math.abs diff
           variable  = if wasRanked then '<i class="fa fa-' + diffIcon + '"></i> ' + diff else 'previously unranked'
           uText     = user.local.pseudo + ' is now ranked <strong>' + user.monthlyRank + '</strong>, ' + variable + '! monthly <i class="fa fa-list"></i>. ' 
+          
+
+          # Prepare notification
+          notif =
+            type: 'newLadderRank'
+            idFrom: user._id
+            from: 'Challenge Master'
+            link1: './leaderboard'
+            title: 'Congratulation!! You are now ranked ' + user.dailyRank
+            icon: 'fa fa-star'
+            to: ''
+            link2: ''
+            message: ''
+              
+          notifs.newNotif([user._id], true, notif);
           
           #define the new leader
           if user.monthlyRank == 1

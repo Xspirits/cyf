@@ -337,7 +337,7 @@ module.exports = {
 	  			friends = _.without(friends, challenged._id.toString());
 
 	  			notif = { 
-					type	 : 'challengeReceive',
+	  				type	 : 'challengeReceive',
 	  				idFrom   : challenger._id,
 	  				from     : challenger.local.pseudo, 
 	  				link1    : '/u/' + challenger.idCool,

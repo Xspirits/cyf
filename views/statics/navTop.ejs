@@ -24,7 +24,8 @@
 			<ul class="nav navbar-nav navbar-right">
 				<a href="/profile" class="navbar-text identicon" data-size="30" data-hashMe="<%= currentUser.idCool %>"></a>
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle  animated fadeInX" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
+					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInX" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
+					<div id="user-xpbar"></div>
 					<ul class="dropdown-menu">
 						<li>
 							<a href="/profile">Profile</a>
@@ -34,9 +35,6 @@
 						</li>
 						<li>
 							<a href="/settings">Settings</a>
-						</li>
-						<li>
-							<a href="/logout">sign off</a>
 						</li>
 					</ul>
 				</li>
@@ -81,6 +79,9 @@
 
 						</li>
 					</ul>
+				</li>
+				<li>
+					<a href="/logout"><i class="glyphicon glyphicon-log-out"></i></a>
 				</li>
 			</ul>
 			<% } else { %>

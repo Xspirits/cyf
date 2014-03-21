@@ -69,13 +69,13 @@ body.modal-open .canvas{
   font-weight: bold;
   color: #F6BB42;
 }
- .ranking_2 {
+.ranking_2 {
   background: url('../img/rank2.png') top left repeat-y;
   font-size: 1.2em;
   font-weight: bold;
   color: rgb(160,160,160);
 }
- .ranking_3 {
+.ranking_3 {
   background: url('../img/rank3.png') top left repeat-y;
   font-size: 1.1em;
   font-weight: bold;
@@ -666,6 +666,30 @@ hr.subtle-divider.hr-white {
 }
 #headNav > .container {
   background: inherit;
+}
+#headNav #user-xpbar {
+  content: '';
+  position: absolute;
+  width: 1%;
+  background: rgb(255, 133, 0);
+  height: 3px;
+  left: 11%;
+  border: 0;
+  z-index: 1;
+  bottom: 6px;
+  border-radius: 5px;
+  transition: width 650ms ease-in-out;
+}
+#headNav #userdropdown:after {
+  content: '';
+  position: absolute;
+  width: 80%;
+  background: rgb(38,38,38);
+  height: 4px;
+  left: 10%;
+  border: 0;
+  bottom: 5px;
+  border-radius: 5px;
 }
 .container {
   background: rgb(241,241,241);

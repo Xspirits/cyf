@@ -7,6 +7,7 @@ var challengeSchema = mongoose.Schema({
 	title           : String,
 	description     : String,
 	game            : String,
+	featured        : {type : Boolean, default: false},
 	durationH       : Number,
 	durationD       : Number,
 	game            : {type : String, ref: 'Game' },
