@@ -11,21 +11,13 @@
 		<div class="container">
 			<div class="row">
 				<div id="user_header" class="col-lg-12 well">
-					<a class="pull-left" href="#">
-						<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= user.idCool %>"></span>
-					</a>
-					<div id="scorebox" class="pull-right animated bounceInRight">
-						<div class="level text-center"><span class="odometer" data-number="<%= user.level %>">0</span>
-						</div>
-						<div class="xp text-center">
-							<%= user.xp %>/<%= (user.xp + user.xpNext) %>
-						</div>
-					</div>
-					<div class="media-body clearfix">
-						<h2 class="animated bounceInUp">
+					<div class="row">
+						<a class="col-lg-2" href="#">
+							<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= user.idCool %>"></span>
+						</a>
+						<h2 class="col-lg-7 animated bounceInUp">
 							<%= user.local.pseudo %> 
 							<small> <a href="/u/<%= user.idCool %>"> <i class="fa fa-chain"></i> <%= user.idCool %> </a></small>
-
 							<% if (currentUser) { %>
 
 							<%
@@ -49,40 +41,50 @@
 
 							%>
 							<% if (currentUser._id.toString() === user._id.toString()) { %>
-							<button class="pull-right btn btn-punch btn-default disabled" >
-								<span class="ladda-label">
-									<span class="glyphicon glyphicon-info-sign"></span> It's you!
-								</span>
-							</button>
+							<p>
+								<button class="btn btn-punch btn-default disabled" >
+									<span class="ladda-label">
+										<span class="glyphicon glyphicon-info-sign"></span> It's you!
+									</span>
+								</button>
+							</p>
 							<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
 
-							<button class="pull-right btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
-								<span class="ladda-label">
-									<span class="glyphicon glyphicon-time"></span> Pending, see your requests
-								</span>
-							</button> 
+							<p>
+								<button class="btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
+									<span class="ladda-label">
+										<span class="glyphicon glyphicon-time"></span> Pending, see your requests
+									</span>
+								</button>
+							</p> 
 							<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
 
-							<button class="ladda-button pull-right btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
-								<span class="ladda-label">
-									<span class="glyphicon glyphicon-plus"></span> Add Friend
-								</span>
-							</button>
-
-
+							<p>
+								<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
+									<span class="ladda-label">
+										<span class="glyphicon glyphicon-plus"></span> Add Friend
+									</span>
+								</button>
+							</p>
 							<% } else { %>
-							<div class="pull-right btn btn-punch btn-success" >
+							<div class="btn btn-punch btn-success" >
 								<span class="ladda-label">
 									<span class="glyphicon glyphicon-ok"></span> Friend
 								</span>
 							</div>
 							<% } %>
 							<% } %>
+
 						</h2>
-						<div class="loaderProgress animated flipInY">
-							<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= (user.xp + user.xpNext) %>"></div>
+						<div id="scorebox" class="col-lg-2 animated bounceInRight">
+							<div class="level text-center"><span class="odometer" data-number="<%= user.level %>">0</span>
+							</div>
+							<div class="xp text-center">
+								<%= user.xp %>/<%= (user.xp + user.xpNext) %>
+							</div>
 						</div>
-						<div class="pull-right">	
+						<div class="col-lg-12">	
+							<strong>Linked accounts: </strong>
 							<% if (user.local.pseudo) { %>
 							<span class="label label-default">CyF</span>
 							<% } %>
@@ -96,7 +98,25 @@
 							<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
 							<% } %>
 						</div>
-
+						<div class="col-lg-12">
+							<h3>Ladders ranking</h3>	
+							<table class="table table-striped text-center">
+								<thead>
+									<tr>
+										<th class="text-center">Yesterday's</th>
+										<th class="text-center">Last Week</th>
+										<th class="text-center">Last Month</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><%= user.dailyRank === 0 ? 'not ranked' : user.dailyRank %></td>
+										<td><%= user.weeklyRank === 0 ? 'not ranked' : user.weeklyRank %></td>
+										<td><%= user.monthlyRank === 0 ? 'not ranked' : user.monthlyRank %></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 
