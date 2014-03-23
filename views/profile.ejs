@@ -17,105 +17,77 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-12 ">
-					
-					<div id="user_header" class="well">
-						<h4>My informations</h4>
-						<a class="pull-left" href="#">
+				<div id="user_header" class="col-lg-12 well">
+					<div class="row">
+						<div class="col-lg-2" href="#">
 							<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
-						</a>
-						<div id="scorebox" class="pull-right animated bounceInRight">
-							<div class="level text-center"><span class="odometer" data-number="<%= currentUser.level %>">0</span>
-							</div>
-							<div class="xp text-center">
-								<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+						</div>
+						<h2 class="col-lg-10 animated bounceInUp">
+							<%= currentUser.local.pseudo %> 
+							<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
+						</h2>
+						<div class="col-lg-10">
+							<div class="row">
+								
+								<span id="scorebox" class="col-lg-2 animated bounceInRight">
+									<span class="level text-center">
+										<span class="odometer" data-number="<%= currentUser.level %>">
+											0
+										</span>
+									</span>
+								</span>
+								<div class="col-lg-10">
+									<div class="loaderProgress animated flipInY">
+										<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+										<div class="xp text-center">
+											<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+										</div>
+									</div>
+									
+								</div>
+
 							</div>
 						</div>
-						<div class="media-body">
-							<h2 class="animated bounceInUp">
-								<%= currentUser.local.pseudo %> 
-								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
-							</h2>
-							<div class="loaderProgress animated flipInY">
-								<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-							</div>
-							<ul class="list-inline animated bounceInDown">
-
-								<% if (currentUser.local.email) { %>
-								<li>
-									<h4>
-										<span class="label label-success">
-											<i class="fa fa-check-square"></i>
-											<%= currentUser.idCool %>
-										</span>
-									</h4>
-								</li>
-								<% } %>
-
-								<li>
-									<h4>
-										<% if (currentUser.facebook.token) { %>
-										<span class="linked active label label-primary">
-											<i class="fa fa-facebook"></i>
-											<a href="/unlink/facebook" class="hidden">
-												<i class="fa fa-times"></i>
-											</a>				
-											<i class="fa fa-check-square meany"></i>
-											<%= currentUser.facebook.name %>
-										</span>
-										<% } else { %>
-										<a href="/connect/facebook" class="label label-primary">
-											<i class="fa fa-facebook"></i>
-											Connect facebook
-										</a>
-										<% } %>
-									</h4>
-								</li>
-
-								<li>
-									<h4>
-										<% if (currentUser.google.token) { %>
-										<span class="linked active label label-danger">
-											<i class="fa fa-google-plus"></i>
-											<a href="/unlink/google" class="hidden">
-												<i class="fa fa-times"></i>
-											</a>
-											<i class="fa fa-check-square meany"></i>
-											<%= currentUser.google.name %>
-										</span>
-										<% } else { %>
-										<a href="/connect/google" class="label label-danger">
-											<i class="fa fa-google-plus"></i>
-											Connect google+
-										</a>
-										<% } %>
-									</h4>
-								</li>
-
-								<li>
-									<h4>
-										<% if (currentUser.twitter.token) { %>
-										<span class="linked active label label-info">
-											<i class="fa fa-twitter"></i>
-											<a href="/unlink/twitter" class="hidden">
-												<i class="fa fa-times"></i>
-											</a>
-											<i class="fa fa-check-square meany"></i>
-											<%= currentUser.twitter.username %>
-										</span>
-										<% } else { %>
-										<a href="/connect/twitter" class="label label-info">
-											<i class="fa fa-twitter"></i>
-											Connect Twitter
-										</a>
-										<% } %>
-									</h4>
-
-								</li>
-
-
-							</ul>
-
+						<div class="col-lg-12">	
+							<strong>Linked accounts: </strong>
+							<% if (currentUser.local.pseudo) { %>
+							<span class="label label-default">CyF</span>
+							<% } %>
+							<% if (currentUser.facebook.name) { %>
+							<span class="label label-primary">Facebook</span>
+							<% } %>
+							<% if (currentUser.google.name) { %>
+							<span class="label label-danger">Google</span>
+							<% } %>
+							<% if (currentUser.leagueoflegend.idProfile) { %>
+							<span class="label label-info">League of Legend</span>
+							<% } %>
+							<% if (currentUser.twitter.username) { %>
+							<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+							<% } %>
+							<a href="./settings" title="add an account" class="label label-default">
+								<span class="fa fa-plus"></span>
+								Add
+							</a>
+						</div>
+						<div class="col-lg-12">
+							<h3>Ladders ranking</h3>	
+							<table class="table table-striped text-center">
+								<thead>
+									<tr>
+										<th class="text-center">Yesterday's</th>
+										<th class="text-center">Last Week</th>
+										<th class="text-center">Last Month</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
+										<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
+										<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>

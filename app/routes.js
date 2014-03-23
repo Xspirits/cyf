@@ -478,7 +478,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 				if(result === true){
 
 					xp.xpReward(req.user, 'connect.game');
-					notifs.ratedChall(data);
+					notifs.linkedGame(req.user, 'League of Legend');
 					res.send(true);
 				} else {
 					res.send(false);
