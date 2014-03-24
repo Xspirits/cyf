@@ -6,11 +6,11 @@ relations = require("./relations")
 social = require("./social")
 _ = require("underscore")
 module.exports =
-  validateEmail: (user, hash, done) ->
-    User.findById user._id, (err, user) ->
+  validateEmail: (hash, done) ->
+    User.findOne {verfiy_hash:hash}, (err, user) ->
       throw err  if err
 
-      if user.verfiy_hash == hash
+      if user
         user.verified = true        
         user.save (err) ->
           throw err  if err

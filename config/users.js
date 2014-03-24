@@ -15,12 +15,14 @@
   _ = require("underscore");
 
   module.exports = {
-    validateEmail: function(user, hash, done) {
-      return User.findById(user._id, function(err, user) {
+    validateEmail: function(hash, done) {
+      return User.findOne({
+        verfiy_hash: hash
+      }, function(err, user) {
         if (err) {
           throw err;
         }
-        if (user.verfiy_hash === hash) {
+        if (user) {
           user.verified = true;
           user.save(function(err) {
             if (err) {

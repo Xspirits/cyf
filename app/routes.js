@@ -14,7 +14,7 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 	app.get('/eval/:hash', function(req, res) {
 
 		var hash = req.params.hash;
-		users.validateEmail(req.user, hash, function( result ) {
+		users.validateEmail(hash, function( result ) {
 			if(result)
 				res.redirect('/login');
 			else
