@@ -2,7 +2,7 @@
 (function() {
   module.exports = {
     cyf: {
-      domain: "http://localhost:8080"
+      domain: "http://challenge-friends.herokuapp.com"
     },
     mandrill_key: "w_F27RXK5GmLNtZoePLczA",
     support: {
