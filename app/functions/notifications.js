@@ -21,8 +21,8 @@
       persist = void 0;
       red = void 0;
       if (isPersistant === false) {
-        if (users.length > 1) {
-          if (not_.length > 0) {
+        if (users.length > 0) {
+          if (not_ && not_.length > 0) {
             red = _.difference(users, not_);
             query = {
               _id: {
@@ -45,8 +45,8 @@
           };
         }
       } else {
-        if (users.length > 1) {
-          if (not_.length > 0) {
+        if (users.length > 0) {
+          if (not_ && not_.length > 0) {
             red = _.difference(users, not_);
             query = {
               _id: {

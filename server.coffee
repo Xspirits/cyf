@@ -23,10 +23,12 @@ mongoose        = require("mongoose")
 passport        = require("passport")
 path            = require("path")
 moment          = require("moment")
+mandrill        = require('mandrill-api/mandrill')
 flash           = require("connect-flash")
 scheduler       = require("node-schedule")
 genUID          = require("shortid")
 _               = require("underscore")
+
 
 # Config Import
 configDB        = require("./config/database")
@@ -36,6 +38,7 @@ relations       = require("./config/relations")
 games           = require("./config/game")
 social          = require("./config/social")
 ladder          = require("./config/ladder")
+mailer          = require("./config/mailer")
 img             = require("./config/img")
 
 # functions Import
@@ -45,6 +48,7 @@ xp              = require("./app/functions/xp")(sio)
 
 # generate a seed to build our UID (idCools)
 genUID.seed 664
+mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 
 # configuration ===============================================================
 mongoose.connect configDB.url # connect to our database

@@ -3,6 +3,7 @@
 # expose our config directly to our application using module.exports
 module.exports =
 
+  mandrill_key: "w_F27RXK5GmLNtZoePLczA"
   express_sid_key: "chachompcha.sid"
   cookie_secret: "oneDoesNotSimplychompi"
 

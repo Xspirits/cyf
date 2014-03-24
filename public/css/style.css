@@ -478,7 +478,12 @@ hr.subtle-divider.hr-white {
 /**
  * Profile
  */
- /* line 151, ../../sass/style.scss */
+
+#user_header {
+}
+.badggies img {
+  max-width: 65px;
+}
  #user_header .linked a, #user_header .linked a:hover {
   color: black;
 }

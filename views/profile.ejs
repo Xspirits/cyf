@@ -17,80 +17,100 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-12 well">
-					<div class="row">
-						<div class="col-lg-2" href="#">
-							<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
-						</div>
-						<h2 class="col-lg-10 animated bounceInUp">
-							<%= currentUser.local.pseudo %> 
-							<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
-						</h2>
-						<div class="col-lg-10">
-							<div class="row">
-								
-								<span id="scorebox" class="col-lg-2 animated bounceInRight">
-									<span class="level text-center">
-										<span class="odometer" data-number="<%= currentUser.level %>">
-											0
+				<div id="user_header" class="col-lg-8">
+					<div class="well">
+						<div class="row">
+							<div class="col-lg-2" href="#">
+								<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
+							</div>
+							<h2 class="col-lg-10 animated bounceInUp">
+								<%= currentUser.local.pseudo %> 
+								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
+							</h2>
+							<div class="col-lg-10">
+								<div class="row">
+
+									<span id="scorebox" class="col-lg-2 animated bounceInRight">
+										<span class="level text-center">
+											<span class="odometer" data-number="<%= currentUser.level %>">
+												0
+											</span>
 										</span>
 									</span>
-								</span>
-								<div class="col-lg-10">
-									<div class="loaderProgress animated flipInY">
-										<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-										<div class="xp text-center">
-											<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+									<div class="col-lg-10">
+										<div class="loaderProgress animated flipInY">
+											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+											<div class="xp text-center">
+												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+											</div>
 										</div>
-									</div>
-									
-								</div>
 
+									</div>
+
+								</div>
 							</div>
-						</div>
-						<div class="col-lg-12">	
-							<strong>Linked accounts: </strong>
-							<% if (currentUser.local.pseudo) { %>
-							<span class="label label-default">CyF</span>
-							<% } %>
-							<% if (currentUser.facebook.name) { %>
-							<span class="label label-primary">Facebook</span>
-							<% } %>
-							<% if (currentUser.google.name) { %>
-							<span class="label label-danger">Google</span>
-							<% } %>
-							<% if (currentUser.leagueoflegend.idProfile) { %>
-							<span class="label label-info">League of Legend</span>
-							<% } %>
-							<% if (currentUser.twitter.username) { %>
-							<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
-							<% } %>
-							<a href="./settings" title="add an account" class="label label-default">
-								<span class="fa fa-plus"></span>
-								Add
-							</a>
-						</div>
-						<div class="col-lg-12">
-							<h3>Ladders ranking</h3>	
-							<table class="table table-striped text-center">
-								<thead>
-									<tr>
-										<th class="text-center">Yesterday's</th>
-										<th class="text-center">Last Week</th>
-										<th class="text-center">Last Month</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
-										<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
-										<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="col-lg-12">	
+								<strong>Linked accounts: </strong>
+								<% if (currentUser.local.pseudo) { %>
+								<span class="label label-default">CyF</span>
+								<% } %>
+								<% if (currentUser.facebook.name) { %>
+								<span class="label label-primary">Facebook</span>
+								<% } %>
+								<% if (currentUser.google.name) { %>
+								<span class="label label-danger">Google</span>
+								<% } %>
+								<% if (currentUser.leagueoflegend.idProfile) { %>
+								<span class="label label-info">League of Legend</span>
+								<% } %>
+								<% if (currentUser.twitter.username) { %>
+								<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+								<% } %>
+								<a href="./settings" title="add an account" class="label label-default">
+									<span class="fa fa-plus"></span>
+									Add
+								</a>
+							</div>
+							<div class="col-lg-12">
+								<h3>Ladders ranking</h3>	
+								<table class="table table-striped text-center">
+									<thead>
+										<tr>
+											<th class="text-center">Yesterday's</th>
+											<th class="text-center">Last Week</th>
+											<th class="text-center">Last Month</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
+											<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
+											<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="col-lg-4 well badggies">
+					<h4>My Badges</h4>
+					<% for (var i = 5; i >= 0; i--) { %>
+					<img src="./img/badges/daily_ranked_1.png" class="img-responsive pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/daily_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/daily_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/friends_10.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/friends_20.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/friends_30.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/weekly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/weekly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/weekly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/monthly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/monthly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<img src="./img/badges/monthly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					<% } %>
+				</div>
+
 			</div>
 			<ul class="timeline">
 
@@ -128,6 +148,15 @@
 	<script type="text/javascript">
 
 		$(function() {
+			$('.badggies img').hover(function(e){
+				$(this).tooltip('show')
+			},function(){
+				$(this).tooltip('hide')
+
+			})
+
+
+			
 			var meNot = false;
 			$('.linked').hover(function(){
 				var _this = $(this);

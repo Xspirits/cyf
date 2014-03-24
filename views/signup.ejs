@@ -17,22 +17,21 @@
 				<div class="alert alert-danger"><%= message %></div>
 				<% } %>
 
-				<!-- LOGIN FORM -->
-				<form action="/signup" method="post">
+				<form action="/signup" id="rockstar" method="post">
 					<div class="form-group">
 						<label>Pseudo</label>
 						<input type="text" class="form-control" name="pseudo">
 					</div>
-					<div class="form-group">
+					<div class="form-group" id="emailVerify">
 						<label>Email</label>
-						<input type="text" class="form-control" name="email">
+						<input type="text" class="form-control" id="txtEmail" name="email">
 					</div>
 					<div class="form-group">
 						<label>Password</label>
 						<input type="password" class="form-control" name="password">
 					</div>
 
-					<button type="submit" class="btn btn-punch btn-warning btn-lg">Signup</button>
+					<button type="submit" id="createAccount" class="btn btn-punch btn-warning btn-lg">Signup</button>
 				</form>
 
 				<hr>
@@ -44,5 +43,27 @@
 		</div>
 	</div>
 	<% include statics/footersFix %>
+
+	<script type="text/javascript">
+
+		$(function() {
+			$('#createAccount').click(function(e) {
+				e.preventDefault();
+				var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				var sEmail = $('#txtEmail').val();
+				if (sEmail == '' || !re.test(sEmail)){
+					console.log(!re.test(sEmail));
+
+					$('#emailVerify').addClass('has-error')
+				} 
+				else {
+					$('#rockstar').submit();
+				}
+			});
+
+		});
+
+	</script>
+
 </body>
 </html>

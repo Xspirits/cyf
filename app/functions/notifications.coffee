@@ -14,8 +14,8 @@ module.exports =
     persist = undefined
     red = undefined
     if isPersistant is false
-      if users.length > 1
-        if not_.length > 0
+      if users.length > 0
+        if not_ && not_.length > 0
           red = _.difference(users, not_)
           query =
             _id:
@@ -33,8 +33,8 @@ module.exports =
           _id: users[0]
           isOnline: true
     else
-      if users.length > 1
-        if not_.length > 0
+      if users.length > 0
+        if not_ && not_.length > 0
           red = _.difference(users, not_)
           query = _id:
             $in: red
