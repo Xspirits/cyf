@@ -48,6 +48,10 @@
 
   _ = require("underscore");
 
+  genUID.seed(664);
+
+  mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
+
   configDB = require("./config/database");
 
   challenge = require("./config/challenge");
@@ -62,7 +66,7 @@
 
   ladder = require("./config/ladder");
 
-  mailer = require("./config/mailer");
+  mailer = require("./config/mailer")(mandrill_client, appKeys, moment);
 
   img = require("./config/img");
 
@@ -72,13 +76,9 @@
 
   xp = require("./app/functions/xp")(sio);
 
-  genUID.seed(664);
-
-  mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
-
   mongoose.connect(configDB.url);
 
-  require("./config/passport")(passport, genUID, xp, notifs);
+  require("./config/passport")(passport, genUID, xp, notifs, mailer);
 
   app.configure(function() {
     app.use(express.logger("dev"));

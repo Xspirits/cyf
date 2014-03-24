@@ -11,7 +11,16 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 				currentUser : false
 			});
 	});
+	app.get('/eval/:hash', function(req, res) {
 
+		var hash = req.params.hash;
+		users.validateEmail(req.user, hash, function( result ) {
+			if(result)
+				res.redirect('/login');
+			else
+				res.redirect('/');
+		});
+	});
 	// LOGOUT ==============================
 	app.get('/logout', isLoggedIn, function(req, res) {
 
@@ -531,11 +540,11 @@ module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, cha
 		app.post('/rateChallenges', isLoggedIn, function(req, res) {
 
 			var obj = {
-				id 			: req.body.id, // idCool of the Ongoing
-				idUser 		: req.user._id,
-				difficulty 	: req.body.difficulty,
-				quickness 	: req.body.quickness,
-				fun 		: req.body.fun,
+				id: req.body.id, // idCool of the Ongoing
+				idUser: req.user._id,
+				difficulty: req.body.difficulty,
+				quickness: req.body.quickness,
+				fun: req.body.fun,
 			};
 
 			challenge.rateChallenge(obj, function( data ) {
@@ -760,16 +769,18 @@ app.post('/confirmFriend', isLoggedIn, function(req, res){
 
 		// SIGNUP =================================
 		// show the signup form
-		app.get('/signup', function(req, res) {
-			res.render('signup.ejs', { message: req.flash('loginMessage') });
+		app.get('/signup/:done?', function(req, res) {
+			var nowConfirm = req.params.done == 'great' ? true : false;
+			res.render('signup.ejs', { waitingConfirm: nowConfirm, message : '' });
 		});
 
 		// process the signup form
 		app.post('/signup', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
+			successRedirect : '/signup/great', // redirect to the secure profile section
 			failureRedirect : '/signup', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));
+
 
 	// facebook -------------------------------
 

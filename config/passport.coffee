@@ -10,7 +10,7 @@ challenge = require("../config/challenge")
 
 # load the auth variables
 configAuth = require("./auth") # use this one for testing
-module.exports = (passport, genUID, xp, notifs) ->
+module.exports = (passport, genUID, xp, notifs, mailer) ->
   
   # =========================================================================
   # passport session setup ==================================================
@@ -57,6 +57,8 @@ module.exports = (passport, genUID, xp, notifs) ->
         return done(null, false, req.flash("loginMessage", "No user found."))  unless userfound
         unless userfound.validPassword(password)
           done null, false, req.flash("loginMessage", "Oops! Wrong password.")
+        unless userfound.verified
+          done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
         
         # all is well, return user
         else
@@ -122,11 +124,15 @@ module.exports = (passport, genUID, xp, notifs) ->
             newUser.local.followers = []
             newUser.save (err, user) ->
               throw err  if err
-              req.session.user = user
-              req.session.isLogged = true
-              req.session.newUser = true
-              xp.xpReward user, "user.register"
-              done null, newUser
+              # send an email confirmation link
+              mailer.accountConfirm user, (returned) ->
+
+                # Instantiate the sessions for socket.io 
+                # req.session.user = user
+                # req.session.isLogged = true
+                # req.session.newUser = true
+                xp.xpReward user, "user.register"
+                done null, newUser
 
           return
 

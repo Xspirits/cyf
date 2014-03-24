@@ -16,7 +16,7 @@
 
   configAuth = require("./auth");
 
-  module.exports = function(passport, genUID, xp, notifs) {
+  module.exports = function(passport, genUID, xp, notifs, mailer) {
     passport.serializeUser(function(user, done) {
       done(null, user.id);
     });
@@ -42,6 +42,9 @@
           }
           if (!userfound.validPassword(password)) {
             done(null, false, req.flash("loginMessage", "Oops! Wrong password."));
+          }
+          if (!userfound.verified) {
+            done(null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena."));
           } else {
             req.session.isLogged = true;
             req.session.user = userfound;
@@ -93,11 +96,10 @@
                 if (err) {
                   throw err;
                 }
-                req.session.user = user;
-                req.session.isLogged = true;
-                req.session.newUser = true;
-                xp.xpReward(user, "user.register");
-                return done(null, newUser);
+                return mailer.accountConfirm(user, function(returned) {
+                  xp.xpReward(user, "user.register");
+                  return done(null, newUser);
+                });
               });
             }
           });

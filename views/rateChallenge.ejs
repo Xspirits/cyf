@@ -115,202 +115,201 @@
 				</div>
 			</div>
 		</div><!-- /Validation -->
-		<div class="canvas">
-			<div class="container">
-				<div class="row">
-					<h4><%= currentUser.local.pseudo %>, we need your opinion on these challenges!</h4>
+		<div class="container">
+			<div class="row">
+				<h4><%= currentUser.local.pseudo %>, we need your opinion on these challenges!</h4>
 
-					<p>You have recently launched these challenges</p>
-					<div class="col-md-12"> 
+				<p>You have recently launched these challenges</p>
+				<div class="col-md-12"> 
 
-						<div class="panel panel-default table-responsive">
-							<table class="table  table-striped table-bordered text-center">
-								<thead>
-									<tr>
-										<th class="text-center">#</th>
-										<th class="text-center">Title</th>
-										<th class="text-center hidden-xs">Game</th>
-										<th class="text-center hidden-xs">description</th>
-										<th class="text-center">TimeFrime</th>
-										<th class="text-center">Vote</th>
+					<div class="panel panel-default table-responsive">
+						<table class="table  table-striped table-bordered text-center">
+							<thead>
+								<tr>
+									<th class="text-center">#</th>
+									<th class="text-center">Title</th>
+									<th class="text-center hidden-xs">Game</th>
+									<th class="text-center hidden-xs">description</th>
+									<th class="text-center">TimeFrime</th>
+									<th class="text-center">Vote</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% 
+								for (var i = challenge.challengeRate.length - 1; i >= 0; i--) {
+									var userChallenge =  challenge.challengeRate[i];
+									%>
+									<tr id="tt_<%= userChallenge.idCool %>">
+										<td>
+											<h4>
+												<a href='/o/<%= userChallenge.idCool %>'>
+													<%= userChallenge.idCool %>
+												</a>
+											</h4>
+										</td>
+										<td>
+											<h5><%= userChallenge.title %></h5>
+										</td>
+										<td class="hidden-xs">				
+											<h6><%= userChallenge.game %></h6>
+										</td>
+										<td class="hidden-xs">			
+											<h6><%= userChallenge.description %></h6>	
+										</td>
+										<td>
+											<strong><%= userChallenge.durationD %></strong> <span class="small">day(s)</span>
+											<strong><%= userChallenge.durationH %></strong> <span class="small">hours(s)</span>
+										</td>
+										<td>
+											<button type="button" id="<%= userChallenge.idCool %>" class="btn btn-info btn-punch btn-block rateNaow" data-title="<%= userChallenge.title %>"> Rate !</button>
+										</td>
 									</tr>
-								</thead>
-								<tbody>
-									<% 
-									for (var i = challenge.challengeRate.length - 1; i >= 0; i--) {
-										var userChallenge =  challenge.challengeRate[i];
-										%>
-										<tr id="tt_<%= userChallenge.idCool %>">
-											<td>
-												<h4>
-													<a href='/o/<%= userChallenge.idCool %>'>
-														<%= userChallenge.idCool %>
-													</a>
-												</h4>
-											</td>
-											<td>
-												<h5><%= userChallenge.title %></h5>
-											</td>
-											<td class="hidden-xs">				
-												<h6><%= userChallenge.game %></h6>
-											</td>
-											<td class="hidden-xs">			
-												<h6><%= userChallenge.description %></h6>	
-											</td>
-											<td>
-												<strong><%= userChallenge.durationD %></strong> <span class="small">day(s)</span>
-												<strong><%= userChallenge.durationH %></strong> <span class="small">hours(s)</span>
-											</td>
-											<td>
-												<button type="button" id="<%= userChallenge.idCool %>" class="btn btn-info btn-punch btn-block rateNaow" data-title="<%= userChallenge.title %>"> Rate !</button>
-											</td>
-										</tr>
-										<% } %>
-									</tbody>
-								</table>						
-							</div>
+									<% } %>
+								</tbody>
+							</table>						
 						</div>
-
 					</div>
 
 				</div>
-				<% include statics/footers %>
-				<script src="./js/easypiechart.js"></script>
 
-				<script type="text/javascript">
+			</div>
+			<% include statics/footers %>
+			<script src="./js/easypiechart.js"></script>
 
-					var populateRate = function( id, cb ) {
-						var cId,cTitle,cLink,
-						_this = $('#'+id);
+			<script type="text/javascript">
 
-						title = _this.attr('data-title');
-						$('.cId').text(id);
-						$('.cTitle').text(title);
-						$('.cLink').attr("href", '/c/'+id);
-						$('#completed').attr('data-oId', id);
+				var populateRate = function( id, cb ) {
+					var cId,cTitle,cLink,
+					_this = $('#'+id);
 
-						cb();
-					};
+					title = _this.attr('data-title');
+					$('.cId').text(id);
+					$('.cTitle').text(title);
+					$('.cLink').attr("href", '/c/'+id);
+					$('#completed').attr('data-oId', id);
 
-					var getRate = function(){
-						var rateA,rateB, rateC, genVal;
+					cb();
+				};
 
-						rateA = parseInt($('#slideA').val());
-						rateB = parseInt($('#slideB').val());
-						rateC = parseInt($('#slideC').val());
+				var getRate = function(){
+					var rateA,rateB, rateC, genVal;
 
-						genVal = Math.round((rateA + rateB + rateC)/ 3);
-						$('#genVal').text(genVal);
+					rateA = parseInt($('#slideA').val());
+					rateB = parseInt($('#slideB').val());
+					rateC = parseInt($('#slideC').val());
 
-						if(genVal < 10)
-							$('#staring').html('').append('<i class="fa fa-star"></i>');
-						else if (genVal >= 10 && genVal < 20)
-							$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i>');
-						else if (genVal >= 20 && genVal < 30)
-							$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
-						else if (genVal >= 30 && genVal < 40)
-							$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
-						else if (genVal >= 40)
-							$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
-						else
-							$('#staring').text('-');
+					genVal = Math.round((rateA + rateB + rateC)/ 3);
+					$('#genVal').text(genVal);
 
-					}
-					$(function() {
+					if(genVal < 10)
+						$('#staring').html('').append('<i class="fa fa-star"></i>');
+					else if (genVal >= 10 && genVal < 20)
+						$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i>');
+					else if (genVal >= 20 && genVal < 30)
+						$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
+					else if (genVal >= 30 && genVal < 40)
+						$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
+					else if (genVal >= 40)
+						$('#staring').html('').append('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
+					else
+						$('#staring').text('-');
 
-						$('#rateMe').on('hidden.bs.modal', function (e) {
-							e.preventDefault();
+				}
+				$(function() {
 
-							$('#slideA, #slideB, #slideC').val(25);
-							$('#tt_'+tarId).addClass('invisible').remove();
-						});
+					$('#rateMe').on('hidden.bs.modal', function (e) {
+						e.preventDefault();
 
-						$('#completed').click(function (e) {
-							e.preventDefault();
+						$('#slideA, #slideB, #slideC').val(25);
+						$('#tt_'+tarId).addClass('invisible').remove();
+					});
 
-							var target = {}
-							_this      = $(this),
-							tarId      = $(this).attr('data-oId');
+					$('#completed').click(function (e) {
+						e.preventDefault();
 
-							target.id         = tarId;
-							target.difficulty = parseInt($('#slideA').val());
-							target.quickness  = parseInt($('#slideB').val());
-							target.fun        = parseInt($('#slideC').val());
+						var target = {}
+						_this      = $(this),
+						tarId      = $(this).attr('data-oId');
 
-							$.ajax({
-								type: 'POST',
-								data: JSON.stringify(target),
-								contentType: 'application/json',
-								url: './rateChallenges',						
-								success: function(data) {
+						target.id         = tarId;
+						target.difficulty = parseInt($('#slideA').val());
+						target.quickness  = parseInt($('#slideB').val());
+						target.fun        = parseInt($('#slideC').val());
 
-									if(data === true) {
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(target),
+							contentType: 'application/json',
+							url: './rateChallenges',						
+							success: function(data) {
 
-										$('#rateMe').modal('hide');
-									}
+								if(data === true) {
+
+									$('#rateMe').modal('hide');
 								}
-							})
-
-						});
-						$('.rateNaow').click(function (e) {
-							e.preventDefault();
-
-							idBox = $(this).attr('id');
-							populateRate(idBox, function() {
-
-								$('#rateMe').modal('show');
-							});
-						});
-
-						$('#slideA').noUiSlider({
-							range: [0, 50],
-							start: 25,
-							step: 1,
-							handles: 1,
-							serialization: {
-								to: [ $("#rateAper"), 'text' ],
-								resolution: 1
-							},
-							slide: function(){
-								$('#rateAVal').data('easyPieChart').update($(this).val()*2);
-								getRate();
 							}
-						});
-						$('#slideB').noUiSlider({
-							range: [0, 50],
-							start: 25,
-							step: 1,
-							handles: 1,
-							serialization: {
-								to: [ $("#rateBper"), 'text' ],
-								resolution: 1
-							},
-							slide: function(){
-								$('#rateBVal').data('easyPieChart').update($(this).val()*2);
-								getRate();
-							}
-						});
-						$('#slideC').noUiSlider({
-							range: [0, 50],
-							start: 25,
-							step: 1,
-							handles: 1,
-							serialization: {
-								to: [ $("#rateCper"), 'text' ],
-								resolution: 1
-							},
-							slide: function(){
-								$('#rateCVal').data('easyPieChart').update($(this).val()*2);
-								getRate();
-							}
-						});
-
-						$('.chart').easyPieChart({
-							animate: 1337,
-							size: 50
-						});
+						})
 
 					});
+					$('.rateNaow').click(function (e) {
+						e.preventDefault();
+
+						idBox = $(this).attr('id');
+						populateRate(idBox, function() {
+
+							$('#rateMe').modal('show');
+						});
+					});
+
+					$('#slideA').noUiSlider({
+						range: [0, 50],
+						start: 25,
+						step: 1,
+						handles: 1,
+						serialization: {
+							to: [ $("#rateAper"), 'text' ],
+							resolution: 1
+						},
+						slide: function(){
+							$('#rateAVal').data('easyPieChart').update($(this).val()*2);
+							getRate();
+						}
+					});
+					$('#slideB').noUiSlider({
+						range: [0, 50],
+						start: 25,
+						step: 1,
+						handles: 1,
+						serialization: {
+							to: [ $("#rateBper"), 'text' ],
+							resolution: 1
+						},
+						slide: function(){
+							$('#rateBVal').data('easyPieChart').update($(this).val()*2);
+							getRate();
+						}
+					});
+					$('#slideC').noUiSlider({
+						range: [0, 50],
+						start: 25,
+						step: 1,
+						handles: 1,
+						serialization: {
+							to: [ $("#rateCper"), 'text' ],
+							resolution: 1
+						},
+						slide: function(){
+							$('#rateCVal').data('easyPieChart').update($(this).val()*2);
+							getRate();
+						}
+					});
+
+					$('.chart').easyPieChart({
+						animate: 1337,
+						size: 50
+					});
+
+				});
 </script>
 </body>
 </html>

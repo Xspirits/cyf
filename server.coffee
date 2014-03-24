@@ -30,6 +30,10 @@ genUID          = require("shortid")
 _               = require("underscore")
 
 
+# generate a seed to build our UID (idCools)
+genUID.seed 664
+mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
+
 # Config Import
 configDB        = require("./config/database")
 challenge       = require("./config/challenge")
@@ -38,7 +42,7 @@ relations       = require("./config/relations")
 games           = require("./config/game")
 social          = require("./config/social")
 ladder          = require("./config/ladder")
-mailer          = require("./config/mailer")
+mailer          = require("./config/mailer")(mandrill_client, appKeys, moment)
 img             = require("./config/img")
 
 # functions Import
@@ -46,13 +50,10 @@ notifs          = require("./app/functions/notifications")
 sio             = require("./app/functions/sio")(io)
 xp              = require("./app/functions/xp")(sio)
 
-# generate a seed to build our UID (idCools)
-genUID.seed 664
-mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 
 # configuration ===============================================================
 mongoose.connect configDB.url # connect to our database
-require("./config/passport") passport, genUID, xp, notifs # pass passport for configuration
+require("./config/passport") passport, genUID, xp, notifs, mailer # pass passport for configuration
 app.configure ->
   
   # set up our express application

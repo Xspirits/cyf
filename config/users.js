@@ -15,6 +15,26 @@
   _ = require("underscore");
 
   module.exports = {
+    validateEmail: function(user, hash, done) {
+      return User.findById(user._id, function(err, user) {
+        if (err) {
+          throw err;
+        }
+        if (user.verfiy_hash === hash) {
+          user.verified = true;
+          user.save(function(err) {
+            if (err) {
+              throw err;
+            }
+            console.log(user);
+            return done(true);
+          });
+          return;
+        } else {
+          done(false);
+        }
+      });
+    },
     updateSettings: function(data, done) {
       var query;
       query = void 0;

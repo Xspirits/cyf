@@ -7,130 +7,129 @@
 <body>
 
 	<% include statics/navTop %>
-	<div class="canvas">
-		<div class="container">
-			<div class="row">
-				<div id="user_header" class="col-lg-8">
-					<div class="well">
-						<div class="row">
-							<div class="col-lg-2" href="#">
-								<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= user.idCool %>"></span>
-							</div>
-							<h2 class="col-lg-7 animated bounceInUp">
-								<%= user.local.pseudo %> 
-								<small> <a href="/u/<%= user.idCool %>"> <i class="fa fa-chain"></i> <%= user.idCool %> </a></small>
-								<% if (currentUser) { %>
+	<div class="container">
+		<div class="row">
+			<div id="user_header" class="col-lg-8">
+				<div class="well">
+					<div class="row">
+						<div class="col-lg-2" href="#">
+							<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= user.idCool %>"></span>
+						</div>
+						<h2 class="col-lg-7 animated bounceInUp">
+							<%= user.local.pseudo %> 
+							<small> <a href="/u/<%= user.idCool %>"> <i class="fa fa-chain"></i> <%= user.idCool %> </a></small>
+							<% if (currentUser) { %>
 
-								<%
-								// Check if already friends
-								var lookupFriends = {};
-								for (var i = 0, len = currentUser.friends.length; i < len; i++) {
-									lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
-								}
+							<%
+							// Check if already friends
+							var lookupFriends = {};
+							for (var i = 0, len = currentUser.friends.length; i < len; i++) {
+								lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
+							}
 
-								// Check if already sent an Invite
-								var lookupSent = {};
-								for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
-									lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
-								}
+							// Check if already sent an Invite
+							var lookupSent = {};
+							for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
+								lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
+							}
 
-								// Check if already received an Invite from this user
-								var lookupPendings = {};
-								for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
-									lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
-								}
+							// Check if already received an Invite from this user
+							var lookupPendings = {};
+							for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
+								lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
+							}
 
-								%>
-								<% if (currentUser._id.toString() === user._id.toString()) { %>
-								<p>
-									<button class="btn btn-punch btn-default disabled" >
-										<span class="ladda-label">
-											<span class="glyphicon glyphicon-info-sign"></span> It's you!
-										</span>
-									</button>
-								</p>
-								<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
-
-								<p>
-									<button class="btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
-										<span class="ladda-label">
-											<span class="glyphicon glyphicon-time"></span> Pending, see your requests
-										</span>
-									</button>
-								</p> 
-								<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
-
-								<p>
-									<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
-										<span class="ladda-label">
-											<span class="glyphicon glyphicon-plus"></span> Add Friend
-										</span>
-									</button>
-								</p>
-								<% } else { %>
-								<div class="btn btn-punch btn-success" >
+							%>
+							<% if (currentUser._id.toString() === user._id.toString()) { %>
+							<p>
+								<button class="btn btn-punch btn-default disabled" >
 									<span class="ladda-label">
-										<span class="glyphicon glyphicon-ok"></span> Friend
+										<span class="glyphicon glyphicon-info-sign"></span> It's you!
 									</span>
-								</div>
-								<% } %>
-								<% } %>
+								</button>
+							</p>
+							<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
 
-							</h2>
-							<div id="scorebox" class="col-lg-2 animated bounceInRight">
-								<div class="level text-center"><span class="odometer" data-number="<%= user.level %>">0</span>
-								</div>
-								<div class="xp text-center">
-									<%= user.xp %>/<%= (user.xp + user.xpNext) %>
-								</div>
+							<p>
+								<button class="btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
+									<span class="ladda-label">
+										<span class="glyphicon glyphicon-time"></span> Pending, see your requests
+									</span>
+								</button>
+							</p> 
+							<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
+
+							<p>
+								<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
+									<span class="ladda-label">
+										<span class="glyphicon glyphicon-plus"></span> Add Friend
+									</span>
+								</button>
+							</p>
+							<% } else { %>
+							<div class="btn btn-punch btn-success" >
+								<span class="ladda-label">
+									<span class="glyphicon glyphicon-ok"></span> Friend
+								</span>
 							</div>
-							<div class="col-lg-12">	
-								<strong>Linked accounts: </strong>
-								<% if (user.local.pseudo) { %>
-								<span class="label label-default">CyF</span>
-								<% } %>
-								<% if (user.facebook.name) { %>
-								<span class="label label-primary">Facebook</span>
-								<% } %>
-								<% if (user.google.name) { %>
-								<span class="label label-danger">Google</span>
-								<% } %>
-								<% if (user.twitter.username) { %>
-								<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
-								<% } %>
+							<% } %>
+							<% } %>
+
+						</h2>
+						<div id="scorebox" class="col-lg-2 animated bounceInRight">
+							<div class="level text-center"><span class="odometer" data-number="<%= user.level %>">0</span>
 							</div>
-							<div class="col-lg-12">
-								<h3>Ladders ranking</h3>	
-								<table class="table table-striped text-center">
-									<thead>
-										<tr>
-											<th class="text-center">Yesterday's</th>
-											<th class="text-center">Last Week</th>
-											<th class="text-center">Last Month</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><%= user.dailyRank === 0 ? 'not ranked' : user.dailyRank %></td>
-											<td><%= user.weeklyRank === 0 ? 'not ranked' : user.weeklyRank %></td>
-											<td><%= user.monthlyRank === 0 ? 'not ranked' : user.monthlyRank %></td>
-										</tr>
-									</tbody>
-								</table>
+							<div class="xp text-center">
+								<%= user.xp %>/<%= (user.xp + user.xpNext) %>
 							</div>
+						</div>
+						<div class="col-lg-12">	
+							<strong>Linked accounts: </strong>
+							<% if (user.local.pseudo) { %>
+							<span class="label label-default">CyF</span>
+							<% } %>
+							<% if (user.facebook.name) { %>
+							<span class="label label-primary">Facebook</span>
+							<% } %>
+							<% if (user.google.name) { %>
+							<span class="label label-danger">Google</span>
+							<% } %>
+							<% if (user.twitter.username) { %>
+							<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+							<% } %>
+						</div>
+						<div class="col-lg-12">
+							<h3>Ladders ranking</h3>	
+							<table class="table table-striped text-center">
+								<thead>
+									<tr>
+										<th class="text-center">Yesterday's</th>
+										<th class="text-center">Last Week</th>
+										<th class="text-center">Last Month</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><%= user.dailyRank === 0 ? 'not ranked' : user.dailyRank %></td>
+										<td><%= user.weeklyRank === 0 ? 'not ranked' : user.weeklyRank %></td>
+										<td><%= user.monthlyRank === 0 ? 'not ranked' : user.monthlyRank %></td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 well">
-					<h4>My Badges</h4>
-				</div>
-
 			</div>
+			<div class="col-lg-4 well">
+				<h4>My Badges</h4>
+			</div>
+
 		</div>
-		<% include statics/footers %>
+	</div>
+	<% include statics/footers %>
 
 
-		<script type="text/javascript">
+	<script type="text/javascript">
 
 			// Bind normal buttons
 			Ladda.bind( 'button', { timeout: 2000 } );

@@ -3,7 +3,12 @@
 # expose our config directly to our application using module.exports
 module.exports =
 
+  cyf :
+    domain: "http://localhost:8080"
   mandrill_key: "w_F27RXK5GmLNtZoePLczA"
+  support :
+    email: "cyf.app@gmail.com"
+    name: "CyF validator"
   express_sid_key: "chachompcha.sid"
   cookie_secret: "oneDoesNotSimplychompi"
 

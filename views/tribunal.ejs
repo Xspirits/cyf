@@ -121,209 +121,208 @@
 			</div>
 		</div><!-- /Validation -->
 
-		<div class="canvas">
-			<div class="container">
+		<div class="container">
 
-				<div class="page-header text-center">
-					<h1>Tribunal</h1>
-				</div>
-
-				<div class="row">
-					<h4><%= currentUser.local.pseudo %>, theses cases need your opinion</h4>
-					<p>
-						Be aware that by judging a case you will affect other users, be fair and judge as if it was you who were implied!
-					</p>
-					<p>
-						By helping others you will be rewarded.
-					</p>
-					<div class="col-md-12"> 
-
-						<div class="panel panel-default table-responsive">
-							<table class="table  table-striped table-bordered text-center">
-								<thead>
-									<tr>
-										<th class="text-center">Challenge #</th>
-										<th class="text-center">Case</th>
-										<th class="text-center">Challenger</th>
-										<th class="text-center">Challenged</th>
-										<th class="text-center">Completed</th>
-										<th class="text-center">Vote</th>
-									</tr>
-								</thead>
-								<tbody>
-									<% for(var i=0; i< cases.length; i++) { %>
-									<tr id="tt_<%= cases[i].idCool %>">
-										<td>
-											<a href='/o/<%= cases[i]._idChallenge.idCool %>'>
-												<%= cases[i]._idChallenge.title %>
-											</a>
-										</td>
-										<td>
-											<a href='/o/<%= cases[i].idCool %>'>
-												<%= cases[i].idCool %>
-											</a>
-										</td>
-										<td>									
-											<a href='/u/<%= cases[i]._idChallenger.idCool %>'>
-												<%= cases[i]._idChallenger.local.pseudo  %>
-											</a>	
-										</td>
-										<td>									
-											<a href='/u/<%= cases[i]._idChallenged.idCool %>'>
-												<%= cases[i]._idChallenged.local.pseudo  %>
-											</a>	
-										</td>
-										<td>
-											<span class="dateDiff" data-from="<%= cases[i].launchDate %>" data-to="<%= cases[i].confirmAsk %>"></span>
-										</td>
-										<td>
-
-											<button type="button" id="<%= cases[i].idCool %>" data-p1="<%= cases[i].confirmLink1 %>" data-p2="<%= cases[i].confirmLink2 %>" data-com="<%= cases[i].confirmComment %>"  data-title="<%= cases[i]._idChallenge.title %>"  data-launched="<%= cases[i].launchDate %>" data-ended="<%= cases[i].confirmAsk %>" data-deadLine="<%= cases[i].deadLine %>" data-challenged="<%= cases[i]._idChallenged._id %>" data-challengedCool="<%= cases[i]._idChallenged.idCool %>" data-challengedPseudo="<%= cases[i]._idChallenged.local.pseudo %>" data-challengerCool="<%= cases[i]._idChallenger.idCool %>" data-challengerPseudo="<%= cases[i]._idChallenger.local.pseudo %>" class="btn btn-info btn-punch btn-block decisionTime">
-												See details and vote
-											</button>
-										</td>
-									</tr>
-									<% } %>
-								</tbody>
-							</table>						
-						</div>
-					</div>
-
-				</div>
+			<div class="page-header text-center">
+				<h1>Tribunal</h1>
 			</div>
 
+			<div class="row">
+				<h4><%= currentUser.local.pseudo %>, theses cases need your opinion</h4>
+				<p>
+					Be aware that by judging a case you will affect other users, be fair and judge as if it was you who were implied!
+				</p>
+				<p>
+					By helping others you will be rewarded.
+				</p>
+				<div class="col-md-12"> 
 
-			<% include statics/footers %>
+					<div class="panel panel-default table-responsive">
+						<table class="table  table-striped table-bordered text-center">
+							<thead>
+								<tr>
+									<th class="text-center">Challenge #</th>
+									<th class="text-center">Case</th>
+									<th class="text-center">Challenger</th>
+									<th class="text-center">Challenged</th>
+									<th class="text-center">Completed</th>
+									<th class="text-center">Vote</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% for(var i=0; i< cases.length; i++) { %>
+								<tr id="tt_<%= cases[i].idCool %>">
+									<td>
+										<a href='/o/<%= cases[i]._idChallenge.idCool %>'>
+											<%= cases[i]._idChallenge.title %>
+										</a>
+									</td>
+									<td>
+										<a href='/o/<%= cases[i].idCool %>'>
+											<%= cases[i].idCool %>
+										</a>
+									</td>
+									<td>									
+										<a href='/u/<%= cases[i]._idChallenger.idCool %>'>
+											<%= cases[i]._idChallenger.local.pseudo  %>
+										</a>	
+									</td>
+									<td>									
+										<a href='/u/<%= cases[i]._idChallenged.idCool %>'>
+											<%= cases[i]._idChallenged.local.pseudo  %>
+										</a>	
+									</td>
+									<td>
+										<span class="dateDiff" data-from="<%= cases[i].launchDate %>" data-to="<%= cases[i].confirmAsk %>"></span>
+									</td>
+									<td>
 
-			<script type="text/javascript">
-				
-				var resetButtons = function() {
+										<button type="button" id="<%= cases[i].idCool %>" data-p1="<%= cases[i].confirmLink1 %>" data-p2="<%= cases[i].confirmLink2 %>" data-com="<%= cases[i].confirmComment %>"  data-title="<%= cases[i]._idChallenge.title %>"  data-launched="<%= cases[i].launchDate %>" data-ended="<%= cases[i].confirmAsk %>" data-deadLine="<%= cases[i].deadLine %>" data-challenged="<%= cases[i]._idChallenged._id %>" data-challengedCool="<%= cases[i]._idChallenged.idCool %>" data-challengedPseudo="<%= cases[i]._idChallenged.local.pseudo %>" data-challengerCool="<%= cases[i]._idChallenger.idCool %>" data-challengerPseudo="<%= cases[i]._idChallenger.local.pseudo %>" class="btn btn-info btn-punch btn-block decisionTime">
+											See details and vote
+										</button>
+									</td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>						
+					</div>
+				</div>
 
-					$('#firstChoice').removeClass('hidden');
-					$('#confirmationReq button:first-child').addClass('hidden');
-					$('#confirmationReq button:nth-child(2)').addClass('hidden');
-					$('#confirmationReq').addClass('hidden');
-				};
-				var populateValidation = function( id, cb ) {
-					var vP1,vP2,vPc,vDs,vDe,diff,vChallengedId,vChallenged,vDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
-					_this = $('#'+id);
-
-					vP1               = _this.attr('data-p1');
-					vP2               = _this.attr('data-p2');
-					vPc               = _this.attr('data-com');
-					vDs               = _this.attr('data-launched');
-					vDe               = _this.attr('data-ended');
-					vDeadLine         = _this.attr('data-deadLine');
-					vChallengedId     = _this.attr('data-challenged');
-					vChallengedIdCool = _this.attr('data-challengedCool');
-					vChallenged       = _this.attr('data-challengedPseudo');
-					vChallengerIdCool = _this.attr('data-challengedCool');
-					vChallenger       = _this.attr('data-challengerPseudo');
+			</div>
+		</div>
 
 
-					_vDs              = moment(vDs).format('dddd DD MMMM HH[h]mm[m]');
-					_vDe              = moment(vDe).format('dddd DD MMMM HH[h]mm[m]');
-					_vDeadLine        = moment(vDeadLine).format('dddd DD MMMM HH[h]mm[m]');
+		<% include statics/footers %>
 
-					diff = moment(vDe).from(vDs, true);
-					diffMax = moment(vDeadLine).from(vDs, true);
+		<script type="text/javascript">
+			
+			var resetButtons = function() {
 
-					sSpeed = moment(vDs).unix();
-					cSpeed = moment(vDe).unix();
-					dSpeed = moment(vDeadLine).unix();
+				$('#firstChoice').removeClass('hidden');
+				$('#confirmationReq button:first-child').addClass('hidden');
+				$('#confirmationReq button:nth-child(2)').addClass('hidden');
+				$('#confirmationReq').addClass('hidden');
+			};
+			var populateValidation = function( id, cb ) {
+				var vP1,vP2,vPc,vDs,vDe,diff,vChallengedId,vChallenged,vDeadLine,sSpeed,cSpeed, dSpeed,chompi,sRate,
+				_this = $('#'+id);
 
-					chompi = (1- ((cSpeed - sSpeed) / (dSpeed - sSpeed)) ) * 100;
-					sRate = Math.round(chompi * 100) / 100 ;
+				vP1               = _this.attr('data-p1');
+				vP2               = _this.attr('data-p2');
+				vPc               = _this.attr('data-com');
+				vDs               = _this.attr('data-launched');
+				vDe               = _this.attr('data-ended');
+				vDeadLine         = _this.attr('data-deadLine');
+				vChallengedId     = _this.attr('data-challenged');
+				vChallengedIdCool = _this.attr('data-challengedCool');
+				vChallenged       = _this.attr('data-challengedPseudo');
+				vChallengerIdCool = _this.attr('data-challengedCool');
+				vChallenger       = _this.attr('data-challengerPseudo');
 
-					$('#vId').text(id);
-					$('#vP1').text(vP1);
-					$('#vP2').text(vP2);
-					$('#vPc').text(vPc);
-					$('#vDs').text(_vDs);
-					$('#vDe').text(_vDe);
-					$('#vDl').text(_vDeadLine);
-					$('#vDiff').text(diff);
 
-					$('#decision').attr('data-tarId', id);
+				_vDs              = moment(vDs).format('dddd DD MMMM HH[h]mm[m]');
+				_vDe              = moment(vDe).format('dddd DD MMMM HH[h]mm[m]');
+				_vDeadLine        = moment(vDeadLine).format('dddd DD MMMM HH[h]mm[m]');
 
-					$('#vPg').attr('aria-valuenow', sRate ).css('width', sRate+'%');
-					$('#vPg > .sr-only > span').text(sRate+'%');
-					$('.speedRate').text(sRate+'%');
+				diff = moment(vDe).from(vDs, true);
+				diffMax = moment(vDeadLine).from(vDs, true);
 
-					$('.givenTime').text(diffMax);
-					$('.vChallenger').text(vChallenger);
-					$('.vChallengerLink').attr("href", '/u/'+vChallengerIdCool);
-					$('.vChallenged').text(vChallenged);
-					$('.vChallengedLink').attr("href", '/u/'+vChallengedIdCool);
-					cb();
+				sSpeed = moment(vDs).unix();
+				cSpeed = moment(vDe).unix();
+				dSpeed = moment(vDeadLine).unix();
 
-				};
-				var readability = function() {
-					$('.dateReadability').each( function () {
-						var date = $(this).attr('data-date');
-						var converted = moment(date).format('dddd DD MMMM HH[h]mm[m]');
-						$(this).text(converted);
-					})
-				};
+				chompi = (1- ((cSpeed - sSpeed) / (dSpeed - sSpeed)) ) * 100;
+				sRate = Math.round(chompi * 100) / 100 ;
 
-				var dateDiff = function() {
-					$('.dateDiff').each( function () {
-						var _this = $(this),
-						from = _this.attr('data-from'),
-						to 	= _this.attr('data-to');
+				$('#vId').text(id);
+				$('#vP1').text(vP1);
+				$('#vP2').text(vP2);
+				$('#vPc').text(vPc);
+				$('#vDs').text(_vDs);
+				$('#vDe').text(_vDe);
+				$('#vDl').text(_vDeadLine);
+				$('#vDiff').text(diff);
 
-						var converted = moment(to).from(from);
-						$(this).text(converted);
-					})
-				};
-				$(function() {
-					var confirmCounter = 0,
-					originalHTML ='<button type="button" class="btn btn-danger btn-punch denying"><span class="glyphicon glyphicon-remove"></span>Deny</button><button type="button" class="btn btn-success btn-punch validating"><span class="glyphicon glyphicon-ok"></span>validate</button>';
+				$('#decision').attr('data-tarId', id);
 
-					readability();
-					dateDiff();
+				$('#vPg').attr('aria-valuenow', sRate ).css('width', sRate+'%');
+				$('#vPg > .sr-only > span').text(sRate+'%');
+				$('.speedRate').text(sRate+'%');
 
-					$('#validation').on('hidden.bs.modal', function (e) {
+				$('.givenTime').text(diffMax);
+				$('.vChallenger').text(vChallenger);
+				$('.vChallengerLink').attr("href", '/u/'+vChallengerIdCool);
+				$('.vChallenged').text(vChallenged);
+				$('.vChallengedLink').attr("href", '/u/'+vChallengedIdCool);
+				cb();
 
-						e.preventDefault();
-						confirmCounter = 0;
-						resetButtons();
+			};
+			var readability = function() {
+				$('.dateReadability').each( function () {
+					var date = $(this).attr('data-date');
+					var converted = moment(date).format('dddd DD MMMM HH[h]mm[m]');
+					$(this).text(converted);
+				})
+			};
+
+			var dateDiff = function() {
+				$('.dateDiff').each( function () {
+					var _this = $(this),
+					from = _this.attr('data-from'),
+					to 	= _this.attr('data-to');
+
+					var converted = moment(to).from(from);
+					$(this).text(converted);
+				})
+			};
+			$(function() {
+				var confirmCounter = 0,
+				originalHTML ='<button type="button" class="btn btn-danger btn-punch denying"><span class="glyphicon glyphicon-remove"></span>Deny</button><button type="button" class="btn btn-success btn-punch validating"><span class="glyphicon glyphicon-ok"></span>validate</button>';
+
+				readability();
+				dateDiff();
+
+				$('#validation').on('hidden.bs.modal', function (e) {
+
+					e.preventDefault();
+					confirmCounter = 0;
+					resetButtons();
+				});
+
+				$('.decisionTime').click(function (e) {
+					e.preventDefault();
+
+					idBox = $(this).attr('id');
+					populateValidation(idBox, function() {
+						$('#validation').modal('show');
 					});
+				});
 
-					$('.decisionTime').click(function (e) {
-						e.preventDefault();
+				$('#firstChoice > button').click(function(e){
+					e.preventDefault();
 
-						idBox = $(this).attr('id');
-						populateValidation(idBox, function() {
-							$('#validation').modal('show');
-						});
+					var _this   = $(this),
+					isDeny      = ((_this.hasClass('denying')) ? true : false);		
+
+					$('#firstChoice').addClass('hidden', function(){
+						if(isDeny) 
+							$('#confirmationReq button:first-child').removeClass('hidden');
+						else 
+							$('#confirmationReq button:nth-child(2)').removeClass('hidden');
+						$('#confirmationReq').removeClass('hidden');
 					});
+				});
 
-					$('#firstChoice > button').click(function(e){
-						e.preventDefault();
+				$('#confirmationReq > button').click(function(e){
+					e.preventDefault();
 
-						var _this   = $(this),
-						isDeny      = ((_this.hasClass('denying')) ? true : false);		
+					var _this   = $(this),
+					tarId       = $('#decision').attr('data-tarId'),
+					isDeny      = ((_this.hasClass('denying')) ? true : false);			
 
-						$('#firstChoice').addClass('hidden', function(){
-							if(isDeny) 
-								$('#confirmationReq button:first-child').removeClass('hidden');
-							else 
-								$('#confirmationReq button:nth-child(2)').removeClass('hidden');
-							$('#confirmationReq').removeClass('hidden');
-						});
-					});
+					var target = {};
 
-					$('#confirmationReq > button').click(function(e){
-						e.preventDefault();
-
-						var _this   = $(this),
-						tarId       = $('#decision').attr('data-tarId'),
-						isDeny      = ((_this.hasClass('denying')) ? true : false);			
-
-						var target = {};
-
-						target.id = tarId;
+					target.id = tarId;
 					target.answer = (isDeny)? false : true; // Must reverse the value
 
 					console.log($('#tt_'+tarId));
@@ -347,7 +346,7 @@
 						}
 					});
 				});
-				});
+			});
 
 </script>
 </body>

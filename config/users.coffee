@@ -6,6 +6,22 @@ relations = require("./relations")
 social = require("./social")
 _ = require("underscore")
 module.exports =
+  validateEmail: (user, hash, done) ->
+    User.findById user._id, (err, user) ->
+      throw err  if err
+
+      if user.verfiy_hash == hash
+        user.verified = true        
+        user.save (err) ->
+          throw err  if err
+
+          console.log user
+          done true
+        return
+      else
+        done false
+      return
+
   updateSettings: (data, done) ->
     query = undefined
     if data.target is "facebook" or data.target is "twitter"

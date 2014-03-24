@@ -14,162 +14,161 @@
 
 	<% include statics/navTop %>
 	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
-	<div class="canvas">
-		<div class="container">
-			<div class="row">
-				<div id="user_header" class="col-lg-8">
-					<div class="well">
-						<div class="row">
-							<div class="col-lg-2" href="#">
-								<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
-							</div>
-							<h2 class="col-lg-10 animated bounceInUp">
-								<%= currentUser.local.pseudo %> 
-								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
-							</h2>
-							<div class="col-lg-10">
-								<div class="row">
+	<div class="container">
+		<div class="row">
+			<div id="user_header" class="col-lg-8">
+				<div class="well">
+					<div class="row">
+						<div class="col-lg-2" href="#">
+							<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= currentUser.idCool %>"></span>
+						</div>
+						<h2 class="col-lg-10 animated bounceInUp">
+							<%= currentUser.local.pseudo %> 
+							<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
+						</h2>
+						<div class="col-lg-10">
+							<div class="row">
 
-									<span id="scorebox" class="col-lg-2 animated bounceInRight">
-										<span class="level text-center">
-											<span class="odometer" data-number="<%= currentUser.level %>">
-												0
-											</span>
+								<span id="scorebox" class="col-lg-2 animated bounceInRight">
+									<span class="level text-center">
+										<span class="odometer" data-number="<%= currentUser.level %>">
+											0
 										</span>
 									</span>
-									<div class="col-lg-10">
-										<div class="loaderProgress animated flipInY">
-											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-											<div class="xp text-center">
-												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
-											</div>
+								</span>
+								<div class="col-lg-10">
+									<div class="loaderProgress animated flipInY">
+										<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+										<div class="xp text-center">
+											<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
 										</div>
-
 									</div>
 
 								</div>
+
 							</div>
-							<div class="col-lg-12">	
-								<strong>Linked accounts: </strong>
-								<% if (currentUser.local.pseudo) { %>
-								<span class="label label-default">CyF</span>
-								<% } %>
-								<% if (currentUser.facebook.name) { %>
-								<span class="label label-primary">Facebook</span>
-								<% } %>
-								<% if (currentUser.google.name) { %>
-								<span class="label label-danger">Google</span>
-								<% } %>
-								<% if (currentUser.leagueoflegend.idProfile) { %>
-								<span class="label label-info">League of Legend</span>
-								<% } %>
-								<% if (currentUser.twitter.username) { %>
-								<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
-								<% } %>
-								<a href="./settings" title="add an account" class="label label-default">
-									<span class="fa fa-plus"></span>
-									Add
-								</a>
-							</div>
-							<div class="col-lg-12">
-								<h3>Ladders ranking</h3>	
-								<table class="table table-striped text-center">
-									<thead>
-										<tr>
-											<th class="text-center">Yesterday's</th>
-											<th class="text-center">Last Week</th>
-											<th class="text-center">Last Month</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
-											<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
-											<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+						</div>
+						<div class="col-lg-12">	
+							<strong>Linked accounts: </strong>
+							<% if (currentUser.local.pseudo) { %>
+							<span class="label label-default">CyF</span>
+							<% } %>
+							<% if (currentUser.facebook.name) { %>
+							<span class="label label-primary">Facebook</span>
+							<% } %>
+							<% if (currentUser.google.name) { %>
+							<span class="label label-danger">Google</span>
+							<% } %>
+							<% if (currentUser.leagueoflegend.idProfile) { %>
+							<span class="label label-info">League of Legend</span>
+							<% } %>
+							<% if (currentUser.twitter.username) { %>
+							<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+							<% } %>
+							<a href="./settings" title="add an account" class="label label-default">
+								<span class="fa fa-plus"></span>
+								Add
+							</a>
+						</div>
+						<div class="col-lg-12">
+							<h3>Ladders ranking</h3>	
+							<table class="table table-striped text-center">
+								<thead>
+									<tr>
+										<th class="text-center">Yesterday's</th>
+										<th class="text-center">Last Week</th>
+										<th class="text-center">Last Month</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
+										<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
+										<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 well badggies">
-					<h4>My Badges</h4>
-					<% for (var i = 5; i >= 0; i--) { %>
-					<img src="./img/badges/daily_ranked_1.png" class="img-responsive pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/daily_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/daily_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/friends_10.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/friends_20.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/friends_30.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/weekly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/weekly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/weekly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/monthly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/monthly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<img src="./img/badges/monthly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					<% } %>
-				</div>
-
 			</div>
-			<ul class="timeline">
+			<div class="col-lg-4 well badggies">
+				<h4>My Badges</h4>
+				<% for (var i = 5; i >= 0; i--) { %>
+				<img src="./img/badges/daily_ranked_1.png" class="img-responsive pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/daily_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/daily_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/friends_10.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/friends_20.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/friends_30.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/weekly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/weekly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/weekly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/monthly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/monthly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<img src="./img/badges/monthly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+				<% } %>
+			</div>
 
-				<% var notif = currentUser.notifications;
-				for (var i = notif.length - 1; i >= 0; i--) {
-					if(notif[i].persist === true) { 
-						var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
-						, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
-						%>
-						<li class="animated <%= isOdd %> ">
-							<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
-							<div class="timeline-panel glow-shad well">
-								<div class="timeline-heading">
-									<h4 class="timeline-title"><%= notif[i].title %></h4>
-									<p>
-										<small class="text-muted">
-											<i class="glyphicon glyphicon-time"></i>
-											<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
-										</small>
-									</p>
-								</div>
-								<div class="timeline-body">
-									<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
-								</div>
-							</div>
-						</li>
-						<% 
-					} 
-				} %>
-
-			</ul>
 		</div>
+		<ul class="timeline">
+
+			<% var notif = currentUser.notifications;
+			for (var i = notif.length - 1; i >= 0; i--) {
+				if(notif[i].persist === true) { 
+					var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
+					, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
+					%>
+					<li class="animated <%= isOdd %> ">
+						<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
+						<div class="timeline-panel glow-shad well">
+							<div class="timeline-heading">
+								<h4 class="timeline-title"><%= notif[i].title %></h4>
+								<p>
+									<small class="text-muted">
+										<i class="glyphicon glyphicon-time"></i>
+										<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
+									</small>
+								</p>
+							</div>
+							<div class="timeline-body">
+								<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
+							</div>
+						</div>
+					</li>
+					<% 
+				} 
+			} %>
+
+		</ul>
 	</div>
-	<% include statics/footers %>
-	<script type="text/javascript">
+</div>
+<% include statics/footers %>
+<script type="text/javascript">
 
-		$(function() {
-			$('.badggies img').hover(function(e){
-				$(this).tooltip('show')
-			},function(){
-				$(this).tooltip('hide')
+	$(function() {
+		$('.badggies img').hover(function(e){
+			$(this).tooltip('show')
+		},function(){
+			$(this).tooltip('hide')
 
-			})
+		})
 
 
-			
-			var meNot = false;
-			$('.linked').hover(function(){
-				var _this = $(this);
-				_this.children('.meany').addClass('hidden');
-				_this.children('a').removeClass('hidden');
+		
+		var meNot = false;
+		$('.linked').hover(function(){
+			var _this = $(this);
+			_this.children('.meany').addClass('hidden');
+			_this.children('a').removeClass('hidden');
 
-			}, function(){
-				var _this = $(this);
-				_this.children('a').addClass('hidden');
-				_this.children('.meany').removeClass('hidden');
-			});
+		}, function(){
+			var _this = $(this);
+			_this.children('a').addClass('hidden');
+			_this.children('.meany').removeClass('hidden');
 		});
+	});
 
-	</script>
+</script>
 </body>
 </html>

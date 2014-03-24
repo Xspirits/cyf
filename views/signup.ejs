@@ -13,9 +13,14 @@
 
 				<h1>Signup</h1>
 
-				<% if (message.length > 0) { %>
+				<% if (message) { %>
 				<div class="alert alert-danger"><%= message %></div>
 				<% } %>
+				<% if (waitingConfirm) { %>
+				<div class="alert alert-success"><strong>One last step!</strong> We sent you an email, please check your inbox and confirm your adress to enter the arena!</div>
+				<% } else { %>
+
+
 
 				<form action="/signup" id="rockstar" method="post">
 					<div class="form-group">
@@ -38,6 +43,7 @@
 
 				<p>Already have an account? <a href="/login">Login</a></p>
 				<p>Or go <a href="/">home</a>.</p>
+				<% } %>
 
 			</div>
 		</div>
