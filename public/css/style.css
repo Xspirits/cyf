@@ -479,12 +479,12 @@ hr.subtle-divider.hr-white {
  * Profile
  */
 
-#user_header {
-}
-.badggies img {
+ #user_header {
+ }
+ .badggies img {
   max-width: 65px;
 }
- #user_header .linked a, #user_header .linked a:hover {
+#user_header .linked a, #user_header .linked a:hover {
   color: black;
 }
 #user_header .loaderProgress {
@@ -700,6 +700,8 @@ hr.subtle-divider.hr-white {
 #headNav .profile-icon {
   max-height: 35px;
   max-width: 35px;
+  margin: 10px 0;
+  padding: 0;
 }
 .container {
   background: rgb(241,241,241);

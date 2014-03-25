@@ -62,7 +62,6 @@ module.exports =
       multi: true
     , (err, result) ->
       throw err  if err
-      console.log "affected rows %d", result
       result
 
     return

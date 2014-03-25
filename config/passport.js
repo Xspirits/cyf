@@ -45,8 +45,10 @@
           if (!userfound.validPassword(password)) {
             done(null, false, req.flash("loginMessage", "Oops! Wrong password."));
           }
-          if (!userfound.verified) {
-            done(null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena."));
+          if (configAuth.app_config.email_confirm) {
+            if (!userfound.verified) {
+              done(null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena."));
+            }
           } else {
             req.session.isLogged = true;
             req.session.user = userfound;

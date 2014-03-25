@@ -1,22 +1,21 @@
 <div id="sharePost"></div>
 </div> <!-- End .canvas -->
 
-	<script type="text/javascript">
-		var url = window.location.href;var arr = url.split("/");var result = arr[0] + "//" + arr[2];
- 		document.write('<' + 'script type="text/javascript" src="' + result + '/js/init.js"></sc' + 'ript>');
-	</script>
-<script src="./socket.io/socket.io.js"></script>
+
+<script src="/js/init.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 	$(function() {
 
-		var url = window.location.href;
+/*		var url = window.location.href;
 		var arr = url.split("/");
 		var result = arr[0] + "//" + arr[2];
 		console.log(arr)
 		console.log(result)
-
+*/
 		//Socket 
-		socket = io.connect(result);
+		//http://localhost:8080/leaderboard
+		socket = io.connect('http://localhost:8080');
 		<% if (currentUser) { %>
 
 		socket.on('globalevent', function (data) {
@@ -37,21 +36,19 @@
 		}
 
 		var isMobile = ($(window).width() < 800) ? true : false;
-		$('.file-inputs').bootstrapFileInput();
-
 		//Avatars/identicons
-		$('.identicon').each( function(){
-			var _this = $(this);
-			var data = _this.attr('data-hashMe')
-			, size = _this.attr('data-size') ? _this.attr('data-size') : 100;
+		// $('.identicon').each( function(){
+		// 	var _this = $(this);
+		// 	var data = _this.attr('data-hashMe')
+		// 	, size = _this.attr('data-size') ? _this.attr('data-size') : 100;
 
-			var hash = CryptoJS.MD5(data);
-			_this.text(hash);
-			_this.identicon5({
-				rotate: true,
-				size: size
-			});
-		})
+		// 	var hash = CryptoJS.MD5(data);
+		// 	_this.text(hash);
+		// 	_this.identicon5({
+		// 		rotate: true,
+		// 		size: size
+		// 	});
+		// })
 		// nprogress Is disabled for now, could be using it in the future though.
 		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
 		var flatten = Math.round((myLevel * .8)*100);

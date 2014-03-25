@@ -88,7 +88,6 @@
         if (err) {
           throw err;
         }
-        console.log("affected rows %d", result);
         return result;
       });
     },

@@ -57,8 +57,9 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
         return done(null, false, req.flash("loginMessage", "No user found."))  unless userfound
         unless userfound.validPassword(password)
           done null, false, req.flash("loginMessage", "Oops! Wrong password.")
-        unless userfound.verified
-          done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
+        if configAuth.app_config.email_confirm
+          unless userfound.verified
+            done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
         
         # all is well, return user
         else
