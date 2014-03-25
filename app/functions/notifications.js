@@ -104,7 +104,7 @@
         "notifications.isSeen": true
       };
       thisNotif = data.idNotif;
-      if (data["delete"] === true) {
+      if (data.del === true) {
         if (thisNotif) {
           User.findByIdAndUpdate(data.idUser, {
             $pull: {

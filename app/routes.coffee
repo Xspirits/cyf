@@ -488,10 +488,11 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
   app.post "/markNotifRead", isLoggedIn, (req, res) ->
     obj =
       idUser: req.user._id
-      delete: req.body.delete
+      del: req.body.del
       idNotif: req.body.id
 
     notifs.markRead obj, (result) ->
+      console.log result
       res.send true
       return
 

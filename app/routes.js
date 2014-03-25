@@ -376,10 +376,11 @@
       var obj;
       obj = {
         idUser: req.user._id,
-        "delete": req.body["delete"],
+        del: req.body.del,
         idNotif: req.body.id
       };
       notifs.markRead(obj, function(result) {
+        console.log(result);
         res.send(true);
       });
     });

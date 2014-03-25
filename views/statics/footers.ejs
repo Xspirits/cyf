@@ -12,30 +12,27 @@
 		var result = arr[0] + "//" + arr[2];
 		console.log(arr)
 		console.log(result)
-*/
+		*/
 		//Socket 
 		//http://localhost:8080/leaderboard
-		socket = io.connect('http://localhost:8080');
+		socket = io.connect('http://localhost');
 		<% if (currentUser) { %>
 
-		socket.on('globalevent', function (data) {
+			socket.on('globalevent', function (data) {
 
-			console.log(data);
-			pushStream(data);
-		});
-		<% } %>
-		var pushStream = function(data) {
-			var target = $('#streams')
-			, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
+				console.log(data);
+				pushStream(data);
+			});
+			<% } %>
+			var pushStream = function(data) {
+				var target = $('#streams')
+				, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
 
-			console.log(data.date);
-			console.log(moment(data.date).fromNow());
+				target.prepend(template);
 
-			target.prepend(template);
+			}
 
-		}
-
-		var isMobile = ($(window).width() < 800) ? true : false;
+			var isMobile = ($(window).width() < 800) ? true : false;
 		//Avatars/identicons
 		// $('.identicon').each( function(){
 		// 	var _this = $(this);
@@ -144,7 +141,15 @@
 					});	
 				}
 			}	
+			function notif (i) {          
+				setTimeout(function () {  
+					console.log(i) 
+					console.log(queue[i]) 
+					sendNotif(queue[i][0],queue[i][1],queue[i][2])
 
+					if (--i) notif(i);      			
+				}, 220)
+			}
 			$('#dismissBoxChall').click(function(e){
 				e.preventDefault();
 				$('#gotchaChallenge,#gotaBoxContent')
@@ -175,9 +180,26 @@
 			timeFromUp();
 			setInterval(function(){
 				timeFromUp();
-			},1000);
+			},60000);
 		});
+var sendNotif= function(msg, idNotif, del) {
 
+	alertify.log(msg, 'info');
+
+	var target = {					
+		del : del,
+		id : idNotif
+	}
+	$.ajax({
+		type: 'POST',
+		data: JSON.stringify(target),
+		contentType: 'application/json',
+		url: './markNotifRead',						
+		success: function(data) {
+			console.log(data);
+		}
+	});				
+}
 var timeFromUp = function(){
 	$('.timeFromUp').each( function () {
 		var start = $(this).attr('data-date');
