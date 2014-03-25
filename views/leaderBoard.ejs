@@ -7,177 +7,179 @@
 <body>
 
 	<% include statics/navTop %>
-	<div class="container">
-		<div class="row">
-			<div class="tabbable tabs-left col-lg-12 clearfix well">
-				<ul id="myTab1" class="nav nav-tabs nav-justified">
-					<li class="active"><a href="#daily" data-toggle="tab">Daily Ladder</a></li>
-					<li><a href="#weekly" 	data-toggle="tab">Weekly Ladder</a></li>
-					<li><a href="#monthly" 	data-toggle="tab">Monthly Ladder</a></li>
-					<li><a href="#global" 	data-toggle="tab">General Ladder</a></li>
 
-				</ul>
-				<div id="leaderboardcontainer" class="tab-content">
-					<!-- daily Leaderboard -->
-					<div class="tab-pane fade active in " id="daily">	
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Rank</th>
-									<th>Challenger</th>
-									<th>Level</th>
-									<th>Score</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% if(ranking.daily.length > 0 ) { %>
-								<% for(var i=0; i< ranking.daily.length; i++) { %>
-								<tr class="animated flipInX">
-									<td class="daily"><%= i+1 %></td>
-									<td><%= ranking.daily[i].local.pseudo %></td>
-									<td><%= ranking.daily[i].level %></td>
-									<td><%= ranking.daily[i].dailyScore %></td>
-								</tr>
-								<% }%>
-								<% }%>
-								
-							</tbody>
-						</table>
-						<div class="text-right">
-							<small id="updateDaily"></small><i class="fa fa-clock-o"></i>
-						</div>	
-					</div>
-					<!-- weekly Leaderboard -->
-					<div class="tab-pane fade in " id="weekly">	
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Rank</th>
-									<th>Challenger</th>
-									<th>Level</th>
-									<th>Score</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% if(ranking.weekly.length > 0 ) { %>
-								<% for(var i=0; i< ranking.weekly.length; i++) { %>
-								<tr class="animated flipInX">
-									<td class="weekly"><%= i+1 %></td>
-									<td><%= ranking.weekly[i].local.pseudo %></td>
-									<td><%= ranking.weekly[i].level %></td>
-									<td><%= ranking.weekly[i].weeklyScore %></td>
-								</tr>
-								<% }%>
-								<% }%>
-							</tbody>
-						</table>
-						<div class="text-right">
-							<small id="updateWeekly"></small><i class="fa fa-clock-o"></i>
-						</div>	
-					</div>
-					<!-- Monthly Leaderboard -->
-					<div class="tab-pane fade in " id="monthly">		
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Rank</th>
-									<th>Challenger</th>
-									<th>Level</th>
-									<th>Score</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% if(ranking.monthly.length > 0 ) { %>
-								<% for(var i=0; i< ranking.monthly.length; i++) { %>
-								<tr class="animated flipInX">
-									<td class="monthly"><%= i+1 %></td>
-									<td><%= ranking.monthly[i].local.pseudo %></td>
-									<td><%= ranking.monthly[i].level %></td>
-									<td><%= ranking.monthly[i].monthlyScore %></td>
-								</tr>
-								<% }%>
-								<% }%>
-							</tbody>
-						</table>
-						<div class="text-right">
-							<small id="updateMonthly"></small><i class="fa fa-clock-o"></i>
-						</div>	
-					</div>
-					<!-- General Leaderboard -->
-					<div class="tab-pane fade in " id="global">		
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Rank</th>
-									<th>Challenger</th>
-									<th>Level</th>
-									<th>Score</th>
-								</tr>
-							</thead>
-							<tbody>
+	<div class="canvas">
+		<div class="container">
+			<div class="row">
+				<div class="tabbable tabs-left col-lg-12 clearfix well">
+					<ul id="myTab1" class="nav nav-tabs nav-justified">
+						<li class="active"><a href="#daily" data-toggle="tab">Daily Ladder</a></li>
+						<li><a href="#weekly" 	data-toggle="tab">Weekly Ladder</a></li>
+						<li><a href="#monthly" 	data-toggle="tab">Monthly Ladder</a></li>
+						<li><a href="#global" 	data-toggle="tab">General Ladder</a></li>
 
-								<% if(ranking.global.length > 0 ) { %>
-								<% for(var i=0; i< ranking.global.length; i++) { %>
-								<tr class="animated flipInX">
-									<td class="global"><%= i+1 %></td>
-									<td><%= ranking.global[i].local.pseudo %></td>
-									<td><%= ranking.global[i].level %></td>
-									<td><%= ranking.global[i].globalScore %></td>
-								</tr>
-								<% }%>
-								<% }%>
-							</tbody>
-						</table>
+					</ul>
+					<div id="leaderboardcontainer" class="tab-content">
+						<!-- daily Leaderboard -->
+						<div class="tab-pane fade active in " id="daily">	
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Score</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% if(ranking.daily.length > 0 ) { %>
+									<% for(var i=0; i< ranking.daily.length; i++) { %>
+									<tr class="animated flipInX">
+										<td class="daily"><%= i+1 %></td>
+										<td><%= ranking.daily[i].local.pseudo %></td>
+										<td><%= ranking.daily[i].level %></td>
+										<td><%= ranking.daily[i].dailyScore %></td>
+									</tr>
+									<% }%>
+									<% }%>
+									
+								</tbody>
+							</table>
+							<div class="text-right">
+								<small id="updateDaily"></small><i class="fa fa-clock-o"></i>
+							</div>	
+						</div>
+						<!-- weekly Leaderboard -->
+						<div class="tab-pane fade in " id="weekly">	
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Score</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% if(ranking.weekly.length > 0 ) { %>
+									<% for(var i=0; i< ranking.weekly.length; i++) { %>
+									<tr class="animated flipInX">
+										<td class="weekly"><%= i+1 %></td>
+										<td><%= ranking.weekly[i].local.pseudo %></td>
+										<td><%= ranking.weekly[i].level %></td>
+										<td><%= ranking.weekly[i].weeklyScore %></td>
+									</tr>
+									<% }%>
+									<% }%>
+								</tbody>
+							</table>
+							<div class="text-right">
+								<small id="updateWeekly"></small><i class="fa fa-clock-o"></i>
+							</div>	
+						</div>
+						<!-- Monthly Leaderboard -->
+						<div class="tab-pane fade in " id="monthly">		
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Score</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% if(ranking.monthly.length > 0 ) { %>
+									<% for(var i=0; i< ranking.monthly.length; i++) { %>
+									<tr class="animated flipInX">
+										<td class="monthly"><%= i+1 %></td>
+										<td><%= ranking.monthly[i].local.pseudo %></td>
+										<td><%= ranking.monthly[i].level %></td>
+										<td><%= ranking.monthly[i].monthlyScore %></td>
+									</tr>
+									<% }%>
+									<% }%>
+								</tbody>
+							</table>
+							<div class="text-right">
+								<small id="updateMonthly"></small><i class="fa fa-clock-o"></i>
+							</div>	
+						</div>
+						<!-- General Leaderboard -->
+						<div class="tab-pane fade in " id="global">		
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Rank</th>
+										<th>Challenger</th>
+										<th>Level</th>
+										<th>Score</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<% if(ranking.global.length > 0 ) { %>
+									<% for(var i=0; i< ranking.global.length; i++) { %>
+									<tr class="animated flipInX">
+										<td class="global"><%= i+1 %></td>
+										<td><%= ranking.global[i].local.pseudo %></td>
+										<td><%= ranking.global[i].level %></td>
+										<td><%= ranking.global[i].globalScore %></td>
+									</tr>
+									<% }%>
+									<% }%>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
+				<div class="col-lg-12 well">
+					
+					<p>
+						Rankings are updated each day, week and month at midnight. Challengers have 24 hours to gather the maximum of bonus points by completing challenge, gathering experience, level uping and sharing on social-networks.
+					</p>	
+				</div>
 			</div>
-			<div class="col-lg-12 well">
-				
-				<p>
-					Rankings are updated each day, week and month at midnight. Challengers have 24 hours to gather the maximum of bonus points by completing challenge, gathering experience, level uping and sharing on social-networks.
-				</p>	
-			</div>
+
 		</div>
+		<% include statics/footers %>
 
-	</div>
-	<% include statics/footers %>
+		<script type="text/javascript">
+			$(function() {
 
-	<script type="text/javascript">
-		$(function() {
+				setInterval(function(){
+					day();
+					week();
+					month();
 
-			setInterval(function(){
-				day();
-				week();
-				month();
+				},1000);
+			});
+			var day = function (){				
+				var d = new Date();
+				d.setHours(24,1,0,0)
+				var converted = moment(d).countdown().toString();
+				$('#updateDaily').text(converted);
+			}
+			var week = function (){				
+				var d = new Date();
 
-			},1000);
-		});
-		var day = function (){				
-			var d = new Date();
-			d.setHours(24,1,0,0)
-			var converted = moment(d).countdown().toString();
-			$('#updateDaily').text(converted);
-		}
-		var week = function (){				
-			var d = new Date();
+				var day = d.getDay()
+				, diff = d.getDate() - day + (day == 0 ? -6:1); 
+				var w = new Date(d.setDate(diff))
+				
+				var converted = moment(w).countdown().toString();
+				$('#updateWeekly').text(converted);
+			}
+			var month = function (){		
+				var now = new Date();
+				if (now.getMonth() == 11) 
+					var current = new Date(now.getFullYear() + 1, 0, 1);
+				else 
+					var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-			var day = d.getDay()
-			, diff = d.getDate() - day + (day == 0 ? -6:1); 
-			var w = new Date(d.setDate(diff))
-			
-			var converted = moment(w).countdown().toString();
-			$('#updateWeekly').text(converted);
-		}
-		var month = function (){		
-			var now = new Date();
-			if (now.getMonth() == 11) 
-				var current = new Date(now.getFullYear() + 1, 0, 1);
-			else 
-				var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
-			var converted = moment(current).countdown().toString();
-			$('#updateMonthly').text(converted);
-		}
-	</script>
-</body>
-</html>
+				var converted = moment(current).countdown().toString();
+				$('#updateMonthly').text(converted);
+			}
+		</script>
+	</body>
+	</html>

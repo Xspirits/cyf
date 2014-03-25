@@ -25,7 +25,8 @@
     "googleapis": "~0.6.1",
     "connect": "~2.14.2",
     "node-schedule": "~0.1.13",
-    "mandrill-api": "~1.0.39"
+    "mandrill-api": "~1.0.39",
+    "identicon": "latest"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

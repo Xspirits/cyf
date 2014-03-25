@@ -95,177 +95,179 @@
 			</div>
 		</div>
 
-		<div class="container">
 
-			<div class="row">
+		<div class="canvas">
+			<div class="container">
 
-				<div class="col-md-6">
-					<h3>Select a challenge
-						<div class="pull-right filter">
-							<input type="search" class="form-control" placeholder="Search a game">
-						</div>					
-					</h3>
-					<div class="row challenge">
-						<% for(var i=0; i< challenges.length; i++) { 
-							isOdd = i%2? 'col-xs-offset-1 col-lg-offset-0' : '';
-							%>
-							<div class="col-lg-6 col-xs-5 <%= isOdd %> imInABox animated flipInX" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
-								<div class="rounded-2 glow-shad grad-blue-main card">
-									<span class="badge"><%= challenges[i].game %></span>
+				<div class="row">
 
-									<h3 class="hidden-xs"><%= challenges[i].title %></h3>
-									<h5 class="visible-xs"><%= challenges[i].title %></h5>
-
-									<p class="hidden-xs"><%= challenges[i].description %></p>
-
-									<hr class="subtle-divider">
-									<i class="fa fa-clock-o"></i>
-									<strong><%= challenges[i].durationH %></strong> Hours
-									<% if (challenges[i].durationD > 0 ) { %> 
-									<strong><%= challenges[i].durationD %></strong> Days
-									<% } %>
-									<span class="pull-right">
-										<i class="fa fa-fire text-danger"></i> <%= challenges[i].value %>
-									</span>
-								</div>
-							</div>
-							<% } %>
-						</div>
-					</div>
 					<div class="col-md-6">
-						<h3>target a friend
+						<h3>Select a challenge
 							<div class="pull-right filter">
-								<input type="search" class="form-control" placeholder="Search a friend">
-							</div>
+								<input type="search" class="form-control" placeholder="Search a game">
+							</div>					
 						</h3>
-						<div class="row friends">
+						<div class="row challenge">
+							<% for(var i=0; i< challenges.length; i++) { 
+								isOdd = i%2? 'col-xs-offset-1 col-lg-offset-0' : '';
+								%>
+								<div class="col-lg-6 col-xs-5 <%= isOdd %> imInABox animated flipInX" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+									<div class="rounded-2 glow-shad grad-blue-main card">
+										<span class="badge"><%= challenges[i].game %></span>
 
-							<% if(userList.length > 0) { %>
-							<% for(var i=0; i< userList.length; i++) { %>
-							<div class="col-lg-3 col-xs-3 col-sm-3 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 boxy rounded-2 animated flipInX" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
-								<div class="flatty">
-									<span class="level"><%= userList[i].idUser.level %></span>
-									<div class="vh-center">
-										<h5 class="label label-white"><%= userList[i].idUser.local.pseudo %></h5>
+										<h3 class="hidden-xs"><%= challenges[i].title %></h3>
+										<h5 class="visible-xs"><%= challenges[i].title %></h5>
+
+										<p class="hidden-xs"><%= challenges[i].description %></p>
+
+										<hr class="subtle-divider">
+										<i class="fa fa-clock-o"></i>
+										<strong><%= challenges[i].durationH %></strong> Hours
+										<% if (challenges[i].durationD > 0 ) { %> 
+										<strong><%= challenges[i].durationD %></strong> Days
+										<% } %>
+										<span class="pull-right">
+											<i class="fa fa-fire text-danger"></i> <%= challenges[i].value %>
+										</span>
 									</div>
+								</div>
+								<% } %>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<h3>target a friend
+								<div class="pull-right filter">
+									<input type="search" class="form-control" placeholder="Search a friend">
+								</div>
+							</h3>
+							<div class="row friends">
+
+								<% if(userList.length > 0) { %>
+								<% for(var i=0; i< userList.length; i++) { %>
+								<div class="col-lg-3 col-xs-3 col-sm-3 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 boxy rounded-2 animated flipInX" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
+									<div class="flatty">
+										<span class="level"><%= userList[i].idUser.level %></span>
+										<div class="vh-center">
+											<h5 class="label label-white"><%= userList[i].idUser.local.pseudo %></h5>
+										</div>
+
+									</div>
+									<span class="identicon" data-size="100" data-hashMe="<%= userList[i].idUser.idCool %>"></span>
 
 								</div>
-								<span class="identicon" data-size="100" data-hashMe="<%= userList[i].idUser.idCool %>"></span>
-
+								<% } %>
+								<% } %>
 							</div>
-							<% } %>
-							<% } %>
 						</div>
+
+						<hr>
 					</div>
 
-					<hr>
 				</div>
 
-			</div>
+				<% include statics/footers %>
 
-			<% include statics/footers %>
+				<script type="text/javascript">
 
-			<script type="text/javascript">
+					$(function() {
+						var cStartDate, cEndDate;
 
-				$(function() {
-					var cStartDate, cEndDate;
+						$('#DTPKStart')
+						.datetimepicker({
+							format: "MM dd yyyy, hh:ii",
+							autoclose: true,
+							startDate : new Date,
+							todayHighlight: true,
+							linkField: "DTPKStart_formated",
+							linkFormat: "yyyy-mm-ddThh:ii:ss",
+							pickerPosition: 'bottom-left'
+						});
 
-					$('#DTPKStart')
-					.datetimepicker({
-						format: "MM dd yyyy, hh:ii",
-						autoclose: true,
-						startDate : new Date,
-						todayHighlight: true,
-						linkField: "DTPKStart_formated",
-						linkFormat: "yyyy-mm-ddThh:ii:ss",
-						pickerPosition: 'bottom-left'
-					});
+						$('.imInABox,.friends .boxy').click(function(e) {
+							e.preventDefault();
+							$(this).siblings().removeClass('active');
+							$(this).toggleClass('active');
 
-					$('.imInABox,.friends .boxy').click(function(e) {
-						e.preventDefault();
-						$(this).siblings().removeClass('active');
-						$(this).toggleClass('active');
+							upFriends();
+						})
 
-						upFriends();
-					})
+						$('#timeConfirm').click( function(e) {
+							e.preventDefault();
 
-					$('#timeConfirm').click( function(e) {
-						e.preventDefault();
+							if($('#DTPKStart').find("input").val()) {
+								$('#timeModal').modal('hide');
+								$('#timeModal').on('hidden.bs.modal', function (e) {
+									e.preventDefault();
 
-						if($('#DTPKStart').find("input").val()) {
-							$('#timeModal').modal('hide');
-							$('#timeModal').on('hidden.bs.modal', function (e) {
-								e.preventDefault();
-
-								var sDate = $('#DTPKStart').find("input").val();
-								console.log(sDate);
+									var sDate = $('#DTPKStart').find("input").val();
+									console.log(sDate);
 							// console.log(eDate);
 							populateModal(sDate,function() {
 								$('#lastStep').modal('show');
 							});
 						});
 
-						} else {
-							$('#DTPKStart').addClass('has-warning').append('<i class="fa fa-warning form-control-feedback" style="float: left;font-size: 2em;margin: 0 15px;"></i>');
+							} else {
+								$('#DTPKStart').addClass('has-warning').append('<i class="fa fa-warning form-control-feedback" style="float: left;font-size: 2em;margin: 0 15px;"></i>');
 
-						}
+							}
 
-					});
+						});
 
-					$("#TOR").click( function(e){
-						e.preventDefault();
+						$("#TOR").click( function(e){
+							e.preventDefault();
 
-						var cBox = $('.imInABox.active'),
-						uBox = $('.friends .boxy.active');
+							var cBox = $('.imInABox.active'),
+							uBox = $('.friends .boxy.active');
 
-						var challengeId = cBox.attr('id')
-						, challenged      = uBox.attr('id')
-						, challengedIdCool      = uBox.attr('data-idCool')
-						, challengedPseudo      = uBox.attr('data-pseudo')
-						, launchAt = $('#DTPKStart_formated').val();
+							var challengeId = cBox.attr('id')
+							, challenged      = uBox.attr('id')
+							, challengedIdCool      = uBox.attr('data-idCool')
+							, challengedPseudo      = uBox.attr('data-pseudo')
+							, launchAt = $('#DTPKStart_formated').val();
 
-						if(moment(launchAt).isAfter()) {
+							if(moment(launchAt).isAfter()) {
 
-							var target = {};
-							target.idChallenge = challengeId;
-							target.idChallenged = challenged;
-							target.deadLine = {
-								h:cBox.attr('data-durationH'),
-								d:cBox.attr('data-durationD')
-							};
-							target.launchDate = launchAt;
+								var target = {};
+								target.idChallenge = challengeId;
+								target.idChallenged = challenged;
+								target.deadLine = {
+									h:cBox.attr('data-durationH'),
+									d:cBox.attr('data-durationD')
+								};
+								target.launchDate = launchAt;
 
-							console.log(target);
+								console.log(target);
 
-							$.ajax({
-								type: 'POST',
-								data: JSON.stringify(target),
-								contentType: 'application/json',
-								url: './launchChallenge',						
-								success: function(data) {
-									console.log('success');
+								$.ajax({
+									type: 'POST',
+									data: JSON.stringify(target),
+									contentType: 'application/json',
+									url: './launchChallenge',						
+									success: function(data) {
+										console.log('success');
 
-									$('#lastStep').modal('hide');
-									$('#lastStep').on('hidden.bs.modal', function (e) {
-										e.preventDefault();
+										$('#lastStep').modal('hide');
+										$('#lastStep').on('hidden.bs.modal', function (e) {
+											e.preventDefault();
 
-										$('#successModal').modal('show');
+											$('#successModal').modal('show');
 
-										socket.emit('just happened',{
-											icon: 'fa fa-bolt',
-											event: '<a href="/u/<%= currentUser.idCool %>" title="youhou"><%= currentUser.local.pseudo %></a> challenged <a href="/u/'+challengedIdCool+'">'+challengedPseudo+'</a>.'
+											socket.emit('just happened',{
+												icon: 'fa fa-bolt',
+												event: '<a href="/u/<%= currentUser.idCool %>" title="youhou"><%= currentUser.local.pseudo %></a> challenged <a href="/u/'+challengedIdCool+'">'+challengedPseudo+'</a>.'
+											});
+
+											window.setTimeout(function(){
+												window.location.href = "./profile";
+											}, 2333);
 										});
-
-										window.setTimeout(function(){
-											window.location.href = "./profile";
-										}, 2333);
-									});
-								}
-							});
-						} else {
-							$('#TOR').text('The challenge cannot start immediatly after your lauched it.')
-						}
-					});
+									}
+								});
+							} else {
+								$('#TOR').text('The challenge cannot start immediatly after your lauched it.')
+							}
+						});
 upFriends();
 });
 

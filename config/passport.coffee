@@ -7,7 +7,7 @@ GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
 # load up the user model & challenge
 User = require("../app/models/user")
 challenge = require("../config/challenge")
-
+grvtr = require('grvtr')
 # load the auth variables
 configAuth = require("./auth") # use this one for testing
 module.exports = (passport, genUID, xp, notifs, mailer) ->
@@ -122,17 +122,27 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             newUser.local.sentRequests = []
             newUser.local.pendingRequests = []
             newUser.local.followers = []
-            newUser.save (err, user) ->
-              throw err  if err
-              # send an email confirmation link
-              mailer.accountConfirm user, (returned) ->
+            grvtr.create "john.doe@example.com",
+              size: 150 # 1 - 2048px
+              defaultImage: "identicon" # 'identicon', 'monsterid', 'wavatar', 'retro', 'blank'
+              rating: "g" # 'pg', 'r', 'x'
+            , (gravatarUrl) ->
+              console.log gravatarUrl
+              newUser.icon = gravatarUrl
+              newUser.save (err, user) ->
+                 throw err  if err
+                 # send an email confirmation link
+                 mailer.accountConfirm user, (returned) ->
 
-                # Instantiate the sessions for socket.io 
-                # req.session.user = user
-                # req.session.isLogged = true
-                # req.session.newUser = true
-                xp.xpReward user, "user.register"
-                done null, newUser
+                   # Instantiate the sessions for socket.io 
+                   # req.session.user = user
+                   # req.session.isLogged = true
+                   # req.session.newUser = true
+                   xp.xpReward user, "user.register"
+                   done null, newUser
+
+              return
+
 
           return
 

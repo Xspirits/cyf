@@ -7,6 +7,7 @@ userSchema = mongoose.Schema(
   verfiy_hash:
     type: String
     required: true
+  icon : String
   verified:
     type: Boolean
     default: false

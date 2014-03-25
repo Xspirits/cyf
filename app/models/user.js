@@ -11,6 +11,7 @@
       type: String,
       required: true
     },
+    icon: String,
     verified: {
       type: Boolean,
       "default": false
