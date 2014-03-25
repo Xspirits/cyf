@@ -94,7 +94,7 @@
               newUser.local.sentRequests = [];
               newUser.local.pendingRequests = [];
               newUser.local.followers = [];
-              grvtr.create("john.doe@example.com", {
+              grvtr.create(email, {
                 size: 150,
                 defaultImage: "identicon",
                 rating: "g"
@@ -106,6 +106,11 @@
                     throw err;
                   }
                   return mailer.accountConfirm(user, function(returned) {
+                    if (!configAuth.app_config.email_confirm) {
+                      req.session.user = user;
+                      req.session.isLogged = true;
+                      req.session.newUser = true;
+                    }
                     xp.xpReward(user, "user.register");
                     return done(null, newUser);
                   });

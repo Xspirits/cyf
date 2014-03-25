@@ -697,6 +697,10 @@ hr.subtle-divider.hr-white {
   bottom: 5px;
   border-radius: 5px;
 }
+#headNav .profile-icon {
+  max-height: 35px;
+  max-width: 35px;
+}
 .container {
   background: rgb(241,241,241);
   color: rgb(21, 34,45);

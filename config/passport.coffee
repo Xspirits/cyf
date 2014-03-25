@@ -122,7 +122,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             newUser.local.sentRequests = []
             newUser.local.pendingRequests = []
             newUser.local.followers = []
-            grvtr.create "john.doe@example.com",
+            grvtr.create email,
               size: 150 # 1 - 2048px
               defaultImage: "identicon" # 'identicon', 'monsterid', 'wavatar', 'retro', 'blank'
               rating: "g" # 'pg', 'r', 'x'
@@ -135,9 +135,10 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
                  mailer.accountConfirm user, (returned) ->
 
                    # Instantiate the sessions for socket.io 
-                   # req.session.user = user
-                   # req.session.isLogged = true
-                   # req.session.newUser = true
+                   unless configAuth.app_config.email_confirm
+                    req.session.user = user
+                    req.session.isLogged = true
+                    req.session.newUser = true
                    xp.xpReward user, "user.register"
                    done null, newUser
 
