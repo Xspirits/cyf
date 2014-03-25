@@ -15,7 +15,7 @@
 		*/
 		//Socket 
 		//http://localhost:8080/leaderboard
-		socket = io.connect('http://localhost');
+		socket = io.connect('http://challenge-friends.herokuapp.com');
 		<% if (currentUser) { %>
 
 			socket.on('globalevent', function (data) {
