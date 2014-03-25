@@ -2,7 +2,7 @@
 (function() {
   module.exports = {
     app_config: {
-      email_confirm: false
+      email_confirm: true
     },
     cyf: {
       domain: "http://challenge-friends.herokuapp.com"
