@@ -43,7 +43,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
     passwordField: "password"
     passReqToCallback: true # allows us to pass in the req from our route (lets us check if a user is logged in or not)
   , (req, email, password, done) ->
-    
+    console.log 'bouya'
     # asynchronous
     process.nextTick ->
       User.findOne
@@ -51,18 +51,19 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
       , (err, userfound) ->
         
         # if there are any errors, return the error
-        return done(err)  if err
+        return done(err) if err
         
         # if no user is found, return the message
         return done(null, false, req.flash("loginMessage", "No user found."))  unless userfound
-        unless userfound.validPassword(password)
-          done null, false, req.flash("loginMessage", "Oops! Wrong password.")
-        if configAuth.app_config.email_confirm
-          unless userfound.verified
-            done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
-        
+        if !userfound.validPassword password
+          return done null, false, req.flash("loginMessage", "Oops! Wrong password.")
+
         # all is well, return user
         else
+          if configAuth.app_config.email_confirm          
+            unless userfound.verified
+              return done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
+          console.log 'logged'
           req.session.isLogged = true
           req.session.user = userfound
           userfound.isOnline = true
@@ -70,12 +71,6 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             throw err  if err
             notifs.login userfound
             done null, userfound
-
-        return
-
-      return
-
-    return
   )
   
   # =========================================================================
@@ -116,6 +111,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
               0
             ]
             newUser.verfiy_hash = uIDHash
+            newUser.verified = true if !configAuth.app_config.email_confirm
             newUser.local.email = email
             newUser.local.password = newUser.generateHash(password)
             newUser.local.friends = []

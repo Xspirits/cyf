@@ -3,6 +3,7 @@ isLoggedIn = (req, res, next) ->
   return next()  if req.isAuthenticated()
   res.redirect "/"
   return
+  
 module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img) ->
 
   # show the home page (will also have our login links)
@@ -10,12 +11,9 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     if req.isAuthenticated()
       res.render "index_logged.ejs",
         currentUser: req.user
-
     else
       res.render "index.ejs",
         currentUser: false
-
-    return
 
   app.get "/eval/:hash", (req, res) ->
     hash = req.params.hash
@@ -24,10 +22,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         res.redirect "/login"
       else
         res.redirect "/"
-      return
-
-    return
-
 
   # LOGOUT ==============================
   app.get "/logout", isLoggedIn, (req, res) ->
@@ -39,24 +33,15 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         req.session.isLogged = false
         req.logout()
         res.redirect "/"
-      return
-
-    return
-
 
   # PROFILE SECTION =========================
   app.get "/profile", isLoggedIn, (req, res) ->
     res.render "profile.ejs",
       currentUser: req.user
 
-    return
-
   app.get "/settings", isLoggedIn, (req, res) ->
     res.render "setting.ejs",
       currentUser: req.user
-
-    return
-
 
   # CHALLENGES SECTION =========================
   app.get "/request", isLoggedIn, (req, res) ->
@@ -74,13 +59,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
           currentUser: (if (req.isAuthenticated()) then req.user else false)
           challenges: obj
 
-        return
-
-      return
-
-    return
-
-
   # =============================================================================
   # TRIBUNAL   ==================================================================
   # =============================================================================
@@ -94,17 +72,10 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: req.user
         cases: data
 
-      return
-
-    return
-
-
   # CASE DETAIL SECTION =========================
   # @TODO
   app.get "/t/:id", isLoggedIn, (req, res) ->
     id = req.params.id
-    return
-
 
   # =============================================================================
   # ONGOINGS   ==================================================================
@@ -120,8 +91,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: (if (req.isAuthenticated()) then req.user else false)
         user: req.user
         ongoing: data
-      return
-
 
   # USER'S ONGOINGS SECTION =========================
   app.get "/ongoing", isLoggedIn, (req, res) ->
@@ -161,7 +130,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[i].progress < 100
           ongoingChall.push data[i]
           console.log "parsed ongoing : " + data[i]._id
-        return
 
       res.render "ongoing.ejs",
         currentUser: req.user
@@ -169,8 +137,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         upChallenges: upcomingChall
         onChallenges: ongoingChall
         endChallenges: endedChall
-
-      return
 
   # =============================================================================
   # CHALLENGES ==================================================================
@@ -183,11 +149,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: (if (req.isAuthenticated()) then req.user else false)
         challenges: list
 
-      return
-
-    return
-
-
   # CHALLENGE DETAILS SECTION =========================
   app.get "/c/:id", (req, res) ->
     cId = req.params.id
@@ -196,18 +157,12 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: (if (req.isAuthenticated()) then req.user else false)
         challenge: data
 
-      return
-
-    return
-
 
   # CREATE CHALLENGE SECTION =========================
   app.get "/newChallenge", isLoggedIn, (req, res) ->
     res.render "newChallenge.ejs",
       currentUser: req.user
       challenge: false
-
-    return
 
   app.post "/newChallenge", isLoggedIn, (req, res) ->
     challenge.create req, (done) ->
@@ -217,10 +172,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       res.render "newChallenge.ejs",
         currentUser: req.user
         challenge: done
-
-      return
-
-    return
 
   app.post "/validateChallenge", isLoggedIn, (req, res) ->
     data =
@@ -253,8 +204,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
               text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>."
               sio.glob "fa fa-twitter", text
               ladder.actionInc req.user, "twitter"
-              return
-
           
           #Automatically share on facebook
           if done._idChallenged.share.facebook is true and done._idChallenged.facebook.token
@@ -266,23 +215,16 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
               text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on facebook."
               sio.glob "fa fa-facebook", text
               ladder.actionInc req.user, "facebook"
-              return
 
           
           #Ask the challenger and challenged to rate the challenge.
           users.askRate obj, (done) ->
             res.send done
-            return
 
         else
           res.send true
-        return
-
-    
-    # 
     else
       res.send false, "not a boolean"
-    return
 
 
   # USER CHALLENGE TO BE RATED (ask opinion) ==================
@@ -292,10 +234,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: req.user
         challenge: data
 
-      return
-
-    return
-
 
   # PROFILE SECTION - USER Challenges =========================
   app.get "/myChallenges", isLoggedIn, (req, res) ->
@@ -303,11 +241,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       res.render "myChallenges.ejs",
         currentUser: req.user
         challenges: data
-
-      return
-
-    return
-
 
   # DELETE CHALLENGE SECTION =========================
   app.get "/removeChallenge/:id", isLoggedIn, (req, res) ->
@@ -331,12 +264,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
           userList: thisUser.friends
           challenges: challenges
 
-        return
-
-      return
-
-    return
-
   app.post "/launchChallenge", isLoggedIn, (req, res) ->
     data =
       from: req.user._id
@@ -348,10 +275,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     notifs.launchChall data.from, data.idChallenged
     challenge.launch data, (result) ->
       res.send true
-      return
-
-    return
-
 
   # @TODO
 
@@ -372,10 +295,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
           console.log data
           challenge.requestValidation data, (result) ->
             res.send result
-            return
-
-          return
-
       else
         data =
           idUser: req.user._id
@@ -387,12 +306,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         console.log data
         challenge.requestValidation data, (result) ->
           res.send result
-          return
-
-      return
-
-    return
-
 
   # =============================================================================
   # USERS PAGES (List and profiles===============================================
@@ -405,11 +318,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: (if (req.isAuthenticated()) then req.user else false)
         users: returned
 
-      return
-
-    return
-
-
   # leader board
   app.get "/leaderboard", (req, res) ->
     users.getLeaderboards "score", (returned) ->
@@ -417,22 +325,12 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         currentUser: (if (req.isAuthenticated()) then req.user else false)
         ranking: returned
 
-      return
-
-    return
-
   app.get "/u/:id", (req, res) ->
     users.getUser req.params.id, (returned) ->
       console.log returned
       res.render "userDetails.ejs",
         currentUser: (if (req.isAuthenticated()) then req.user else false)
         user: returned
-
-      return
-
-    return
-
-
   # =============================================================================
   # AJAX CALLS ==================================================================
   # =============================================================================
@@ -444,17 +342,11 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       res.send returned.data,
         "Content-Type": "application/json"
       , returned.go
-      return
-
-    return
 
   app.get "/unlink/game_lol", isLoggedIn, (req, res) ->
     users.unlinkLol req.user._id, (result) ->
       console.log result
       res.redirect "/settings"
-      return
-
-    return
 
   app.post "/linkLol", isLoggedIn, (req, res) ->
     obj =
@@ -469,9 +361,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         res.send true
       else
         res.send false
-      return
-
-    return
 
   app.post "/updateSettings", isLoggedIn, (req, res) ->
     obj =
@@ -481,22 +370,17 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
     users.updateSettings obj, (result) ->
       res.send true
-      return
-
-    return
 
   app.post "/markNotifRead", isLoggedIn, (req, res) ->
     obj =
       idUser: req.user._id
       del: req.body.del
       idNotif: req.body.id
+    console.log 'markNotifRead'
 
     notifs.markRead obj, (result) ->
       console.log result
       res.send true
-      return
-
-    return
 
 #TODO
 # idCool of the Ongoing
@@ -618,10 +502,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
     challenge.sendTribunal obj, (result) ->
       res.send true
-      return
-
-    return
-
   app.post "/rateChallenges", isLoggedIn, (req, res) ->
     obj =
       id: req.body.id
@@ -634,9 +514,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       xp.xpReward req.user, "challenge.rate"
       notifs.ratedChall data
       res.send true
-      return
-
-    return
 
   app.post "/voteCase", isLoggedIn, (req, res) ->
     obj =
@@ -666,11 +543,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
         else
           res.send true
-        return
-
-      return
-
-    return
 
   app.post "/askFriend", isLoggedIn, (req, res) ->
     idFriend = req.body.id
@@ -690,9 +562,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     notifs.askFriend req.user, obj.to
     users.askFriend obj, (result) ->
       res.send true
-      return
-
-    return
 
   app.post "/confirmFriend", isLoggedIn, (req, res) ->
     idFriend = req.body.id
@@ -712,9 +581,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       notifs.nowFriends result
       sio.glob "fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!"
       res.send true
-      return
-
-    return
 
   app.post "/cancelFriend", isLoggedIn, (req, res) ->
     idFriend = req.body.id
@@ -730,9 +596,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
     relations.cancelRelation obj.from, obj.to, (result) ->
       res.send true
-      return
-
-    return
 
   app.post "/denyFriend", isLoggedIn, (req, res) ->
     idFriend = req.body.id
@@ -748,9 +611,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
     relations.denyRelation obj.from, obj.to, (result) ->
       res.send true
-      return
-
-    return
 
   app.post "/acceptChallenge", isLoggedIn, (req, res) ->
     obj =
@@ -766,9 +626,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       ioText += result._idChallenger.idCool + " title=\"" + result._idChallenger.local.pseudo + "\">" + result._idChallenger.local.pseudo + "</a>."
       sio.glob "fa fa-gamepad", ioText
       res.send true
-      return
-
-    return
 
   app.post "/denyChallenge", isLoggedIn, (req, res) ->
     obj =
@@ -780,15 +637,10 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         res.send true
       else
         console.log result
-      return
-
-    return
 
   app.get "/login", (req, res) ->
     res.render "login.ejs",
       message: req.flash("loginMessage")
-
-    return
 
   app.post "/login", passport.authenticate("local-login",
     successRedirect: "/profile"
@@ -800,8 +652,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     res.render "signup.ejs",
       waitingConfirm: nowConfirm
       message: ""
-
-    return
 
   app.post "/signup", passport.authenticate("local-signup",
     successRedirect: "/signup/great"
@@ -836,8 +686,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
   app.get "/connect/local", (req, res) ->
     res.render "connect-local.ejs",
       message: req.flash("loginMessage")
-
-    return
 
   app.post "/connect/local", passport.authenticate("local-signup",
     successRedirect: "/profile"
@@ -878,35 +726,21 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     user.local.pseudo = `undefined`
     user.save (err) ->
       res.redirect "/profile"
-      return
-
-    return
 
   app.get "/unlink/facebook", (req, res) ->
     user = req.user
     user.facebook.token = `undefined`
     user.save (err) ->
       res.redirect "/profile"
-      return
-
-    return
 
   app.get "/unlink/twitter", (req, res) ->
     user = req.user
     user.twitter.token = `undefined`
     user.save (err) ->
       res.redirect "/profile"
-      return
-
-    return
 
   app.get "/unlink/google", (req, res) ->
     user = req.user
     user.google.token = `undefined`
     user.save (err) ->
       res.redirect "/profile"
-      return
-
-    return
-
-  return

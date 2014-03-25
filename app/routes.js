@@ -12,11 +12,11 @@
   module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img) {
     app.get("/", function(req, res) {
       if (req.isAuthenticated()) {
-        res.render("index_logged.ejs", {
+        return res.render("index_logged.ejs", {
           currentUser: req.user
         });
       } else {
-        res.render("index.ejs", {
+        return res.render("index.ejs", {
           currentUser: false
         });
       }
@@ -24,45 +24,45 @@
     app.get("/eval/:hash", function(req, res) {
       var hash;
       hash = req.params.hash;
-      users.validateEmail(hash, function(result) {
+      return users.validateEmail(hash, function(result) {
         if (result) {
-          res.redirect("/login");
+          return res.redirect("/login");
         } else {
-          res.redirect("/");
+          return res.redirect("/");
         }
       });
     });
     app.get("/logout", isLoggedIn, function(req, res) {
       notifs.logout(req.user);
       sio.glob("glyphicon glyphicon-log-out", req.user.local.pseudo + " disconnected");
-      users.setOffline(req.user, function(result) {
+      return users.setOffline(req.user, function(result) {
         if (result) {
           req.session.notifLog = false;
           req.session.isLogged = false;
           req.logout();
-          res.redirect("/");
+          return res.redirect("/");
         }
       });
     });
     app.get("/profile", isLoggedIn, function(req, res) {
-      res.render("profile.ejs", {
+      return res.render("profile.ejs", {
         currentUser: req.user
       });
     });
     app.get("/settings", isLoggedIn, function(req, res) {
-      res.render("setting.ejs", {
+      return res.render("setting.ejs", {
         currentUser: req.user
       });
     });
     app.get("/request", isLoggedIn, function(req, res) {
-      challenge.challengerRequests(req.user._id, function(dataChallenger) {
-        challenge.challengedRequests(req.user._id, function(dataChallenged) {
+      return challenge.challengerRequests(req.user._id, function(dataChallenger) {
+        return challenge.challengedRequests(req.user._id, function(dataChallenged) {
           var obj;
           obj = {
             sent: dataChallenger,
             request: dataChallenged
           };
-          res.render("request.ejs", {
+          return res.render("request.ejs", {
             currentUser: (req.isAuthenticated() ? req.user : false),
             challenges: obj
           });
@@ -70,8 +70,8 @@
       });
     });
     app.get("/tribunal", isLoggedIn, function(req, res) {
-      challenge.userWaitingCases(req.user, function(data) {
-        res.render("tribunal.ejs", {
+      return challenge.userWaitingCases(req.user, function(data) {
+        return res.render("tribunal.ejs", {
           currentUser: req.user,
           cases: data
         });
@@ -79,13 +79,13 @@
     });
     app.get("/t/:id", isLoggedIn, function(req, res) {
       var id;
-      id = req.params.id;
+      return id = req.params.id;
     });
     app.get("/o/:id", function(req, res) {
       var id;
       id = req.params.id;
       return challenge.ongoingDetails(id, function(data) {
-        res.render("ongoingDetails.ejs", {
+        return res.render("ongoingDetails.ejs", {
           currentUser: (req.isAuthenticated() ? req.user : false),
           user: req.user,
           ongoing: data
@@ -109,19 +109,19 @@
             console.log(moment(cEnd).isSame() || moment(cEnd).isBefore());
             console.log(data[i].idCool);
             challenge.crossedDeadline(data[i]._id);
-            endedChall.push(data[i]);
+            return endedChall.push(data[i]);
           } else if (data[i].waitingConfirm === true && data[i].progress < 100) {
             reqValidation.push(data[i]);
-            console.log("parsed reqValidation : " + data[i].waitingConfirm);
+            return console.log("parsed reqValidation : " + data[i].waitingConfirm);
           } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[i].progress < 100) {
             upcomingChall.push(data[i]);
-            console.log("parsed upcoming : " + data[i]._id);
+            return console.log("parsed upcoming : " + data[i]._id);
           } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[i].progress < 100) {
             ongoingChall.push(data[i]);
-            console.log("parsed ongoing : " + data[i]._id);
+            return console.log("parsed ongoing : " + data[i]._id);
           }
         });
-        res.render("ongoing.ejs", {
+        return res.render("ongoing.ejs", {
           currentUser: req.user,
           toValidate: reqValidation,
           upChallenges: upcomingChall,
@@ -131,8 +131,8 @@
       });
     });
     app.get("/challenges", function(req, res) {
-      challenge.getList(function(list) {
-        res.render("challenges.ejs", {
+      return challenge.getList(function(list) {
+        return res.render("challenges.ejs", {
           currentUser: (req.isAuthenticated() ? req.user : false),
           challenges: list
         });
@@ -141,25 +141,25 @@
     app.get("/c/:id", function(req, res) {
       var cId;
       cId = req.params.id;
-      challenge.getChallenge(cId, function(data) {
-        res.render("challengeDetails.ejs", {
+      return challenge.getChallenge(cId, function(data) {
+        return res.render("challengeDetails.ejs", {
           currentUser: (req.isAuthenticated() ? req.user : false),
           challenge: data
         });
       });
     });
     app.get("/newChallenge", isLoggedIn, function(req, res) {
-      res.render("newChallenge.ejs", {
+      return res.render("newChallenge.ejs", {
         currentUser: req.user,
         challenge: false
       });
     });
     app.post("/newChallenge", isLoggedIn, function(req, res) {
-      challenge.create(req, function(done) {
+      return challenge.create(req, function(done) {
         notifs.createdChallenge(req.user, done.idCool);
         xp.xpReward(req.user, "challenge.create");
         sio.glob("fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>.");
-        res.render("newChallenge.ejs", {
+        return res.render("newChallenge.ejs", {
           currentUser: req.user,
           challenge: done
         });
@@ -172,7 +172,7 @@
         pass: req.body.pass
       };
       if (typeof data.pass === "boolean" || data.pass instanceof Boolean) {
-        challenge.validateOngoing(data, function(done) {
+        return challenge.validateOngoing(data, function(done) {
           var ioText, message, obj, twitt;
           if (data.pass === true) {
             obj = {
@@ -191,7 +191,7 @@
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>.";
                 sio.glob("fa fa-twitter", text);
-                ladder.actionInc(req.user, "twitter");
+                return ladder.actionInc(req.user, "twitter");
               });
             }
             if (done._idChallenged.share.facebook === true && done._idChallenged.facebook.token) {
@@ -203,31 +203,31 @@
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on facebook.";
                 sio.glob("fa fa-facebook", text);
-                ladder.actionInc(req.user, "facebook");
+                return ladder.actionInc(req.user, "facebook");
               });
             }
-            users.askRate(obj, function(done) {
-              res.send(done);
+            return users.askRate(obj, function(done) {
+              return res.send(done);
             });
           } else {
-            res.send(true);
+            return res.send(true);
           }
         });
       } else {
-        res.send(false, "not a boolean");
+        return res.send(false, "not a boolean");
       }
     });
     app.get("/rateChallenges", isLoggedIn, function(req, res) {
-      users.userToRateChallenges(req.user._id, function(data) {
-        res.render("rateChallenge.ejs", {
+      return users.userToRateChallenges(req.user._id, function(data) {
+        return res.render("rateChallenge.ejs", {
           currentUser: req.user,
           challenge: data
         });
       });
     });
     app.get("/myChallenges", isLoggedIn, function(req, res) {
-      challenge.getUserChallenges(req.user._id, function(data) {
-        res.render("myChallenges.ejs", {
+      return challenge.getUserChallenges(req.user._id, function(data) {
+        return res.render("myChallenges.ejs", {
           currentUser: req.user,
           challenges: data
         });
@@ -244,10 +244,10 @@
       });
     });
     app.get("/launchChallenge", isLoggedIn, function(req, res) {
-      challenge.getList(function(challenges) {
-        users.getUser(req.user.idCool, function(thisUser) {
+      return challenge.getList(function(challenges) {
+        return users.getUser(req.user.idCool, function(thisUser) {
           console.log(thisUser.friends);
-          res.render("launchChallenge.ejs", {
+          return res.render("launchChallenge.ejs", {
             currentUser: req.user,
             userList: thisUser.friends,
             challenges: challenges
@@ -265,16 +265,16 @@
         launchDate: req.body.launchDate
       };
       notifs.launchChall(data.from, data.idChallenged);
-      challenge.launch(data, function(result) {
-        res.send(true);
+      return challenge.launch(data, function(result) {
+        return res.send(true);
       });
     });
     app.post("/validationRequest", isLoggedIn, function(req, res) {
-      img.googleUrl(req.body.proofLink1, function(imgUrl1) {
+      return img.googleUrl(req.body.proofLink1, function(imgUrl1) {
         var data;
         console.log("\nuploaded %s to %s", req.body.proofLink1, imgUrl1);
         if (req.body.proofLink2) {
-          img.googleUrl(req.body.proofLink2, function(imgUrl2) {
+          return img.googleUrl(req.body.proofLink2, function(imgUrl2) {
             var data;
             console.log("\nuploaded %s to %s", req.body.proofLink2, imgUrl2);
             data = {
@@ -285,8 +285,8 @@
               confirmComment: req.body.confirmComment
             };
             console.log(data);
-            challenge.requestValidation(data, function(result) {
-              res.send(result);
+            return challenge.requestValidation(data, function(result) {
+              return res.send(result);
             });
           });
         } else {
@@ -298,32 +298,32 @@
             confirmComment: req.body.confirmComment
           };
           console.log(data);
-          challenge.requestValidation(data, function(result) {
-            res.send(result);
+          return challenge.requestValidation(data, function(result) {
+            return res.send(result);
           });
         }
       });
     });
     app.get("/users", function(req, res) {
-      users.getUserList(function(returned) {
-        res.render("userList.ejs", {
+      return users.getUserList(function(returned) {
+        return res.render("userList.ejs", {
           currentUser: (req.isAuthenticated() ? req.user : false),
           users: returned
         });
       });
     });
     app.get("/leaderboard", function(req, res) {
-      users.getLeaderboards("score", function(returned) {
-        res.render("leaderBoard.ejs", {
+      return users.getLeaderboards("score", function(returned) {
+        return res.render("leaderBoard.ejs", {
           currentUser: (req.isAuthenticated() ? req.user : false),
           ranking: returned
         });
       });
     });
     app.get("/u/:id", function(req, res) {
-      users.getUser(req.params.id, function(returned) {
+      return users.getUser(req.params.id, function(returned) {
         console.log(returned);
-        res.render("userDetails.ejs", {
+        return res.render("userDetails.ejs", {
           currentUser: (req.isAuthenticated() ? req.user : false),
           user: returned
         });
@@ -332,16 +332,16 @@
     app.get("/search_game", function(req, res) {
       var lookFor;
       lookFor = req.query["term"];
-      games.regexFind(lookFor, function(returned) {
-        res.send(returned.data, {
+      return games.regexFind(lookFor, function(returned) {
+        return res.send(returned.data, {
           "Content-Type": "application/json"
         }, returned.go);
       });
     });
     app.get("/unlink/game_lol", isLoggedIn, function(req, res) {
-      users.unlinkLol(req.user._id, function(result) {
+      return users.unlinkLol(req.user._id, function(result) {
         console.log(result);
-        res.redirect("/settings");
+        return res.redirect("/settings");
       });
     });
     app.post("/linkLol", isLoggedIn, function(req, res) {
@@ -351,13 +351,13 @@
         region: req.body.region,
         summonerName: req.body.summonerName
       };
-      users.linkLol(obj, function(result) {
+      return users.linkLol(obj, function(result) {
         if (result === true) {
           xp.xpReward(req.user, "connect.game");
           notifs.linkedGame(req.user, "League of Legend");
-          res.send(true);
+          return res.send(true);
         } else {
-          res.send(false);
+          return res.send(false);
         }
       });
     });
@@ -368,8 +368,8 @@
         target: req.body.target,
         value: req.body.value
       };
-      users.updateSettings(obj, function(result) {
-        res.send(true);
+      return users.updateSettings(obj, function(result) {
+        return res.send(true);
       });
     });
     app.post("/markNotifRead", isLoggedIn, function(req, res) {
@@ -379,9 +379,10 @@
         del: req.body.del,
         idNotif: req.body.id
       };
-      notifs.markRead(obj, function(result) {
+      console.log('markNotifRead');
+      return notifs.markRead(obj, function(result) {
         console.log(result);
-        res.send(true);
+        return res.send(true);
       });
     });
     app.post("/sendTribunal", isLoggedIn, function(req, res) {
@@ -390,8 +391,8 @@
         idUser: req.user._id,
         id: req.body.id
       };
-      challenge.sendTribunal(obj, function(result) {
-        res.send(true);
+      return challenge.sendTribunal(obj, function(result) {
+        return res.send(true);
       });
     });
     app.post("/rateChallenges", isLoggedIn, function(req, res) {
@@ -403,10 +404,10 @@
         quickness: req.body.quickness,
         fun: req.body.fun
       };
-      challenge.rateChallenge(obj, function(data) {
+      return challenge.rateChallenge(obj, function(data) {
         xp.xpReward(req.user, "challenge.rate");
         notifs.ratedChall(data);
-        res.send(true);
+        return res.send(true);
       });
     });
     app.post("/voteCase", isLoggedIn, function(req, res) {
@@ -416,11 +417,11 @@
         idUser: req.user._id,
         answer: req.body.answer
       };
-      challenge.voteCase(obj, function(result) {
+      return challenge.voteCase(obj, function(result) {
         xp.xpReward(req.user, "tribunal.vote");
-        challenge.remainingCaseVotes(obj.id, function(counter) {
+        return challenge.remainingCaseVotes(obj.id, function(counter) {
           if (counter === 0) {
-            challenge.completeCase(obj.id, function(cases) {
+            return challenge.completeCase(obj.id, function(cases) {
               var ioText;
               obj = {
                 id: cases._idChallenge,
@@ -437,7 +438,7 @@
               });
             });
           } else {
-            res.send(true);
+            return res.send(true);
           }
         });
       });
@@ -460,8 +461,8 @@
         }
       };
       notifs.askFriend(req.user, obj.to);
-      users.askFriend(obj, function(result) {
-        res.send(true);
+      return users.askFriend(obj, function(result) {
+        return res.send(true);
       });
     });
     app.post("/confirmFriend", isLoggedIn, function(req, res) {
@@ -478,12 +479,12 @@
           userName: req.user.local.pseudo
         }
       };
-      relations.acceptRelation(obj.from, obj.to, function(result) {
+      return relations.acceptRelation(obj.from, obj.to, function(result) {
         xp.xpReward(result[0], "user.newFriend");
         xp.xpReward(result[1], "user.newFriend");
         notifs.nowFriends(result);
         sio.glob("fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!");
-        res.send(true);
+        return res.send(true);
       });
     });
     app.post("/cancelFriend", isLoggedIn, function(req, res) {
@@ -500,8 +501,8 @@
           userName: nameFriend
         }
       };
-      relations.cancelRelation(obj.from, obj.to, function(result) {
-        res.send(true);
+      return relations.cancelRelation(obj.from, obj.to, function(result) {
+        return res.send(true);
       });
     });
     app.post("/denyFriend", isLoggedIn, function(req, res) {
@@ -518,8 +519,8 @@
           userName: req.user.local.pseudo
         }
       };
-      relations.denyRelation(obj.from, obj.to, function(result) {
-        res.send(true);
+      return relations.denyRelation(obj.from, obj.to, function(result) {
+        return res.send(true);
       });
     });
     app.post("/acceptChallenge", isLoggedIn, function(req, res) {
@@ -528,7 +529,7 @@
         id: req.body.id,
         idUser: req.user._id
       };
-      challenge.accept(obj, function(result) {
+      return challenge.accept(obj, function(result) {
         var ioText;
         xp.xpReward(result._idChallenged, "ongoing.accept");
         xp.xpReward(result._idChallenger, "ongoing.accept");
@@ -537,7 +538,7 @@
         ioText += result._idChallenged.local.pseudo + "</a> accepted <a href=\"/c/" + result._idChallenge.idCool + ">the challenge</a> of <a href=\"/u/";
         ioText += result._idChallenger.idCool + " title=\"" + result._idChallenger.local.pseudo + "\">" + result._idChallenger.local.pseudo + "</a>.";
         sio.glob("fa fa-gamepad", ioText);
-        res.send(true);
+        return res.send(true);
       });
     });
     app.post("/denyChallenge", isLoggedIn, function(req, res) {
@@ -546,16 +547,16 @@
         id: req.body.id,
         idUser: req.user._id
       };
-      challenge.deny(obj, function(result) {
+      return challenge.deny(obj, function(result) {
         if (result) {
-          res.send(true);
+          return res.send(true);
         } else {
-          console.log(result);
+          return console.log(result);
         }
       });
     });
     app.get("/login", function(req, res) {
-      res.render("login.ejs", {
+      return res.render("login.ejs", {
         message: req.flash("loginMessage")
       });
     });
@@ -567,7 +568,7 @@
     app.get("/signup/:done?", function(req, res) {
       var nowConfirm;
       nowConfirm = (req.params.done === "great" ? true : false);
-      res.render("signup.ejs", {
+      return res.render("signup.ejs", {
         waitingConfirm: nowConfirm,
         message: ""
       });
@@ -597,7 +598,7 @@
       failureRedirect: "/"
     }));
     app.get("/connect/local", function(req, res) {
-      res.render("connect-local.ejs", {
+      return res.render("connect-local.ejs", {
         message: req.flash("loginMessage")
       });
     });
@@ -633,32 +634,32 @@
       user.local.email = undefined;
       user.local.password = undefined;
       user.local.pseudo = undefined;
-      user.save(function(err) {
-        res.redirect("/profile");
+      return user.save(function(err) {
+        return res.redirect("/profile");
       });
     });
     app.get("/unlink/facebook", function(req, res) {
       var user;
       user = req.user;
       user.facebook.token = undefined;
-      user.save(function(err) {
-        res.redirect("/profile");
+      return user.save(function(err) {
+        return res.redirect("/profile");
       });
     });
     app.get("/unlink/twitter", function(req, res) {
       var user;
       user = req.user;
       user.twitter.token = undefined;
-      user.save(function(err) {
-        res.redirect("/profile");
+      return user.save(function(err) {
+        return res.redirect("/profile");
       });
     });
-    app.get("/unlink/google", function(req, res) {
+    return app.get("/unlink/google", function(req, res) {
       var user;
       user = req.user;
       user.google.token = undefined;
-      user.save(function(err) {
-        res.redirect("/profile");
+      return user.save(function(err) {
+        return res.redirect("/profile");
       });
     });
   };

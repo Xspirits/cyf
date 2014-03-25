@@ -32,8 +32,9 @@
       passwordField: "password",
       passReqToCallback: true
     }, function(req, email, password, done) {
-      process.nextTick(function() {
-        User.findOne({
+      console.log('bouya');
+      return process.nextTick(function() {
+        return User.findOne({
           "local.email": email
         }, function(err, userfound) {
           if (err) {
@@ -43,17 +44,18 @@
             return done(null, false, req.flash("loginMessage", "No user found."));
           }
           if (!userfound.validPassword(password)) {
-            done(null, false, req.flash("loginMessage", "Oops! Wrong password."));
-          }
-          if (configAuth.app_config.email_confirm) {
-            if (!userfound.verified) {
-              done(null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena."));
-            }
+            return done(null, false, req.flash("loginMessage", "Oops! Wrong password."));
           } else {
+            if (configAuth.app_config.email_confirm) {
+              if (!userfound.verified) {
+                return done(null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena."));
+              }
+            }
+            console.log('logged');
             req.session.isLogged = true;
             req.session.user = userfound;
             userfound.isOnline = true;
-            userfound.save(function(err) {
+            return userfound.save(function(err) {
               if (err) {
                 throw err;
               }
@@ -89,6 +91,9 @@
               newUser.idCool = uID;
               newUser.userRand = [Math.random(), 0];
               newUser.verfiy_hash = uIDHash;
+              if (!configAuth.app_config.email_confirm) {
+                newUser.verified = true;
+              }
               newUser.local.email = email;
               newUser.local.password = newUser.generateHash(password);
               newUser.local.friends = [];
