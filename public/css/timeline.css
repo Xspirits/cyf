@@ -10,7 +10,8 @@
         position: absolute;
         content: " ";
         width: 3px;
-        background-color: #eeeeee;
+        background-color: #728382;
+        border-radius: 5px;
         left: 50%;
         margin-left: -1.5px;
     }

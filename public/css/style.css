@@ -513,8 +513,15 @@ hr.subtle-divider.hr-white {
   color: #27a2c9;
 }
 
-#scorebox .xp {
+.xp {
   font-weight: bold;
+}
+h2 > #scorebox  {
+  margin: 0;
+}
+h2 > #scorebox .level {
+  margin: 0;
+  font-size: 45px;
 }
 /* CONTAINER */
 /* line 158, ../../sass/style.scss */

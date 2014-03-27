@@ -28,26 +28,27 @@
 							</div>
 							<h2 class="col-lg-10 animated bounceInUp">
 								<%= currentUser.local.pseudo %> 
-								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
-							</h2>
-							<div class="col-lg-10">
-								<div class="row">
 
-									<span id="scorebox" class="col-lg-2 animated bounceInRight">
-										<span class="level text-center">
-											<span class="odometer" data-number="<%= currentUser.level %>">
-												0
-											</span>
+								<span id="scorebox">
+									<span class="level text-center">
+										<span class="odometer" data-number="<%= currentUser.level %>">
+											0
 										</span>
 									</span>
+								</span>
+								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
+							</h2>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-2">
+										<div class="xp text-center">
+											<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+										</div>
+									</div>
 									<div class="col-lg-10">
 										<div class="loaderProgress animated flipInY">
 											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-											<div class="xp text-center">
-												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
-											</div>
 										</div>
-
 									</div>
 
 								</div>

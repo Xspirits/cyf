@@ -19,8 +19,16 @@
 									<img src="<%= user.icon %>" class="img-responsive">
 								</span>
 							</div>
-							<h2 class="col-lg-7 animated bounceInUp">
+							<h2 class="col-lg-10 animated bounceInUp">
 								<%= user.local.pseudo %> 
+
+								<span id="scorebox">
+									<span class="level text-center">
+										<span class="odometer" data-number="<%= user.level %>">
+											0
+										</span>
+									</span>
+								</span>
 								<small> <a href="/u/<%= user.idCool %>"> <i class="fa fa-chain"></i> <%= user.idCool %> </a></small>
 								<% if (currentUser) { %>
 
@@ -80,13 +88,6 @@
 								<% } %>
 
 							</h2>
-							<div id="scorebox" class="col-lg-2 animated bounceInRight">
-								<div class="level text-center"><span class="odometer" data-number="<%= user.level %>">0</span>
-								</div>
-								<div class="xp text-center">
-									<%= user.xp %>/<%= (user.xp + user.xpNext) %>
-								</div>
-							</div>
 							<div class="col-lg-12">	
 								<strong>Linked accounts: </strong>
 								<% if (user.local.pseudo) { %>

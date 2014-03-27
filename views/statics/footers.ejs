@@ -6,16 +6,13 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 	$(function() {
-
-/*		var url = window.location.href;
+		var url = window.location.href;
 		var arr = url.split("/");
-		var result = arr[0] + "//" + arr[2];
-		console.log(arr)
-		console.log(result)
-		*/
+		var resultURL = arr[0] + "//" + arr[2];
 		//Socket 
 		//http://localhost:8080/leaderboard
-		socket = io.connect('http://challenge-friends.herokuapp.com');
+		socket = io.connect(resultURL);
+		// socket = io.connect('http://challenge-friends.herokuapp.com');
 		<% if (currentUser) { %>
 
 			socket.on('globalevent', function (data) {
@@ -49,9 +46,8 @@
 		// nprogress Is disabled for now, could be using it in the future though.
 		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
 		var flatten = Math.round((myLevel * .8)*100);
-		console.log(flatten)
-
 		$('#user-xpbar').width(flatten + '%')
+		
 		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
 		// NProgress.set( myLevel );
 
@@ -59,42 +55,47 @@
 		alertify.set({ delay : 12000 });
 		var queue = [];
 		var hasCSuccess = [];
-		queue.push(['<i class="fa fa-plus-square-o"></i> <a href="/u/gv0lhu" title="You gained 55 xp."><strong>You gained 55 xp.</strong></a> <a href="" ></a> by creating an account','5333b3870f0bee640d62e631', false]);
-		queue.push(['<i class="fa fa-plus-square-o"></i> <a href="/u/gv0lhu" title="You gained 55 xp."><strong>You gained 55 xp.</strong></a> <a href="" ></a> by creating an account','5333b3870f0bee640d62e631', false]);
-		<% if (currentUser && currentUser.notifications) { 
 
-			var notif = currentUser.notifications
-			, limit = 9;
+		<% if (currentUser) {
 
-			for (var i = notif.length - 1; i >= 0; i--) {
-				if(notif[i].isSeen == false) { 
-					--limit;
+			if(currentUser.notifications && currentUser.notifications.length > 0) { 
 
-					if(notif[i].type == 'challengeSuccess'){ %>
-						var obj_<%= i %> = {
-							title : '<%= notif[i].to %>',
-							link : '<%= notif[i].link2 %>',
-							message : '<%= notif[i].title %>'
-						}
-						hasCSuccess.push(obj_<%= i %>);
-						<%
-					} %>
+				var notif = currentUser.notifications
+				, limit = 9;
 
-					queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>','<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>]);
+				for (var i = notif.length - 1; i >= 0; i--) {
+					if(notif[i].isSeen == false) { 
+						--limit;
 
-					console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>+ ' queue ' + queue.length);
-					<% 
-				} 
-				if(limit <= 0 || i == notif.length-1){
-					%>
-					notif(queue, queue.length -1); 
-					challengeAlert(); 
-					<%
-					break;
+						if(notif[i].type == 'challengeSuccess'){ %>
+							var obj_<%= i %> = {
+								title : '<%= notif[i].to %>',
+								link : '<%= notif[i].link2 %>',
+								message : '<%= notif[i].title %>'
+							}
+							hasCSuccess.push(obj_<%= i %>);
+							<%
+						} %>
+
+						queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>','<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>, true]);
+						// <%= (notif[i].persist && currentUser.allowDeskNotif) ? true : false %>
+						console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>+ ' queue ' + queue.length);
+						<% 
+						/*if(limit <= 0 || i == notif.length-1){
+							%>
+							console.log('fired')
+							notif(queue, queue.length -1); 
+							challengeAlert(); 
+							<%
+							break;
+						}*/
+					} 
 				}
 			}
 		} %>
 
+		notif(queue, queue.length -1); 
+		challengeAlert(); 
 		readability();
 		readabilityAgo();
 
@@ -141,37 +142,67 @@
 			function notif (queue,i) {     
 
 				setTimeout(function () {  
-					sendNotif(queue[i][0],queue[i][1],queue[i][2])
+					if(queue[i]) {
+						sendNotif(queue[i][0],queue[i][1],queue[i][2])
+						if(queue[i][3]) notify(false, queue[i][0]);
+						if (--i) notif(queue, i);  
 
-					if (--i) notif(queue, i);      			
+					}    			
 				}, 220)
 			}
-			$('#dismissBoxChall').click(function(e){
-				e.preventDefault();
-				$('#gotchaChallenge,#gotaBoxContent')
-				.removeClass('flipInX')
-				.addClass('flipOutX');
+			// If the user accepted having desktop notifs
+			function notify(title, content, image, link) {
+				console.log('notify push')
+				var title = title || 'Challenge Your Friends Notification';
+				var content = content || 'Notification popped';
+				var image = image || resultURL+'/logo_dark.png';
+				var link = link || resultURL;
 
-				$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+				var havePermission = window.webkitNotifications.checkPermission();
+				if (havePermission == 0) {
+    				// 0 is PERMISSION_ALLOWED 
+    				console.log('PERMISSION_ALLOWED')
+    				var notification = window.webkitNotifications.createNotification(
+    					image,
+    					title,
+    					content
+    					);
 
-					$('#gotchaChallenge,#gotaBoxContent')
-					.remove();
-				});
-			})
-			function challengeAlert (){
-				var number = hasCSuccess.length;
+    				notification.onclick = function () {
+    					notification.close();
+    				}
+    				notification.show();
+    			} else {
+    				console.log('PERMISSION_ NOT ALLOWED')
+    				window.webkitNotifications.requestPermission();
+    			}
+    		}  
+    		$('#dismissBoxChall').click(function(e){
+    			e.preventDefault();
+    			$('#gotchaChallenge,#gotaBoxContent')
+    			.removeClass('flipInX')
+    			.addClass('flipOutX');
 
-				if(number == 1 ){
+    			$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
 
-					var template = '<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(38,38,38); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas><div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
-					$(".canvas").prepend(template);
-					popChallengeSuccessbox();
+    				$('#gotchaChallenge,#gotaBoxContent')
+    				.remove();
+    			});
+    		})
+    		function challengeAlert (){
+    			var number = hasCSuccess.length;
 
-					$('#gotchaChallenge').removeClass('hidden').addClass('animated flipInX');
+    			if(number == 1 ){
+
+    				var template = '<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(38,38,38); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas><div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
+    				$(".canvas").prepend(template);
+    				popChallengeSuccessbox();
+
+    				$('#gotchaChallenge').removeClass('hidden').addClass('animated flipInX');
 
 
-				}
-			}
+    			}
+    		}
 			// Launch some fun timers
 			timeFromUp();
 			setInterval(function(){
