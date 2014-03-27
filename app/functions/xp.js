@@ -74,7 +74,6 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           if (xp > bugCheck) {
             flatten = getLevel(xp) - curLvL;
             nextXpReq = getXp(flatten + curLvL) - xp;
-            console.log(xp + " > " + bugCheck + " ==> " + xpNeeded + " inc " + curLvL + " of " + flatten);
             return [flatten, nextXpReq];
           } else {
             return [1, nextXpReq];

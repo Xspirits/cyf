@@ -61,7 +61,7 @@ module.exports = (sio) ->
       if xp > bugCheck
         flatten = getLevel(xp) - curLvL
         nextXpReq = getXp(flatten + curLvL) - xp
-        console.log xp + " > " + bugCheck + " ==> " + xpNeeded + " inc " + curLvL + " of " + flatten
+        # console.log xp + " > " + bugCheck + " ==> " + xpNeeded + " inc " + curLvL + " of " + flatten
         [ # $inc of the difference to make the level up to date
           flatten
           nextXpReq
@@ -79,7 +79,7 @@ module.exports = (sio) ->
 
   xpReward: (user, action, bonus) ->
     userDoubleXp = (if user.xpDouble then true else false)
-    bonus        = ((if bonus then bonus else 0))
+    bonus        = (if bonus then bonus else 0)
     value        = (_.values(_.pick(xpRewardvalue, action))[0] * ((if userDoubleXp then 2 else 1))) + bonus
     uXp          = user.xp
     uLvl         = user.level
