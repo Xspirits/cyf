@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+	<title></title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+	<div class="canvas">
+
+		<div class="container">
+			<div class="row well">
+				<ul class="userlist">
+					<% for(var i=0; i< friends.length; i++) { 
+
+						if(friends[i]._id.toString() != currentUser._id) { %>
+						<li class="media col-md-4">
+							<div class="row">
+
+								<a class="pull-left" href="/u/<%= friends[i].idCool %>">
+									<span class="navbar-text identicon" data-size="27" data-hashMe="<%= friends[i].idCool %>"></span>
+								</a>
+
+								<div class="media-body">
+									<h4 class="media-heading col-lg-12"> 
+										<% if(_friendList.indexOf(friends[i]._id.toString()) > -1) { %>
+										<span class="<%= (friends[i].isOnline === true) ? "online" : "offline" %>"></span>
+										<% } %>
+										<a href="/u/<%= friends[i].idCool %>">
+											<%= friends[i].local.pseudo %>
+										</a>
+									</h4>
+									<div class="col-lg-12">
+										<% if(_friendList.indexOf(friends[i]._id.toString()) > -1) { %>
+										<span class="badge alert-success">Friend</span>
+										<% } %>
+
+
+										<span class="badge alert-warning">level <%= friends[i].level %></span>
+										<% if(_friendList.indexOf(friends[i]._id.toString()) > -1) { %>
+										<span class="badge alert-warning"><%= friends[i].friends.length %> friends</span>		
+										<% } %>	
+									</div>
+								</div>
+							</div>
+						</li>
+						<% } 
+					} %>
+				</ul>
+			</div>
+
+		</div>
+		<% include statics/footers %>
+	</body>
+	</html>

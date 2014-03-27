@@ -15,7 +15,9 @@
 					<div class="well">
 						<div class="row">
 							<div class="col-lg-2" href="#">
-								<span class="navbar-text identicon animated rotateIn" data-size="110" data-hashMe="<%= user.idCool %>"></span>
+								<span class="navbar-text animated rotateIn">
+									<img src="<%= user.icon %>" class="img-responsive">
+								</span>
 							</div>
 							<h2 class="col-lg-7 animated bounceInUp">
 								<%= user.local.pseudo %> 

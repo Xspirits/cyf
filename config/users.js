@@ -65,6 +65,14 @@
         done(false);
       }
     },
+    getFriendList: function(id, done) {
+      return User.findById(id).populate("friends.idUser").exec(function(err, user) {
+        if (err) {
+          throw err;
+        }
+        return done(user);
+      });
+    },
     linkLol: function(data, done) {
       var name, region;
       region = data.region;

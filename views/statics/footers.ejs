@@ -59,59 +59,56 @@
 		alertify.set({ delay : 12000 });
 		var queue = [];
 		var hasCSuccess = [];
-		<% if (currentUser) { 
+		queue.push(['<i class="fa fa-plus-square-o"></i> <a href="/u/gv0lhu" title="You gained 55 xp."><strong>You gained 55 xp.</strong></a> <a href="" ></a> by creating an account','5333b3870f0bee640d62e631', false]);
+		queue.push(['<i class="fa fa-plus-square-o"></i> <a href="/u/gv0lhu" title="You gained 55 xp."><strong>You gained 55 xp.</strong></a> <a href="" ></a> by creating an account','5333b3870f0bee640d62e631', false]);
+		<% if (currentUser && currentUser.notifications) { 
 
-			if (currentUser.notifications) { 
+			var notif = currentUser.notifications
+			, limit = 9;
 
-				var notif = currentUser.notifications
-				, limit = 9;
+			for (var i = notif.length - 1; i >= 0; i--) {
+				if(notif[i].isSeen == false) { 
+					--limit;
 
-				for (var i = notif.length - 1; i >= 0; i--) {
-					if(notif[i].isSeen == false) { 
-						--limit;
-
-						if(notif[i].type == 'challengeSuccess'){ %>
-							var obj_<%= i %> = {
-								title : '<%= notif[i].to %>',
-								link : '<%= notif[i].link2 %>',
-								message : '<%= notif[i].title %>'
-							}
-							hasCSuccess.push(obj_<%= i %>);
-							<%
-						} %>
-
-						queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>','<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>]);
-
-						console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>+ ' queue ' + queue.length);
-						<% 
-					} 
-					if(limit <= 0 || i+1 >= notif.length){
-						%>
-						if(queue.length > 0){
-							console.log('passed')
-							notif(queue); 
-							challengeAlert(); 
+					if(notif[i].type == 'challengeSuccess'){ %>
+						var obj_<%= i %> = {
+							title : '<%= notif[i].to %>',
+							link : '<%= notif[i].link2 %>',
+							message : '<%= notif[i].title %>'
 						}
-						<%}
-						break;
-					}
-				}  
-			} %>
+						hasCSuccess.push(obj_<%= i %>);
+						<%
+					} %>
 
-			readability();
-			readabilityAgo();
+					queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>','<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>]);
 
-			setTimeout(function(){
-				$('.odometer').each(function(){
-					var number = Math.floor(parseInt($(this).attr('data-number')));
+					console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>+ ' queue ' + queue.length);
+					<% 
+				} 
+				if(limit <= 0 || i == notif.length-1){
+					%>
+					notif(queue, queue.length -1); 
+					challengeAlert(); 
+					<%
+					break;
+				}
+			}
+		} %>
 
-					$(this).html(number);
-				});
-			}, 1000);
+		readability();
+		readabilityAgo();
 
-			$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-				animateProgress();
+		setTimeout(function(){
+			$('.odometer').each(function(){
+				var number = Math.floor(parseInt($(this).attr('data-number')));
+
+				$(this).html(number);
 			});
+		}, 1000);
+
+		$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+			animateProgress();
+		});
 
 			// Progress animation
 			function animateProgress() {
@@ -141,13 +138,12 @@
 					});	
 				}
 			}	
-			function notif (i) {          
+			function notif (queue,i) {     
+
 				setTimeout(function () {  
-					console.log(i) 
-					console.log(queue[i]) 
 					sendNotif(queue[i][0],queue[i][1],queue[i][2])
 
-					if (--i) notif(i);      			
+					if (--i) notif(queue, i);      			
 				}, 220)
 			}
 			$('#dismissBoxChall').click(function(e){

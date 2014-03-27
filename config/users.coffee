@@ -41,6 +41,11 @@ module.exports =
       done false
     return
 
+  getFriendList: (id, done) ->
+    User.findById(id).populate("friends.idUser").exec (err, user) ->
+      throw err  if err
+      done user
+
   linkLol: (data, done) ->
     region = data.region
     name = data.summonerName

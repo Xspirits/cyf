@@ -34,7 +34,15 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         req.logout()
         res.redirect "/"
 
-  # PROFILE SECTION =========================
+  # FRIENDS LIST SECTION ======================
+  app.get "/friends", isLoggedIn, (req, res) ->
+    users.getFriendList req.user._id, (fList) ->
+
+      res.render "friendList.ejs",
+        currentUser: req.user
+        friends: fList
+
+  # PROFILE SECTION ===========================
   app.get "/profile", isLoggedIn, (req, res) ->
     res.render "profile.ejs",
       currentUser: req.user
@@ -48,7 +56,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     
     #get Ongoing challenges for the current user
     
-    # @todo : merge this shit
+    # @todo : merge this
     challenge.challengerRequests req.user._id, (dataChallenger) ->
       challenge.challengedRequests req.user._id, (dataChallenged) ->
         obj =

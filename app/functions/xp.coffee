@@ -14,7 +14,7 @@ xpRewardvalue =
   "challenge.create": 110
   "challenge.rate": 60
   "ongoing.accept": 60
-  "ongoing.validate": 200
+  "ongoing.validate": 150
   "ongoing.succeed": 330
   "tribunal.vote": 80
 
@@ -35,8 +35,6 @@ getLevel = (xp) ->
 
 getXp = (level) ->
   process = (((Math.pow(level, 2) + level) / 2) * 100) - (level * 100)
-  
-  # console.log('processing lvl ' + level +' ... Required xp : ' +process);
   process
 
 module.exports = (sio) ->

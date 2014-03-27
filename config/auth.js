@@ -2,7 +2,7 @@
 (function() {
   module.exports = {
     app_config: {
-      email_confirm: true
+      email_confirm: false
     },
     cyf: {
       domain: "http://localhost:8080"

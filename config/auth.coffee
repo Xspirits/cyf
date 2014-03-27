@@ -3,7 +3,7 @@
 # expose our config directly to our application using module.exports
 module.exports =
   app_config:
-    email_confirm: true
+    email_confirm: false
   cyf :
     # domain: "http://challenge-friends.herokuapp.com"
     domain: "http://localhost:8080"

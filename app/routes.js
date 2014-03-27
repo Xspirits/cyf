@@ -44,6 +44,14 @@
         }
       });
     });
+    app.get("/friends", isLoggedIn, function(req, res) {
+      return users.getFriendList(req.user._id, function(fList) {
+        return res.render("friendList.ejs", {
+          currentUser: req.user,
+          friends: fList
+        });
+      });
+    });
     app.get("/profile", isLoggedIn, function(req, res) {
       return res.render("profile.ejs", {
         currentUser: req.user

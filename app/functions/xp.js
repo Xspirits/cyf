@@ -23,7 +23,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
     "challenge.create": 110,
     "challenge.rate": 60,
     "ongoing.accept": 60,
-    "ongoing.validate": 200,
+    "ongoing.validate": 150,
     "ongoing.succeed": 330,
     "tribunal.vote": 80
   };
