@@ -6,72 +6,71 @@
 </head>
 <body>
 
-	<% include statics/navTopFix %>
+	<% include statics/navTop %>
 
 	<div class="canvas">
-		<div class="canvas">
-			<div class="container">
-				<div class="col-sm-6 col-sm-offset-3">
+		<div class="container">
+			<div class="col-sm-6 col-sm-offset-3">
 
-					<h1>Signup</h1>
+				<h1>Signup</h1>
 
-					<% if (message) { %>
-					<div class="alert alert-danger"><%= message %></div>
-					<% } %>
-					<% if (waitingConfirm) { %>
-					<div class="alert alert-success"><strong>One last step!</strong> We sent you an email, please check your inbox and confirm your adress to enter the arena!</div>
-					<% } else { %>
-
+				<% if (message) { %>
+				<div class="alert alert-danger"><%= message %></div>
+				<% } %>
+				<% if (waitingConfirm) { %>
+				<div class="alert alert-success"><strong>One last step!</strong> We sent you an email, please check your inbox and confirm your adress to enter the arena!</div>
+				<% } else { %>
 
 
-					<form action="/signup" id="rockstar" method="post">
-						<div class="form-group">
-							<label>Pseudo</label>
-							<input type="text" class="form-control" name="pseudo">
-						</div>
-						<div class="form-group" id="emailVerify">
-							<label>Email</label>
-							<input type="text" class="form-control" id="txtEmail" name="email">
-						</div>
-						<div class="form-group">
-							<label>Password</label>
-							<input type="password" class="form-control" name="password">
-						</div>
 
-						<button type="submit" id="createAccount" class="btn btn-punch btn-warning btn-lg">Signup</button>
-					</form>
+				<form action="/signup" id="rockstar" method="post">
+					<div class="form-group">
+						<label>Pseudo</label>
+						<input type="text" class="form-control" name="pseudo">
+					</div>
+					<div class="form-group" id="emailVerify">
+						<label>Email</label>
+						<input type="text" class="form-control" id="txtEmail" name="email">
+					</div>
+					<div class="form-group">
+						<label>Password</label>
+						<input type="password" class="form-control" name="password"  placeholder="Password" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,12}$" data-validation-msg="Password must be 2-12 characters" required >
+					</div>
 
-					<hr>
+					<button type="submit" id="createAccount" class="btn btn-punch btn-warning btn-lg">Signup</button>
+				</form>
 
-					<p>Already have an account? <a href="/login">Login</a></p>
-					<p>Or go <a href="/">home</a>.</p>
-					<% } %>
+				<hr>
 
-				</div>
+				<p>Already have an account? <a href="/login">Login</a></p>
+				<p>Or go <a href="/">home</a>.</p>
+				<% } %>
+
 			</div>
 		</div>
-		<% include statics/footersFix %>
+	</div>
+	<% include statics/footersFix %>
 
-		<script type="text/javascript">
+	<script type="text/javascript">
 
-			$(function() {
-				$('#createAccount').click(function(e) {
-					e.preventDefault();
-					var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-					var sEmail = $('#txtEmail').val();
-					if (sEmail == '' || !re.test(sEmail)){
-						console.log(!re.test(sEmail));
+		$(function() {
+			$('#createAccount').click(function(e) {
+				e.preventDefault();
+				var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				var sEmail = $('#txtEmail').val();
+				if (sEmail == '' || !re.test(sEmail)){
+					console.log(!re.test(sEmail));
 
-						$('#emailVerify').addClass('has-error')
-					} 
-					else {
-						$('#rockstar').submit();
-					}
-				});
-
+					$('#emailVerify').addClass('has-error')
+				} 
+				else {
+					$('#rockstar').submit();
+				}
 			});
 
-		</script>
+		});
 
-	</body>
-	</html>
+	</script>
+
+</body>
+</html>

@@ -5,7 +5,8 @@
  var url = window.location.href;var arr = url.split("/");var result = arr[0] + "//" + arr[2];
  src = [
  'main.js',
- 'challengeBox.js',
+ 'completed.js',
+ // 'challengeBox.js',
  'bootstrap.switch.js',
  'nprogress.js',
  'odometer.min.js',

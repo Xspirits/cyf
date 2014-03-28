@@ -2,6 +2,7 @@
 </div> <!-- End .canvas -->
 
 
+<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(18,18,18); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas>
 <script src="/js/init.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
@@ -67,7 +68,7 @@
 					if(notif[i].isSeen == false) { 
 						--limit;
 
-						if(notif[i].type == 'challengeSuccess'){ %>
+						if(notif[i].type == 'challengeSuccess' && !isMobile){ %>
 							var obj_<%= i %> = {
 								title : '<%= notif[i].to %>',
 								link : '<%= notif[i].link2 %>',
@@ -95,6 +96,12 @@
 		} %>
 
 		notif(queue, queue.length -1); 
+		var obj_0 = {
+			title : 'test',
+			link : 'testtest',
+			message : 'testtesttest'
+		}
+		hasCSuccess.push(obj_0);
 		challengeAlert(); 
 		readability();
 		readabilityAgo();
@@ -144,39 +151,10 @@
 				setTimeout(function () {  
 					if(queue[i]) {
 						sendNotif(queue[i][0],queue[i][1],queue[i][2])
-						if(queue[i][3]) notify(false, queue[i][0]);
 						if (--i) notif(queue, i);  
-
 					}    			
 				}, 220)
-			}
-			// If the user accepted having desktop notifs
-			function notify(title, content, image, link) {
-				console.log('notify push')
-				var title = title || 'Challenge Your Friends Notification';
-				var content = content || 'Notification popped';
-				var image = image || resultURL+'/logo_dark.png';
-				var link = link || resultURL;
-
-				var havePermission = window.webkitNotifications.checkPermission();
-				if (havePermission == 0) {
-    				// 0 is PERMISSION_ALLOWED 
-    				console.log('PERMISSION_ALLOWED')
-    				var notification = window.webkitNotifications.createNotification(
-    					image,
-    					title,
-    					content
-    					);
-
-    				notification.onclick = function () {
-    					notification.close();
-    				}
-    				notification.show();
-    			} else {
-    				console.log('PERMISSION_ NOT ALLOWED')
-    				window.webkitNotifications.requestPermission();
-    			}
-    		}  
+			} 
     		$('#dismissBoxChall').click(function(e){
     			e.preventDefault();
     			$('#gotchaChallenge,#gotaBoxContent')
@@ -192,13 +170,13 @@
     		function challengeAlert (){
     			var number = hasCSuccess.length;
 
-    			if(number == 1 ){
+    			if(number >= 1 ){
 
-    				var template = '<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(38,38,38); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas><div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
-    				$(".canvas").prepend(template);
-    				popChallengeSuccessbox();
+    				var template = '<div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
+    				$("#gotchaChallenge").html(template);
+    				// popChallengeSuccessbox();
 
-    				$('#gotchaChallenge').removeClass('hidden').addClass('animated flipInX');
+    				$('#gotchaChallenge').fadeIn('slow').removeClass('hidden');
 
 
     			}

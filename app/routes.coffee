@@ -659,6 +659,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     nowConfirm = (if req.params.done is "great" then true else false)
     res.render "signup.ejs",
       waitingConfirm: nowConfirm
+      currentUser: req.user unless req.user
       message: ""
 
   app.post "/signup", passport.authenticate("local-signup",

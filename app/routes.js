@@ -578,6 +578,7 @@
       nowConfirm = (req.params.done === "great" ? true : false);
       return res.render("signup.ejs", {
         waitingConfirm: nowConfirm,
+        currentUser: !req.user ? req.user : void 0,
         message: ""
       });
     });
