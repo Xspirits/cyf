@@ -16,17 +16,16 @@
 
 				<div class="col-md-12">
 					<h3>Challenges</h3>
-					
-					<div class="pull-right filter">
-						<input type="search" class="form-control" placeholder="Search a challenge">
-					</div>	
-					<p class="well">
+					<div class="well clearfix">
 						The challenges are classed from the most valuated to the least one.
-					</p>
+						<div class="pull-right filter">
+							<input type="search" class="form-control" placeholder="Search a challenge">
+						</div>	
+					</div>
 					<div class="row">
 						<% for(var i=0; i< challenges.length; i++) { %>
-						<div class="col-lg-4 col-xs-12 animated fadeInDown" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
-							<div class="rounded-2 well">
+						<div class="col-lg-4 col-xs-12 challenge-card hover-me animated fadeInDown" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+							<div class="rounded-2">
 								<h4><%= challenges[i].title %></h4>
 								<% for(var z=0; z< challenges[z].completedBy.length; z++) { %>
 								<%= challenges[i].completedBy[z] %>

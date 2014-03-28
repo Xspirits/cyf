@@ -19,7 +19,7 @@
 		<div class="container">
 			<div class="row">
 				<div id="user_header" class="col-lg-8">
-					<div class="well">
+					<div class="">
 						<div class="row">
 							<div class="col-lg-2" href="#">
 								<span class="navbar-text animated rotateIn">
@@ -97,23 +97,23 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 well badggies">
+				<div class="col-lg-4  badggies">
 					<h4>My Badges</h4>
-					<section class="clearfix">
+					<section class="badgeList">
 						
 						<% for (var i = 2; i >= 0; i--) { %>
-						<img src="./img/badges/daily_ranked_1.png" class="img-responsive pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/daily_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/daily_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/friends_10.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/friends_20.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/friends_30.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_1.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_2.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_3.png" class="img-responsive  pull-left" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/daily_ranked_1.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/daily_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/daily_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/friends_10.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/friends_20.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/friends_30.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/weekly_ranked_1.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/weekly_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/weekly_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/monthly_ranked_1.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/monthly_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+						<img src="./img/badges/monthly_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<% } %>
 					</section>
 				</div>
@@ -129,7 +129,7 @@
 						%>
 						<li class="animated <%= isOdd %> ">
 							<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
-							<div class="timeline-panel glow-shad well">
+							<div class="timeline-panel glow-shad ">
 								<div class="timeline-heading">
 									<h4 class="timeline-title"><%= notif[i].title %></h4>
 									<p>

@@ -7,26 +7,27 @@
 <body>
 
 	<% include statics/navTop %>
-	<div class="container">
+	<div class="canvas">
+		<div class="container">
 
-		<div class="page-header text-center">
-			<h1>Challenges created</h1>
-		</div>
+			<div class="page-header text-center">
+				<h1>Challenges created</h1>
+			</div>
 
-		<div class="row">
+			<div class="row">
+				<ul class="list-unstyled">
+					<% for(var i=0; i< challenges.length; i++) { %>
+					<li>
+						<span class="<%= challenges[i].icon %>"></span>
+						<a href='/c/<%= challenges[i].idCool %>'>
+							<%= challenges[i].title %>
+						</a> -- <span class="dateReadability" data-date="<%= challenges[i].creation %>"></span>
 
-			<ul>
-				<% for(var i=0; i< challenges.length; i++) { %>
-				<li>
-					<span class="<%= challenges[i].icon %>"></span>
-					<a href='/c/<%= challenges[i].idCool %>'>
-						<%= challenges[i].title %>
-					</a> -- <span class="dateReadability" data-date="<%= challenges[i].creation %>"></span>
-					
-					<a href="/removeChallenge/<%= challenges[i]._id %>" class="btn btn-punch btn-warning btn-xs"> Delete</a>
-				</li>
-				<% } %>
-			</ul>
+						<a href="/removeChallenge/<%= challenges[i]._id %>" class="btn btn-punch btn-warning btn-xs"> Delete</a>
+					</li>
+					<% } %>
+				</ul>
+			</div>
 		</div>
 	</div>
 
