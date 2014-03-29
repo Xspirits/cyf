@@ -1,0 +1,321 @@
+
+#skrollr-body.container {
+	background: #00C993;
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 2050px;
+	color: white;
+	text-align: center;
+	min-width: 24px;
+}
+
+.section {
+	position: absolute;
+	display: block;
+	width: 100%;
+	color: white;
+	text-align: left;
+}
+
+#sect1 {
+	top: 400px;
+}
+
+#sect2 {
+	top: 1000px;
+}
+
+#sect3 {
+	top: 1500px;
+}
+
+#footer {
+	top: 2050px;
+	height: 50px;
+	text-align: center;
+}
+
+#twitter {
+	float: left;
+	width: 20%;
+	font-size: 5em;
+	padding-left: 15%;
+}
+
+#rocket {
+	float: right;
+	width: 20%;
+	font-size: 5em;
+	padding-left: 15%;
+}
+
+#hiddenIcon {
+	text-align: center;
+	visibility: hidden;
+	height: 0;
+	font-size: 5em;
+}
+
+.anchor {
+	height: 100px;
+}
+
+band2 h2 {
+	text-align: left;
+}
+
+.explanation {
+	min-width: 12.42em;
+	float: left;
+	width: 40%;
+}
+
+.explanation-right {
+	min-width: 12.42em;
+	float: left;
+	text-align: right;
+	padding-left: 5%;
+	width: 40%;
+}
+
+#phone {
+	background: #DDD7D1;
+	border-radius: 30px;
+	box-shadow: 0 0.5em 0 #BCB1A5;
+	padding: 50px 18px 50px 18px;
+	width: 20%;
+	min-width: 200px;
+	max-width: 400px;
+	margin-right: 5%;
+	float: left;
+}
+
+#screen {
+	background: #ffffff;
+	height: 300px;
+	overflow: hidden;
+	padding: 0;
+	position: relative;
+	min-width: 200px;
+}
+
+#topBar {
+	background: #00C993;
+	height: 10%;
+	overflow: hidden;
+	padding-left: 10px;
+	padding-right: 10px;
+	position: relative;
+	min-width: 100px;
+}
+
+#mc_embed_signup {
+	text-align: right;
+	background-color: #00C993;
+}
+
+#mce-EMAIL {
+	text-align: right;
+	width: auto;
+	height: 30px;
+	margin-bottom: 20px;
+	padding-right: 1em;
+	border-style: none;
+	outline: none;
+}
+
+#mce-EMAIL:focus {
+	outline: none;
+}
+
+#mc-embedded-subscribe {
+	border-style: none;
+}
+
+.icon-bookmark {
+	float: right;
+}
+
+.icon-bookmark:hover {
+	color: #FFC52F;
+}
+
+.pressed {
+	color: #FFC52F;
+}
+
+h1, h3 {
+	font-family: 'Signika', sans-serif;
+	font-weight: 700;
+	text-align: center;
+}
+
+#skrollr-body.container h1 {
+	font-size: 5em;
+	line-height: 1em;
+	/*margin-bottom: 1em;*/
+}
+
+a {
+	color: white;
+}
+
+.button {
+	background: #DDD7D1;
+	text-align: center;
+	padding: .5em 1em;
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+	box-shadow: 0 0.2em 0 #BCB1A5;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	/*transition cross-browser stuff*/
+	-webkit-transition: background 0.2s ease-out;
+	/* Safari 3.2+, Chrome */
+	-moz-transition: background 0.2s ease-out;
+	/* Firefox 4-15 */
+	-o-transition: background 0.2s ease-out;
+	/* Opera 10.5–12.00 */
+	transition: background 0.2s ease-out;
+	/* Firefox 16+, Opera 12.50+ */
+}
+
+.button:hover {
+	background: #BCB1A5;
+}
+
+a.arrow {
+	color: white;
+	text-align: center;
+	font-size: 3em;
+	text-decoration: none;
+	padding-bottom: 30px;
+	/*transition cross-browser stuff*/
+	-webkit-transition: color 0.2s ease-in-out;
+	/* Safari 3.2+, Chrome */
+	-moz-transition: color 0.2s ease-in-out;
+	/* Firefox 4-15 */
+	-o-transition: color 0.2s ease-in-out;
+	/* Opera 10.5–12.00 */
+	transition: color 0.2s ease-in-out;
+	/* Firefox 16+, Opera 12.50+ */
+	margin: 0 auto;
+}
+
+a.arrow:hover {
+	color: #37BC9B;
+}
+
+#skrollr-body .row, #skrollr-body .container {
+	background: transparent;
+	height: 100%;
+}
+#eReg {
+
+	-webkit-animation-duration: 1.664s;
+	-moz-animation-duration: 1.664s;
+	-o-animation-duration: 1.664s;
+	animation-duration: 1.664s;
+	-webkit-animation-delay: 3.33s;
+	-moz-animation-delay: 3.33s;
+	-o-animation-delay: 3.33s;
+	animation-delay: 3.33s;
+	-webkit-animation-iteration-count: 2;
+	-moz-animation-iteration-count: 2;
+	-o-animation-iteration-count: 2;
+	animation-iteration-count: 2;
+}
+@media only screen and (min-width: 767px) {
+	body {
+		font-size: 1.125em;
+		/* 18px / 16px */
+	}
+
+	#skrollr-body.container {
+		background-size: 100%;
+	}
+
+	#skrollr-body #landing {
+		position: relative;
+
+	}
+	#skrollr-body.container h1 {
+		font-size: 4.03em;
+		margin: 90px 0 75px 5%;
+		max-width: 640px;
+	}
+
+	#skrollr-body.container form {
+		margin: 45px 0;
+	}
+	#skrollr-body.container h5 {
+		margin: 8% 5% 0 0;
+		max-width: 40%;
+		float: right;
+		border-top: 5px solid rgba(138,138,138,.4);
+		padding: 10px 0 0;
+	}
+	a.button {
+		padding: .75em 1.5em;
+	}
+}
+@media only screen and (max-width: 550px) {
+	.explanation {
+		float: none;
+		margin: auto;
+		text-align: center;
+	}
+
+	.explanation-right {
+		float: none;
+		margin: auto;
+		text-align: center;
+	}
+
+	#sect1 {
+		top: 350px;
+	}
+
+	#phone {
+		visibility: hidden;
+		height: 0px;
+		width: 0px;
+		padding: 0;
+		margin: 0;
+	}
+
+	#map {
+		width: 0px;
+		height: 0px;
+	}
+
+	#sect2 {
+		top: 900px;
+	}
+
+	#rocket {
+		visibility: hidden;
+	}
+
+	#twitter {
+		visibility: hidden;
+		padding-left: 0em;
+	}
+
+	#hiddenIcon {
+		visibility: visible;
+		height: auto;
+	}
+
+	#mce-EMAIL {
+		text-align: center;
+		padding: 0;
+		float: none;
+	}
+
+	#mc_embed_signup {
+		text-align: center;
+	}
+}
