@@ -7,6 +7,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 	$(function() {
+
 		var url = window.location.href;
 		var arr = url.split("/");
 		var resultURL = arr[0] + "//" + arr[2];
@@ -149,25 +150,25 @@
 					}    			
 				}, 220)
 			} 
-    		$('#dismissBoxChall').click(function(e){
-    			e.preventDefault();
-    			$('#gotchaChallenge,#gotaBoxContent')
-    			.removeClass('flipInX')
-    			.addClass('flipOutX');
+			$('#dismissBoxChall').click(function(e){
+				e.preventDefault();
+				$('#gotchaChallenge,#gotaBoxContent')
+				.removeClass('flipInX')
+				.addClass('flipOutX');
 
-    			$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+				$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
 
-    				$('#gotchaChallenge,#gotaBoxContent')
-    				.remove();
-    			});
-    		})
-    		function challengeAlert (){
-    			var number = hasCSuccess.length;
+					$('#gotchaChallenge,#gotaBoxContent')
+					.remove();
+				});
+			})
+			function challengeAlert (){
+				var number = hasCSuccess.length;
 
-    			if(number >= 1 ){
+				if(number >= 1 ){
 
-    				var template = '<div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
-    				$("#gotchaChallenge").html(template);
+					var template = '<div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
+					$("#gotchaChallenge").html(template);
     				// popChallengeSuccessbox();
 
     				$('#gotchaChallenge').fadeIn('slow').removeClass('hidden');
@@ -180,6 +181,7 @@
 			setInterval(function(){
 				timeFromUp();
 			},60000);
+			livePatern.init();
 		});
 var sendNotif= function(msg, idNotif, del) {
 
