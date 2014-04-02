@@ -3,12 +3,13 @@ var livePatern = {
   context: null,
   cols: 0,
   rows: 0,
-  colors: [22, 38, 49, 20, 35, 32],
-  triangleColors: [ 20, 35, 32],
-  destColors: [20, 35, 32],
+  colors: [252, 245, 249, 248, 241, 238],
+  triangleColors: [],
+  destColors: [],
+  
   
   init: function(){
-    this.canvas = $('.canvas');
+    this.canvas = document.getElementById('animeBg');
     this.context = this.canvas.getContext('2d');
     this.cols = Math.floor(document.body.clientWidth / 24);
     this.rows = Math.floor(document.body.clientHeight / 24) + 1;
@@ -73,5 +74,3 @@ var livePatern = {
     }, 10);
   },
 };
-
-!function(){livePatern.init();}()
