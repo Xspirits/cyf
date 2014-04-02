@@ -22,8 +22,6 @@
  'alertify.min.js',
  'navmenu.js',
  'file-input.js',
- // 'md5.js',
- // 'identicons.js',
  'bootstrap.min.js',
  'jquery-ui.min.js',
  'jquery.min.js'
