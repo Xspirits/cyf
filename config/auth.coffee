@@ -5,8 +5,8 @@ module.exports =
   app_config:
     email_confirm: false
   cyf :
-    domain: "http://challenge-friends.herokuapp.com"
-    # domain: "http://localhost:8080"
+    # domain: "http://challenge-friends.herokuapp.com"
+    domain: "http://localhost:8080"
   mandrill_key: "w_F27RXK5GmLNtZoePLczA"
   support :
     email: "cyf.app@gmail.com"
