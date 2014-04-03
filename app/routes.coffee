@@ -40,7 +40,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
       res.render "friendList.ejs",
         currentUser: req.user
-        friends: fList
+        friends: fList.friends
 
   # PROFILE SECTION ===========================
   app.get "/profile", isLoggedIn, (req, res) ->

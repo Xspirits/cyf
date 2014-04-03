@@ -48,7 +48,7 @@
       return users.getFriendList(req.user._id, function(fList) {
         return res.render("friendList.ejs", {
           currentUser: req.user,
-          friends: fList
+          friends: fList.friends
         });
       });
     });

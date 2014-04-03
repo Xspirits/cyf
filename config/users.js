@@ -66,10 +66,14 @@
       }
     },
     getFriendList: function(id, done) {
-      return User.findById(id).populate("friends.idUser").exec(function(err, user) {
+      return User.findById(id).populate({
+        path: 'friends.idUser',
+        select: '-notifications'
+      }).exec(function(err, user) {
         if (err) {
           throw err;
         }
+        console.log(user);
         return done(user);
       });
     },

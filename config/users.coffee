@@ -42,9 +42,10 @@ module.exports =
     return
 
   getFriendList: (id, done) ->
-    User.findById(id).populate("friends.idUser").exec (err, user) ->
-      throw err  if err
-      done user
+    User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
+        throw err  if err
+        console.log user
+        done user
 
   linkLol: (data, done) ->
     region = data.region

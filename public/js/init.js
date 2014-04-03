@@ -9,7 +9,7 @@
  // 'challengeBox.js',
  'bootstrap.switch.js',
  'nprogress.js',
- 'bg.js',
+ // 'bg.js',
  'odometer.min.js',
  'nouislider.min.js',
  'touchspin.js',

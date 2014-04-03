@@ -27,19 +27,19 @@
 	</script>
 
 	<div class="canvas">
-		<canvas id="animeBg" class="animated fadeIn"></canvas>
+		
 
 		<div class="container">
-			<div class="row well">
-				<ul class="userlist">
+			<div class="row">
+				<ul class="userlist col-lg-12">
 					<% for(var i=0; i< users.length; i++) { 
 
 						if(users[i]._id.toString() != currentUser._id) { %>
-						<li class="media col-md-4">
-							<div class="row">
+						<li class="media row">
+							<div class="col-md-4">
 
 								<a class="pull-left" href="/u/<%= users[i].idCool %>">
-									<span class="navbar-text identicon" data-size="27" data-hashMe="<%= users[i].idCool %>"></span>
+									<img src="<%= users[i].icon %>" class="img-rounded">
 								</a>
 
 								<div class="media-body">

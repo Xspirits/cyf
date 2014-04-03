@@ -11,7 +11,7 @@
 				<i class="fa fa-ellipsis-v"></i>
 			</button>
 			<a class="navbar-brand animated flipInX" href="./">
-				<img src="./img/logo_dark.png" >
+				<img src="./img/tinylogo.png" >
 			</a>
 		</div>
 		<div class="navbar-collapse collapse">
@@ -22,10 +22,10 @@
 				<li class="animated fadeInX"><a href="/users">Who's here ?</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<a href="/profile" class="navbar-text profile-icon"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
+				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
 				<li class="dropdown">
 					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInX" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
-					<div id="user-xpbar"></div>
+					<div id="user-xpbar" class="hidden-xs hidden-sm"></div>
 					<ul class="dropdown-menu">
 						<li>
 							<a href="/profile">Profile</a>
@@ -57,11 +57,11 @@
 						</li>
 						<!-- <li><a href="/newChallenge">Create</a></li> -->
 						<li><a href="/myChallenges">My Challenges</a></li>
-						<li class="divider"></li>
+						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
 							<a href="/launchChallenge"><strong>Launch</strong></a>
 						</li>
-						<li class="divider"></li>
+						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
 							<a href="/rateChallenges">Rate challenges
 								<% if(currentUser.challengeRate.length > 0 ) { %>
@@ -81,7 +81,7 @@
 					</ul>
 				</li>
 				<li>
-					<a href="/logout"><i class="glyphicon glyphicon-log-out"></i></a>
+					<a href="/logout"><i class="glyphicon glyphicon-log-out hidden-xs hidden-sm"></i> <span class="hidden-md hidden-lg">Log out</span></a>
 				</li>
 			</ul>
 			<% } else { %>
