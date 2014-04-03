@@ -118,38 +118,36 @@
 						<% } %>
 					</section>
 				</div>
-
 			</div>
-			<ul class="timeline">
-
-				<% var notif = currentUser.notifications;
-				for (var i = notif.length - 1; i >= 0; i--) {
-					if(notif[i].persist === true) { 
-						var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
-						, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
-						%>
-						<li class="animated <%= isOdd %> ">
-							<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
-							<div class="timeline-panel glow-shad ">
-								<div class="timeline-heading">
-									<h4 class="timeline-title"><%= notif[i].title %></h4>
-									<p>
-										<small class="text-muted">
-											<i class="glyphicon glyphicon-time"></i>
-											<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
-										</small>
-									</p>
+			<div class="row">
+				<ul class="timeline col-lg-12">
+					<% var notif = currentUser.notifications;
+					for (var i = notif.length - 1; i >= 0; i--) {
+						if(notif[i].persist === true) { 
+							var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
+							, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
+							%>
+							<li class="animated <%= isOdd %> ">
+								<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
+								<div class="timeline-panel glow-shad ">
+									<div class="timeline-heading">
+										<h4 class="timeline-title"><%= notif[i].title %></h4>
+										<p>
+											<small class="text-muted">
+												<i class="glyphicon glyphicon-time"></i>
+												<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
+											</small>
+										</p>
+									</div>
+									<div class="timeline-body">
+										<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
+									</div>
 								</div>
-								<div class="timeline-body">
-									<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
-								</div>
-							</div>
-						</li>
-						<% 
-					} 
-				} %>
-
-			</ul>
+							</li>
+							<% } 
+					} %>
+				</ul>			
+			</div>
 		</div>
 	</div>
 	<% include statics/footers %>

@@ -5,13 +5,12 @@
 }
 
     .timeline:before {
-        top: 0;
+        top: 40px;
         bottom: 0;
         position: absolute;
         content: " ";
         width: 3px;
-        background-color: #728382;
-        border-radius: 5px;
+        background-color: #E1E4E6;
         left: 50%;
         margin-left: -1.5px;
     }
@@ -48,8 +47,28 @@
             border-radius: 2px;
             padding: 20px;
             position: relative;
-            -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+            -webkit-transition: all .22s ease;
+            -moz-transition: all .22s ease;
+            -ms-transition: all .22s ease;
+            -o-transition: all .22s ease;
+            transition: all .22s ease;
+            -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0);
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0);
+            -moz-transform: translateY(0);
+            -webkit-transform: translateY(0);
+            -o-transform: translateY(0);
+            -ms-transform: translateY(0);
+            transform: translateY(0);
+        }
+        .timeline > li:hover > .timeline-panel {
+            -webkit-box-shadow: 0 2px 2px rgba(197, 197, 197, 0.69);
+            box-shadow: 0 2px 2px rgba(197, 197, 197, 0.69);
+            -moz-transform: translateY(-2px);
+            -webkit-transform: translateY(-2px);
+            -o-transform: translateY(-2px);
+            -ms-transform: translateY(-2px);
+            transform: translateY(-2px);
+
         }
 
             .timeline > li > .timeline-panel:before {
