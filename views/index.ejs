@@ -2,102 +2,149 @@
 <html>
 <head>
 
-	<% include statics/headers %>
-	<link rel="stylesheet" type="text/css" href="./css/landing.css">
-	<title>Challenge your Friends</title>
+    <% include statics/headers %>
+    <link rel="stylesheet" type="text/css" href="./css/landing.css">
+    <title>Challenge your Friends</title>
 </head>
 <body>
 
-	<div class="navbar navbar-default landing navbar-static-top" id="headNav" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<i class="fa fa-ellipsis-v"></i>
-				</button>
-				<a class="navbar-brand animated flipInX" href="./">
-					<img src="./img/tinylogo.png" >
-				</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li class="active animated fadeInX"><a href="/profile">Home</a></li>
-					<li class="animated fadeInX"><a href="/leaderboard">LeaderBoard</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-					<li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
-				</ul>
-			</div><!--/.nav-collapse -->
-		</div>
-	</div>
+    <div class="navbar navbar-default landing navbar-static-top" id="headNav" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <a class="navbar-brand animated flipInX" href="./">
+                    <img src="./img/tinylogo.png" >
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active animated fadeInX"><a href="/profile">Home</a></li>
+                    <li class="animated fadeInX"><a href="/leaderboard">LeaderBoard</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
+                    <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
 
-	<section id="slide-1" class="homeSlide">
-		<div class="bcg skrollable" data-center="background-position: 0% 0%;" data-top-bottom="background-position: 50% 0;" data-anchor-target="#slide-1">
-			<div class="hsContainer animated flipInX">
-				<div class="hsContent">
-					<div class="container text-right">
-						<h5>Challenge Friends and compete</h5>
-						<h5>Gather experience and level up</h5>
-						<h5>Try to reach the top of the ladder</h5>
+    <section id="slide-1" class="homeSlide">
+        <div class="bcg skrollable" data-center="background-position: 80% 100%;" data-top-bottom="background-position: 80% -800%;" data-anchor-target="#slide-1">
+        </div>
+                    <div class="container">
+                        <div class="row animated fadeInUp">
+                            <div class="col-lg-5 text-left">
+                                <h3>Revive the GAMER inside YOU!</h3>
+                                <h5>
+                                  <span class="fa-stack fa-lg">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-flash fa-stack-1x fa-inverse"></i>
+                                  </span>
+                                  Challenge Friends and compete 
+                                </h5>
+                                <h5>
+                                  <span class="fa-stack fa-lg">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-arrow-up fa-stack-1x fa-inverse"></i>
+                                  </span>
+                                  Gather experience and level up 
+                                </h5>
+                                <h5>
+                                  <span class="fa-stack fa-lg">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-list-ol fa-stack-1x fa-inverse"></i>
+                                  </span>
+                                  Try to reach the top of the ladders 
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row animated fadeInDown">
+                            <div class="col-lg-6 text-left">
+                                <h3>Connect, everywhere, to everyone!</h3>
+                                <h5>
+                                  <span class="fa-stack fa-lg">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-users fa-stack-1x fa-inverse"></i>
+                                  </span>
+                                  Make new <strike>friends</strike> competitors 
+                                </h5>
+                                <h5>
+                                  <span class="fa-stack fa-lg">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
+                                  </span>
+                                  Enable Automatic sharing of your achievements
+                                </h5>
+                                <h5>
+                                  <span class="fa-stack fa-lg">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                  </span>
+                                  Share on Twitter, Facebook, or Google + easily</h5>
+                            </div>
+                        </div>
+                    </div>
+    </section>
+    <section id="slide-2">
+        <div class="bcg skrollable" 
+        data-300-bottom="opacity: 0;background-position: 30% 100%;" 
+        data-center-top="opacity: 1;" 
+        data-top-bottom="background-position: 100% 100%;" 
+        data--300-top="opacity: 0;"
+        data-anchor-target="#slide-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        
+                        <div data-220-top="opacity: 1" data--100-bottom="opacity: 0" data-anchor-target="#slide-2" class="skrollable">
+                          <h3>There is no RNG here, only pure SKILL</h3>
 
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section id="slide-2">
-		<div class="bcg skrollable " data-220-top="background-color:rgb(250,250,250);" data--100-bottom="background-color:rgb(6,2,3);" data-anchor-target="#slide-2">
-			<div class="hsContainer">
-				<div class="hsContent">
-					<div data-220-top="opacity: 1" data--100-bottom="opacity: 0" data-anchor-target="#slide-2" class="skrollable">
-						<h2 class="animated flipInX">GIVE A NEW LIFE TO GAMING</h2>
-						<h5>challenge other players and see if they can reach you.</h5>
-						<h5>Challenge Friends and compete</h5>
-						<h5>Gather experience and level up</h5>
-						<h5>Try to reach the top of the ladder</h5>
-					</div>
-				</div>
-			</div>
-			<div class="item"  data-150-bottom="background-position: -200% 0;"  data-top="background-position: 20% 0;" data-center="background-position: 50% 0;" data-top-bottom="background-position: 50% 0;" data-anchor-target="#slide-2"></div>
-			<div class="item2"  data-150-bottom="background-position: 200% 0;"  data-top="background-position: 80% 0;" data-center="background-position: 50% 0;" data-top-bottom="background-position: 50% 0;" data-anchor-target="#slide-2"></div>
-		</div>
-	</section>
-	<div class="container">
-		
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	</div>
-</section>
-<div class="container">
+                          <div class="row">
+                            <ul class="fa-ul col-md-4">
+                              <li><h4>Players against Players, no rng</h4></li>
+                              <li><i class="fa-li fa fa-edit"></i> Create new challenges</li>
+                              <li><i class="fa-li fa fa-gamepad"></i> Launch challenges to your friends</li>
+                              <li><i class="fa-li fa fa-signal"></i> Rate the challenges you've done</li>
+                            </ul>
+                            <ul class="fa-ul col-md-4">
+                              <li><h4>Awesomes features</h4></li>
+                              <li><i class="fa-li fa fa-twitter"></i> Auto-Share on social networks</li>
+                              <li><i class="fa-li fa fa-align-justify"></i> Live timeline: see what's happening in live</li>
+                              <li><i class="fa-li fa fa-chain"></i> Import your League of Legend account <small>(alpha)</small></li>
+                            </ul>
+                            <ul class="fa-ul col-md-4">
+                              <li><h4>Fairness &amp; fun ensured</h4></li>
+                              <li><i class="fa-li fa fa-star"></i>Daily, Weekly, Monthly and Global ladders</li>
+                              <li><i class="fa-li fa fa-gavel"></i> Tribunal: no more rage, if you win, you win</li>
+                              <li><i class="fa-li fa fa-bar-chart-o"></i> Detailed challengers' statistics and historics</li>
+                            </ul>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="slide-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                    <h3>What is Challenge your Friends (CyF)?</h3>
+                    <p> At CyF we believe each game deserve an unique experience. Let's take the following situation to explain in details what is CyF:
+                    </p>
+                    <blockquote>
+                      <p>I have been playing this for so long, I don't even find anything challenging in this game... 
+                      The routine has taken away the first excitment I got from this game... Sigh!</p>
+                    </blockquote>
+                    </div>
+                </div>
+            </div>
+    </section>
 
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-</div>
-</section>
-<div class="container">
-
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-</div>
-</section>
-<div class="container">
-
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-</div>
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
@@ -105,9 +152,9 @@
 <script type="text/javascript" src="./js/landing.js"></script>
 
 <script type="text/javascript">
-	$(function () {
-		var s = skrollr.init();
-	});
+    $(function () {
+        var s = skrollr.init();
+    });
 
 </script>
 
