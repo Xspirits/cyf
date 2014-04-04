@@ -11,9 +11,9 @@
 	<div class="canvas">
 		
 		<div class="container">
-			<div class="col-sm-6 col-sm-offset-3">
+			<div class="col-sm-8 col-sm-offset-2">
 
-				<h1>Signup</h1>
+				<h1>Well met, <span id="whoAmI">challenger</span></h1>
 
 				<% if (message) { %>
 				<div class="alert alert-danger"><%= message %></div>
@@ -43,7 +43,7 @@
 				</form>
 
 				<hr>
-				<p><a href="/signup" class="btn bittersweet btn-md">Already have an account? Enter the Arena!</a></p>
+				<p><a href="/login" class="btn bittersweet btn-md">Already have an account? Enter the Arena!</a></p>
 
 				<% } %>
 
@@ -55,6 +55,15 @@
 	<script type="text/javascript">
 
 		$(function() {
+			$('input[name="pseudo"]')
+				.on('keyup', function () {
+				    $("#whoAmI").text($(this).val()+"...");
+				})
+				.focusout(function() {
+					var cooei = $(this).val();
+				    $("#whoAmI").text(cooei);
+				    $('#createAccount').text('I, '+cooei+', am ready to become a challenger');
+				});
 			$('#createAccount').click(function(e) {
 				e.preventDefault();
 				var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
