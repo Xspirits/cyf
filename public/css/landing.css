@@ -226,25 +226,6 @@ cursor: default;
 	
 }
 @media only screen and (max-width: 900px) {
-	.navbar-header {
-		float: left;
-		width: 130px;
-		display: block;
-	}
-	.nav>li {
-		float: left;
-	}
-	#headNav a {
-		background: transparent;
-	}
-	#headNav .navbar-right>li>a {
-		background: transparent;
-	font-size: 1.2em;
-	padding: 15px 20px;
-	}
-	#headNav li:hover {
-		margin: 0;
-	}
 	#slide-1 .bcg {background:url('../img/landing_1_mobile.jpg') no-repeat;}
 }
 
