@@ -5,7 +5,7 @@
       email_confirm: false
     },
     cyf: {
-      domain: "http://challenge-friends.herokuapp.com"
+      domain: "http://localhost:8080"
     },
     mandrill_key: "w_F27RXK5GmLNtZoePLczA",
     support: {
