@@ -71,7 +71,7 @@
       }
       body = JSON.parse(body);
       if (body.error) {
-        return console.error("Error returned from facebook: ", body.error);
+        return console.error("Error returned from  twitter: ", body.error);
       }
       callback(body);
     });

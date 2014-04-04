@@ -43,7 +43,7 @@ games           = require("./config/game")
 social          = require("./config/social")
 ladder          = require("./config/ladder")
 mailer          = require("./config/mailer")(mandrill_client, appKeys, moment)
-img             = require("./config/img")
+google          = require("./config/google")
 
 # functions Import
 notifs          = require("./app/functions/notifications")
@@ -53,7 +53,8 @@ xp              = require("./app/functions/xp")(sio)
 
 # configuration ===============================================================
 mongoose.connect configDB.url # connect to our database
-require("./config/passport") passport, genUID, xp, notifs, mailer # pass passport for configuration
+require("./config/passport") passport, genUID, xp, notifs, mailer, google # pass passport for configuration
+
 app.configure ->
   
   # set up our express application
@@ -82,7 +83,7 @@ app.configure ->
 
 
 # routes ======================================================================
-require("./app/routes") app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img 
+require("./app/routes") app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
 require("./app/schedule") scheduler, _,  sio, ladder, moment, social, appKeys, notifs

@@ -9,7 +9,7 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img) {
+  module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/", function(req, res) {
       if (req.isAuthenticated()) {
         return res.render("index_logged.ejs", {
@@ -194,7 +194,7 @@
             sio.glob("glyphicon glyphicon-tower", ioText);
             notifs.successChall(done);
             if (done._idChallenged.share.twitter === true && done._idChallenged.twitter.token) {
-              twitt = "I just completed a challenge (http://goo.gl/gskvYu) on League of Legend! Join me now @cyf_app #challenge";
+              twitt = "I just completed a challenge (http://goo.gl/gskvYu) on Challenge your Friends! Join me now @cyf_app #challenge";
               social.postTwitter(req.user.twitter, twitt, function(data) {
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>.";
@@ -278,11 +278,11 @@
       });
     });
     app.post("/validationRequest", isLoggedIn, function(req, res) {
-      return img.googleUrl(req.body.proofLink1, function(imgUrl1) {
+      return shortUrl.googleUrl(req.body.proofLink1, function(imgUrl1) {
         var data;
         console.log("\nuploaded %s to %s", req.body.proofLink1, imgUrl1);
         if (req.body.proofLink2) {
-          return img.googleUrl(req.body.proofLink2, function(imgUrl2) {
+          return shortUrl.googleUrl(req.body.proofLink2, function(imgUrl2) {
             var data;
             console.log("\nuploaded %s to %s", req.body.proofLink2, imgUrl2);
             data = {
@@ -302,7 +302,7 @@
             idUser: req.user._id,
             idChallenge: req.body.idChallenge,
             proofLink1: imgUrl1,
-            proofLink2: imgUrl2,
+            proofLink2: '',
             confirmComment: req.body.confirmComment
           };
           console.log(data);

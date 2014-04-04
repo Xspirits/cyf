@@ -4,7 +4,7 @@ isLoggedIn = (req, res, next) ->
   res.redirect "/"
   return
   
-module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img) ->
+module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   # show the home page (will also have our login links)
   app.get "/", (req, res) ->
@@ -207,7 +207,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
           
           #automaticall share on Twitter if allowed
           if done._idChallenged.share.twitter is true and done._idChallenged.twitter.token
-            twitt = "I just completed a challenge (http://goo.gl/gskvYu) on League of Legend! Join me now @cyf_app #challenge"
+            twitt = "I just completed a challenge (http://goo.gl/gskvYu) on Challenge your Friends! Join me now @cyf_app #challenge"
             social.postTwitter req.user.twitter, twitt, (data) ->
               text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>."
               sio.glob "fa fa-twitter", text
@@ -288,10 +288,10 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
   #Ask a challenge validation to another user
   app.post "/validationRequest", isLoggedIn, (req, res) ->
-    img.googleUrl req.body.proofLink1, (imgUrl1) ->
+    shortUrl.googleUrl req.body.proofLink1, (imgUrl1) ->
       console.log "\nuploaded %s to %s", req.body.proofLink1, imgUrl1
       if req.body.proofLink2
-        img.googleUrl req.body.proofLink2, (imgUrl2) ->
+        shortUrl.googleUrl req.body.proofLink2, (imgUrl2) ->
           console.log "\nuploaded %s to %s", req.body.proofLink2, imgUrl2
           data =
             idUser: req.user._id
@@ -308,7 +308,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
           idUser: req.user._id
           idChallenge: req.body.idChallenge
           proofLink1: imgUrl1
-          proofLink2: imgUrl2
+          proofLink2: ''
           confirmComment: req.body.confirmComment
 
         console.log data

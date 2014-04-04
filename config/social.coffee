@@ -61,7 +61,7 @@ exports.postTwitter = (accessToken, message, callback) ->
   , (err, resp, body) ->
     return console.error("Error occured: ", err)  if err
     body = JSON.parse(body)
-    return console.error("Error returned from facebook: ", body.error)  if body.error
+    return console.error("Error returned from  twitter: ", body.error)  if body.error
     callback body
     return
   )

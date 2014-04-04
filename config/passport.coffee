@@ -8,9 +8,11 @@ GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
 User = require("../app/models/user")
 challenge = require("../config/challenge")
 grvtr = require('grvtr')
+social = require("../config/social")
+
 # load the auth variables
 configAuth = require("./auth") # use this one for testing
-module.exports = (passport, genUID, xp, notifs, mailer) ->
+module.exports = (passport, genUID, xp, notifs, mailer,shortUrl) ->
   
   # =========================================================================
   # passport session setup ==================================================
@@ -248,12 +250,15 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             user.twitter.displayName = profile.displayName
             user.save (err) ->
               throw err  if err
-              done null, user
-
-            done null, user # user found, return that user
+              profileUrl = configAuth.cyf.domain + '/'+ user.idCool
+              shortUrl.googleUrl profileUrl, (shortened) ->
+                console.log "\n New twitter linked %s to %s", profileUrl, shortened
+                twitt = "Welcome @"+user.twitter.username+" ("+shortened+") on Challenge your Friends! You are "+user.level+", a journey await you! @cyf_app #challenge"
+                social.postTwitter req.user.twitter, twitt, (data) ->
+                  done null, user
           else
             
-            # if there is no user, create them
+            # if there is no user, create them 
             newUser = new User()
             newUser.twitter.id = profile.id
             newUser.twitter.token = token

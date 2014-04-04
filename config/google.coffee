@@ -1,9 +1,13 @@
 database = require("./database")
-imgur = require("imgur-node-api")
+auth = require("./auth")
+# Note: The upload on IMGUR is done front-end side
+# imgur = require("imgur-node-api")
+# imgur.setClientID database.imgurClientId
 googleapis = require("googleapis")
 OAuth2 = googleapis.auth.OAuth2
-imgur.setClientID database.imgurClientId
-oauth2Client = new OAuth2(database.google.client_email, database.google.client_secret, "http://localhost:8080")
+oauth2Client = new OAuth2(database.google.client_email, database.google.client_secret, auth.cyf.domain)
+
+
 exports.googleUrl = (url, callback) ->
   googleapis.discover("urlshortener", "v1").execute (err, client) ->
     oauth2Client.credentials =
