@@ -6,7 +6,8 @@
     <link rel="stylesheet" type="text/css" href="./css/landing.css">
     <title>Challenge your Friends</title>
 </head>
-<body id="skrollr-body">
+<body>
+  <div id="skrollr-body">
 
     <div class="navbar navbar-default landing navbar-fixed-top" id="headNav" role="navigation">
         <div class="container">
@@ -28,7 +29,6 @@
         </div>
     </div>
 
-  <div>
     <section id="slide-1" class="homeSlide">
         <div class="bcg skrollable" data-center="background-position: 60% 100%;" data-top-bottom="background-position: 100% 100%;" data-anchor-target="#slide-1 .bcg">
         </div>
@@ -242,11 +242,7 @@
 
 <script type="text/javascript">
     $(function () {
-          skrollr.init({forceHeight: false});
-        if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera)){
-          skrollr.destroy(); // skrollr.init() returns the singleton created above
-    
-        }
+          skrollr.init();
 
     });
 
