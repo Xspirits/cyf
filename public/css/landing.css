@@ -1,3 +1,7 @@
+
+body, #skrollr-body { 
+  background: rgb(6,2,3);
+}
 #headNav {	
 width: 100%;
 height: auto;
@@ -15,17 +19,9 @@ font-weight: normal;
 	max-width: initial !important;
 }
 #skrollr-body.container {
-	background: #00C993;
-	position: absolute;
-	display: block;
+ 	 background: rgb(6,2,3);
 	width: 100%;
 	height: 100%;
-	color: white;
-	min-width: 24px;
-}
-.skrollr body { 
-  background: rgb(6,2,3);
-min-height: 3000px;
 }
 
 a {
@@ -73,8 +69,8 @@ section .container .btn-block {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-color: rgb(6,2,3);
-  height: 100%;
-  width: 100%;
+  height: auto;
+  width: auto;
 }
 #slide-1 .container {
 	opacity: 1;
@@ -109,9 +105,9 @@ font-size: 1em;
 #slide-1 h5:hover {
 	color: #22D6CF;
 }
-#slide-1 .bcg {background:url('../img/landing_1.jpg') no-repeat; position: absolute;}
+#slide-1 .bcg {background:url('../img/landing_1.jpg') no-repeat; position: absolute; width: 100%; height: 100%}
 
-#slide-2,#slide-3 { margin-top: 2em;	cursor: default;}
+#slide-1,#slide-2,#slide-3 {cursor: default;}
 #slide-2 .bcg {	background: #020101 url('../img/landing_2.jpg') repeat-x; }
 
 #slide-2 h3 {
@@ -212,7 +208,7 @@ cursor: default;
 	color: #FFF;
 }
 #skrollr-body .row, #skrollr-body .container {
-	height: 100%;
+	height: auto;
 }
 @media only screen and (min-width: 900px) {
 	body {
