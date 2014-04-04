@@ -224,7 +224,7 @@ doctype html>
                     </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
                        <a href="./signup" class="btn btn-danger btn-lg btn-block">BECOME A CHALLENGER NOW</a>
@@ -242,7 +242,9 @@ doctype html>
 
 <script type="text/javascript">
     $(function () {
-        skrollr.init({forceHeight: false});
+        if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera)){
+          skrollr.init({forceHeight: false});
+        }
 
     });
 
