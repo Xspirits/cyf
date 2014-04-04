@@ -12,20 +12,25 @@ doctype html>
     <div class="navbar navbar-default landing navbar-fixed-top" id="headNav" role="navigation">
         <div class="container">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <i class="fa fa-ellipsis-v"></i>
+          </button>
             <a class="navbar-brand animated flipInX" href="./">
                     <img src="./img/logo.png" alt="go home">
             </a>
         </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-        <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
-      </ul>
-    </div><!--/.nav-collapse -->
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
+            <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
         </div>
     </div>
 
   <div id="skrollr-body">
+  </div>
     
     <section id="slide-1" class="homeSlide">
         <div class="bcg skrollable" data-center="background-position: 60% 100%;" data-top-bottom="background-position: 100% 100%;" data-anchor-target="#slide-1 .bcg">
@@ -233,8 +238,6 @@ doctype html>
                 </div>
         </div>
     </section>
-
-  </div>
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
