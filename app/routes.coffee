@@ -12,8 +12,21 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       res.render "index_logged.ejs",
         currentUser: req.user
     else
-      res.render "index.ejs",
+      res.render 'index.ejs',
         currentUser: false
+
+  app.get "/discover", (req, res) ->
+    if req.isAuthenticated()
+      res.render "discover.ejs",
+        currentUser: req.user
+    else
+      ua = req.header 'user-agent'
+      if /mobile/i.test(ua)
+        res.render 'discover_mobile.ejs',
+          currentUser: false
+      else
+        res.render 'discover.ejs',
+          currentUser: false
 
   app.get "/eval/:hash", (req, res) ->
     hash = req.params.hash

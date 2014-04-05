@@ -16,9 +16,28 @@
           currentUser: req.user
         });
       } else {
-        return res.render("index.ejs", {
+        return res.render('index.ejs', {
           currentUser: false
         });
+      }
+    });
+    app.get("/discover", function(req, res) {
+      var ua;
+      if (req.isAuthenticated()) {
+        return res.render("discover.ejs", {
+          currentUser: req.user
+        });
+      } else {
+        ua = req.header('user-agent');
+        if (/mobile/i.test(ua)) {
+          return res.render('discover_mobile.ejs', {
+            currentUser: false
+          });
+        } else {
+          return res.render('discover.ejs', {
+            currentUser: false
+          });
+        }
       }
     });
     app.get("/eval/:hash", function(req, res) {
