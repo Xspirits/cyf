@@ -207,14 +207,15 @@ body.modal-open .canvas{
   font-weight: bold;
   color: rgb(139,94,60);
 }
-ul.userlist > li {
+ul.userlist >div > li {
   margin-top: 0;
 }
 
-ul.userlist > li > div > a > img {
- max-width: 35px;
+ul.userlist >div > li > a > img {
+ max-width: 55px;
  height: auto;
 }
+
 
 .value-text {
   color: rgb(240, 73,50);
@@ -902,6 +903,10 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 .navbar-brand {
   padding: 5px;
 }
+.navbar-brand img {
+  max-width: 95px;
+  height: auto;
+}
 .navbar-default .navbar-nav>li>a,.navbar-default .navbar-nav>li>a:hover  {
   color: #f7f7f7;
   text-shadow: 0 1px 0 #000;
@@ -1344,4 +1349,8 @@ input.gStyle:focus {
   border-radius: 5px;
   border-color: #274B55;
 
+}
+
+.hover-me.challenge-card.active > div > a,.hover-me.challenge-card > div > a,.hover-me.challenge-card:hover > div > a{
+  color: inherit;
 }

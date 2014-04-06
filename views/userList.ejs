@@ -32,41 +32,40 @@
 		<div class="container">
 			<div class="row">
 				<ul class="userlist col-lg-12">
-					<% for(var i=0; i< users.length; i++) { 
+					<div class="row">						
+						<% for(var i=0; i< users.length; i++) { 
+							if(users[i]._id.toString() != currentUser._id) { %>
+							<li class="media col-md-4">
 
-						if(users[i]._id.toString() != currentUser._id) { %>
-						<li class="media row">
-							<div class="col-md-4">
+									<a class="pull-left" href="/u/<%= users[i].idCool %>">
+										<img src="<%= users[i].icon %>" class="img-rounded">
+									</a>
 
-								<a class="pull-left" href="/u/<%= users[i].idCool %>">
-									<img src="<%= users[i].icon %>" class="img-rounded">
-								</a>
-
-								<div class="media-body">
-									<h4 class="media-heading col-lg-12"> 
-										<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-										<span class="<%= (users[i].isOnline === true) ? "online" : "offline" %>"></span>
-										<% } %>
-										<a href="/u/<%= users[i].idCool %>">
-											<%= users[i].local.pseudo %>
-										</a>
-									</h4>
-									<div class="col-lg-12">
-										<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-										<span class="badge alert-success">Friend</span>
-										<% } %>
+									<div class="media-body">
+										<h4 class="media-heading col-lg-12"> 
+											<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
+											<span class="<%= (users[i].isOnline === true) ? "online" : "offline" %>"></span>
+											<% } %>
+											<a href="/u/<%= users[i].idCool %>">
+												<%= users[i].local.pseudo %>
+											</a>
+										</h4>
+										<div class="col-lg-12">
+											<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
+											<span class="badge alert-success">Friend</span>
+											<% } %>
 
 
-										<span class="badge alert-warning">level <%= users[i].level %></span>
-										<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-										<span class="badge alert-warning"><%= users[i].friends.length %> friends</span>		
-										<% } %>	
+											<span class="badge alert-warning">level <%= users[i].level %></span>
+											<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
+											<span class="badge alert-warning"><%= users[i].friends.length %> friends</span>		
+											<% } %>	
+										</div>
 									</div>
-								</div>
-							</div>
-						</li>
-						<% } 
-					} %>
+							</li>
+							<% } 
+						} %>
+					</div>
 				</ul>
 			</div>
 
