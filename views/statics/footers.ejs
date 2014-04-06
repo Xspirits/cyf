@@ -8,6 +8,7 @@
 <script type="text/javascript">
 	$(function() {
 
+		var isMobile = ($(window).width() < 800) ? true : false;
 		var url = window.location.href;
 		var arr = url.split("/");
 		var resultURL = arr[0] + "//" + arr[2];
@@ -31,7 +32,6 @@
 
 			}
 
-			var isMobile = ($(window).width() < 800) ? true : false;
 		// nprogress Is disabled for now, could be using it in the future though.
 		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
 		var flatten = Math.round((myLevel * .8)*100);
@@ -96,8 +96,8 @@
 			function animateProgress() {
 
 				var progressNumber = $('.tinyProgress').length;
-				//All progress are now at their expected value, cast ou the setInterval
-				if(progressNumber <= 0 ){					
+				//All progress are now at their expected value, cast out the setInterval
+				if(progressNumber < 1 ){					
 					console.log(progressNumber)
 					clearInterval(timerId);
 				} else {
@@ -111,7 +111,7 @@
 						var currWidth = (currWidth === 0) ? 0.05 : currWidth;
 						var incVal 	= (currWidth + (tarWidth * Math.random()));	
 
-						if(incVal >= tarWidth) 
+						if(incVal >= tarWidth || isMobile) 
 							_this.width(tarWidth + '%');
 						else{
 							_this.width(incVal + '%');

@@ -369,6 +369,17 @@ hr.subtle-divider {
   border-bottom: 1px solid rgb(245,245,245);
   color: rgb(235,235,235);
 }
+#leadTab>li>a {
+  font-weight: bolder;
+  font-size: 1.2em;
+  font-variant: small-caps;
+}
+#leadTab>li>a>img {
+max-height: 30px;
+float: left;
+margin-top: -8px;
+}
+
 #streams .list-group-item {
   border: 0;
   border-radius: 0;
@@ -377,13 +388,17 @@ hr.subtle-divider {
 
 #streams li {
   padding: 0 5px;
-  border-bottom: 1px solid #FFF;
-  color: #373F32;
+  border-bottom: 1px solid #696969;
+  color: #F0F0F0;
   margin: 0 15px 0 0;
 }
 #streams li a {
-  color: #ECB045;
-  transition:color 220ms ease-in-out;
+  color: #6DEC45;
+  -webkit-transition: color 220ms ease-in-out;
+  -moz-transition: color 220ms ease-in-out;
+  -ms-transition: color 220ms ease-in-out;
+  -o-transition: color 220ms ease-in-out;
+  transition: color 220ms ease-in-out;
 }
 #streams li a:hover,
 #streams li a:active {
