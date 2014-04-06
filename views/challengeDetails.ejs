@@ -2,7 +2,36 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+	<!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="<%= challenge.title %>, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Challenge <%= challenge.title %> details on Challenge your Friends">
+    <meta name="description" content="<%= challenge.description %>">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="profile"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.com/img/twitt_card.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Challenge <%= challenge.title %> details on Challenge your Friends">
+    <meta property="og:description" content="<%= challenge.description %>">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.com/img/twitt_card.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="Challenge <%= challenge.title %> details on Challenge your Friends">
+    <meta name="twitter:description" content="<%= challenge.description %>">
+    <!-- Twitter card end -->
+
+	<title>Challenge <%= challenge.title %> details - Challenge your friends</title>
 </head>
 <body>
 

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+	<title>Rate a challenge</title>
 
 </head>
 <body>
@@ -139,7 +139,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<% 
+									<% if(challenge.challengeRate.length > 0 ) {
 									for (var i = challenge.challengeRate.length - 1; i >= 0; i--) {
 										var userChallenge =  challenge.challengeRate[i];
 										%>
@@ -168,7 +168,13 @@
 												<button type="button" id="<%= userChallenge.idCool %>" class="btn btn-info btn-punch btn-block rateNaow" data-title="<%= userChallenge.title %>"> Rate !</button>
 											</td>
 										</tr>
-										<% } %>
+										<% }
+										} else { %>
+
+									<tr>
+										<td>Nothing yet! Come back later</td>
+									</tr>
+									<% } %>
 									</tbody>
 								</table>						
 							</div>

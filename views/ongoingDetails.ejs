@@ -2,7 +2,35 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="<%= ongoing.idCool %> for <%= ongoing._idChallenged.local.pseudo %> details - Challenge your Friends">
+    <meta name="description" content="<%= ongoing._idChallenge.title %> details, <%= ongoing._idChallenged.local.pseudo %> challenged by <%= ongoing._idChallenger.local.pseudo %> ">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="profile:<%= ongoing.idCool %>"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.com/img/twitt_card.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="<%= ongoing.idCool %> for <%= ongoing._idChallenged.local.pseudo %> details - Challenge your Friends">
+    <meta property="og:description" content="<%= ongoing._idChallenge.title %> details, <%= ongoing._idChallenged.local.pseudo %> challenged by <%= ongoing._idChallenger.local.pseudo %> ">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.com/img/twitt_card.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="<%= ongoing.idCool %> for <%= ongoing._idChallenged.local.pseudo %> details - Challenge your Friends">
+    <meta name="twitter:description" content="<%= ongoing._idChallenge.title %> details, <%= ongoing._idChallenged.local.pseudo %> challenged by <%= ongoing._idChallenger.local.pseudo %> ">
+    <!-- Twitter card end -->
+	<title><%= ongoing.idCool %> for <%= ongoing._idChallenged.local.pseudo %> details - Challenge your Friends</title>
 </head>
 <body>
 
@@ -60,7 +88,7 @@
 					</h3>
 				</div>
 				<div class="panel-body">
-					You will be redirected to your divrofile in 5 seconds.
+					You will be redirected to your profile in 5 seconds.
 				</div>
 			</div>
 		</div>
@@ -71,59 +99,61 @@
 		<div class="container">
 
 			<div class="row">
-				<h1>
-					<span class="<%= ongoing._idChallenge.icon %>"></span> 
-					<%= ongoing._idChallenge.title %> 
-					<small> <%= ongoing._idChallenge.game %></small>
-				</h1>
-				<hr>
+				<div class="col-md-12">
+					<h1>
+						<span class="<%= ongoing._idChallenge.icon %>"></span> 
+						<%= ongoing._idChallenge.title %> 
+						<small> <%= ongoing._idChallenge.game %></small>
+					</h1>
+					<hr>
 
-				<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString()  && !ongoing.waitingConfirm) { %>
-				<div class="col-lg-8">	 			
-					<% } else { %>
-					<div class="col-lg-12">	 			
-						<% } %>
-						<p>
+					<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString()  && !ongoing.waitingConfirm) { %>
+					<div class="col-lg-8">	 			
+						<% } else { %>
+						<div class="col-lg-12">	 			
+							<% } %>
+							<p>
 
-							<a href='/u/<%= ongoing._idChallenger.idCool %>'>
-								<%= ongoing._idChallenger.local.pseudo  %>
-							</a>
-							<span class="glyphicon glyphicon-arrow-right"></span>
-							<a href='/u/<%= ongoing._idChallenged.idCool %>'>
-								<%= ongoing._idChallenged.local.pseudo  %>
-							</a>
+								<a href='/u/<%= ongoing._idChallenger.idCool %>'>
+									<%= ongoing._idChallenger.local.pseudo  %>
+								</a>
+								<span class="glyphicon glyphicon-arrow-right"></span>
+								<a href='/u/<%= ongoing._idChallenged.idCool %>'>
+									<%= ongoing._idChallenged.local.pseudo  %>
+								</a>
 
-						</p>
-						<p>
-							<strong>Description :</strong> <%= ongoing._idChallenge.description %>
-						</p>
-						<p>
-							<strong>Start :</strong> <%= ongoing.launchDate %>
-						</p>
-						<p>
-							<strong>End by :</strong> <%= ongoing.deadLine %>
-						</p>
-						<p>
-							<strong>Created :</strong> <%= ongoing._idChallenge.creation %>
-						</p>
-						<p>
-							<strong>Challenge page :</strong>
-							<a href='/c/<%= ongoing._idChallenge.idCool %>'>
-								<%= ongoing._idChallenge.title  %>
-							</a>
-						</p>
-					</div>
-
-					<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() && !ongoing.waitingConfirm ) { %>
-					<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
-						<div class="well">
-							<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
-							<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
+							</p>
+							<p>
+								<strong>Description :</strong> <%= ongoing._idChallenge.description %>
+							</p>
+							<p>
+								<strong>Start :</strong> <%= ongoing.launchDate %>
+							</p>
+							<p>
+								<strong>End by :</strong> <%= ongoing.deadLine %>
+							</p>
+							<p>
+								<strong>Created :</strong> <%= ongoing._idChallenge.creation %>
+							</p>
+							<p>
+								<strong>Challenge page :</strong>
+								<a href='/c/<%= ongoing._idChallenge.idCool %>'>
+									<%= ongoing._idChallenge.title  %>
+								</a>
+							</p>
 						</div>
+
+						<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() && !ongoing.waitingConfirm ) { %>
+						<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
+							<div class="well">
+								<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
+								<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
+							</div>
+						</div>
+
+						<% } %>
+
 					</div>
-
-					<% } %>
-
 				</div>
 			</div>
 

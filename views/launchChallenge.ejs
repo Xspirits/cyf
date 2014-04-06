@@ -2,7 +2,35 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title>Launch a challenge</title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
+    <meta name="description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="article"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.com/img/twitt_card.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
+    <meta property="og:description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.com/img/twitt_card.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
+    <meta name="twitter:description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
+    <!-- Twitter card end -->
+	<title>Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %></title>
 </head>
 <body>
 

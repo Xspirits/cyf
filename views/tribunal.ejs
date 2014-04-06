@@ -2,7 +2,7 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+	<title>Judge cases - Challenge your friends</title>
 </head>
 <body>
 
@@ -125,21 +125,12 @@
 		
 
 			<div class="container">
-
-				<div class="page-header text-center">
-					<h1>Tribunal</h1>
-				</div>
-
 				<div class="row">
+					<div class="col-md-12"> 
 					<h4><%= currentUser.local.pseudo %>, theses cases need your opinion</h4>
 					<p>
 						Be aware that by judging a case you will affect other users, be fair and judge as if it was you who were implied!
 					</p>
-					<p>
-						By helping others you will be rewarded.
-					</p>
-					<div class="col-md-12"> 
-
 						<div class="panel panel-default table-responsive">
 							<table class="table  table-striped table-bordered text-center">
 								<thead>
@@ -153,7 +144,8 @@
 									</tr>
 								</thead>
 								<tbody>
-									<% for(var i=0; i< cases.length; i++) { %>
+									<% if(cases.length > 0 ) {
+									for(var i=0; i< cases.length; i++) { %>
 									<tr id="tt_<%= cases[i].idCool %>">
 										<td>
 											<a href='/o/<%= cases[i]._idChallenge.idCool %>'>
@@ -185,10 +177,20 @@
 											</button>
 										</td>
 									</tr>
+									<% } 
+									} else { %>
+
+									<tr>
+										<td>Nothing yet! Come back later</td>
+									</tr>
 									<% } %>
 								</tbody>
 							</table>						
 						</div>
+
+						<p>
+							Typically when a challenged has been missjudged, he/she can submits a case to the tribunal. Three other challengers as then picked randomly and asked to give their opinion about the case. If they decide that the case should be validated, the challenged will be awarded and the challenger who misjudged will be given a penalty.
+						</p>
 					</div>
 
 				</div>
