@@ -32,19 +32,6 @@
 			}
 
 			var isMobile = ($(window).width() < 800) ? true : false;
-		//Avatars/identicons
-		// $('.identicon').each( function(){
-		// 	var _this = $(this);
-		// 	var data = _this.attr('data-hashMe')
-		// 	, size = _this.attr('data-size') ? _this.attr('data-size') : 100;
-
-		// 	var hash = CryptoJS.MD5(data);
-		// 	_this.text(hash);
-		// 	_this.identicon5({
-		// 		rotate: true,
-		// 		size: size
-		// 	});
-		// })
 		// nprogress Is disabled for now, could be using it in the future though.
 		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
 		var flatten = Math.round((myLevel * .8)*100);
@@ -83,14 +70,6 @@
 						// <%= (notif[i].persist && currentUser.allowDeskNotif) ? true : false %>
 						console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>+ ' queue ' + queue.length);
 						<% 
-						/*if(limit <= 0 || i == notif.length-1){
-							%>
-							console.log('fired')
-							notif(queue, queue.length -1); 
-							challengeAlert(); 
-							<%
-							break;
-						}*/
 					} 
 				}
 			}

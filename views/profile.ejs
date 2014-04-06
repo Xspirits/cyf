@@ -20,12 +20,9 @@
 		<div class="container">
 			<div class="row">
 				<div id="user_header" class="col-lg-8">
-					<div class="">
 						<div class="row">
-							<div class="col-lg-2" href="#">
-								<span class="navbar-text animated rotateIn">
+							<div class="col-lg-2 col-xs-2 animated fadeInUp" href="#">
 									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
-								</span>
 							</div>
 							<h2 class="col-lg-10 animated bounceInUp">
 								<%= currentUser.local.pseudo %> 
@@ -39,20 +36,14 @@
 								</span>
 								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
 							</h2>
-							<div class="col-lg-12">
-								<div class="row">
-									<div class="col-lg-2">
-										<div class="xp text-center">
-											<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
-										</div>
-									</div>
-									<div class="col-lg-10">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="loaderProgress animated flipInY">
 											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-										</div>
-									</div>
 
-								</div>
+											<div class="xp text-center">
+												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+											</div>
+										</div>
 							</div>
 							<div class="col-lg-12">	
 								<strong>Linked accounts: </strong>
@@ -96,9 +87,8 @@
 								</table>
 							</div>
 						</div>
-					</div>
 				</div>
-				<div class="col-lg-4  badggies">
+				<div class="col-lg-4 badggies">
 					<h4>My Badges</h4>
 					<section class="badgeList">
 						
