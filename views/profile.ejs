@@ -108,8 +108,40 @@
 									</tbody>
 								</table>
 							</div>
-							<div class="col-lg-12">								
-								<canvas id="historygraph" class="c-center"></canvas>	
+
+							<div class="col-md-12 col-lg-12">
+								<div class="panel graphsTab">
+									<div class="tabbable tabs-left clearfix">
+										<ul id="tabbyTab" class="nav nav-tabs nav-justified">
+											<li class="active"><a href="#xpTab" data-toggle="tab">experience</a></li>
+											<li><a href="#levelTab" data-toggle="tab">levels</a></li>
+											<li><a href="#ranksTab" data-toggle="tab">Ranks</a></li>
+										</ul>
+										<div id="tabby" class="tab-content">
+											<div class="tab-pane active animated bounceIn" id="xpTab">
+												<div class="row">
+													<div class="col-lg-12">								
+														<canvas id="historygraph" class="c-center"></canvas>	
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane animated bounceIn" id="levelTab">
+												<div class="row">
+													<div class="col-lg-12">								
+														<canvas id="levelgraph" class="c-center"></canvas>	
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane animated bounceIn" id="ranksTab">
+												<div class="row">
+													<div class="col-lg-12">								
+														<canvas id="ranksgraph" class="c-center"></canvas>	
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 				</div>
@@ -174,6 +206,7 @@
 
 		$(function() {
 
+			$(".graphsTab input[type=checkbox]").bootstrapSwitch();
 			// return an array composed of a list of the days' number from 1 month ago until today, not included.
 			function getAllDays() {
 				var e = moment();
@@ -207,39 +240,101 @@
 			});
 
 
-			// User Xp and Level Historic graph
+			// User Xp Historic graph
 			var dataLabels = getAllDays();
 			var desiredRatio = $("#historygraph").parent().width();
-			var canvas = $("#historygraph")[0];
-			var ctx = canvas.getContext("2d");
-			var dota2 = []
-			canvas.setAttribute('width', desiredRatio);
-			canvas.setAttribute('height', desiredRatio/3);
-			console.log(dataLabels.length);
-			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>');
-			console.log(historic);
+			var canvasXp = $("#historygraph")[0];
 
+			var ctxXp = canvasXp.getContext("2d")
+			, dota2 = []
+			, warcraft4 = []
+			, dailyR = []
+			, weeklyR = []
+			, monthlyR = []
+			, globalR = [];
+			canvasXp.setAttribute('width', desiredRatio);
+			canvasXp.setAttribute('height', desiredRatio/3);
+			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
+
+			// position our start at the end of the graph by reversing it.
 			for (var i = dataLabels.length - 1; i >= 0; i--) {
+				// Reverse the value of our historic
 				var thisOne = historic[i] ? historic[i].xp : 0;
+				var thatOne = historic[i] ? historic[i].level : 0;
 				dota2.push(thisOne);
-				console.log(thisOne);
-				console.log('pushing :for ' + i);
+				warcraft4.push(thatOne);
 				
 			};
-
-			var data = {
+			var optionA = {
+				scaleStartValue : 50
+			}
+			var dataXp = {
 				labels : dataLabels,
 				datasets : [
 					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						pointColor : "rgba(220,220,220,1)",
+						fillColor : "rgba(27,63,89,0.3)",
+						strokeColor : "rgba(27,63,89,0.6)",
+						pointColor : "rgba(27,63,89,0.8)",
 						pointStrokeColor : "#fff",
 						data : dota2
 					}
 				]
 			}
-			new Chart(ctx).Line(data);
+			new Chart(ctxXp).Line(dataXp,optionA);
+			//Level Graph
+
+			var canvasLevel = $("#levelgraph")[0];
+			var ctxLevel = canvasLevel.getContext("2d");
+			canvasLevel.setAttribute('width', desiredRatio);
+			canvasLevel.setAttribute('height', desiredRatio/3);
+
+			var optionB = {
+				scaleStartValue : 0
+			}
+			var dataLevel = {
+				labels : dataLabels,
+				datasets : [
+					{
+						fillColor : "rgba(26,56,82,0.3)",
+						strokeColor : "rgba(26,56,82,0.6)",
+						pointColor : "rgba(26,56,82,0.8)",
+						pointStrokeColor : "#fff",
+						data : warcraft4
+					}
+				]
+			}
+			new Chart(ctxLevel).Line(dataLevel,optionB);
+
+			//Ranks Graph
+			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse();
+
+			var canvasRanks = $("#ranksgraph")[0];
+			var ctxRanks = canvasRanks.getContext("2d");
+			canvasRanks.setAttribute('width', desiredRatio);
+			canvasRanks.setAttribute('height', desiredRatio/3);
+
+			for (var i = rHistDaily.length - 1; i >= 0; i--) {
+				// Reverse the value of our historic
+				var thisOne = rHistDaily[i] ? rHistDaily[i].rank : 0;
+				dailyR.push(thisOne);
+				
+			};
+			var optionB = {
+				scaleStartValue : 0
+			}
+			var dataRanks = {
+				labels : dataLabels,
+				datasets : [
+					{
+						fillColor : "rgba(245,61,104,0.3)",
+						strokeColor : "rgba(245,61,104,0.6)",
+						pointColor : "rgba(245,61,104,0.8)",
+						pointStrokeColor : "#fff",
+						data : ranks
+					}
+				]
+			}
+			new Chart(ctxRanks).Line(dataRanks,optionB);
 
 		});
 
