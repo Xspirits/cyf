@@ -9,7 +9,7 @@
     <meta name="rating" content="General">
     <meta name="keywords" content="<%= challenge.title %>, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
     <meta name="title" content="Challenge <%= challenge.title %> details on Challenge your Friends">
-    <meta name="description" content="<%= challenge.description %>">
+    <meta name="description" content="Challenge <%= challenge.title %>, value <%= challenge.rateValue %>, rated <%= challenge.rating %> overall. <%= challenge.description %>">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="profile"> <!-- website/article/profile -->
@@ -20,7 +20,7 @@
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
     <meta property="og:title" content="Challenge <%= challenge.title %> details on Challenge your Friends">
-    <meta property="og:description" content="<%= challenge.description %>">
+    <meta property="og:description" content="Challenge <%= challenge.title %>, value <%= challenge.rateValue %>, rated <%= challenge.rating %> overall. <%= challenge.description %>">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="http://www.challenge-friends.com/img/twitt_card.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Challenge <%= challenge.title %> details on Challenge your Friends">
-    <meta name="twitter:description" content="<%= challenge.description %>">
+    <meta name="twitter:description" content="Challenge <%= challenge.title %>, value <%= challenge.rateValue %>, rated <%= challenge.rating %> overall. <%= challenge.description %>">
     <!-- Twitter card end -->
 
 	<title>Challenge <%= challenge.title %> details - Challenge your friends</title>
@@ -40,53 +40,163 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<h1><span class="<%= challenge.icon %>"></span> <%= challenge.title %> <small> <%= challenge.game %></small></h1>
+				<h2 class="col-md-8 col-lg-8 col-xs-12 col-sm-12"><%= challenge.title %> <small> <a href="/c/<%= challenge.idCool %>"> <i class="fa fa-chain"></i> <%= challenge.idCool %> </a></small></h2> 
+				<h2 class="col-md-4 col-lg-4 col-xs-12 col-sm-12"><small class="text-info">Value <i class="fa fa-fire"></i><%= challenge.value %></small></h2>
+
 				<hr>
-				<p>
-					<strong>Description :</strong> <%= challenge.description %>
-				</p>
-				<p>
-					<strong>value :</strong> <%= challenge.value %>
-				</p>
-				<p> 
-					<strong>Rated :</strong> <span class="odometer" data-number="<%= challenge.rating.difficulty.count %>">0</span> times
-				</p>
-				<ul>
-					<li>Difficulty : 
-						<span class="label label-danger odometer" data-number="<%= challenge.rating.difficulty.avg %>">0</span>
-					</li>
-					<li>Quickness : 
-						<span class="label label-info odometer" data-number="<%= challenge.rating.quickness.avg %>">0</span>
-					</li>
-					<li>fun : 
-						<span class="label label-success odometer" data-number="<%= challenge.rating.quickness.avg %>">0</span>
-					</li>
-				</ul>
-				<p>
-					<strong>Currently rated :</strong> <%= challenge.rateValue %>
-				</p>
-				<p>
-					<strong>Created :</strong> <span class="dateReadability" data-date="<%= challenge.creation %>"></span>
-				</p>
 			</div>
 			<div class="row">
 				<div class="col-xs-12 col-md-6">
-					<h1 class="rating-num">4.0</h1>
-					<h2 class="fa fa-fire pull-left"><%= challenge.value %></h2>
-					<div class="rating">
-						<span class="glyphicon glyphicon-star"></span>
-						<span class="glyphicon glyphicon-star"></span>
-						<span class="glyphicon glyphicon-star"></span>
-						<span class="glyphicon glyphicon-star"></span>
-						<span class="glyphicon glyphicon-star-empty"></span>
+
+							<h4>Description</h4>
+							<p class="well">
+								<%= challenge.description %>
+							</p>
+					<div class="row">
+							<div class="col-md-12">
+								<h4>Rated <span class="odometer" data-number="<%= challenge.rateNumber %>">0</span> times, overall <%= challenge.rateValue %></h4>
+								<div class="well clearfix">
+									<canvas id="detailsChart" class="c-center"></canvas>
+									<div class="text-center" >
+										<span>Difficulty <span class="odometer" data-number="<%= challenge.rating.difficulty.avg %>">0</span></span> |
+										<span>Quickness <span class="odometer" data-number="<%= challenge.rating.quickness.avg %>">0</span></span> |
+										<span>fun <span class="odometer" data-number="<%= challenge.rating.fun.avg %>">0</span></span>
+									</div>
+								</div>							
+							</div>
 					</div>
-					<div>
-						<span class="fa fa-pencil"></span> <%= challenge.rating.difficulty.count %> evaluations
+				</div>
+				<div class="col-xs-12 col-md-6">
+					<div class="row">
+							<div class="col-md-12">		
+								<h4>Creation</h4>
+								<p class="well">
+									by <a href="../u/<%= challenge.author.idCool %>"><%= challenge.author.local.pseudo %></a>,<span class="dateReadability" data-date="<%= challenge.creation %>"></span>
+								</p>		
+							</div>
+							<div class="col-md-12" >	
+								<h4 class="rating-num">More stats</h4>
+								<div class="well clearfix">
+										<canvas id="dispersionChart" class="c-center"></canvas>	
+								</div>						
+							</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<% include statics/footers %>
+	<% include statics/footers %>
+	<script type="text/javascript" src="../js/chart.min.js"></script>
+	<script type="text/javascript">
+
+		$(function() {
+
+			// Difficulty, quick and fun chart
+			var desiredRatio = $("#detailsChart").parent().width()*0.5;
+			var canvas = $("#detailsChart")[0];
+			var ctx = canvas.getContext("2d");
+			canvas.setAttribute('width', desiredRatio);
+			canvas.setAttribute('height', desiredRatio);
+
+			<% 
+			if(challenge.rating.difficulty.avg === 0 && challenge.rating.quickness.avg === 0 && challenge.rating.fun.avg === 0) {
+			%>
+			var data = [
+				{value : 0, color: "transparent"},
+				{value : 50, color: "transparent"}
+			]
+
+			<%
+			} else {
+			%>
+			var data = [
+				{value : <%= challenge.rating.difficulty.avg %>, color: "#DF3C5C"},
+				{value : <%= challenge.rating.quickness.avg %>, color: "#42ECE3"},
+				{value : <%= challenge.rating.fun.avg %>, color: "#EFE029"}
+			]
+
+			<%
+			}
+			%>
+			new Chart(ctx).PolarArea(data);
+
+
+			// D
+			var desiredRatio = $("#dispersionChart").parent().width()*0.7;
+			var canvas = $("#dispersionChart")[0];
+			var ctx = canvas.getContext("2d");
+			canvas.setAttribute('width', desiredRatio);
+			canvas.setAttribute('height', desiredRatio);
+
+
+			// data
+			<% 
+			if(challenge.rating.difficulty.avg === 0 && challenge.rating.quickness.avg === 0 && challenge.rating.fun.avg === 0) {
+			%>
+			var data = {
+				labels : ["[0-10]","[10-20]","[20-30]","[30-40]","[40-50]"],
+				datasets : [
+					{
+						fillColor : "rgba(223,60,92,0.5)",
+						strokeColor : "rgba(223,60,92,1)",
+						pointColor : "rgba(223,60,92,1)",
+						pointStrokeColor : "rgb(189,43,72)",
+						data : [30,201,90,81,12]
+					},
+					{
+						fillColor : "rgba(66,236,227,0.5)",
+						strokeColor : "rgba(66,236,227,1)",
+						pointColor : "rgba(66,236,227,1)",
+						pointStrokeColor : "rgb(77,163,159)",
+						data : [28,48,40,19,96]
+					}
+				]
+			}
+			<%
+			} else {
+			%>
+			var data = {
+				labels : ["Eating","Drinking","Sleeping","Designing","Coding"],
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						pointColor : "rgba(220,220,220,1)",
+						pointStrokeColor : "#fff",
+						data : [65,59,90,81,56]
+					},
+					{
+						fillColor : "rgba(151,187,205,0.5)",
+						strokeColor : "rgba(151,187,205,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						data : [28,48,40,19,96]
+					}
+				]
+			}
+
+			<%
+			}
+			%>
+			var options = {
+									
+				scaleBackdropColor : "rgba(255,255,255,0)",	
+				//Boolean - Whether to show labels on the scale	
+				scaleShowLabels : true,
+										
+				//Number - Radius of each point dot in pixels
+				pointDotRadius : 1,
+				
+				//Number - Pixel width of point dot stroke
+				pointDotStrokeWidth : 1,
+				
+				//Number - Number of animation steps
+				animationSteps : 110
+				
+			}
+			new Chart(ctx).Radar(data,options);
+		});
+
+	</script>
 
 	</body>
 	</html>

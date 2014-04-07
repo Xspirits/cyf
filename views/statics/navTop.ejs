@@ -21,22 +21,6 @@
 				<li class="animated fadeInX"><a href="/users">Who's here ?</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
-				<li class="dropdown">
-					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInX" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
-					<div id="user-xpbar" class="hidden-xs hidden-sm"></div>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="/profile">Profile</a>
-						</li>
-						<li>
-							<a href="/friends">Friends</a>
-						</li>
-						<li>
-							<a href="/settings">Settings</a>
-						</li>
-					</ul>
-				</li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle animated fadeInX" data-toggle="dropdown">Challenges <b class="caret"></b></a>
 					<ul class="dropdown-menu">
@@ -56,11 +40,11 @@
 						</li>
 						<!-- <li><a href="/newChallenge">Create</a></li> -->
 						<li><a href="/myChallenges">My Challenges</a></li>
-						<li class="divider hidden-xs hidden-sm"></li>
+						<li class="divider"></li>
 						<li>
 							<a href="/launchChallenge"><strong>Launch</strong></a>
 						</li>
-						<li class="divider hidden-xs hidden-sm"></li>
+						<li class="divider"></li>
 						<li>
 							<a href="/rateChallenges">Rate challenges
 								<% if(currentUser.challengeRate.length > 0 ) { %>
@@ -79,9 +63,26 @@
 						</li>
 					</ul>
 				</li>
-				<li>
-					<a href="/logout"><i class="glyphicon glyphicon-log-out hidden-xs hidden-sm"></i> <span class="hidden-md hidden-lg">Log out</span></a>
+				<li class="dropdown">
+					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInX" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
+					<div id="user-xpbar" class="hidden-xs hidden-sm"></div>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="/profile">Profile</a>
+						</li>
+						<li>
+							<a href="/friends">Friends</a>
+						</li>
+						<li>
+							<a href="/settings">Settings</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="/logout">Log out</a>
+						</li>
+					</ul>
 				</li>
+				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
 			</ul>
 			<% } else { %>
 			<ul class="nav navbar-nav">
