@@ -86,7 +86,7 @@ app.configure ->
 require("./app/routes") app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
-require("./app/schedule") scheduler, _,  sio, ladder, moment, social, appKeys, notifs
+require("./app/schedule") scheduler, _,  sio, ladder, moment, social, appKeys, xp, notifs
 
 # launch ======================================================================
 server.listen port

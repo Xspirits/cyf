@@ -1,5 +1,21 @@
-module.exports = (schedule, _, sio, ladder, moment, social, appKeys, notifs) ->
+module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs) ->
   
+  # =============================================================================
+  # XP&LEVEL HISTORY   ==========================================================
+  # =============================================================================
+
+  # Daily Ladder
+  xpLevelUpdate         = new schedule.RecurrenceRule()
+  xpLevelUpdate.hour    = 0
+  xpLevelUpdate.minute  = 10 # Let's avoid taking risks with setting 0h 0m 0s
+  xpLevelUpdate.seconds = 0
+
+  xpLevel = schedule.scheduleJob xpLevelUpdate, ->
+    console.log 'xpLevel update start'
+
+    xp.updateDaily (result)-> 
+      console.log result
+
   # =============================================================================
   # LADDERS    ==================================================================
   # =============================================================================
@@ -69,7 +85,7 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, notifs) ->
   weeklyRanking           = new schedule.RecurrenceRule()
   weeklyRanking.dayOfWeek = 1 #Monday
   weeklyRanking.hour      = 0
-  weeklyRanking.minute    = 1 # Let's avoid taking risks with setting 0h 0m 0s
+  weeklyRanking.minute    = 5 # Let's avoid taking risks with setting 0h 0m 0s
   weeklyRanking.seconds   = 0
 
   weekLadder = schedule.scheduleJob weeklyRanking, ->

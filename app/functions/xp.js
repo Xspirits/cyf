@@ -131,6 +131,54 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           notifs.gainedXp(userUpdated, value, bonus, text);
           return "woo";
         });
+      },
+      updateDaily: function(done) {
+        return User.find().exec(function(err, users) {
+          var user, _i, _len, _results;
+          if (err) {
+            throw err;
+          }
+          _results = [];
+          for (_i = 0, _len = users.length; _i < _len; _i++) {
+            user = users[_i];
+            _results.push((function(_this) {
+              return function(user) {
+                var gYlvl, gYxp, garbage, todayLevel, todayXp, yesterdayLevel, yesterdayXp;
+                if (user.xpHistoric && user.xpHistoric.length > 0) {
+                  yesterdayXp = user.xpHistoric[user.xpHistoric.length - 1].xp;
+                  yesterdayLevel = user.xpHistoric[user.xpHistoric.length - 1].level;
+                  todayXp = user.xp;
+                  todayLevel = user.level;
+                  gYxp = todayXp > yesterdayXp ? todayXp - yesterdayXp : 0;
+                  gYlvl = yesterdayLevel < todayLevel ? todayLevel - yesterdayLevel : 0;
+                  garbage = {
+                    xp: gYxp,
+                    level: gYlvl
+                  };
+                  console.log('Y.xp: ' + yesterdayXp + ' Y.lvl ' + yesterdayLevel + ' N.xp' + todayXp + ' N.lvl ' + todayLevel);
+                  console.log('gYxp: ' + gYxp + ' gYlvl ' + gYlvl);
+                } else {
+                  garbage = {
+                    xp: user.xp,
+                    level: user.level
+                  };
+                }
+                return User.findByIdAndUpdate(user._id, {
+                  $push: {
+                    xpHistoric: garbage
+                  }
+                }).exec(function(err, userUpdated) {
+                  if (err) {
+                    throw err;
+                  }
+                  console.log(user);
+                  return done(true);
+                });
+              };
+            })(this)(user));
+          }
+          return _results;
+        });
       }
     };
   };

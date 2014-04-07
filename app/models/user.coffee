@@ -34,7 +34,17 @@ userSchema = mongoose.Schema(
   xp:
     type: Number
     default: 0
-
+  xpHistoric: [
+    xp:
+      type: Number
+      default: 0
+    level:
+      type: Number
+      default: 0
+    date:
+      type: Date
+      default: Date.now
+  ]
   xpNext:
     type: Number
     default: 100

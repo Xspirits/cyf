@@ -104,7 +104,7 @@
 
   require("./app/routes")(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google);
 
-  require("./app/schedule")(scheduler, _, sio, ladder, moment, social, appKeys, notifs);
+  require("./app/schedule")(scheduler, _, sio, ladder, moment, social, appKeys, xp, notifs);
 
   server.listen(port);
 

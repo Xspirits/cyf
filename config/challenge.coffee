@@ -90,7 +90,6 @@ module.exports =
       # if there are any errors, return the error
       return done(err)  if err
       chall = doc[0]
-      console.log chall.author + " <> " + currentUser
       if chall.author is currentUser
         chall.remove done
       else

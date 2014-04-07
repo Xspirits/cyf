@@ -98,7 +98,6 @@
           return done(err);
         }
         chall = doc[0];
-        console.log(chall.author + " <> " + currentUser);
         if (chall.author === currentUser) {
           return chall.remove(done);
         } else {

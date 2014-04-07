@@ -108,6 +108,9 @@
 									</tbody>
 								</table>
 							</div>
+							<div class="col-lg-12">								
+								<canvas id="historygraph" class="c-center"></canvas>	
+							</div>
 						</div>
 				</div>
 				<div class="col-lg-4 badggies">
@@ -162,18 +165,34 @@
 			</div>
 		</div>
 	</div>
+
+			<%= currentUser.dailyArchives %>
+			
 	<% include statics/footers %>
+	<script type="text/javascript" src="../js/chart.min.js"></script>
 	<script type="text/javascript">
 
 		$(function() {
+
+			// return an array composed of a list of the days' number from 1 month ago until today, not included.
+			function getAllDays() {
+				var e = moment();
+				var s = moment().subtract('months', 1);
+				var a = [];
+
+				while(s.isBefore(e)) {
+					a.push(s.format("MMM - DD"));
+					s = s.add('days', 1);
+				}
+				return a;
+			}
+
 			$('.badggies img').hover(function(e){
 				$(this).tooltip('show')
 			},function(){
 				$(this).tooltip('hide')
 
 			})
-
-
 			
 			var meNot = false;
 			$('.linked').hover(function(){
@@ -186,6 +205,42 @@
 				_this.children('a').addClass('hidden');
 				_this.children('.meany').removeClass('hidden');
 			});
+
+
+			// User Xp and Level Historic graph
+			var dataLabels = getAllDays();
+			var desiredRatio = $("#historygraph").parent().width();
+			var canvas = $("#historygraph")[0];
+			var ctx = canvas.getContext("2d");
+			var dota2 = []
+			canvas.setAttribute('width', desiredRatio);
+			canvas.setAttribute('height', desiredRatio/3);
+			console.log(dataLabels.length);
+			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>');
+			console.log(historic);
+
+			for (var i = dataLabels.length - 1; i >= 0; i--) {
+				var thisOne = historic[i] ? historic[i].xp : 0;
+				dota2.push(thisOne);
+				console.log(thisOne);
+				console.log('pushing :for ' + i);
+				
+			};
+
+			var data = {
+				labels : dataLabels,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						pointColor : "rgba(220,220,220,1)",
+						pointStrokeColor : "#fff",
+						data : dota2
+					}
+				]
+			}
+			new Chart(ctx).Line(data);
+
 		});
 
 	</script>
