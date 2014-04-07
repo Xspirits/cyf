@@ -208,7 +208,7 @@
     @param  {Function} done [description]
     @return {[type]}        [description]
      */
-    createWeeklyLadder: function() {
+    createWeeklyLadder: function(callback) {
       var self;
       self = this;
       return User.find({}).sort("-_id").exec(function(err, usersList) {
@@ -226,7 +226,7 @@
     @param  {Function} done [description]
     @return {[type]}        [description]
      */
-    createMonthlyLadder: function() {
+    createMonthlyLadder: function(callback) {
       var self;
       self = this;
       return User.find({}).sort("-_id").exec(function(err, usersList) {

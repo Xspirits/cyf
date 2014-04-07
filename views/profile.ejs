@@ -118,21 +118,21 @@
 											<li><a href="#ranksTab" data-toggle="tab">Ranks</a></li>
 										</ul>
 										<div id="tabby" class="tab-content">
-											<div class="tab-pane active animated bounceIn" id="xpTab">
+											<div class="tab-pane active animated flipInX" id="xpTab">
 												<div class="row">
 													<div class="col-lg-12">								
 														<canvas id="historygraph" class="c-center"></canvas>	
 													</div>
 												</div>
 											</div>
-											<div class="tab-pane animated bounceIn" id="levelTab">
+											<div class="tab-pane animated flipInX" id="levelTab">
 												<div class="row">
 													<div class="col-lg-12">								
 														<canvas id="levelgraph" class="c-center"></canvas>	
 													</div>
 												</div>
 											</div>
-											<div class="tab-pane animated bounceIn" id="ranksTab">
+											<div class="tab-pane animated flipInX" id="ranksTab">
 												<div class="row">
 													<div class="col-lg-12">								
 														<canvas id="ranksgraph" class="c-center"></canvas>	
@@ -245,31 +245,52 @@
 			var desiredRatio = $("#historygraph").parent().width();
 			var canvasXp = $("#historygraph")[0];
 
-			var ctxXp = canvasXp.getContext("2d")
-			, dota2 = []
+			var ctxXp = canvasXp.getContext("2d");
+			var dota2 = []
 			, warcraft4 = []
 			, dailyR = []
 			, weeklyR = []
-			, monthlyR = []
-			, globalR = [];
+			, monthlyR = [];
+
 			canvasXp.setAttribute('width', desiredRatio);
-			canvasXp.setAttribute('height', desiredRatio/3);
+			canvasXp.setAttribute('height', desiredRatio/2.5);
+
 			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
+			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse()
+			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>').reverse()
+			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>').reverse();
+
+			var offsetDaily = rHistDaily[0].rank + 9999;
+			var offsetWeekly = rHistDaily[0].rank + 9999;
+			var offsetMonthly = rHistDaily[0].rank + 9999;
 
 			// position our start at the end of the graph by reversing it.
 			for (var i = dataLabels.length - 1; i >= 0; i--) {
 				// Reverse the value of our historic
-				var thisOne = historic[i] ? historic[i].xp : 0;
-				var thatOne = historic[i] ? historic[i].level : 0;
-				dota2.push(thisOne);
-				warcraft4.push(thatOne);
-				
+				thisOne = historic[i] ? historic[i].xp : 0;
+				thatOne = historic[i] ? historic[i].level : 0;
+				thisdaily = rHistDaily[i] ? rHistDaily[i].rank : offsetDaily;
+				thisWeekly = rHistWeekly[i] ? rHistWeekly[i].rank : offsetWeekly;
+				thisMonthly = rHistMonthly[i] ? rHistMonthly[i].rank : offsetMonthly;
+
+				if(thisOne > 0){
+					dota2.push(thisOne);
+				}
+				if(thatOne > 0){		
+					warcraft4.push(thatOne);
+				}
+					dailyR.push(thisdaily);
+					weeklyR.push(thisWeekly);
+					monthlyR.push(thisMonthly);
 			};
+			console.log(rHistDaily)
+			console.log(dailyR)
 			var optionA = {
 				scaleStartValue : 50
 			}
+			var xpLab = dota2.length < dataLabels.length ? dataLabels.slice(dataLabels.length - dota2.length,dataLabels.length) : dataLabels;
 			var dataXp = {
-				labels : dataLabels,
+				labels : xpLab,
 				datasets : [
 					{
 						fillColor : "rgba(27,63,89,0.3)",
@@ -286,55 +307,62 @@
 			var canvasLevel = $("#levelgraph")[0];
 			var ctxLevel = canvasLevel.getContext("2d");
 			canvasLevel.setAttribute('width', desiredRatio);
-			canvasLevel.setAttribute('height', desiredRatio/3);
+			canvasLevel.setAttribute('height', desiredRatio/2.5);
 
-			var optionB = {
-				scaleStartValue : 0
-			}
+
+			var lvlLab = warcraft4.length < dataLabels.length ? dataLabels.slice(dataLabels.length - warcraft4.length,dataLabels.length) : dataLabels;
 			var dataLevel = {
-				labels : dataLabels,
+				labels : lvlLab,
 				datasets : [
 					{
-						fillColor : "rgba(26,56,82,0.3)",
-						strokeColor : "rgba(26,56,82,0.6)",
-						pointColor : "rgba(26,56,82,0.8)",
+						fillColor : "rgba(159,238,0,0.3)",
+						strokeColor : "rgba(159,238,0,0.6)",
+						pointColor : "rgba(159,238,0,0.8)",
 						pointStrokeColor : "#fff",
 						data : warcraft4
 					}
 				]
 			}
-			new Chart(ctxLevel).Line(dataLevel,optionB);
+			new Chart(ctxLevel).Line(dataLevel);
 
 			//Ranks Graph
-			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse();
-
 			var canvasRanks = $("#ranksgraph")[0];
 			var ctxRanks = canvasRanks.getContext("2d");
 			canvasRanks.setAttribute('width', desiredRatio);
-			canvasRanks.setAttribute('height', desiredRatio/3);
+			canvasRanks.setAttribute('height', desiredRatio/2.5);
 
-			for (var i = rHistDaily.length - 1; i >= 0; i--) {
-				// Reverse the value of our historic
-				var thisOne = rHistDaily[i] ? rHistDaily[i].rank : 0;
-				dailyR.push(thisOne);
-				
-			};
-			var optionB = {
-				scaleStartValue : 0
+			var rankLab = dailyR.length < dataLabels.length ? dataLabels.slice(dataLabels.length - dailyR.length,dataLabels.length) : dataLabels;
+			
+			var opt = {
+				datasetFill : false
 			}
 			var dataRanks = {
-				labels : dataLabels,
+				labels : rankLab,
 				datasets : [
 					{
 						fillColor : "rgba(245,61,104,0.3)",
 						strokeColor : "rgba(245,61,104,0.6)",
 						pointColor : "rgba(245,61,104,0.8)",
 						pointStrokeColor : "#fff",
-						data : ranks
+						data : dailyR
+					},
+					{
+						fillColor : "rgba(183,0,148,0.3)",
+						strokeColor : "rgba(183,0,148,0.6)",
+						pointColor : "rgba(183,0,148,0.8)",
+						pointStrokeColor : "#fff",
+						data : weeklyR
+					},
+					{
+						fillColor : "rgba(255,230,0,0.3)",
+						strokeColor : "rgba(255,230,0,0.6)",
+						pointColor : "rgba(255,230,0,0.8)",
+						pointStrokeColor : "#fff",
+						data : monthlyR
 					}
 				]
 			}
-			new Chart(ctxRanks).Line(dataRanks,optionB);
+			new Chart(ctxRanks).Line(dataRanks,opt);
 
 		});
 

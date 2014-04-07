@@ -187,7 +187,7 @@ module.exports =
   @param  {Function} done [description]
   @return {[type]}        [description]
   ###
-  createWeeklyLadder: ->
+  createWeeklyLadder: (callback) ->
     self = this
     
     #Users Loop
@@ -203,7 +203,7 @@ module.exports =
   @param  {Function} done [description]
   @return {[type]}        [description]
   ###
-  createMonthlyLadder: ->
+  createMonthlyLadder: (callback) ->
     self = this
     
     #Users Loop

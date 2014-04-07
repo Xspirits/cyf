@@ -65,12 +65,27 @@
     });
     app.get("/friends", isLoggedIn, function(req, res) {
       return users.getFriendList(req.user._id, function(fList) {
-        xp.updateDaily(function(result) {
-          return console.log(result);
-        });
-        return res.render("friendList.ejs", {
-          currentUser: req.user,
-          friends: fList.friends
+        return ladder.createDailyLadder(function() {
+          return ladder.rankUser('dailyRank', function(top3) {
+            console.log(top3);
+            return ladder.createWeeklyLadder(function() {
+              return ladder.rankUser('weeklyRank', function(top3) {
+                console.log(top3);
+                return ladder.createMonthlyLadder(function() {
+                  return ladder.rankUser('monthlyRank', function(top3) {
+                    console.log(top3);
+                    return xp.updateDaily(function(result) {
+                      console.log(result);
+                      return res.render("friendList.ejs", {
+                        currentUser: req.user,
+                        friends: fList.friends
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
         });
       });
     });

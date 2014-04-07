@@ -51,12 +51,20 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
   app.get "/friends", isLoggedIn, (req, res) ->
     users.getFriendList req.user._id, (fList) ->
     
-      xp.updateDaily (result)-> 
-        console.log result
-
-      res.render "friendList.ejs",
-        currentUser: req.user
-        friends: fList.friends
+      ladder.createDailyLadder ->
+        ladder.rankUser 'dailyRank', (top3)-> 
+          console.log top3
+          ladder.createWeeklyLadder ->
+            ladder.rankUser 'weeklyRank', (top3)-> 
+              console.log top3
+              ladder.createMonthlyLadder ->
+                ladder.rankUser 'monthlyRank', (top3)-> 
+                  console.log top3
+                  xp.updateDaily (result)-> 
+                    console.log result
+                    res.render "friendList.ejs",
+                      currentUser: req.user
+                      friends: fList.friends
 
   # PROFILE SECTION ===========================
   app.get "/profile", isLoggedIn, (req, res) ->
