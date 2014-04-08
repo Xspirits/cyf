@@ -6,9 +6,9 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
 
   # Level and Xp update
   xpLevelUpdate         = new schedule.RecurrenceRule()
-  xpLevelUpdate.hour    = 12
-  xpLevelUpdate.minute  = 30 # Let's avoid taking risks with setting 0h 0m 0s
-  xpLevelUpdate.seconds = 0
+  # xpLevelUpdate.hour    = 0
+  # xpLevelUpdate.minute  = 0 # Let's avoid taking risks with setting 0h 0m 0s
+  xpLevelUpdate.seconds = new schedule.Range(15, 30)
 
   xpLevel = schedule.scheduleJob xpLevelUpdate, ->
     console.log 'xpLevel update start'

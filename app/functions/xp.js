@@ -143,26 +143,11 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
             user = users[_i];
             _results.push((function(_this) {
               return function(user) {
-                var gYlvl, gYxp, garbage, todayLevel, todayXp, yesterdayLevel, yesterdayXp;
-                if (user.xpHistoric && user.xpHistoric.length > 0) {
-                  yesterdayXp = user.xpHistoric[user.xpHistoric.length - 1].xp;
-                  yesterdayLevel = user.xpHistoric[user.xpHistoric.length - 1].level;
-                  todayXp = user.xp;
-                  todayLevel = user.level;
-                  gYxp = todayXp > yesterdayXp ? todayXp - yesterdayXp : 0;
-                  gYlvl = yesterdayLevel < todayLevel ? todayLevel - yesterdayLevel : 0;
-                  garbage = {
-                    xp: gYxp,
-                    level: gYlvl
-                  };
-                  console.log('Y.xp: ' + yesterdayXp + ' Y.lvl ' + yesterdayLevel + ' N.xp' + todayXp + ' N.lvl ' + todayLevel);
-                  console.log('gYxp: ' + gYxp + ' gYlvl ' + gYlvl);
-                } else {
-                  garbage = {
-                    xp: user.xp,
-                    level: user.level
-                  };
-                }
+                var garbage;
+                garbage = {
+                  xp: user.xp,
+                  level: user.level
+                };
                 return User.findByIdAndUpdate(user._id, {
                   $push: {
                     xpHistoric: garbage

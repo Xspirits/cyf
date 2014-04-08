@@ -113,9 +113,9 @@
 								<div class="panel">
 									<div class="tabbable tabs-left clearfix">
 										<ul id="tabbyTab" class="nav nav-tabs nav-justified">
-											<li class="active"><a href="#xpTab" data-toggle="tab">experience</a></li>
-											<li><a href="#levelTab" data-toggle="tab">levels</a></li>
-											<li><a href="#ranksTab" data-toggle="tab">Ranks</a></li>
+											<li class="active"><a href="#xpTab" data-toggle="tab">XP Progression</a></li>
+											<li><a href="#levelTab" data-toggle="tab">Level Progression</a></li>
+											<li><a href="#ranksTab" data-toggle="tab">Ranks Historic</a></li>
 										</ul>
 										<div id="tabby" class="tab-content">
 											<div class="tab-pane active" id="xpTab">
@@ -300,7 +300,7 @@
 					}
 				]
 			}
-			new Chart(ctxXp).Bar(dataXp);
+			new Chart(ctxXp).Line(dataXp);
 			//Level Graph
 
 			var canvasLevel = $("#levelgraph")[0];

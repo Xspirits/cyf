@@ -126,37 +126,14 @@ module.exports = (sio) ->
       throw err if err
 
       for user in users then do (user) =>
-        if user.xpHistoric && user.xpHistoric.length > 0 
-          # calculate the xp generated yesterday
-          yesterdayXp = user.xpHistoric[user.xpHistoric.length-1].xp
-          yesterdayLevel = user.xpHistoric[user.xpHistoric.length-1].level
-  
-          # get current values
-          todayXp = user.xp
-          todayLevel = user.level
-
-          # process the HARDCORE MATHS
-          gYxp = if todayXp > yesterdayXp then (todayXp - yesterdayXp) else 0
-          gYlvl = if yesterdayLevel < todayLevel then (todayLevel - yesterdayLevel) else 0
-
-          #generate object of the day
-          garbage=
-            xp: gYxp
-            level: gYlvl
-
-          #print out to be sure
-          console.log 'Y.xp: '+ yesterdayXp+' Y.lvl '+yesterdayLevel + ' N.xp'+ todayXp+' N.lvl '+todayLevel
-          console.log 'gYxp: '+ gYxp+' gYlvl '+gYlvl
-        else
-          #generate object of the day
-          garbage=
-            xp: user.xp
-            level: user.level
+        #generate object of the day: freez the xp and level achieved
+        garbage=
+          xp: user.xp
+          level: user.level
 
         User.findByIdAndUpdate(user._id,
           $push:
             xpHistoric: garbage
         ).exec (err, userUpdated) ->
           throw err  if err
-          console.log user
           return done true
