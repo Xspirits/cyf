@@ -1,4 +1,3 @@
-
 @charset "UTF-8";
 @import url("http://fonts.googleapis.com/css?family=Signika");
 /* custom scrollbar */
@@ -6,7 +5,6 @@
 ::-webkit-scrollbar {
   width: .95em;
 }
-
 /* line 10, ../../sass/style.scss */
 ::-webkit-scrollbar-track {
   background-color: rgba(217, 217, 217, 0.5);
@@ -114,6 +112,8 @@
   border: 1px solid #ED5565;
 }
 
+/* Magic css fix */
+.fb-share-button{ top: -4px; }
 canvas {
   display: block;
 }
@@ -379,6 +379,9 @@ hr.subtle-divider {
   border-top: 1px solid rgb(235,235,235);
   border-bottom: 1px solid rgb(245,245,245);
   color: rgb(235,235,235);
+}
+.valueChall {
+  margin: 0 5px;
 }
 #leadTab>li>a {
   font-weight: bolder;

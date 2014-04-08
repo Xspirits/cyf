@@ -125,6 +125,11 @@
 								<% if (user.twitter.username) { %>
 								<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
 								<% } %>
+								<section class="pull-right">
+									<div class="fb-share-button" data-href="http://challenge-friends.herokuapp.com/u/<%= user.idCool %>" data-type="button_count"></div>
+									<div class="g-plus" data-action="share" data-annotation="bubble"></div>
+									<a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
+								</section>
 							</div>
 							<div class="col-lg-12">
 								<h3>Ladders ranking</h3>	
