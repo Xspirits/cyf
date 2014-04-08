@@ -37,7 +37,7 @@
 	<% include statics/navTop %>
 	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
 
-	<div class="canvas">
+	<div class="canvas c-center-x">
 		
 		<div class="container">
 			<div class="row">
@@ -109,8 +109,8 @@
 								</table>
 							</div>
 
-							<div class="col-md-12 col-lg-12">
-								<div class="panel graphsTab">
+							<div class="col-md-12 col-lg-12 col-xs-1O col-sm-1O">
+								<div class="panel">
 									<div class="tabbable tabs-left clearfix">
 										<ul id="tabbyTab" class="nav nav-tabs nav-justified">
 											<li class="active"><a href="#xpTab" data-toggle="tab">experience</a></li>
@@ -118,26 +118,14 @@
 											<li><a href="#ranksTab" data-toggle="tab">Ranks</a></li>
 										</ul>
 										<div id="tabby" class="tab-content">
-											<div class="tab-pane active animated flipInX" id="xpTab">
-												<div class="row">
-													<div class="col-lg-12 col-md-12 col-sm-10 col-xs-10 ">								
-														<canvas id="historygraph" class="c-center"></canvas>	
-													</div>
-												</div>
+											<div class="tab-pane active" id="xpTab">
+												<canvas id="historygraph"></canvas>
 											</div>
-											<div class="tab-pane animated flipInX" id="levelTab">
-												<div class="row">
-													<div class="col-lg-12 col-md-12 col-sm-10 col-xs-10 ">								
-														<canvas id="levelgraph" class="c-center"></canvas>	
-													</div>
-												</div>
+											<div class="tab-pane" id="levelTab">
+												<canvas id="levelgraph"></canvas>
 											</div>
-											<div class="tab-pane animated flipInX" id="ranksTab">
-												<div class="row">
-													<div class="col-lg-12 col-md-12 col-sm-10 col-xs-10 ">								
-														<canvas id="ranksgraph" class="c-center"></canvas>	
-													</div>
-												</div>
+											<div class="tab-pane" id="ranksTab">
+												<canvas id="ranksgraph"></canvas>
 											</div>
 
 											<div class="text-right">
@@ -345,7 +333,8 @@
 			var rankLab = dailyR.length < dataLabels.length ? dataLabels.slice(dataLabels.length - dailyR.length,dataLabels.length) : dataLabels;
 			
 			var opt = {
-				datasetFill : false
+				datasetFill : false,
+				onAnimationComplete: fixIt()
 			}
 			var dataRanks = {
 				labels : rankLab,
@@ -376,10 +365,19 @@
 			new Chart(ctxRanks).Line(dataRanks,opt);
 
 		});
+		var fixIt = function () {
+			setTimeout(function(){
+				$("#ranksgraph").css('padding',0).parent().css('padding',0);
+				$("#levelgraph").css('padding',0).parent().css('padding',0);
+				$("#historygraph").css('padding',0).parent().css('padding',0);
+				$('.tab-content').css('padding',0)
+			},300);
+			
 
+		}
 			var timer = function (){				
 				var d = new Date();
-				d.setHours(0,0,0,1)
+				d.setHours(0,0,1,0)
 				var converted = moment(d).countdown().toString();
 				$('.timer').text('Next update in ' + converted);
 			}

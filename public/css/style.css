@@ -114,11 +114,15 @@
   border: 1px solid #ED5565;
 }
 
-
+canvas {
+  display: block;
+}
 /* line 21, ../../sass/style.scss */
 
 html, body {
   height: 100%;
+    margin: 0;
+    padding: 0;
   background: url('../img/px_bg.png') repeat;
   font-size: .865em;
   font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -168,7 +172,9 @@ body.modal-open .canvas{
 /* Usefull class to center canvas */
 .c-center {
     padding: 0;
-    margin: 0;
+    margin: 0 auto;
+    vertical-align: top;
+    display: block;
 }
 
 .modal-backdrop {background: #f7f7f7;}
@@ -929,7 +935,12 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 @media (max-width: 767px) {
 
   .c-center {
+    margin: 0;
   }
+  .c-center-x {
+    overflow-x: hidden;
+  }
+
 
   .navbar-nav {
   margin: 0 -15px;
