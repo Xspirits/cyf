@@ -6,7 +6,7 @@ module.exports =
     email_confirm: false
   twitterPushNews: true
   cyf :
-    domain: "http://challenge-friends.com"
+    domain: "http://challenge-friends.herokuapp.com"
     # domain: "http://localhost:8080"
   mandrill_key: "w_F27RXK5GmLNtZoePLczA"
   support :
@@ -24,12 +24,12 @@ module.exports =
   facebookAuth:
     clientID: "624902070914410" # your App ID
     clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92" # your App Secret
-    callbackURL: "http://challenge-friends.com/auth/facebook/callback"
+    callbackURL: "http://challenge-friends.herokuapp.com/auth/facebook/callback"
 
   twitterAuth:
     consumerKey: "KqGJkpnwthwuOcrVpLoKA"
     consumerSecret: "DmWpNqUNnctc2hoPj36rsWVRsItsKhwhbqfhSmcXOQ"
-    callbackURL: "http://challenge-friends.com/auth/twitter/callback"
+    callbackURL: "http://challenge-friends.herokuapp.com/auth/twitter/callback"
 
   twitterCyf:
     token : "2396246222-NAnfkkJen2abruUEgDM9dZHRD1NpPZxblWeLPSy"
