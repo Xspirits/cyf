@@ -3,30 +3,30 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.com">
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
     <meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
-    <meta name="title" content="<%= user.local.pseudo %>'s profile - Challenge your Friends">
-    <meta name="description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %> at Challenge your Friends. He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'twitter @'+user.twitter.username :'' %> ">
+    <meta name="title" content="<%= user.local.pseudo %>'s profile on challenge your Friends">
+    <meta name="description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %> ">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="profile:<%= user.local.idCool %>"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.com/u/<%= user.idCool %>">
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com/u/<%= user.idCool %>">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="<%= user.icon %>">
+    <meta property="og:image" content="<%= user.icon %>.png">
     <meta property="og:image:width" content="200">
-    <meta property="og:title" content="<%= user.local.pseudo %>'s profile - Challenge your Friends">
-    <meta property="og:description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %> at Challenge your Friends. He/She has <%= user.friends.length %> friend(s) <%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>  ">
+    <meta property="og:title" content="<%= user.local.pseudo %>'s profile on challenge your Friends">
+    <meta property="og:description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s) <%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>  ">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="<%= user.icon %>">
+    <meta name="twitter:image" content="<%= user.icon %>.png">
     <meta name="twitter:image:width" content="200">
-    <meta name="twitter:title" content="<%= user.local.pseudo %>'s profile - Challenge your Friends">
-    <meta name="twitter:description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %> at Challenge your Friends. He/She has <%= user.friends.length %> friend(s) <%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>  ">
+    <meta name="twitter:title" content="<%= user.local.pseudo %>'s profile on challenge your Friends">
+    <meta name="twitter:description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s) <%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>  ">
     <!-- Twitter card end -->
 	<title><%= user.local.pseudo %> profile- Challenge your Friends</title>
 </head>
