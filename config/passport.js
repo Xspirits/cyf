@@ -228,11 +228,13 @@
                 profileUrl = configAuth.cyf.domain + '/' + user.idCool;
                 return shortUrl.googleUrl(profileUrl, function(shortened) {
                   var twitt;
-                  console.log("\n New twitter linked %s to %s", profileUrl, shortened);
-                  twitt = "Welcome @" + user.twitter.username + " (" + shortened + ") on Challenge your Friends! You are " + user.level + ", a journey await you! @cyf_app #challenge";
-                  return social.postTwitter(req.user.twitter, twitt, function(data) {
-                    return done(null, user);
-                  });
+                  console.log("New twitter linked %s to %s", profileUrl, shortened);
+                  if (configAuth.twitterPushNews) {
+                    twitt = "Welcome @" + user.twitter.username + " (" + shortened + ") on Challenge your Friends! You are " + user.level + ", a journey awaits you! @cyf_app #challenge";
+                    return social.postTwitter(configAuth.twitterCyf, twitt, function(data) {
+                      return done(null, user);
+                    });
+                  }
                 });
               });
             } else {

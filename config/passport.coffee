@@ -249,15 +249,17 @@ module.exports = (passport, genUID, xp, notifs, mailer,shortUrl) ->
             user.twitter.username = profile.username
             user.twitter.displayName = profile.displayName
             user.save (err) ->
-              throw err  if err
+              throw err if err
               profileUrl = configAuth.cyf.domain + '/'+ user.idCool
               shortUrl.googleUrl profileUrl, (shortened) ->
-                console.log "\n New twitter linked %s to %s", profileUrl, shortened
-                twitt = "Welcome @"+user.twitter.username+" ("+shortened+") on Challenge your Friends! You are "+user.level+", a journey await you! @cyf_app #challenge"
-                social.postTwitter req.user.twitter, twitt, (data) ->
-                  done null, user
+                console.log "New twitter linked %s to %s", profileUrl, shortened
+                if configAuth.twitterPushNews
+                  # Lets push on our timeline to let players now about the new member!             
+                  twitt = "Welcome @"+user.twitter.username+" ("+shortened+") on Challenge your Friends! You are "+user.level+", a journey awaits you! @cyf_app #challenge"
+                  social.postTwitter configAuth.twitterCyf, twitt, (data) ->
+                    done null, user
           else
-            
+            # NOT OPERATING ANYMORE. Users Must create a local user. 
             # if there is no user, create them 
             newUser = new User()
             newUser.twitter.id = profile.id

@@ -4,6 +4,7 @@
     app_config: {
       email_confirm: false
     },
+    twitterPushNews: true,
     cyf: {
       domain: "http://challenge-friends.com"
     },
