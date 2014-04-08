@@ -3,9 +3,7 @@
   module.exports = function(schedule, _, sio, ladder, moment, social, appKeys, xp, notifs) {
     var dailyLadder, dailyRanking, monthlyLadder, monthlyRanking, weekLadder, weeklyRanking, xpLevel, xpLevelUpdate;
     xpLevelUpdate = new schedule.RecurrenceRule();
-    xpLevelUpdate.hour = 0;
-    xpLevelUpdate.minute = 10;
-    xpLevelUpdate.seconds = 0;
+    xpLevelUpdate.seconds = new schedule.Range(15, 30);
     xpLevel = schedule.scheduleJob(xpLevelUpdate, function() {
       console.log('xpLevel update start');
       return xp.updateDaily(function(result) {
@@ -71,10 +69,10 @@
     weeklyRanking.seconds = 0;
     weekLadder = schedule.scheduleJob(weeklyRanking, function() {
       return ladder.createWeeklyLadder(function() {
-        console.log("Updated ladder for the past week " + lastWeek);
         return ladder.rankUser('weeklyRank', function(top3) {
           var lastWeek, newFollower, newLeader;
           lastWeek = moment().subtract('w', 1).format("w");
+          console.log("Updating ladder for the past week " + lastWeek);
           newLeader = '';
           newFollower = '';
           _.each(top3, function(user, it) {
@@ -122,14 +120,14 @@
     monthlyRanking = new schedule.RecurrenceRule();
     monthlyRanking.date = 1;
     monthlyRanking.hour = 1;
-    monthlyRanking.minute = 0;
+    monthlyRanking.minute = 2;
     monthlyRanking.seconds = 0;
     return monthlyLadder = schedule.scheduleJob(monthlyRanking, function() {
       return ladder.createMonthlyLadder(function() {
-        console.log("Updated ladder for the past month " + lastMonth);
-        return ladder.rankUser('monthlyRank', function() {
+        return ladder.rankUser('monthlyRank', function(top3) {
           var lastMonth, newFollower, newLeader;
           lastMonth = moment().subtract('m', 1).format("MMMM GGGG");
+          console.log("Updated ladder for the past month " + lastMonth);
           newLeader = '';
           newFollower = '';
           _.each(top3, function(user, it) {

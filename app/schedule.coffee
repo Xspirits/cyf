@@ -4,10 +4,10 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
   # XP&LEVEL HISTORY   ==========================================================
   # =============================================================================
 
-  # Daily Ladder
+  # Level and Xp update
   xpLevelUpdate         = new schedule.RecurrenceRule()
-  xpLevelUpdate.hour    = 0
-  xpLevelUpdate.minute  = 10 # Let's avoid taking risks with setting 0h 0m 0s
+  xpLevelUpdate.hour    = 12
+  xpLevelUpdate.minute  = 30 # Let's avoid taking risks with setting 0h 0m 0s
   xpLevelUpdate.seconds = 0
 
   xpLevel = schedule.scheduleJob xpLevelUpdate, ->
@@ -30,10 +30,8 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
     console.log 'dailyLadder'
 
     ladder.createDailyLadder ->
-
       ladder.rankUser 'dailyRank', (top3)-> 
         yesterday = moment().subtract('d', 1).format("ddd Do MMM")
-        # console.log 'Updated ladder for ' + yesterday + ' leaders ' + top3.length
         # Initiate the newLeader variable here, else we'll get an undefined when we post on twitter.
         newLeader = ''
         _.each top3, (user, it) ->
@@ -91,10 +89,10 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
   weekLadder = schedule.scheduleJob weeklyRanking, ->
     ladder.createWeeklyLadder ->
 
-      console.log "Updated ladder for the past week " + lastWeek
       ladder.rankUser 'weeklyRank', (top3)-> 
 
         lastWeek = moment().subtract('w', 1).format("w")
+        console.log "Updating ladder for the past week " + lastWeek
         newLeader   = ''
         newFollower = ''
         _.each top3, (user, it) ->
@@ -145,15 +143,15 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
   monthlyRanking         = new schedule.RecurrenceRule()
   monthlyRanking.date    = 1 # 1st of each month
   monthlyRanking.hour    = 1 # at 1 AM
-  monthlyRanking.minute  = 0
+  monthlyRanking.minute  = 2
   monthlyRanking.seconds = 0
 
   monthlyLadder = schedule.scheduleJob monthlyRanking, ->
     ladder.createMonthlyLadder ->
 
-      console.log "Updated ladder for the past month " + lastMonth
-      ladder.rankUser 'monthlyRank', -> 
+      ladder.rankUser 'monthlyRank', (top3)-> 
         lastMonth = moment().subtract('m', 1).format("MMMM GGGG")
+        console.log "Updated ladder for the past month " + lastMonth
         newLeader   = ''
         newFollower = ''
         _.each top3, (user, it) ->

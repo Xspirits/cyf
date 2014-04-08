@@ -168,10 +168,9 @@ body.modal-open .canvas{
 /* Usefull class to center canvas */
 .c-center {
     padding: 0;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+    margin: 0;
 }
+
 .modal-backdrop {background: #f7f7f7;}
 .modal-content {background: #EBECEE; border: 0;}
 .modal-header {
@@ -928,6 +927,9 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 }
 
 @media (max-width: 767px) {
+
+  .c-center {
+  }
 
   .navbar-nav {
   margin: 0 -15px;
