@@ -53,10 +53,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
   # FRIENDS LIST SECTION ======================
   app.get "/friends", isLoggedIn, (req, res) ->
     users.getFriendList req.user._id, (fList) ->
-     
-      xp.updateDaily (result)-> 
-        console.log result
-
       res.render "friendList.ejs",
         currentUser: req.user
         friends: fList.friends

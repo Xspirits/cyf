@@ -229,9 +229,9 @@
                 return shortUrl.googleUrl(profileUrl, function(shortened) {
                   var twitt;
                   console.log("New twitter linked %s to %s", profileUrl, shortened);
-                  if (configAuth.twitterPushNews) {
+                  if (configAuth.app_config.twitterPushNews) {
                     twitt = "Welcome @" + user.twitter.username + " (" + shortened + ") on Challenge your Friends! You are " + user.level + ", a journey awaits you! @cyf_app #challenge";
-                    return social.postTwitter(configAuth.twitterCyf, twitt, function(data) {
+                    return social.postTwitter(false, twitt, function(data) {
                       return done(null, user);
                     });
                   }

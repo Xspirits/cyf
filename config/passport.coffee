@@ -253,10 +253,10 @@ module.exports = (passport, genUID, xp, notifs, mailer,shortUrl) ->
               profileUrl = configAuth.cyf.domain + '/'+ user.idCool
               shortUrl.googleUrl profileUrl, (shortened) ->
                 console.log "New twitter linked %s to %s", profileUrl, shortened
-                if configAuth.twitterPushNews
+                if configAuth.app_config.twitterPushNews
                   # Lets push on our timeline to let players now about the new member!             
                   twitt = "Welcome @"+user.twitter.username+" ("+shortened+") on Challenge your Friends! You are "+user.level+", a journey awaits you! @cyf_app #challenge"
-                  social.postTwitter configAuth.twitterCyf, twitt, (data) ->
+                  social.postTwitter false, twitt, (data) ->
                     done null, user
           else
             # NOT OPERATING ANYMORE. Users Must create a local user. 

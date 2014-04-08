@@ -43,11 +43,18 @@ exports.getFbData = (accessToken, apiPath, callback) ->
 
 exports.postTwitter = (accessToken, message, callback) ->
   url = "https://api.twitter.com/1.1/statuses/update.json"
-  params =
-    consumer_key: auth.twitterAuth.consumerKey
-    consumer_secret: auth.twitterAuth.consumerSecret
-    token: accessToken.token
-    token_secret: accessToken.tokenSecret
+  unless accessToken
+    params =
+      consumer_key: auth.twitterAuth.consumerKey
+      consumer_secret: auth.twitterAuth.consumerSecret
+      token: auth.twitterCyf.token
+      token_secret: auth.twitterCyf.tokenSecret
+  else
+    params =
+      consumer_key: auth.twitterAuth.consumerKey
+      consumer_secret: auth.twitterAuth.consumerSecret
+      token: accessToken.token
+      token_secret: accessToken.tokenSecret
 
   r = request.post(
     url: url

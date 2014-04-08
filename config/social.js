@@ -58,12 +58,21 @@
   exports.postTwitter = function(accessToken, message, callback) {
     var form, params, r, url;
     url = "https://api.twitter.com/1.1/statuses/update.json";
-    params = {
-      consumer_key: auth.twitterAuth.consumerKey,
-      consumer_secret: auth.twitterAuth.consumerSecret,
-      token: accessToken.token,
-      token_secret: accessToken.tokenSecret
-    };
+    if (!accessToken) {
+      params = {
+        consumer_key: auth.twitterAuth.consumerKey,
+        consumer_secret: auth.twitterAuth.consumerSecret,
+        token: auth.twitterCyf.token,
+        token_secret: auth.twitterCyf.tokenSecret
+      };
+    } else {
+      params = {
+        consumer_key: auth.twitterAuth.consumerKey,
+        consumer_secret: auth.twitterAuth.consumerSecret,
+        token: accessToken.token,
+        token_secret: accessToken.tokenSecret
+      };
+    }
     r = request.post({
       url: url,
       oauth: params

@@ -70,9 +70,6 @@
     });
     app.get("/friends", isLoggedIn, function(req, res) {
       return users.getFriendList(req.user._id, function(fList) {
-        xp.updateDaily(function(result) {
-          return console.log(result);
-        });
         return res.render("friendList.ejs", {
           currentUser: req.user,
           friends: fList.friends
