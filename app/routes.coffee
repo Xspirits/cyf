@@ -6,6 +6,9 @@ isLoggedIn = (req, res, next) ->
   
 module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
+  app.get "/about", (req,res) ->
+    res.render "about.ejs",
+      currentUser: if req.isAuthenticated() then req.user else false
   # show the home page (will also have our login links)
   app.get "/", (req, res) ->
     if req.isAuthenticated()
@@ -374,17 +377,16 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
   app.post "/linkLol", isLoggedIn, (req, res) ->
     obj =
-      _id: req.user._id
       region: req.body.region
       summonerName: req.body.summonerName
 
     users.linkLol obj, (result) ->
-      if result is true
+      if result.status_code == 200
         xp.xpReward req.user, "connect.game"
         notifs.linkedGame req.user, "League of Legend"
         res.send true
       else
-        res.send false
+        res.send false,result.message
 
   app.post "/updateSettings", isLoggedIn, (req, res) ->
     obj =
@@ -769,3 +771,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     user.google.token = `undefined`
     user.save (err) ->
       res.redirect "/profile"
+
+  app.get "*", (req, res) ->
+    res.redirect "/"

@@ -1,5 +1,5 @@
 {
-  "name": "challenge-yout-friends",
+  "name": "challenge-your-friends",
   "main": "server.js",
   "scripts": {
     "start": "node server"
@@ -26,11 +26,9 @@
     "connect": "~2.14.2",
     "node-schedule": "~0.1.13",
     "mandrill-api": "~1.0.39",
-    "grvtr": "latest"
+    "grvtr": "latest",
+    "leagueapi": "latest",
+    "irelia": "^0.2.3"
   },
-  "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-compass": "~0.7.2"
-  }
+  "devDependencies": {}
 }

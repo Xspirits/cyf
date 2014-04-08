@@ -43,10 +43,10 @@
 			<div class="row">
 				<div id="user_header" class="col-lg-8">
 						<div class="row">
-							<div class="col-lg-2 col-xs-2 animated fadeInUp" href="#">
+							<div class="col-lg-2 col-xs-2 animated fadeInDown" href="#">
 									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
 							</div>
-							<h2 class="col-lg-10 animated bounceInUp">
+							<h2 class="col-lg-10 animated fadeInDown">
 								<%= currentUser.local.pseudo %> 
 
 								<span id="scorebox">
@@ -59,7 +59,7 @@
 								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
 							</h2>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-										<div class="loaderProgress animated flipInY">
+										<div class="loaderProgress animated fadeInDown">
 											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
 
 											<div class="xp text-center">
@@ -142,20 +142,12 @@
 					<h4>My Badges</h4>
 					<section class="badgeList">
 						
-						<% for (var i = 2; i >= 0; i--) { %>
 						<img src="./img/badges/daily_ranked_1.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/daily_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/daily_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/friends_10.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/friends_20.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/friends_30.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_1.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_1.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<% } %>
 					</section>
 				</div>
 			</div>
@@ -164,10 +156,10 @@
 					<% var notif = currentUser.notifications;
 					for (var i = notif.length - 1; i >= 0; i--) {
 						if(notif[i].persist === true) { 
-							var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
+							var isOdd =  (i % 2) ? '' : 'timeline-inverted'
 							, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
 							%>
-							<li class="animated <%= isOdd %> ">
+							<li class="<%= isOdd %> ">
 								<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
 								<div class="timeline-panel glow-shad ">
 									<div class="timeline-heading">
@@ -292,9 +284,9 @@
 				labels : xpLab,
 				datasets : [
 					{
-						fillColor : "rgba(27,63,89,0.3)",
-						strokeColor : "rgba(27,63,89,0.6)",
-						pointColor : "rgba(27,63,89,0.8)",
+						fillColor : "rgba(16,100,83,0.2)",
+						strokeColor : "rgba(16,100,83,0.6)",
+						pointColor : "rgba(16,100,83,0.8)",
 						pointStrokeColor : "#fff",
 						data : dota2
 					}

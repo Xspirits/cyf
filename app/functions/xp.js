@@ -156,7 +156,6 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
                   if (err) {
                     throw err;
                   }
-                  console.log(user);
                   return done(true);
                 });
               };

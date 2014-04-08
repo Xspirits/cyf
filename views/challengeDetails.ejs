@@ -70,7 +70,7 @@
 					<div class="row">
 							<div class="col-md-12">		
 								<h4>Creation</h4>
-								<p class="well">
+								<p class="well"> 
 									by <a href="../u/<%= challenge.author.idCool %>"><%= challenge.author.local.pseudo %></a>,<span class="dateReadability" data-date="<%= challenge.creation %>"></span>
 								</p>		
 							</div>
@@ -136,18 +136,13 @@
 				labels : ["[0-10]","[10-20]","[20-30]","[30-40]","[40-50]"],
 				datasets : [
 					{
-						fillColor : "rgba(223,60,92,0.5)",
-						strokeColor : "rgba(223,60,92,1)",
-						pointColor : "rgba(223,60,92,1)",
-						pointStrokeColor : "rgb(189,43,72)",
-						data : [30,201,90,81,12]
+						data : [0,0,0,0,0]
 					},
 					{
-						fillColor : "rgba(66,236,227,0.5)",
-						strokeColor : "rgba(66,236,227,1)",
-						pointColor : "rgba(66,236,227,1)",
-						pointStrokeColor : "rgb(77,163,159)",
-						data : [28,48,40,19,96]
+						data : [0,0,0,0,0]
+					},
+					{
+						data : [0,0,0,0,0]
 					}
 				]
 			}
@@ -155,28 +150,32 @@
 			} else {
 			%>
 			var data = {
-				labels : ["Eating","Drinking","Sleeping","Designing","Coding"],
+				labels : ["[0-10]","[10-20]","[20-30]","[30-40]","[40-50]"],
 				datasets : [
 					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						pointColor : "rgba(220,220,220,1)",
-						pointStrokeColor : "#fff",
-						data : [65,59,90,81,56]
+						fillColor : "rgba(223,60,92,0.5)",
+						strokeColor : "rgba(223,60,92,1)",
+						pointColor : "rgba(223,60,92,1)",
+						pointStrokeColor : "rgb(189,43,72)",
+						data : [<%- challenge.rating.difficulty.distribution.one %>,<%- challenge.rating.difficulty.distribution.two %>,<%- challenge.rating.difficulty.distribution.three %>,<%- challenge.rating.difficulty.distribution.four %>,<%- challenge.rating.difficulty.distribution.five %>]
 					},
 					{
-						fillColor : "rgba(151,187,205,0.5)",
-						strokeColor : "rgba(151,187,205,1)",
-						pointColor : "rgba(151,187,205,1)",
-						pointStrokeColor : "#fff",
-						data : [28,48,40,19,96]
+						fillColor : "rgba(66,236,227,0.5)",
+						strokeColor : "rgba(66,236,227,1)",
+						pointColor : "rgba(66,236,227,1)",
+						pointStrokeColor : "rgb(77,163,159)",
+						data : [<%- challenge.rating.quickness.distribution.one %>,<%- challenge.rating.quickness.distribution.two %>,<%- challenge.rating.quickness.distribution.three %>,<%- challenge.rating.quickness.distribution.four %>,<%- challenge.rating.quickness.distribution.five %>]
+					},
+					{
+						fillColor : "rgba(239,224,41,0.5)",
+						strokeColor : "rgba(239,224,41,1)",
+						pointColor : "rgba(239,224,41,1)",
+						pointStrokeColor : "rgb(77,163,159)",
+						data : [<%- challenge.rating.fun.distribution.one %>,<%- challenge.rating.fun.distribution.two %>,<%- challenge.rating.fun.distribution.three %>,<%- challenge.rating.fun.distribution.four %>,<%- challenge.rating.fun.distribution.five %>]
 					}
 				]
 			}
-
-			<%
-			}
-			%>
+			<% } %>
 			var options = {
 									
 				scaleBackdropColor : "rgba(255,255,255,0)",	

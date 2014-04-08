@@ -10,6 +10,11 @@
   };
 
   module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
+    app.get("/about", function(req, res) {
+      return res.render("about.ejs", {
+        currentUser: req.isAuthenticated() ? req.user : false
+      });
+    });
     app.get("/", function(req, res) {
       if (req.isAuthenticated()) {
         return res.render("index_logged.ejs", {
@@ -377,17 +382,16 @@
     app.post("/linkLol", isLoggedIn, function(req, res) {
       var obj;
       obj = {
-        _id: req.user._id,
         region: req.body.region,
         summonerName: req.body.summonerName
       };
       return users.linkLol(obj, function(result) {
-        if (result === true) {
+        if (result.status_code === 200) {
           xp.xpReward(req.user, "connect.game");
           notifs.linkedGame(req.user, "League of Legend");
           return res.send(true);
         } else {
-          return res.send(false);
+          return res.send(false, result.message);
         }
       });
     });
@@ -675,13 +679,16 @@
         return res.redirect("/profile");
       });
     });
-    return app.get("/unlink/google", function(req, res) {
+    app.get("/unlink/google", function(req, res) {
       var user;
       user = req.user;
       user.google.token = undefined;
       return user.save(function(err) {
         return res.redirect("/profile");
       });
+    });
+    return app.get("*", function(req, res) {
+      return res.redirect("/");
     });
   };
 

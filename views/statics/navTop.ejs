@@ -19,6 +19,9 @@
 			<ul class="nav navbar-nav">
 				<li class="animated fadeInX"><a href="/leaderboard">LeaderBoard</a></li>
 				<li class="animated fadeInX"><a href="/users">Who's here ?</a></li>
+					<% if (currentUser) { %>
+					<li class="hidden-lg hidden-md"><a href="javascript:void(0)" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">Stream</a></li>
+					<% } %>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
@@ -73,14 +76,14 @@
 						<li>
 							<a href="/friends">Friends</a>
 						</li>
+						<li class="divider hidden-md hidden-lg"></li>
 						<li>
-							<a href="/settings">Settings</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="/logout">Log out</a>
+							<a href="/logout" class="hidden-md hidden-lg">Log out</a>
 						</li>
 					</ul>
+				</li>
+				<li>
+					<a href="/settings" class="hidden-sm hidden-xs"><i class="fa fa-cogs"></i></a>
 				</li>
 				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
 			</ul>

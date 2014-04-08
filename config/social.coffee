@@ -1,24 +1,18 @@
 https   = require("https")
 request = require("request")
 auth    = require("./auth")
-RiotApi = require("../app/functions/riot-api")
+RiotApi = require('irelia')
 _       = require("underscore")
-api     = new RiotApi(auth.leagueoflegend.key)
+riotApi  = new RiotApi({host: 'prod.api.pvp.net',path: '/api/lol/',key: auth.leagueoflegend.key,debug: true});
 
 exports.findSummonerLol = (region, name, callback) ->
-  region = undefined
-  name = undefined
-  url = undefined
-  buffer = {}
-  api.getSummoner
-    region: region
-    summonerName: name  #-OR-'summonerId': 60783
-  , (data) ->
-    buffer = _.values(data)[0]
-    callback buffer
-    return
-
-  return
+  console.log region
+  console.log name
+  riotApi.getSummonerByName region,name, (err, summoner) ->
+    throw err if err
+    # summoner = _.values(summoner)[0]
+    console.log summoner
+    callback summoner
 
 exports.getFbData = (accessToken, apiPath, callback) ->
   options =

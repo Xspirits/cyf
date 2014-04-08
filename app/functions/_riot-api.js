@@ -79,10 +79,10 @@ RiotApi.prototype.getRecentGames = function(options, callback) {
 RiotApi.prototype.getSummoner = function(options, callback) {
     var region = (options.region||'NA').toLowerCase();
     if(options.hasOwnProperty('summonerId')) {
-        this.getCachedJSONRequest(this.BASE_PATH + region + '/v1.3/summoner/' + options.summonerId + '?api_key='+this.API_KEY, callback);
+        this.getCachedJSONRequest(this.BASE_PATH + region + '/v1.4/summoner/' + options.summonerId + '?api_key='+this.API_KEY, callback);
     }
     else if(options.hasOwnProperty('summonerName')) {
-       this.getCachedJSONRequest(this.BASE_PATH + region + '/v1.3/summoner/by-name/' + options.summonerName + '?api_key='+this.API_KEY, callback);
+       this.getCachedJSONRequest(this.BASE_PATH + region + '/v1.4/summoner/by-name/' + options.summonerName + '?api_key='+this.API_KEY, callback);
    }
    else {
     callback({});

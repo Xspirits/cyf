@@ -3,7 +3,9 @@
   module.exports = function(schedule, _, sio, ladder, moment, social, appKeys, xp, notifs) {
     var dailyLadder, dailyRanking, monthlyLadder, monthlyRanking, weekLadder, weeklyRanking, xpLevel, xpLevelUpdate;
     xpLevelUpdate = new schedule.RecurrenceRule();
-    xpLevelUpdate.seconds = new schedule.Range(15, 30);
+    xpLevelUpdate.hour = 12;
+    xpLevelUpdate.minute = 30;
+    xpLevelUpdate.seconds = 0;
     xpLevel = schedule.scheduleJob(xpLevelUpdate, function() {
       console.log('xpLevel update start');
       return xp.updateDaily(function(result) {

@@ -5,8 +5,8 @@ module.exports =
   app_config:
     email_confirm: false
   cyf :
-    # domain: "http://challenge-friends.herokuapp.com"
-    domain: "http://localhost:8080"
+    domain: "http://challenge-friends.com"
+    # domain: "http://localhost:8080"
   mandrill_key: "w_F27RXK5GmLNtZoePLczA"
   support :
     email: "cyf.app@gmail.com"
@@ -14,18 +14,21 @@ module.exports =
   express_sid_key: "chachompcha.sid"
   cookie_secret: "oneDoesNotSimplychompi"
 
+  steam:
+    key: "02130312F2CCF046E4710C189E8481BA"
+    domain: "challenge-friends.herokuapp.com"
   leagueoflegend:
-    key: "2822b5e7-ff7e-4e0d-bf25-880bb335eb83"
+    key: "fdc734d5-eae1-4570-b800-a1646962d9e9"
 
   facebookAuth:
     clientID: "624902070914410" # your App ID
     clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92" # your App Secret
-    callbackURL: "http://192.168.1.2:8080/auth/facebook/callback"
+    callbackURL: "http://challenge-friends.com/auth/facebook/callback"
 
   twitterAuth:
     consumerKey: "KqGJkpnwthwuOcrVpLoKA"
     consumerSecret: "DmWpNqUNnctc2hoPj36rsWVRsItsKhwhbqfhSmcXOQ"
-    callbackURL: "http://192.168.1.2:8080/auth/twitter/callback"
+    callbackURL: "http://challenge-friends.com/auth/twitter/callback"
 
   twitterCyf:
     token : "2396246222-NAnfkkJen2abruUEgDM9dZHRD1NpPZxblWeLPSy"
