@@ -7,9 +7,10 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
-    games.pop
-    res.render "about.ejs",
-      currentUser: if req.isAuthenticated() then req.user else false
+    games.popee (done)->
+      console.log done
+      res.render "about.ejs",
+        currentUser: if req.isAuthenticated() then req.user else false
   # show the home page (will also have our login links)
   app.get "/", (req, res) ->
     if req.isAuthenticated()
