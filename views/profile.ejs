@@ -72,16 +72,16 @@
 								<% if (currentUser.local.pseudo) { %>
 								<span class="label label-default">CyF</span>
 								<% } %>
-								<% if (currentUser.facebook.name) { %>
+								<% if (currentUser.facebook.token) { %>
 								<span class="label label-primary">Facebook</span>
 								<% } %>
-								<% if (currentUser.google.name) { %>
+								<% if (currentUser.google.token) { %>
 								<span class="label label-danger">Google</span>
 								<% } %>
 								<% if (currentUser.leagueoflegend.idProfile) { %>
 								<span class="label label-info">League of Legend</span>
 								<% } %>
-								<% if (currentUser.twitter.username) { %>
+								<% if (currentUser.twitter.token) { %>
 								<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= currentUser.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
 								<% } %>
 								<a href="./settings" title="add an account" class="label label-default">
