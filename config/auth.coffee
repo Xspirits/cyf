@@ -3,7 +3,7 @@
 # expose our config directly to our application using module.exports
 module.exports =
   app_config:
-    email_confirm: false
+    email_confirm: true
   twitterPushNews: true
   cyf :
     domain: "http://challenge-friends.herokuapp.com"
@@ -14,7 +14,6 @@ module.exports =
     name: "CyF validator"
   express_sid_key: "chachompcha.sid"
   cookie_secret: "oneDoesNotSimplychompi"
-
   steam:
     key: "02130312F2CCF046E4710C189E8481BA"
     domain: "challenge-friends.herokuapp.com"
@@ -39,4 +38,4 @@ module.exports =
   googleAuth:
     clientID: "90650508831.apps.googleusercontent.com"
     clientSecret: "PvPJ5cCT_AgKNU0dDEP98HTb"
-    callbackURL: "http://192.168.1.2:8080/auth/google/callback"
+    callbackURL: "http://challenge-friends.herokuapp.com/auth/google/callback"

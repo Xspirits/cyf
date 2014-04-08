@@ -113,7 +113,7 @@ module.exports = (passport, genUID, xp, notifs, mailer,shortUrl) ->
               0
             ]
             newUser.verfiy_hash = uIDHash
-            newUser.verified = true if !configAuth.app_config.email_confirm
+            newUser.verified = true unless configAuth.app_config.email_confirm
             newUser.local.email = email
             newUser.local.password = newUser.generateHash(password)
             newUser.local.friends = []

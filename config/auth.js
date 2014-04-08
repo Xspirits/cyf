@@ -2,11 +2,11 @@
 (function() {
   module.exports = {
     app_config: {
-      email_confirm: false
+      email_confirm: true
     },
     twitterPushNews: true,
     cyf: {
-      domain: "http://challenge-friends.com"
+      domain: "http://challenge-friends.herokuapp.com"
     },
     mandrill_key: "w_F27RXK5GmLNtZoePLczA",
     support: {
@@ -25,12 +25,12 @@
     facebookAuth: {
       clientID: "624902070914410",
       clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92",
-      callbackURL: "http://challenge-friends.com/auth/facebook/callback"
+      callbackURL: "http://challenge-friends.herokuapp.com/auth/facebook/callback"
     },
     twitterAuth: {
       consumerKey: "KqGJkpnwthwuOcrVpLoKA",
       consumerSecret: "DmWpNqUNnctc2hoPj36rsWVRsItsKhwhbqfhSmcXOQ",
-      callbackURL: "http://challenge-friends.com/auth/twitter/callback"
+      callbackURL: "http://challenge-friends.herokuapp.com/auth/twitter/callback"
     },
     twitterCyf: {
       token: "2396246222-NAnfkkJen2abruUEgDM9dZHRD1NpPZxblWeLPSy",
@@ -40,7 +40,7 @@
     googleAuth: {
       clientID: "90650508831.apps.googleusercontent.com",
       clientSecret: "PvPJ5cCT_AgKNU0dDEP98HTb",
-      callbackURL: "http://192.168.1.2:8080/auth/google/callback"
+      callbackURL: "http://challenge-friends.herokuapp.com/auth/google/callback"
     }
   };
 
