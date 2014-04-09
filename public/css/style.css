@@ -33,6 +33,12 @@
   background: #E9573F;
   border: 1px solid #FC6E51;
 }
+.bittersweet-color {
+  color: #FC6E51;
+}
+.bittersweet-color:hover,.bittersweet-color:active,.bittersweet-color:visited {
+  color: #E9573F;
+}
 .mediumgrey {
   background: #CCD1D9;
   border-color: #AAB2BD;
@@ -85,6 +91,31 @@
   background: #F6BB42;
   border: 1px solid #FFCE54;
 }
+.sunflower-color {
+  color: #FFCE54;
+}
+.sunflower-color:hover,.sunflower-color:active,.sunflower-color:visited  {
+  color: #F6BB42;
+}
+.aqua {
+  background: #4FC1E9;
+  border-color: #3BAFDA;
+  border: 1px solid #3BAFDA;
+
+  -moz-box-shadow: #3BAFDA 0 2px 0;
+  -webkit-box-shadow: #3BAFDA 0 2px 0;
+  box-shadow: #3BAFDA 0 2px 0
+}
+.aqua:hover,.aqua:active,.aqua:visited  {
+  background: #3BAFDA;
+  border: 1px solid #4FC1E9;
+}
+.aqua-color {
+  color: #4FC1E9;
+}
+.aqua-color:hover,.aqua-color:active,.aqua-color:visited  {
+  color: #3BAFDA;
+}
 .pinked {
   background: #EC87C0;
   border-color: #D770AD;
@@ -110,6 +141,25 @@
 .grapefruit:hover,.grapefruit:active,.grapefruit:visited  {
   background: #DA4453;
   border: 1px solid #ED5565;
+}
+.grapefruit {
+  background: #ED5565;
+  border-color: #DA4453;
+  border: 1px solid #DA4453;
+
+  -moz-box-shadow: #DA4453 0 2px 0;
+  -webkit-box-shadow: #DA4453 0 2px 0;
+  box-shadow: #DA4453 0 2px 0
+}
+.grapefruit:hover,.grapefruit:active,.grapefruit:visited  {
+  background: #DA4453;
+  border: 1px solid #ED5565;
+}
+.grapefruit-color {
+  color: #ED5565;
+}
+.grapefruit-color:hover,.grapefruit-color:active,.grapefruit-color:visited  {
+  color: #DA4453;
 }
 
 /* Magic css fix */
@@ -138,14 +188,19 @@ body.modal-open .canvas{
 }
 
 #footer {
-  background-color:#313030;
+  height: 41px;
+  background-color: #1F1F1F;
+  border-top: 1px solid rgb(82, 73, 73);
+  z-index: 2;
+  position: relative;
 }
-
-#footer a {
-  color: #DBDADA;
-  text-shadow: 0 1px #2E2C2C;
-  font-weight: normal;
-}
+  #footer > .container > .row > section {
+    line-height: 40px;
+  }
+  #footer > .container > .row > section a {
+    color: #979797;
+    font-weight: normal;
+  }
 #footer h4 {
   color: rgb(69, 107, 114);
 }

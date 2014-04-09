@@ -11,11 +11,8 @@
 
   module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      return games.popee(function(done) {
-        console.log(done);
-        return res.render("about.ejs", {
-          currentUser: req.isAuthenticated() ? req.user : false
-        });
+      return res.render("about.ejs", {
+        currentUser: req.isAuthenticated() ? req.user : false
       });
     });
     app.get("/", function(req, res) {

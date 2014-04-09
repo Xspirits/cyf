@@ -25,12 +25,12 @@
     facebookAuth: {
       clientID: "624902070914410",
       clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92",
-      callbackURL: "http://www.cyf-app.co//auth/facebook/callback"
+      callbackURL: "http://www.cyf-app.co/auth/facebook/callback"
     },
     twitterAuth: {
       consumerKey: "KqGJkpnwthwuOcrVpLoKA",
       consumerSecret: "DmWpNqUNnctc2hoPj36rsWVRsItsKhwhbqfhSmcXOQ",
-      callbackURL: "http://www.cyf-app.co//auth/twitter/callback"
+      callbackURL: "http://www.cyf-app.co/auth/twitter/callback"
     },
     twitterCyf: {
       token: "2396246222-NAnfkkJen2abruUEgDM9dZHRD1NpPZxblWeLPSy",
@@ -40,7 +40,7 @@
     googleAuth: {
       clientID: "90650508831.apps.googleusercontent.com",
       clientSecret: "PvPJ5cCT_AgKNU0dDEP98HTb",
-      callbackURL: "http://www.cyf-app.co//auth/google/callback"
+      callbackURL: "http://www.cyf-app.co/auth/google/callback"
     }
   };
 
