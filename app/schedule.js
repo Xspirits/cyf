@@ -23,7 +23,7 @@
           var newLeader, yesterday;
           yesterday = moment().subtract('d', 1).format("ddd Do MMM");
           newLeader = '';
-          _.each(top3, function(user, it) {
+          return _.each(top3, function(user, it) {
             var diff, diffIcon, lastTime, notif, twitt, uText, variable, wasRanked;
             lastTime = user.dailyArchives.length - 1;
             diff = user.dailyArchives[lastTime].rank - user.dailyRank;
@@ -51,9 +51,9 @@
               newLeader += user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
             }
             if (it + 1 >= top3.length) {
-              if (appKeys.app_config.twitterPushNews) {
+              if (appKeys.app_config.twitterPushNews === true) {
                 twitt = "The daily #ranking for yesterday, " + yesterday + ", is up! #GG " + newLeader + " who ranked First! http://goo.gl/3VjsJd #CYF_ladder #CYFDaily";
-                social.postTwitter(false, twitt, function(data) {
+                return social.postTwitter(false, twitt, function(data) {
                   var text;
                   text = 'The ranking of yesterday <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
                   return sio.glob("fa fa-list", text);
@@ -77,7 +77,7 @@
           console.log("Updating ladder for the past week " + lastWeek);
           newLeader = '';
           newFollower = '';
-          _.each(top3, function(user, it) {
+          return _.each(top3, function(user, it) {
             var diff, diffIcon, lastTime, notif, twitt, uText, variable, wasRanked;
             lastTime = user.weeklyArchives.length - 1;
             diff = user.weeklyArchives[lastTime].rank - user.weeklyRank;
@@ -107,8 +107,8 @@
             sio.glob("fa fa-star", '<i class="fa fa-star"></i> ' + uText);
             if (it + 1 >= top3.length) {
               twitt = "Weekly #ranking " + lastWeek + " is live! #GG " + newLeader + " who ranked First and " + newFollower + " 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFWeekly";
-              if (appKeys.app_config.twitterPushNews) {
-                social.postTwitter(false, twitt, function(data) {
+              if (appKeys.app_config.twitterPushNews === true) {
+                return social.postTwitter(false, twitt, function(data) {
                   var text;
                   text = 'The weekly ranking <strong>' + lastWeek + '</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
                   return sio.glob("fa fa-list", text);
@@ -132,7 +132,7 @@
           console.log("Updated ladder for the past month " + lastMonth);
           newLeader = '';
           newFollower = '';
-          _.each(top3, function(user, it) {
+          return _.each(top3, function(user, it) {
             var diff, diffIcon, lastTime, notif, twitt, uText, variable, wasRanked;
             lastTime = user.monthlyArchives.length - 1;
             diff = user.monthlyArchives[lastTime].rank - user.monthlyRank;
@@ -162,8 +162,8 @@
             sio.glob("fa fa-star", '<i class="fa fa-star"></i><i class="fa fa-star"></i> ' + uText);
             if (it + 1 >= top3.length) {
               twitt = "The #ranking for " + lastMonth + " is live! #GG " + newLeader + " who ranked First and " + newFollower + " 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFMonthly";
-              if (appKeys.app_config.twitterPushNews) {
-                social.postTwitter(false, twitt, function(data) {
+              if (appKeys.app_config.twitterPushNews === true) {
+                return social.postTwitter(false, twitt, function(data) {
                   var text;
                   text = 'The ranking for <strong>' + lastMonth + '</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
                   return sio.glob("fa fa-list", text);

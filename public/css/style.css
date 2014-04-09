@@ -136,6 +136,19 @@ body.modal-open .canvas{
   -ms-filter: blur(15px);
   filter: blur(15px);
 }
+
+#footer {
+  background-color:#313030;
+}
+
+#footer a {
+  color: #DBDADA;
+  text-shadow: 0 1px #2E2C2C;
+  font-weight: normal;
+}
+#footer h4 {
+  color: rgb(69, 107, 114);
+}
 #animeBg {
   position: absolute;
   top: 0;

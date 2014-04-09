@@ -69,16 +69,14 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
 
           if it + 1 >= top3.length
             # Tweet
-            if appKeys.app_config.twitterPushNews
-              # Lets push on our timeline to let players now about the new Leaderboard
+            if appKeys.app_config.twitterPushNews == true
+              # Lets  spush on our timeline to let players now about the new Leaderboard
               twitt     = "The daily #ranking for yesterday, "+yesterday+", is up! #GG "+newLeader+" who ranked First! http://goo.gl/3VjsJd #CYF_ladder #CYFDaily"
             
               social.postTwitter false, twitt, (data) ->
                 text = 'The ranking of yesterday <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text
-          return
-        return
-  
+
   # Weekly Ladder
   weeklyRanking           = new schedule.RecurrenceRule()
   weeklyRanking.dayOfWeek = 1 #Monday
@@ -132,12 +130,10 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
             # Lets push on our timeline to let players now about the new Leaderboard
             twitt     = "Weekly #ranking "+lastWeek+" is live! #GG "+newLeader+" who ranked First and "+newFollower+" 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFWeekly"
             
-            if appKeys.app_config.twitterPushNews
+            if appKeys.app_config.twitterPushNews == true
               social.postTwitter false, twitt, (data) ->
                 text = 'The weekly ranking <strong>'+lastWeek+'</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text
-          return
-        return
   
   # Monthly Ladder
   monthlyRanking         = new schedule.RecurrenceRule()
@@ -191,9 +187,7 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
             # Lets push on our timeline to let players now about the new Leaderboard
             twitt     = "The #ranking for "+lastMonth+" is live! #GG "+newLeader+" who ranked First and "+newFollower+" 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFMonthly"
             
-            if appKeys.app_config.twitterPushNews
+            if appKeys.app_config.twitterPushNews == true
               social.postTwitter false, twitt, (data) ->
                 text = 'The ranking for <strong>'+lastMonth+'</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text
-          return
-        return
