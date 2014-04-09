@@ -9,7 +9,7 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
+  module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, mailer, shortUrl) {
     app.get("/about", function(req, res) {
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false
@@ -126,31 +126,29 @@
     });
     app.get("/ongoing", isLoggedIn, function(req, res) {
       return challenge.userAcceptedChallenge(req.user._id, function(data) {
-        var cStart, eStart, endedChall, ongoingChall, reqValidation, upcomingChall;
-        cStart = void 0;
-        eStart = void 0;
+        var endedChall, ongoingChall, reqValidation, upcomingChall;
         upcomingChall = [];
         ongoingChall = [];
         endedChall = [];
         reqValidation = [];
         _.each(data, function(value, key) {
-          var cEnd;
+          var cEnd, cStart;
           cStart = data[key].launchDate;
           cEnd = data[key].deadLine;
           if (moment(cEnd).isSame() || moment(cEnd).isBefore()) {
             console.log(moment(cEnd).isSame() || moment(cEnd).isBefore());
-            console.log(data[i].idCool);
-            challenge.crossedDeadline(data[i]._id);
-            return endedChall.push(data[i]);
-          } else if (data[i].waitingConfirm === true && data[i].progress < 100) {
-            reqValidation.push(data[i]);
-            return console.log("parsed reqValidation : " + data[i].waitingConfirm);
-          } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[i].progress < 100) {
-            upcomingChall.push(data[i]);
-            return console.log("parsed upcoming : " + data[i]._id);
-          } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[i].progress < 100) {
-            ongoingChall.push(data[i]);
-            return console.log("parsed ongoing : " + data[i]._id);
+            console.log(data[key].idCool);
+            challenge.crossedDeadline(data[key]._id);
+            return endedChall.push(data[key]);
+          } else if (data[key].waitingConfirm === true && data[key].progress < 100) {
+            reqValidation.push(data[key]);
+            return console.log("parsed reqValidation : " + data[key].waitingConfirm);
+          } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+            upcomingChall.push(data[key]);
+            return console.log("parsed upcoming : " + data[key]._id);
+          } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+            ongoingChall.push(data[key]);
+            return console.log("parsed ongoing : " + data[key]._id);
           }
         });
         return res.render("ongoing.ejs", {

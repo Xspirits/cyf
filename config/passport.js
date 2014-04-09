@@ -115,7 +115,7 @@
                     throw err;
                   }
                   return mailer.accountConfirm(user, function(returned) {
-                    if (!configAuth.app_config.email_confirm) {
+                    if (configAuth.app_config.email_confirm === false) {
                       req.session.user = user;
                       req.session.isLogged = true;
                       req.session.newUser = true;

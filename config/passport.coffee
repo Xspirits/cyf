@@ -134,7 +134,7 @@ module.exports = (passport, genUID, xp, notifs, mailer,shortUrl) ->
                  mailer.accountConfirm user, (returned) ->
 
                    # Instantiate the sessions for socket.io 
-                   unless configAuth.app_config.email_confirm
+                   if configAuth.app_config.email_confirm == false
                     req.session.user = user
                     req.session.isLogged = true
                     req.session.newUser = true

@@ -3,7 +3,7 @@ isLoggedIn = (req, res, next) ->
   res.redirect "/"
   return
   
-module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
+module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder,mailer, shortUrl) ->
 
   app.get "/about", (req,res) ->
     res.render "about.ejs",
@@ -120,8 +120,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     
     #get Ongoing challenges for the current user
     challenge.userAcceptedChallenge req.user._id, (data) ->
-      cStart = undefined
-      eStart = undefined
       upcomingChall = []
       ongoingChall = []
       endedChall = []
@@ -134,25 +132,25 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         # If yes, mark it as not completed, failed        
         if moment(cEnd).isSame() or moment(cEnd).isBefore()
           console.log moment(cEnd).isSame() or moment(cEnd).isBefore()
-          console.log data[i].idCool
-          challenge.crossedDeadline data[i]._id
-          endedChall.push data[i]
+          console.log data[key].idCool
+          challenge.crossedDeadline data[key]._id
+          endedChall.push data[key]
         
         # Challenge is awaiting validation
         # To determine if its belong to the current user or not will be done client-side.
-        else if data[i].waitingConfirm is true and data[i].progress < 100
-          reqValidation.push data[i]
-          console.log "parsed reqValidation : " + data[i].waitingConfirm
+        else if data[key].waitingConfirm is true and data[key].progress < 100
+          reqValidation.push data[key]
+          console.log "parsed reqValidation : " + data[key].waitingConfirm
         
         # Start hasn't been reached
-        else if not moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[i].progress < 100
-          upcomingChall.push data[i]
-          console.log "parsed upcoming : " + data[i]._id
+        else if not moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+          upcomingChall.push data[key]
+          console.log "parsed upcoming : " + data[key]._id
         
         # Start has been reached but not end
-        else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[i].progress < 100
-          ongoingChall.push data[i]
-          console.log "parsed ongoing : " + data[i]._id
+        else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+          ongoingChall.push data[key]
+          console.log "parsed ongoing : " + data[key]._id
 
       res.render "ongoing.ejs",
         currentUser: req.user
