@@ -9,7 +9,7 @@ module.exports = (mandrill_client, keys, moment) ->
 			name: user.local.pseudo
 			type: "to"
 		]
-		gotoUrl = keys.cyf.domain + '/eval/'+ user.verfiy_hash
+		gotoUrl = keys.cyf.app_domain + '/eval/'+ user.verfiy_hash
 		  
 		message =
 
@@ -26,7 +26,7 @@ module.exports = (mandrill_client, keys, moment) ->
 		  preserve_recipients: true
 		  tags: ["account-confirmation"]
 		  metadata:
-		    website: keys.cyf.domain
+		    website: keys.cyf.app_domain
 
 		mandrill_client.messages.send
 		  message: message

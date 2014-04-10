@@ -10,7 +10,7 @@
 
   OAuth2 = googleapis.auth.OAuth2;
 
-  oauth2Client = new OAuth2(database.google.client_email, database.google.client_secret, auth.cyf.domain);
+  oauth2Client = new OAuth2(database.google.client_email, database.google.client_secret, auth.cyf.app_domain);
 
   exports.googleUrl = function(url, callback) {
     googleapis.discover("urlshortener", "v1").execute(function(err, client) {

@@ -250,7 +250,7 @@ module.exports = (passport, genUID, xp, notifs, mailer,shortUrl) ->
             user.twitter.displayName = profile.displayName
             user.save (err) ->
               throw err if err
-              profileUrl = configAuth.cyf.domain + '/'+ user.idCool
+              profileUrl = configAuth.cyf.app_domain + '/'+ user.idCool
               shortUrl.googleUrl profileUrl, (shortened) ->
                 console.log "New twitter linked %s to %s", profileUrl, shortened
                 if configAuth.app_config.twitterPushNews

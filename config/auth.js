@@ -6,7 +6,7 @@
       twitterPushNews: true
     },
     cyf: {
-      domain: "http://www.cyf-app.co"
+      app_domain: "http://www.cyf-app.co"
     },
     mandrill_key: "w_F27RXK5GmLNtZoePLczA",
     support: {

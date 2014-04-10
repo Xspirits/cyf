@@ -225,7 +225,7 @@
                 if (err) {
                   throw err;
                 }
-                profileUrl = configAuth.cyf.domain + '/' + user.idCool;
+                profileUrl = configAuth.cyf.app_domain + '/' + user.idCool;
                 return shortUrl.googleUrl(profileUrl, function(shortened) {
                   var twitt;
                   console.log("New twitter linked %s to %s", profileUrl, shortened);
