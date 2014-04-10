@@ -6,7 +6,7 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
 
   # Level and Xp update
   xpLevelUpdate         = new schedule.RecurrenceRule()
-  xpLevelUpdate.hour    = 12
+  xpLevelUpdate.hour    = new schedule.Range(0, 12)
   xpLevelUpdate.minute  = 30 # Let's avoid taking risks with setting 0h 0m 0s
   xpLevelUpdate.seconds = 0
 
@@ -34,6 +34,7 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
         yesterday = moment().subtract('d', 1).format("ddd Do MMM")
         # Initiate the newLeader variable here, else we'll get an undefined when we post on twitter.
         newLeader = ''
+        newFollower = ''
         _.each top3, (user, it) ->
           lastTime  = user.dailyArchives.length-1
           diff      = user.dailyArchives[lastTime].rank - user.dailyRank
@@ -43,7 +44,6 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
           diff      = Math.abs diff
           variable  = if wasRanked then '<i class="fa fa-' + diffIcon + '"></i> ' + diff else 'previously unranked'
           uText     = user.local.pseudo + ' is now ranked <strong>' + user.dailyRank + '</strong>, ' + variable + '! daily <i class="fa fa-list"></i>. ' 
-          
           #Send a Global message
           sio.glob "fa fa-star", uText
 
@@ -63,25 +63,26 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
 
           #define the new leader
           if user.dailyRank == 1
-            console.log user.twitter
-            console.log user.local.pseudo
             newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+          #define the new follower
+          if user.weeklyRank == 2
+            newFollower += 'and '+ user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ') 2nd' else ''
 
           if it + 1 >= top3.length
             # Tweet
             if appKeys.app_config.twitterPushNews == true
               # Lets  spush on our timeline to let players now about the new Leaderboard
-              twitt     = "The daily #ranking for yesterday, "+yesterday+", is up! #GG "+newLeader+" who ranked First! http://goo.gl/3VjsJd #CYF_ladder #CYFDaily"
+              twitt     = "New #dailyRanking "+yesterday+" up! #GG "+newLeader+" 1st "+newFollower+"!! http://goo.gl/3VjsJd #CyfLadder #CYFDaily."
             
               social.postTwitter false, twitt, (data) ->
-                text = 'The ranking of yesterday <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
+                text = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text
 
   # Weekly Ladder
   weeklyRanking           = new schedule.RecurrenceRule()
   weeklyRanking.dayOfWeek = 1 #Monday
   weeklyRanking.hour      = 0
-  weeklyRanking.minute    = 5 # Let's avoid taking risks with setting 0h 0m 0s
+  weeklyRanking.minute    = 2 # Let's avoid taking risks with setting 0h 0m 0s
   weeklyRanking.seconds   = 0
 
   weekLadder = schedule.scheduleJob weeklyRanking, ->
@@ -102,7 +103,6 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
           diff      = Math.abs diff
           variable  = if wasRanked then '<i class="fa fa-' + diffIcon + '"></i> ' + diff else 'previously unranked'
           uText     = user.local.pseudo + ' is now ranked <strong>' + user.weeklyRank + '</strong>, ' + variable + '! weekly <i class="fa fa-list"></i>. ' 
-          
 
           # Prepare notification
           notif =
@@ -123,23 +123,23 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
             newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
           #define the new follower
           if user.weeklyRank == 2
-            newFollower += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+            newFollower += 'and '+ user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ') 2nd' else ''
 
           sio.glob "fa fa-star", '<i class="fa fa-star"></i> ' + uText
           if it + 1 >= top3.length
             # Lets push on our timeline to let players now about the new Leaderboard
-            twitt     = "Weekly #ranking "+lastWeek+" is live! #GG "+newLeader+" who ranked First and "+newFollower+" 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFWeekly"
+            twitt     = "Weekly #ranking #"+lastWeek+" live! #GG "+newLeader+" 1st "+newFollower+"! http://goo.gl/3VjsJd #CyfLadder #CYFWeekly"
             
             if appKeys.app_config.twitterPushNews == true
               social.postTwitter false, twitt, (data) ->
-                text = 'The weekly ranking <strong>'+lastWeek+'</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
+                text = 'The weekly ranking <strong>'+lastWeek+'</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text
   
   # Monthly Ladder
   monthlyRanking         = new schedule.RecurrenceRule()
   monthlyRanking.date    = 1 # 1st of each month
-  monthlyRanking.hour    = 1 # at 1 AM
-  monthlyRanking.minute  = 2
+  monthlyRanking.hour    = 0 # at 1 AM
+  monthlyRanking.minute  = 3
   monthlyRanking.seconds = 0
 
   monthlyLadder = schedule.scheduleJob monthlyRanking, ->
@@ -180,14 +180,14 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
             newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
           #define the new follower
           if user.monthlyRank == 2
-            newFollower += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+            newFollower += ' followed by '+user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
 
           sio.glob "fa fa-star", '<i class="fa fa-star"></i><i class="fa fa-star"></i> ' + uText
           if it + 1 >= top3.length
             # Lets push on our timeline to let players now about the new Leaderboard
-            twitt     = "The #ranking for "+lastMonth+" is live! #GG "+newLeader+" who ranked First and "+newFollower+" 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFMonthly"
+            twitt     = "The #ranking for "+lastMonth+": 1st "+newLeader+" "+newFollower+" #GG! http://goo.gl/3VjsJd #CyfLadder #CYFMonthly"
             
             if appKeys.app_config.twitterPushNews == true
               social.postTwitter false, twitt, (data) ->
-                text = 'The ranking for <strong>'+lastMonth+'</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
+                text = 'The ranking for <strong>'+lastMonth+'</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/'+ data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.'
                 sio.glob "fa fa-list", text

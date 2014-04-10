@@ -98,7 +98,7 @@
   color: #F6BB42;
 }
 .aqua {
-  background: #4FC1E9;
+  background: #4FC1E9; 
   border-color: #3BAFDA;
   border: 1px solid #3BAFDA;
 
@@ -128,19 +128,6 @@
 .pinked:hover,.pinked:active,.pinked:visited  {
   background: #D770AD;
   border: 1px solid #EC87C0;
-}
-.grapefruit {
-  background: #ED5565;
-  border-color: #DA4453;
-  border: 1px solid #DA4453;
-
-  -moz-box-shadow: #DA4453 0 2px 0;
-  -webkit-box-shadow: #DA4453 0 2px 0;
-  box-shadow: #DA4453 0 2px 0
-}
-.grapefruit:hover,.grapefruit:active,.grapefruit:visited  {
-  background: #DA4453;
-  border: 1px solid #ED5565;
 }
 .grapefruit {
   background: #ED5565;

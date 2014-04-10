@@ -63,8 +63,8 @@ exports.postTwitter = (accessToken, message, callback) ->
     return console.error("Error occured: ", err)  if err
     body = JSON.parse(body)
     return console.error("Error returned from  twitter: ", body.error)  if body.error
-    callback body
-    return
+    console.log body
+    return callback body
   )
   form = r.form()
   form.append "status", message

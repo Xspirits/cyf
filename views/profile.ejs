@@ -272,9 +272,9 @@
 				// Reverse the value of our historic
 				thisOne = historic[i] ? historic[i].xp : 0;
 				thatOne = historic[i] ? historic[i].level : 0;
-				thisdaily = rHistDaily[i] ? (rHistDaily[i].rank == 0 ? 9999:rHistDaily[i].rank) : false;
-				thisWeekly = rHistWeekly[i] ? (rHistWeekly[i].rank == 0 ? 9999:rHistWeekly[i].rank) : false;
-				thisMonthly = rHistMonthly[i] ? (rHistMonthly[i].rank == 0 ? 9999:rHistMonthly[i].rank) : false;
+				thisdaily = rHistDaily[i] ? (rHistDaily[i].rank == 0 ? false:rHistDaily[i].rank) : false;
+				thisWeekly = rHistWeekly[i] ? (rHistWeekly[i].rank == 0 ? false:rHistWeekly[i].rank) : false;
+				thisMonthly = rHistMonthly[i] ? (rHistMonthly[i].rank == 0 ? false:rHistMonthly[i].rank) : false;
 
 				if(thisOne > 0){
 					dota2.push(thisOne);
@@ -298,7 +298,7 @@
 			}
 			function offsetArray (arr,over9thousands) {
 				var val = over9thousands? 9999:0;
-				return arr.length === 1 ? [val,arr[val]]: (arr.length === 0 ? [val,val]: arr);
+				return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
 			}
 			function findFirstRank (arr) {
 				var rank=0;
@@ -309,11 +309,14 @@
 				return rank;
 			}
 			// We need at LEAST 2 values (it's a graph, yep)
+			console.log(dailyR);
+			console.log(weeklyR);
+			console.log(monthlyR);
 			dota2 = offsetArray(dota2);
 			warcraft4 = offsetArray(warcraft4);
-			dailyR = offsetArray(dailyR, true);
-			weeklyR = offsetArray(weeklyR, true);
-			monthlyR = offsetArray(monthlyR, true);
+			// dailyR = offsetArray(dailyR);
+			// weeklyR = offsetArray(weeklyR);
+			// monthlyR = offsetArray(monthlyR);
 			console.log(dailyR);
 			console.log(weeklyR);
 			console.log(monthlyR);
@@ -329,6 +332,7 @@
 			weeklyR = whichLongest.length < weeklyR.length ? weeklyR.slice(weeklyR.length - whichLongest.length,weeklyR.length) : weeklyR;
 			monthlyR = whichLongest.length < monthlyR.length ? monthlyR.slice(monthlyR.length - whichLongest.length,monthlyR.length) : monthlyR;
 			rankLab = offsetArray(rankLab);
+			console.log(rankLab);
 
 			//BUILD CHARTS
 

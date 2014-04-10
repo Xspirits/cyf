@@ -35,6 +35,8 @@
     twitterCyf: {
       token: "2396246222-NAnfkkJen2abruUEgDM9dZHRD1NpPZxblWeLPSy",
       tokenSecret: "adZoD4YiIpQOvDEFzodKjBIx83zYAPkCxSLt0HbuPB7Cn",
+      username: "cyf_app",
+      displayName: "Cyf app",
       id: "2396246222"
     },
     googleAuth: {

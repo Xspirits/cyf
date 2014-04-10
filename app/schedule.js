@@ -3,7 +3,7 @@
   module.exports = function(schedule, _, sio, ladder, moment, social, appKeys, xp, notifs) {
     var dailyLadder, dailyRanking, monthlyLadder, monthlyRanking, weekLadder, weeklyRanking, xpLevel, xpLevelUpdate;
     xpLevelUpdate = new schedule.RecurrenceRule();
-    xpLevelUpdate.hour = 12;
+    xpLevelUpdate.hour = new schedule.Range(0, 12);
     xpLevelUpdate.minute = 30;
     xpLevelUpdate.seconds = 0;
     xpLevel = schedule.scheduleJob(xpLevelUpdate, function() {
@@ -20,9 +20,10 @@
       console.log('dailyLadder');
       return ladder.createDailyLadder(function() {
         return ladder.rankUser('dailyRank', function(top3) {
-          var newLeader, yesterday;
+          var newFollower, newLeader, yesterday;
           yesterday = moment().subtract('d', 1).format("ddd Do MMM");
           newLeader = '';
+          newFollower = '';
           return _.each(top3, function(user, it) {
             var diff, diffIcon, lastTime, notif, twitt, uText, variable, wasRanked;
             lastTime = user.dailyArchives.length - 1;
@@ -46,16 +47,17 @@
             };
             notifs.newNotif([user._id], true, notif);
             if (user.dailyRank === 1) {
-              console.log(user.twitter);
-              console.log(user.local.pseudo);
               newLeader += user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
+            }
+            if (user.weeklyRank === 2) {
+              newFollower += 'and ' + user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ') 2nd' : '');
             }
             if (it + 1 >= top3.length) {
               if (appKeys.app_config.twitterPushNews === true) {
-                twitt = "The daily #ranking for yesterday, " + yesterday + ", is up! #GG " + newLeader + " who ranked First! http://goo.gl/3VjsJd #CYF_ladder #CYFDaily";
+                twitt = "New #dailyRanking " + yesterday + " up! #GG " + newLeader + " 1st " + newFollower + "!! http://goo.gl/3VjsJd #CyfLadder #CYFDaily.";
                 return social.postTwitter(false, twitt, function(data) {
                   var text;
-                  text = 'The ranking of yesterday <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
+                  text = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
                   return sio.glob("fa fa-list", text);
                 });
               }
@@ -67,7 +69,7 @@
     weeklyRanking = new schedule.RecurrenceRule();
     weeklyRanking.dayOfWeek = 1;
     weeklyRanking.hour = 0;
-    weeklyRanking.minute = 5;
+    weeklyRanking.minute = 2;
     weeklyRanking.seconds = 0;
     weekLadder = schedule.scheduleJob(weeklyRanking, function() {
       return ladder.createWeeklyLadder(function() {
@@ -102,15 +104,15 @@
               newLeader += user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
             }
             if (user.weeklyRank === 2) {
-              newFollower += user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
+              newFollower += 'and ' + user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ') 2nd' : '');
             }
             sio.glob("fa fa-star", '<i class="fa fa-star"></i> ' + uText);
             if (it + 1 >= top3.length) {
-              twitt = "Weekly #ranking " + lastWeek + " is live! #GG " + newLeader + " who ranked First and " + newFollower + " 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFWeekly";
+              twitt = "Weekly #ranking #" + lastWeek + " live! #GG " + newLeader + " 1st " + newFollower + "! http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
               if (appKeys.app_config.twitterPushNews === true) {
                 return social.postTwitter(false, twitt, function(data) {
                   var text;
-                  text = 'The weekly ranking <strong>' + lastWeek + '</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
+                  text = 'The weekly ranking <strong>' + lastWeek + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
                   return sio.glob("fa fa-list", text);
                 });
               }
@@ -121,8 +123,8 @@
     });
     monthlyRanking = new schedule.RecurrenceRule();
     monthlyRanking.date = 1;
-    monthlyRanking.hour = 1;
-    monthlyRanking.minute = 2;
+    monthlyRanking.hour = 0;
+    monthlyRanking.minute = 3;
     monthlyRanking.seconds = 0;
     return monthlyLadder = schedule.scheduleJob(monthlyRanking, function() {
       return ladder.createMonthlyLadder(function() {
@@ -157,15 +159,15 @@
               newLeader += user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
             }
             if (user.monthlyRank === 2) {
-              newFollower += user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
+              newFollower += ' followed by ' + user.local.pseudo + (user.twitter ? ' (@' + user.twitter.username + ')' : '');
             }
             sio.glob("fa fa-star", '<i class="fa fa-star"></i><i class="fa fa-star"></i> ' + uText);
             if (it + 1 >= top3.length) {
-              twitt = "The #ranking for " + lastMonth + " is live! #GG " + newLeader + " who ranked First and " + newFollower + " 2nd! http://goo.gl/3VjsJd #CYF_ladder #CYFMonthly";
+              twitt = "The #ranking for " + lastMonth + ": 1st " + newLeader + " " + newFollower + " #GG! http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
               if (appKeys.app_config.twitterPushNews === true) {
                 return social.postTwitter(false, twitt, function(data) {
                   var text;
-                  text = 'The ranking for <strong>' + lastMonth + '</strong> <a href="/leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
+                  text = 'The ranking for <strong>' + lastMonth + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
                   return sio.glob("fa fa-list", text);
                 });
               }

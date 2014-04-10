@@ -84,7 +84,8 @@
       if (body.error) {
         return console.error("Error returned from  twitter: ", body.error);
       }
-      callback(body);
+      console.log(body);
+      return callback(body);
     });
     form = r.form();
     form.append("status", message);
