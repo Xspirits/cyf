@@ -393,6 +393,12 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       console.log result      
       res.send if result == true then true else false
 
+  app.post "/linkLol_confirm", isLoggedIn, (req, res) ->
+
+    users.linkLol_confirm req.user, (result) ->
+      console.log result      
+      res.send if result == true then true else false
+
   app.post "/updateSettings", isLoggedIn, (req, res) ->
     obj =
       _id: req.user._id

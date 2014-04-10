@@ -88,6 +88,7 @@
           lol = {
             idProfile: parseInt(summoner.id, 10),
             name: summoner.name,
+            region: region,
             profileIconId: parseInt(summoner.profileIconId, 10),
             revisionDate: new Date(summoner.revisionDate * 1000),
             summonerLevel: parseInt(summoner.summonerLevel, 10),
@@ -118,8 +119,28 @@
         if (err) {
           throw err;
         }
-        console.log(user);
         return done(true);
+      });
+    },
+    linkLol_confirm: function(user, done) {
+      var UID, name, region;
+      region = user.leagueoflegend.region;
+      name = user.leagueoflegend.name;
+      UID = user._id;
+      return social.findSummonerLol(region, name, function(summoner) {
+        console.log(summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
+        if (true) {
+          return User.findByIdAndUpdate(UID, {
+            'leagueoflegend.confirmed': true
+          }, function(err, user) {
+            if (err) {
+              throw err;
+            }
+            return done(true);
+          });
+        } else {
+          return done(false, "Icons did not match!");
+        }
       });
     },
 

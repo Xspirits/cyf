@@ -403,6 +403,12 @@
         return res.send(result === true ? true : false);
       });
     });
+    app.post("/linkLol_confirm", isLoggedIn, function(req, res) {
+      return users.linkLol_confirm(req.user, function(result) {
+        console.log(result);
+        return res.send(result === true ? true : false);
+      });
+    });
     app.post("/updateSettings", isLoggedIn, function(req, res) {
       var obj;
       obj = {

@@ -498,6 +498,9 @@ margin-top: -8px;
   right: 0;
   color: rgb(211, 205, 205);
 }
+.label a,.label a:hover {
+  color: #fff;
+}
 .friends .boxy {
   cursor: pointer;
   width: 100px;
@@ -737,7 +740,7 @@ margin-top: -8px;
 }
 .loaderProgress > .xp {
   position: absolute;
-  top: -1px;
+  top: 13px;
   right: 5px;
   color: rgb(140, 143, 145);
   text-shadow: 0 1px 0 white;
@@ -1440,3 +1443,183 @@ input.gStyle:focus {
 .hover-me.challenge-card.active > div > a,.hover-me.challenge-card > div > a,.hover-me.challenge-card:hover > div > a{
   color: inherit;
 }
+
+/* LOL SPRITES */
+
+.lol-p-icon0,.lol-p-icon1,.lol-p-icon10,.lol-p-icon11,.lol-p-icon12,.lol-p-icon13,.lol-p-icon14,.lol-p-icon15,.lol-p-icon16,.lol-p-icon17,.lol-p-icon18,.lol-p-icon19,.lol-p-icon2,.lol-p-icon20,.lol-p-icon21,.lol-p-icon22,.lol-p-icon23,.lol-p-icon24,.lol-p-icon25,.lol-p-icon26,.lol-p-icon27,.lol-p-icon28,.lol-p-icon3,.lol-p-icon4,.lol-p-icon5,.lol-p-icon501,.lol-p-icon502,.lol-p-icon503,.lol-p-icon504,.lol-p-icon505,.lol-p-icon506,.lol-p-icon507,.lol-p-icon508,.lol-p-icon509,.lol-p-icon510,.lol-p-icon511,.lol-p-icon512,.lol-p-icon513,.lol-p-icon514,.lol-p-icon515,.lol-p-icon516,.lol-p-icon517,.lol-p-icon518,.lol-p-icon519,.lol-p-icon520,.lol-p-icon521,.lol-p-icon522,.lol-p-icon523,.lol-p-icon524,.lol-p-icon525,.lol-p-icon526,.lol-p-icon527,.lol-p-icon528,.lol-p-icon529,.lol-p-icon530,.lol-p-icon531,.lol-p-icon532,.lol-p-icon533,.lol-p-icon534,.lol-p-icon535,.lol-p-icon536,.lol-p-icon537,.lol-p-icon538,.lol-p-icon539,.lol-p-icon540,.lol-p-icon541,.lol-p-icon542,.lol-p-icon543,.lol-p-icon544,.lol-p-icon545,.lol-p-icon546,.lol-p-icon547,.lol-p-icon548,.lol-p-icon549,.lol-p-icon550,.lol-p-icon551,.lol-p-icon552,.lol-p-icon553,.lol-p-icon554,.lol-p-icon555,.lol-p-icon556,.lol-p-icon557,.lol-p-icon558,.lol-p-icon559,.lol-p-icon560,.lol-p-icon561,.lol-p-icon562,.lol-p-icon563,.lol-p-icon564,.lol-p-icon565,.lol-p-icon566,.lol-p-icon567,.lol-p-icon568,.lol-p-icon569,.lol-p-icon570,.lol-p-icon571,.lol-p-icon572,.lol-p-icon573,.lol-p-icon574,.lol-p-icon575,.lol-p-icon576,.lol-p-icon577,.lol-p-icon578,.lol-p-icon579,.lol-p-icon580,.lol-p-icon581,.lol-p-icon582,.lol-p-icon583,.lol-p-icon584,.lol-p-icon585,.lol-p-icon586,.lol-p-icon587,.lol-p-icon588,.lol-p-icon589,.lol-p-icon590,.lol-p-icon591,.lol-p-icon592,.lol-p-icon593,.lol-p-icon594,.lol-p-icon595,.lol-p-icon596,.lol-p-icon597,.lol-p-icon598,.lol-p-icon599,.lol-p-icon6,.lol-p-icon600,.lol-p-icon601,.lol-p-icon602,.lol-p-icon603,.lol-p-icon604,.lol-p-icon605,.lol-p-icon606,.lol-p-icon607,.lol-p-icon608,.lol-p-icon609,.lol-p-icon610,.lol-p-icon611,.lol-p-icon612,.lol-p-icon613,.lol-p-icon614,.lol-p-icon615,.lol-p-icon616,.lol-p-icon617,.lol-p-icon618,.lol-p-icon619,.lol-p-icon620,.lol-p-icon621,.lol-p-icon622,.lol-p-icon623,.lol-p-icon624,.lol-p-icon625,.lol-p-icon626,.lol-p-icon627,.lol-p-icon628,.lol-p-icon629,.lol-p-icon630,.lol-p-icon631,.lol-p-icon632,.lol-p-icon633,.lol-p-icon634,.lol-p-icon635,.lol-p-icon636,.lol-p-icon637,.lol-p-icon638,.lol-p-icon639,.lol-p-icon640,.lol-p-icon641,.lol-p-icon642,.lol-p-icon7,.lol-p-icon8,.lol-p-icon9 {
+  display: block; background: url('../img/assets_lol/icons/profileicon0.png') no-repeat;
+  /*basic */
+  width: 48px;
+  height: 48px;
+}
+.lol-p-icon0 {background-position:-0px -0px;}
+.lol-p-icon1 {background-position:-48px -0px;}
+.lol-p-icon10 {background-position:-96px -0px;}
+.lol-p-icon11 {background-position:-144px -0px;}
+.lol-p-icon12 {background-position:-192px -0px;}
+.lol-p-icon13 {background-position:-240px -0px;}
+.lol-p-icon14 {background-position:-288px -0px;}
+.lol-p-icon15 {background-position:-336px -0px;}
+.lol-p-icon16 {background-position:-384px -0px;}
+.lol-p-icon17 {background-position:-432px -0px;}
+.lol-p-icon18 {background-position:-0px -48px;}
+.lol-p-icon19 {background-position:-48px -48px;}
+.lol-p-icon2 {background-position:-96px -48px;}
+.lol-p-icon20 {background-position:-144px -48px;}
+.lol-p-icon21 {background-position:-192px -48px;}
+.lol-p-icon22 {background-position:-240px -48px;}
+.lol-p-icon23 {background-position:-288px -48px;}
+.lol-p-icon24 {background-position:-336px -48px;}
+.lol-p-icon25 {background-position:-384px -48px;}
+.lol-p-icon26 {background-position:-432px -48px;}
+.lol-p-icon27 {background-position:-0px -96px;}
+.lol-p-icon28 {background-position:-48px -96px;}
+.lol-p-icon3 {background-position:-144px -96px;}
+.lol-p-icon4 {background-position:-192px -144px;}
+.lol-p-icon5 {background-position:-384px -144px;}
+.lol-p-icon501 {background-position:-432px -144px;}
+.lol-p-icon502 {background-position:-0px -192px;}
+.lol-p-icon503 {background-position:-48px -192px;}
+.lol-p-icon504 {background-position:-96px -192px;}
+.lol-p-icon505 {background-position:-144px -192px;}
+.lol-p-icon506 {background-position:-192px -192px;}
+.lol-p-icon507 {background-position:-240px -192px;}
+.lol-p-icon508 {background-position:-288px -192px;}
+.lol-p-icon509 {background-position:-336px -192px;}
+.lol-p-icon510 {background-position:-384px -192px;}
+.lol-p-icon511 {background-position:-432px -192px;}
+.lol-p-icon512 {background-position:-0px -240px;}
+.lol-p-icon513 {background-position:-48px -240px;}
+.lol-p-icon514 {background-position:-96px -240px;}
+.lol-p-icon515 {background-position:-144px -240px;}
+.lol-p-icon516 {background-position:-192px -240px;}
+.lol-p-icon517 {background-position:-240px -240px;}
+.lol-p-icon518 {background-position:-288px -240px;}
+.lol-p-icon519 {background-position:-336px -240px;}
+.lol-p-icon520 {background-position:-384px -240px;}
+.lol-p-icon521 {background-position:-432px -240px;}
+.lol-p-icon522 {background-position:-0px -288px;}
+.lol-p-icon523 {background-position:-48px -288px;}
+.lol-p-icon524 {background-position:-96px -288px;}
+.lol-p-icon525 {background-position:-144px -288px;}
+.lol-p-icon526 {background-position:-192px -288px;}
+.lol-p-icon527 {background-position:-240px -288px;}
+.lol-p-icon528 {background-position:-288px -288px;}
+.lol-p-icon529 {background-position:-336px -288px;}
+.lol-p-icon530 {background-position:-384px -288px;}
+.lol-p-icon531 {background-position:-432px -288px;}
+.lol-p-icon532 {background-position:-0px -336px;}
+.lol-p-icon533 {background-position:-48px -336px;}
+.lol-p-icon534 {background-position:-96px -336px;}
+.lol-p-icon535 {background-position:-144px -336px;}
+.lol-p-icon536 {background-position:-192px -336px;}
+.lol-p-icon537 {background-position:-240px -336px;}
+.lol-p-icon538 {background-position:-288px -336px;}
+.lol-p-icon539 {background-position:-336px -336px;}
+.lol-p-icon540 {background-position:-384px -336px;}
+.lol-p-icon541 {background-position:-432px -336px;}
+.lol-p-icon542 {background-position:-0px -384px;}
+.lol-p-icon543 {background-position:-48px -384px;}
+.lol-p-icon544 {background-position:-96px -384px;}
+.lol-p-icon545 {background-position:-144px -384px;}
+.lol-p-icon546 {background-position:-192px -384px;}
+.lol-p-icon547 {background-position:-240px -384px;}
+.lol-p-icon548 {background-position:-288px -384px;}
+.lol-p-icon549 {background-position:-336px -384px;}
+.lol-p-icon550 {background-position:-384px -384px;}
+.lol-p-icon551 {background-position:-432px -384px;}
+.lol-p-icon552 {background-position:-0px -432px;}
+.lol-p-icon553 {background-position:-48px -432px;}
+.lol-p-icon554 {background-position:-96px -432px;}
+.lol-p-icon555 {background-position:-144px -432px;}
+.lol-p-icon556 {background-position:-192px -432px;}
+.lol-p-icon557 {background-position:-240px -432px;}
+.lol-p-icon558 {background-position:-288px -432px;}
+.lol-p-icon559 {background-position:-336px -432px;}
+.lol-p-icon560 {background-position:-384px -432px;}
+.lol-p-icon561 {background-position:-432px -432px;}
+.lol-p-icon562 {background-position:-0px -480px;}
+.lol-p-icon563 {background-position:-48px -480px;}
+.lol-p-icon564 {background-position:-96px -480px;}
+.lol-p-icon565 {background-position:-144px -480px;}
+.lol-p-icon566 {background-position:-192px -480px;}
+.lol-p-icon567 {background-position:-240px -480px;}
+.lol-p-icon568 {background-position:-288px -480px;}
+.lol-p-icon569 {background-position:-336px -480px;}
+.lol-p-icon570 {background-position:-384px -480px;}
+.lol-p-icon571 {background-position:-432px -480px;}
+.lol-p-icon572 {background-position:-0px -528px;}
+.lol-p-icon573 {background-position:-48px -528px;}
+.lol-p-icon574 {background-position:-96px -528px;}
+.lol-p-icon575 {background-position:-336px -528px;}
+.lol-p-icon576 {background-position:-384px -528px;}
+.lol-p-icon577 {background-position:-432px -528px;}
+.lol-p-icon578 {background-position:-0px -576px;}
+.lol-p-icon579 {background-position:-48px -576px;}
+.lol-p-icon580 {background-position:-96px -576px;}
+.lol-p-icon581 {background-position:-144px -576px;}
+.lol-p-icon582 {background-position:-192px -576px;}
+.lol-p-icon583 {background-position:-240px -576px;}
+.lol-p-icon584 {background-position:-288px -576px;}
+.lol-p-icon585 {background-position:-336px -576px;}
+.lol-p-icon586 {background-position:-384px -576px;}
+.lol-p-icon587 {background-position:-432px -576px;}
+.lol-p-icon588 {background-position:-0px -624px;}
+.lol-p-icon589 {background-position:-48px -624px;}
+.lol-p-icon590 {background-position:-96px -624px;}
+.lol-p-icon591 {background-position:-144px -624px;}
+.lol-p-icon592 {background-position:-192px -624px;}
+.lol-p-icon593 {background-position:-240px -624px;}
+.lol-p-icon594 {background-position:-288px -624px;}
+.lol-p-icon595 {background-position:-336px -624px;}
+.lol-p-icon596 {background-position:-384px -624px;}
+.lol-p-icon597 {background-position:-432px -624px;}
+.lol-p-icon598 {background-position:-0px -672px;}
+.lol-p-icon599 {background-position:-48px -672px;}
+.lol-p-icon6 {background-position:-144px -528px;}
+.lol-p-icon600 {background-position:-96px -672px;}
+.lol-p-icon601 {background-position:-144px -672px;}
+.lol-p-icon602 {background-position:-192px -672px;}
+.lol-p-icon603 {background-position:-240px -672px;}
+.lol-p-icon604 {background-position:-288px -672px;}
+.lol-p-icon605 {background-position:-336px -672px;}
+.lol-p-icon606 {background-position:-384px -672px;}
+.lol-p-icon607 {background-position:-432px -672px;}
+.lol-p-icon608 {background-position:-0px -720px;}
+.lol-p-icon609 {background-position:-48px -720px;}
+.lol-p-icon610 {background-position:-96px -720px;}
+.lol-p-icon611 {background-position:-144px -720px;}
+.lol-p-icon612 {background-position:-192px -720px;}
+.lol-p-icon613 {background-position:-240px -720px;}
+.lol-p-icon614 {background-position:-288px -720px;}
+.lol-p-icon615 {background-position:-336px -720px;}
+.lol-p-icon616 {background-position:-384px -720px;}
+.lol-p-icon617 {background-position:-432px -720px;}
+.lol-p-icon618 {background-position:-0px -768px;}
+.lol-p-icon619 {background-position:-48px -768px;}
+.lol-p-icon620 {background-position:-96px -768px;}
+.lol-p-icon621 {background-position:-144px -768px;}
+.lol-p-icon622 {background-position:-192px -768px;}
+.lol-p-icon623 {background-position:-240px -768px;}
+.lol-p-icon624 {background-position:-288px -768px;}
+.lol-p-icon625 {background-position:-336px -768px;}
+.lol-p-icon626 {background-position:-384px -768px;}
+.lol-p-icon627 {background-position:-432px -768px;}
+.lol-p-icon628 {background-position:-0px -816px;}
+.lol-p-icon629 {background-position:-48px -816px;}
+.lol-p-icon630 {background-position:-96px -816px;}
+.lol-p-icon631 {background-position:-144px -816px;}
+.lol-p-icon632 {background-position:-192px -816px;}
+.lol-p-icon633 {background-position:-240px -816px;}
+.lol-p-icon634 {background-position:-288px -816px;}
+.lol-p-icon635 {background-position:-336px -816px;}
+.lol-p-icon636 {background-position:-384px -816px;}
+.lol-p-icon637 {background-position:-432px -816px;}
+.lol-p-icon638 {background-position:-0px -864px;}
+.lol-p-icon639 {background-position:-48px -864px;}
+.lol-p-icon640 {background-position:-96px -864px;}
+.lol-p-icon641 {background-position:-144px -864px;}
+.lol-p-icon642 {background-position:-192px -864px;}
+.lol-p-icon7 {background-position:-192px -528px;}
+.lol-p-icon8 {background-position:-240px -528px;}
+.lol-p-icon9 {background-position:-288px -528px;}

@@ -262,6 +262,7 @@
       },
       idProfile: Number,
       name: String,
+      region: String,
       profileIconId: Number,
       profileIconId_confirm: {
         type: Number,

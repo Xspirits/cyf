@@ -107,11 +107,14 @@
 										<div class="col-md-12 col-xs-12">
 											<h3><i class="fa fa-link"></i> League of Legend</h3>
 											<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed === true) { %>
-											<span class="linked label label-success">
-												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.leagueoflegend.name %>
-												<a href="/unlink/game_lol" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
-											</span>
+											<div class="pull-left">
+												<img class="img-responsive" src="./img/assets_lol/icons/<%= currentUser.leagueoflegend.profileIconId %>.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account.">
+											</div>
 											<h4><%= currentUser.leagueoflegend.name %> - Summoner level <%= currentUser.leagueoflegend.summonerLevel %></h4>
+											<h5 class="linked label label-success">
+												<i class="fa fa-check-square meany"></i> Connected!
+												<a href="/unlink/game_lol" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
+											</h5>
 											<% } else if (!currentUser.leagueoflegend.idProfile || currentUser.leagueoflegend.profileIconId_confirm === 0) { %>
 											<div class="row" id="linkingLoL">
 												<div id="step-1">													
@@ -150,7 +153,6 @@
 													<p>Please, change your profile icon in League of legend to this one and click in the following button:
 													<button id="confirmLoL" class="btn btn-info">Check my profile icon</button>
 													</p>
-
 												</div>
 											</div>
 											<% } else { %>
@@ -160,10 +162,10 @@
 													<h4>Confirm your account</h4>
 													<p>You picked the following icon: </p>
 													<div id="pickedIcon">
-													<img class="img-responsive" src="./img/assets_lol/icons/ProfileIcon<%= currentUser.leagueoflegend.profileIconId_confirm %>.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account.">
+													<img class="img-responsive" src="./img/assets_lol/icons/<%= currentUser.leagueoflegend.profileIconId_confirm %>.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account.">
 													</div>
 													<p>Please, change your profile icon in League of legend to this one and click in the following button:
-													<button id="confirmLoL" class="btn btn-info">Check my profile icon</button>
+													<button id="confirmLoL" class="btn btn-info ladda-button" data-style="expand-right"><span class="ladda-label">Verify my account</span></button>
 													</p>
 												</div>
 											</div>
@@ -174,6 +176,30 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<span class="glyphicon glyphicon-ok"></span>
+						Account Linked!
+					</h3>
+					</div>
+				<div class="panel-body">
+					<div class="media">
+                        <div class="pull-left">
+                        	<div class="lol-p-icon642"></div>
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">Well met challenger!</h4>
+                          <p>Congratulation, you have confirmed your League of Legend account!</p>
+                        </div>
+                      </div>
+
 				</div>
 			</div>
 		</div>
@@ -204,7 +230,28 @@
 					}
 				});
 			});
+			$('#confirmLoL').click(function(e){
+				e.preventDefault();
+				$.ajax({
+					type: 'POST',
+					url: './linkLol_confirm',						
+					success: function(data) {
+						if(data === true) {
+						
+							$('#successModal').modal('show');
 
+							window.setTimeout(function(){
+								window.location.href = "./profile";
+							}, 2333);
+
+						} else {
+							var newContent = '<div class="alert alert-danger"><i class="fa facheck"></i><strong>Oups!</strong> '+data[1]+'</div>'
+							$('#linkingLoL')
+							.append(newContent);
+						}
+					}
+				});
+			})
 			$('#lol_link').click(function(e) {
 				e.preventDefault();
 
@@ -246,7 +293,7 @@
 					url: './linklol_pickicon',						
 					success: function(data) {
 						if(data === true) {
-							$('#pickedIcon').append('<img class="img-responsive" src="./img/assets_lol/icons/ProfileIcon'+id+'.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account." >')
+							$('#pickedIcon').append('<img class="img-responsive" src="./img/assets_lol/icons/'+id+'.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account." >')
 							lolStep3();
 
 						} else {
@@ -271,9 +318,8 @@
 				_this.children('a').addClass('hidden');
 			});
 			function randNum (icons) {
-				var a = _.random(1, 29);
-				b = '0'+a;
-				a = a < 10 ? b:a;
+				var a = _.random(0, 28);
+				console.log(a)
 				return $.inArray(a,icons) === -1 ? a: randNum (icons);
 			}
 			function lolStep3() {
@@ -288,7 +334,7 @@
 			function lolStep2() {
 				//pick 5 random lol icons
 				var icons = [];
-				for (var i =5 - 1; i >= 0; i--) {
+				for (var i =10 - 1; i >= 0; i--) {
 					icons.push(randNum());
 				};
 
@@ -296,7 +342,7 @@
 				$s2 = $('#step-2')
 				$ul = $s2.find('ul').first();
 				_.each(icons, function(numb){
-					$ul.append('<li class="pickme"><img  id="'+numb+'" class="img-responsive" src="./img/assets_lol/icons/ProfileIcon'+numb+'.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account." ></li>');
+					$ul.append('<li class="pickme"><img  id="'+numb+'" class="img-responsive" src="./img/assets_lol/icons/'+numb+'.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account." ></li>');
 				})
 				$('#step-1').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
 					$('#step-1').hide();

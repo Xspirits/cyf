@@ -191,24 +191,23 @@
 	<% include statics/footers %>
 	<script type="text/javascript" src="../js/chart.min.js"></script>
 	<script type="text/javascript">
-		function testArray (aA,aB) {
-			return aA.length > aB.length;
-		}
-		function offsetArray (arr,over9thousands) {
-			var val = over9thousands? 9999:0;
-			return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
-		}
-		function findFirstRank (arr) {
-			var rank=0;
-			for (var i = arr.length - 1; i >= 0; i--) {
-				if(arr[i] > 0)
-					++rank;
-			};
-			return rank;
-		}
 		$(function() {
 
-			$(".graphsTab input[type=checkbox]").bootstrapSwitch();
+			//$(".graphsTab input[type=checkbox]").bootstrapSwitch();
+
+			function offsetArray (arr,lie,val) {
+				var cL = arr.length;
+				var val = val?val:0;
+				if (lie) {
+					for (var i = cL; i < lie; i++) {
+						arr.push(val)
+					};
+					arr.reverse();
+					// console.log(arr)
+					return arr;
+				} else
+				return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+			}
 			// return an array composed of a list of the days' number from 1 month ago until today, not included.
 			function getAllDays() {
 				var e = moment();
@@ -256,6 +255,7 @@
 			, monthlyR = [];
 			var dataLabels = getAllDays();
 
+			//Load our data
 			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
 			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse()
 			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>').reverse();
@@ -272,10 +272,6 @@
 				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>});
 			<%} %>
 
-			var offsetDaily = rHistDaily[0] && rHistDaily[0].length>0 ? rHistDaily[0].rank: 10000;
-			var offsetWeekly = rHistWeekly[0] && rHistWeekly[0].length>0 ? rHistWeekly[0].rank: 10000;
-			var offsetMonthly = rHistMonthly[0] && rHistMonthly[0].length>0 ? rHistMonthly[0].rank: 10000;
-
 			// position our start at the end of the graph by reversing it.
 			for (var i = 0; i < dataLabels.length; i++) {
 				// Reverse the value of our historic
@@ -285,48 +281,46 @@
 				thisWeekly = rHistWeekly[i] ? (rHistWeekly[i].rank == 0 ? false:rHistWeekly[i].rank) : false;
 				thisMonthly = rHistMonthly[i] ? (rHistMonthly[i].rank == 0 ? false:rHistMonthly[i].rank) : false;
 
-				if(thisOne > 0){
+				if(thisOne > 0)
 					dota2.push(thisOne);
-				}
-				if(thatOne > 0){		
+
+				if(thatOne > 0)		
 					warcraft4.push(thatOne);
-				}
-				if(thisdaily){	
+
+				if(thisdaily)	
 					dailyR.push(thisdaily);
-				}
-				if(thisWeekly){	
+
+				if(thisWeekly)	
 					weeklyR.push(thisWeekly);
-				}
-				if(thisMonthly){	
+
+				if(thisMonthly)	
 					monthlyR.push(thisMonthly);
-				}
 			};
 
 			// We need at LEAST 2 values (it's a graph, yep)
-			dota2 = offsetArray(dota2);
-			warcraft4 = offsetArray(warcraft4);
-			dota2 = dota2.reverse();
-			warcraft4 = warcraft4.reverse();
-			// dailyR = offsetArray(dailyR);
-			// weeklyR = offsetArray(weeklyR);
-			// monthlyR = offsetArray(monthlyR);
-			console.log(dota2);
-			console.log(warcraft4);
-			console.log(dailyR);
-			console.log(weeklyR);
-			console.log(monthlyR);
+			dota2 = offsetArray(dota2).reverse();
+			warcraft4 = offsetArray(warcraft4).reverse();
 
+			// determine the length (X) we need for our ranking's array
+			var whichLongest=rHistDaily.length>rHistWeekly.length?rHistDaily.length>rHistMonthly.length?rHistDaily:rHistMonthly:rHistWeekly.length>rHistMonthly.length?rHistWeekly:rHistMonthly
 
-			var rd = findFirstRank(rHistDaily);
-			var rw = findFirstRank(rHistWeekly);
-			var rm = findFirstRank(rHistMonthly);
+			// Put all our ranking graph to the same length
+			dailyR = offsetArray(dailyR,whichLongest.length,9999);
+			weeklyR = offsetArray(weeklyR,whichLongest.length,9999);
+			monthlyR = offsetArray(monthlyR,whichLongest.length,9999);
+			// Now take the labels to the same length (slice or take the last X ones)
+			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
 
-			//Compressed
-			var whichLongest=rd.length>rw.length?rd.length>rm.length?rd:rm:rw.length>rm.length?rw:rm;whichLongest=offsetArray([whichLongest]);var rankLab=whichLongest.length<dataLabels.length?dataLabels.slice(dataLabels.length-whichLongest.length,dataLabels.length):dataLabels;dailyR=whichLongest.length<dailyR.length?dailyR.slice(dailyR.length-whichLongest.length,dailyR.length):dailyR;weeklyR=whichLongest.length<weeklyR.length?weeklyR.slice(weeklyR.length-whichLongest.length,weeklyR.length):weeklyR;monthlyR=whichLongest.length<monthlyR.length?monthlyR.slice(monthlyR.length-whichLongest.length,monthlyR.length):monthlyR;rankLab=offsetArray(rankLab)
-
+			// =========================
 			//BUILD CHARTS
-
-			var xpLab = dota2.length < dataLabels.length ? dataLabels.slice(dataLabels.length - dota2.length,dataLabels.length) : dataLabels;
+			// =========================
+			var spec = []
+			for (var i = 0; i < dataLabels.length; i++) {
+				spec.push(dataLabels[i]+' AM');
+				spec.push(dataLabels[i]+' PM');
+			};
+			var xpLab = dota2.length < spec.length ? spec.slice(spec.length - dota2.length,spec.length) : spec;
+			console.log(xpLab);
 			var dataXp = {
 				labels : xpLab,
 				datasets : [
@@ -342,15 +336,9 @@
 			//Level Graph
 			var lvlLab = warcraft4.length < dataLabels.length ? dataLabels.slice(dataLabels.length - warcraft4.length,dataLabels.length) : dataLabels;
 			var optLvl = {
-					//Boolean - If we want to override with a hard coded scale
 					scaleOverride : true,
-					
-					//** Required if scaleOverride is true **
-					//Number - The number of steps in a hard coded scale
 					scaleSteps : <%- currentUser.level*2 %>,
-					//Number - The value jump in the hard coded scale
 					scaleStepWidth : 1,
-					//Number - The scale starting value
 					scaleStartValue : 0
 			}
 			var dataLevel = {

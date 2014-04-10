@@ -56,6 +56,7 @@ module.exports =
         lol =
           idProfile : parseInt(summoner.id, 10)
           name : summoner.name
+          region : region
           profileIconId : parseInt(summoner.profileIconId, 10)
           revisionDate : new Date(summoner.revisionDate * 1000)
           summonerLevel : parseInt(summoner.summonerLevel, 10)
@@ -77,9 +78,23 @@ module.exports =
       'leagueoflegend.profileIconId_confirm': icon
     , (err, user) ->
       throw err if err
-      console.log user
       return done true
 
+  linkLol_confirm: (user, done)->
+    region = user.leagueoflegend.region
+    name = user.leagueoflegend.name
+    UID = user._id
+    social.findSummonerLol region, name, (summoner)->
+      console.log ( summoner.profileIconId+' == '+user.leagueoflegend.profileIconId_confirm)
+      
+      if summoner.profileIconId == user.leagueoflegend.profileIconId_confirm
+        User.findByIdAndUpdate UID,
+          'leagueoflegend.confirmed': true
+        , (err, user) ->
+          throw err if err
+          return done true
+      else
+        return done false, "Icons did not match!"
   ###
   Unlink a league of legend account
   @param  {[type]}   user [description]
