@@ -256,9 +256,17 @@
       }
     },
     leagueoflegend: {
+      confirmed: {
+        type: Boolean,
+        "default": false
+      },
       idProfile: Number,
       name: String,
       profileIconId: Number,
+      profileIconId_confirm: {
+        type: Number,
+        "default": 0
+      },
       revisionDate: Date,
       summonerLevel: Number,
       lastUpdated: {

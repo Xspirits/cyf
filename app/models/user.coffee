@@ -230,15 +230,20 @@ userSchema = mongoose.Schema(
       default: Date.now
 
   leagueoflegend:
+    confirmed: 
+      type:Boolean
+      default: false
     idProfile: Number
     name: String
     profileIconId: Number
+    profileIconId_confirm: 
+      type: Number
+      default: 0
     revisionDate: Date
     summonerLevel: Number
     lastUpdated:
       type: Date
       default: Date.now
-
     linkedOnce:
       type: Boolean
       default: true

@@ -10,8 +10,7 @@ exports.findSummonerLol = (region, name, callback) ->
   console.log name
   riotApi.getSummonerByName region,name, (err, summoner) ->
     throw err if err
-    # summoner = _.values(summoner)[0]
-    console.log summoner
+    summoner = _.values(summoner)[0]
     callback summoner
 
 exports.getFbData = (accessToken, apiPath, callback) ->

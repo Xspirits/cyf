@@ -18,7 +18,7 @@ module.exports =
     key: "02130312F2CCF046E4710C189E8481BA"
     domain: "challenge-friends.herokuapp.com"
   leagueoflegend:
-    key: "fdc734d5-eae1-4570-b800-a1646962d9e9"
+    key: "e95d7edc-2645-4790-b514-bac09bbb03d0"
 
   facebookAuth:
     clientID: "624902070914410" # your App ID

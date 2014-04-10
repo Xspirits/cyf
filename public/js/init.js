@@ -21,6 +21,7 @@
  'spin.min.js',
  'alertify.min.js',
  'navmenu.js',
+ 'underscore.min.js',
  'file-input.js',
  'bootstrap.min.js',
  'jquery-ui.min.js',

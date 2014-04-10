@@ -26,7 +26,7 @@
       if (err) {
         throw err;
       }
-      console.log(summoner);
+      summoner = _.values(summoner)[0];
       return callback(summoner);
     });
   };

@@ -50,30 +50,36 @@ module.exports =
   linkLol: (data, done) ->
     region = data.region
     name = data.summonerName
-    social.findSummonerLol region, name, (summoner) ->
+    UID = data.id
+    social.findSummonerLol region, name, (summoner)->
       if summoner.id
-        User.findById(data._id).exec (err, user) ->
-          throw err  if err
-          lol = user.leagueoflegend
-          lol.idProfile = parseInt(summoner.id, 10)
-          lol.name = summoner.name
-          lol.profileIconId = parseInt(summoner.profileIconId, 10)
-          lol.revisionDate = new Date(summoner.revisionDate * 1000)
-          lol.summonerLevel = parseInt(summoner.summonerLevel, 10)
-          user.save (err) ->
-            throw err  if err
-            console.log user
-            done true
-
-          return
-
+        lol =
+          idProfile : parseInt(summoner.id, 10)
+          name : summoner.name
+          profileIconId : parseInt(summoner.profileIconId, 10)
+          revisionDate : new Date(summoner.revisionDate * 1000)
+          summonerLevel : parseInt(summoner.summonerLevel, 10)
+          profileIconId_confirm: 0
+        console.log lol
+        User.findByIdAndUpdate UID,
+          leagueoflegend: lol
+        , (err, user) ->
+          throw err if err
+          console.log user
+          return done true
       else
-        done false, "summoner not found"
-      return
+        return done false, "summoner not found"
 
-    return
+  linkLolIconPick: (data, done)->
+    UID = data.id
+    icon = parseInt(data.profileIconId_confirm,10)
+    User.findByIdAndUpdate UID,
+      'leagueoflegend.profileIconId_confirm': icon
+    , (err, user) ->
+      throw err if err
+      console.log user
+      return done true
 
-  
   ###
   Unlink a league of legend account
   @param  {[type]}   user [description]

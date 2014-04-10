@@ -371,16 +371,27 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
   app.post "/linkLol", isLoggedIn, (req, res) ->
     obj =
+      id: req.user._id
       region: req.body.region
       summonerName: req.body.summonerName
 
     users.linkLol obj, (result) ->
-      if result.status_code == 200
+      console.log result
+      if result == true
         xp.xpReward req.user, "connect.game"
         notifs.linkedGame req.user, "League of Legend"
         res.send true
       else
-        res.send false,result.message
+        res.send false,result[1]
+
+  app.post "/linklol_pickicon", isLoggedIn, (req, res) ->
+    obj =
+      id: req.user._id
+      profileIconId_confirm: req.body.iconPicked
+
+    users.linkLolIconPick obj, (result) ->
+      console.log result      
+      res.send if result == true then true else false
 
   app.post "/updateSettings", isLoggedIn, (req, res) ->
     obj =

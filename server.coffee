@@ -60,7 +60,6 @@ require("./config/passport") passport, genUID, xp, notifs, mailer, google # pass
 app.configure ->
   
   # set up our express application
-  app.use express.logger("dev") # log every request to the console
   app.use express.bodyParser() # get information from html forms
   app.use cookieParser # read cookies (needed for auth)
   app.set "view engine", "ejs" # set up ejs for templating
@@ -80,8 +79,8 @@ app.configure ->
   app.use express.static(path.join(__dirname, "public"),
     maxAge: 2592000000
   )
+  app.use express.logger("dev") # log every request to the console
   app.use flash() # use connect-flash for flash messages stored in session
-  return
 
 
 # routes ======================================================================

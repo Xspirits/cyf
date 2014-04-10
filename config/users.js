@@ -78,33 +78,48 @@
       });
     },
     linkLol: function(data, done) {
-      var name, region;
+      var UID, name, region;
       region = data.region;
       name = data.summonerName;
-      social.findSummonerLol(region, name, function(summoner) {
+      UID = data.id;
+      return social.findSummonerLol(region, name, function(summoner) {
+        var lol;
         if (summoner.id) {
-          User.findById(data._id).exec(function(err, user) {
-            var lol;
+          lol = {
+            idProfile: parseInt(summoner.id, 10),
+            name: summoner.name,
+            profileIconId: parseInt(summoner.profileIconId, 10),
+            revisionDate: new Date(summoner.revisionDate * 1000),
+            summonerLevel: parseInt(summoner.summonerLevel, 10),
+            profileIconId_confirm: 0
+          };
+          console.log(lol);
+          return User.findByIdAndUpdate(UID, {
+            leagueoflegend: lol
+          }, function(err, user) {
             if (err) {
               throw err;
             }
-            lol = user.leagueoflegend;
-            lol.idProfile = parseInt(summoner.id, 10);
-            lol.name = summoner.name;
-            lol.profileIconId = parseInt(summoner.profileIconId, 10);
-            lol.revisionDate = new Date(summoner.revisionDate * 1000);
-            lol.summonerLevel = parseInt(summoner.summonerLevel, 10);
-            user.save(function(err) {
-              if (err) {
-                throw err;
-              }
-              console.log(user);
-              return done(true);
-            });
+            console.log(user);
+            return done(true);
           });
         } else {
-          done(false, "summoner not found");
+          return done(false, "summoner not found");
         }
+      });
+    },
+    linkLolIconPick: function(data, done) {
+      var UID, icon;
+      UID = data.id;
+      icon = parseInt(data.profileIconId_confirm, 10);
+      return User.findByIdAndUpdate(UID, {
+        'leagueoflegend.profileIconId_confirm': icon
+      }, function(err, user) {
+        if (err) {
+          throw err;
+        }
+        console.log(user);
+        return done(true);
       });
     },
 

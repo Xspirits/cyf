@@ -85,7 +85,6 @@
   require("./config/passport")(passport, genUID, xp, notifs, mailer, google);
 
   app.configure(function() {
-    app.use(express.logger("dev"));
     app.use(express.bodyParser());
     app.use(cookieParser);
     app.set("view engine", "ejs");
@@ -103,7 +102,8 @@
     app.use(express["static"](path.join(__dirname, "public"), {
       maxAge: 2592000000
     }));
-    app.use(flash());
+    app.use(express.logger("dev"));
+    return app.use(flash());
   });
 
   require("./app/routes")(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, mailer, google);

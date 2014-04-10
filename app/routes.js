@@ -377,17 +377,30 @@
     app.post("/linkLol", isLoggedIn, function(req, res) {
       var obj;
       obj = {
+        id: req.user._id,
         region: req.body.region,
         summonerName: req.body.summonerName
       };
       return users.linkLol(obj, function(result) {
-        if (result.status_code === 200) {
+        console.log(result);
+        if (result === true) {
           xp.xpReward(req.user, "connect.game");
           notifs.linkedGame(req.user, "League of Legend");
           return res.send(true);
         } else {
-          return res.send(false, result.message);
+          return res.send(false, result[1]);
         }
+      });
+    });
+    app.post("/linklol_pickicon", isLoggedIn, function(req, res) {
+      var obj;
+      obj = {
+        id: req.user._id,
+        profileIconId_confirm: req.body.iconPicked
+      };
+      return users.linkLolIconPick(obj, function(result) {
+        console.log(result);
+        return res.send(result === true ? true : false);
       });
     });
     app.post("/updateSettings", isLoggedIn, function(req, res) {
