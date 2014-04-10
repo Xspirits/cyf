@@ -23,12 +23,14 @@ mongoose        = require("mongoose")
 passport        = require("passport")
 path            = require("path")
 moment          = require("moment")
+moment          = require('moment-timezone')
 mandrill        = require('mandrill-api/mandrill')
 flash           = require("connect-flash")
 scheduler       = require("node-schedule")
 genUID          = require("shortid")
 _               = require("underscore")
 
+moment().tz("Europe/London").format()
 
 # generate a seed to build our UID (idCools)
 genUID.seed 664
@@ -93,4 +95,7 @@ server.listen port
 
 # sockets awesomization
 require("./app/io") io, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
+console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
+console.log 'Current Application time : '+moment().format()
+console.log '==========================================================='

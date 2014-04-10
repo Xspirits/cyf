@@ -38,6 +38,8 @@
 
   moment = require("moment");
 
+  moment = require('moment-timezone');
+
   mandrill = require('mandrill-api/mandrill');
 
   flash = require("connect-flash");
@@ -47,6 +49,8 @@
   genUID = require("shortid");
 
   _ = require("underscore");
+
+  moment().tz("Europe/London").format();
 
   genUID.seed(664);
 
@@ -110,6 +114,12 @@
 
   require("./app/io")(io, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio);
 
+  console.log('===========================================================');
+
   console.log("I challenge you to watch on port " + port);
+
+  console.log('Current Application time : ' + moment().format());
+
+  console.log('===========================================================');
 
 }).call(this);

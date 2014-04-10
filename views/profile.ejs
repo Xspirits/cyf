@@ -191,7 +191,21 @@
 	<% include statics/footers %>
 	<script type="text/javascript" src="../js/chart.min.js"></script>
 	<script type="text/javascript">
-
+		function testArray (aA,aB) {
+			return aA.length > aB.length;
+		}
+		function offsetArray (arr,over9thousands) {
+			var val = over9thousands? 9999:0;
+			return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+		}
+		function findFirstRank (arr) {
+			var rank=0;
+			for (var i = arr.length - 1; i >= 0; i--) {
+				if(arr[i] > 0)
+					++rank;
+			};
+			return rank;
+		}
 		$(function() {
 
 			$(".graphsTab input[type=checkbox]").bootstrapSwitch();
@@ -233,19 +247,14 @@
 			},60000);
 			//================================================
 			// User Xp Historic graph
-			var dataLabels = getAllDays();
-			var desiredRatio = $("#historygraph").parent().width();
-			var canvasXp = $("#historygraph")[0];
-
-			var ctxXp = canvasXp.getContext("2d");
+			//================================================
+			//Setup vars
 			var dota2 = []
 			, warcraft4 = []
 			, dailyR = []
 			, weeklyR = []
 			, monthlyR = [];
-
-			canvasXp.setAttribute('width', desiredRatio);
-			canvasXp.setAttribute('height', desiredRatio/2.5);
+			var dataLabels = getAllDays();
 
 			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
 			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse()
@@ -293,30 +302,16 @@
 				}
 			};
 
-			function testArray (aA,aB) {
-				return aA.length > aB.length;
-			}
-			function offsetArray (arr,over9thousands) {
-				var val = over9thousands? 9999:0;
-				return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
-			}
-			function findFirstRank (arr) {
-				var rank=0;
-				for (var i = arr.length - 1; i >= 0; i--) {
-					if(arr[i] > 0)
-						++rank;
-				};
-				return rank;
-			}
 			// We need at LEAST 2 values (it's a graph, yep)
-			console.log(dailyR);
-			console.log(weeklyR);
-			console.log(monthlyR);
 			dota2 = offsetArray(dota2);
 			warcraft4 = offsetArray(warcraft4);
+			dota2 = dota2.reverse();
+			warcraft4 = warcraft4.reverse();
 			// dailyR = offsetArray(dailyR);
 			// weeklyR = offsetArray(weeklyR);
 			// monthlyR = offsetArray(monthlyR);
+			console.log(dota2);
+			console.log(warcraft4);
 			console.log(dailyR);
 			console.log(weeklyR);
 			console.log(monthlyR);
@@ -325,14 +320,9 @@
 			var rd = findFirstRank(rHistDaily);
 			var rw = findFirstRank(rHistWeekly);
 			var rm = findFirstRank(rHistMonthly);
-			var whichLongest = rd.length > rw.length ? (rd.length > rm.length ? rd : rm):(rw.length > rm.length ? rw : rm);
-			whichLongest = offsetArray([whichLongest])
-			var rankLab = whichLongest.length < dataLabels.length ? dataLabels.slice(dataLabels.length - whichLongest.length,dataLabels.length) : dataLabels;
-			dailyR = whichLongest.length < dailyR.length ? dailyR.slice(dailyR.length - whichLongest.length,dailyR.length) : dailyR;
-			weeklyR = whichLongest.length < weeklyR.length ? weeklyR.slice(weeklyR.length - whichLongest.length,weeklyR.length) : weeklyR;
-			monthlyR = whichLongest.length < monthlyR.length ? monthlyR.slice(monthlyR.length - whichLongest.length,monthlyR.length) : monthlyR;
-			rankLab = offsetArray(rankLab);
-			console.log(rankLab);
+
+			//Compressed
+			var whichLongest=rd.length>rw.length?rd.length>rm.length?rd:rm:rw.length>rm.length?rw:rm;whichLongest=offsetArray([whichLongest]);var rankLab=whichLongest.length<dataLabels.length?dataLabels.slice(dataLabels.length-whichLongest.length,dataLabels.length):dataLabels;dailyR=whichLongest.length<dailyR.length?dailyR.slice(dailyR.length-whichLongest.length,dailyR.length):dailyR;weeklyR=whichLongest.length<weeklyR.length?weeklyR.slice(weeklyR.length-whichLongest.length,weeklyR.length):weeklyR;monthlyR=whichLongest.length<monthlyR.length?monthlyR.slice(monthlyR.length-whichLongest.length,monthlyR.length):monthlyR;rankLab=offsetArray(rankLab)
 
 			//BUILD CHARTS
 
@@ -349,16 +339,20 @@
 					}
 				]
 			}
-			new Chart(ctxXp).Line(dataXp);
 			//Level Graph
-
-			var canvasLevel = $("#levelgraph")[0];
-			var ctxLevel = canvasLevel.getContext("2d");
-			canvasLevel.setAttribute('width', desiredRatio);
-			canvasLevel.setAttribute('height', desiredRatio/2.5);
-
-
 			var lvlLab = warcraft4.length < dataLabels.length ? dataLabels.slice(dataLabels.length - warcraft4.length,dataLabels.length) : dataLabels;
+			var optLvl = {
+					//Boolean - If we want to override with a hard coded scale
+					scaleOverride : true,
+					
+					//** Required if scaleOverride is true **
+					//Number - The number of steps in a hard coded scale
+					scaleSteps : <%- currentUser.level*2 %>,
+					//Number - The value jump in the hard coded scale
+					scaleStepWidth : 1,
+					//Number - The scale starting value
+					scaleStartValue : 0
+			}
 			var dataLevel = {
 				labels : lvlLab,
 				datasets : [
@@ -371,15 +365,10 @@
 					}
 				]
 			}
-			new Chart(ctxLevel).Line(dataLevel);
-
 			//Ranks Graph
-			var canvasRanks = $("#ranksgraph")[0];
-			var ctxRanks = canvasRanks.getContext("2d");
-			canvasRanks.setAttribute('width', desiredRatio);
-			canvasRanks.setAttribute('height', desiredRatio/2.5);
-			var opt = {
-				datasetFill : false
+			var optRk = {
+				datasetFill : false,
+				bezierCurve : false
 			}
 			var dataRanks = {
 				labels : rankLab,
@@ -407,14 +396,39 @@
 					}
 				]
 			}
-			new Chart(ctxRanks).Line(dataRanks,opt);
+			// Build Canvas
+			var desiredRatio = $("#historygraph").parent().width(); // Used for all graphs
+			var canvasXp = $("#historygraph")[0];
+
+			var ctxXp = canvasXp.getContext("2d");
+
+			canvasXp.setAttribute('width', desiredRatio);
+			canvasXp.setAttribute('height', desiredRatio/2.5);
+
+			var canvasLevel = $("#levelgraph")[0];
+			var ctxLevel = canvasLevel.getContext("2d");
+			canvasLevel.setAttribute('width', desiredRatio);
+			canvasLevel.setAttribute('height', desiredRatio/2.5);
+
+			var canvasRanks = $("#ranksgraph")[0];
+			var ctxRanks = canvasRanks.getContext("2d");
+			canvasRanks.setAttribute('width', desiredRatio);
+			canvasRanks.setAttribute('height', desiredRatio/2.5);
+			//Build charts
+			new Chart(ctxXp).Line(dataXp);
+			new Chart(ctxLevel).Line(dataLevel,optLvl);
+			new Chart(ctxRanks).Line(dataRanks,optRk);
 
 		});
 		var timer = function (){				
-			// var d = new Date();
-			// d.setHours(0,0,1,0)
-			// var converted = moment(d).countdown().toString();
-			$('.timer').text('Ranks are updated every 24h, xp and level every 12h.');
+			var d = new Date();
+			var x = d.setHours(12,30,0,0);
+			var x2 = d.setHours(0,1,0,0);
+			d.setHours(0,0,1,0);
+			var converted = moment(d).countdown(new Date(),countdown.HOURS|countdown.MINUTES, NaN, 0).toString();
+			var convertedx = moment(x).countdown(new Date(),countdown.HOURS|countdown.MINUTES, NaN, 0).toString();
+			var convertedx2 = moment(x2).countdown(new Date(),countdown.HOURS|countdown.MINUTES, NaN, 0).toString();
+			$('.timer').html('xp Next update <strong>'+convertedx+'</strong> then <strong>'+convertedx2+'</strong>.<br> Ranks next update: <strong>'+converted+'</strong>');
 		}
 	</script>
 </body>
