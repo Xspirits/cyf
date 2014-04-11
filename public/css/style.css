@@ -968,20 +968,40 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 }
 
 /* line 283, ../../sass/style.scss */
-.navbar-toggle.lefty {
+.lefty {
   float: left;
   margin-left: 15px;
+}
+.righty {
+  float: right;
+  margin-right: 1%;
+  color: white;
+  margin-top: -3.2em;
+  cursor: pointer;
+}
+
+.righty.navbar-text {
+  color: #fafafa;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
   background-color: #50677a;
   color: #FFF;
 }
 /* line 288, ../../sass/style.scss */
-.navmenu {
-  z-index: 1;
+.liveFeed {
+  z-index: 5;
   padding-top: 65px;
+  margin-right: -206px;
   background: url('../img/px_bg.png') repeat;
+  -webkit-transition: margin .22s ease-in; 
+  -moz-transition: margin .22s ease-in;
+  -ms-transition: margin .22s ease-in;
+  -o-transition: margin .22s ease-in;
+  transition: margin .22s ease-in;
 }
+  .liveFeed.sticked, .liveFeed.active {
+    margin-right: 0 !important;
+  }
 .navbar-brand {
   padding: 5px;
 }

@@ -1,9 +1,6 @@
 
 <!-- Static navbar -->
 <div class="navbar navbar-default navbar-static-top" id="headNav" role="navigation">
-	<% if (currentUser) { %>
-	<button type="button" class="navbar-toggle lefty hidden-xs hidden-sm" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas"><i class="fa fa-ellipsis-v"></i></button>
-	<% } %>
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -88,6 +85,7 @@
 					<a href="/settings" class="hidden-sm hidden-xs"><i class="fa fa-cogs"></i></a>
 				</li>
 				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
+				<div class="navbar-text visible-sm visible-md righty"><span class="fa fa-th fa-2x"></span></div>
 			</ul>
 			<% } else { %>
 			<ul class="nav navbar-nav">
@@ -100,9 +98,13 @@
 			<% } %>
 		</div><!--/.nav-collapse -->
 	</div>
+
+	<% if (currentUser) { %>
+	<div class="righty visible-lg"><span class="fa fa-th fa-2x"></span></div>
+	<% } %>
 </div>
 
-<div class="navmenu navmenu-default navmenu-fixed-left">
+<div class="liveFeed navmenu navmenu-fixed-right visible-lg visible-md visible-sm">
 	<ul class="list-group" id="streams">
 	</ul>
 </div>

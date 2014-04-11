@@ -112,17 +112,14 @@
 			});
 		}, 1000);
 
-		$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-			animateProgress();
-		});
-
 			// Progress animation
-			function animateProgress() {
+			(function animateProgress() {
 				$('.tinyProgress').each(function(){
 					var w   = $(this).attr('data-percent');
 					$(this).width(w + '%');
 				});	
-			}	
+			})();
+				
 			function notif (queue,i) {     
 
 				setTimeout(function () {  
@@ -132,6 +129,16 @@
 					}    			
 				}, 220)
 			} 
+			$('.righty').hover(function(){
+				if(!$('.liveFeed').hasClass('sticked'))
+					$('.liveFeed').addClass('active');
+			},function(){
+				if(!$('.liveFeed').hasClass('sticked'))
+					$('.liveFeed').removeClass('active');
+			});
+			$('.righty').on('click', function(){
+				$('.liveFeed').toggleClass('sticked');
+			})
 			$('#dismissBoxChall').click(function(e){
 				e.preventDefault();
 				$('#gotchaChallenge,#gotaBoxContent')
