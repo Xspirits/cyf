@@ -11,6 +11,7 @@
     mandrill_key: "w_F27RXK5GmLNtZoePLczA",
     support: {
       email: "cyf.app@gmail.com",
+      password: "evoweb88",
       name: "CyF validator"
     },
     express_sid_key: "chachompcha.sid",

@@ -61,7 +61,7 @@ module.exports =
     ,
       multi: true
     , (err, result) ->
-      throw err  if err
+      consol.log err if err
       result
 
     return

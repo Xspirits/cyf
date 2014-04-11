@@ -8,12 +8,12 @@ _ = require("underscore")
 module.exports =
   validateEmail: (hash, done) ->
     User.findOne {verfiy_hash:hash}, (err, user) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
 
       if user
         user.verified = true        
         user.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err
 
           console.log user
           done true
@@ -33,7 +33,7 @@ module.exports =
           "share.twitter": data.value
       console.log query
       User.findByIdAndUpdate data._id, query, (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err
         done true
         return
 
@@ -43,7 +43,7 @@ module.exports =
 
   getFriendList: (id, done) ->
     User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err
         console.log user
         done user
 
@@ -103,7 +103,7 @@ module.exports =
   ###
   unlinkLol: (id, done) ->
     User.findById(id).exec (err, user) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       lol = user.leagueoflegend
       lol.idProfile = `undefined`
       lol.name = `undefined`
@@ -111,7 +111,7 @@ module.exports =
       lol.revisionDate = `undefined`
       lol.summonerLevel = `undefined`
       user.save (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err
         console.log user
         done true
 
@@ -123,7 +123,7 @@ module.exports =
     User.findByIdAndUpdate user._id,
       isOnline: false
     , (err) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done true
       return
 
@@ -158,7 +158,7 @@ module.exports =
       userRand:
         $near: nearNum
     ).limit(num).exec (err, randomUser) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done randomUser
 
     return
@@ -180,7 +180,7 @@ module.exports =
     ,
       multi: true
     ).exec (err, randomUser) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done true
 
     return
@@ -204,7 +204,7 @@ module.exports =
           answer: data.answer
           voteDate: currentDate
     ).exec (err, doc) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       console.log doc
       idx = (if doc.tribunal then doc.tribunal.indexOf(idSplice) else -1)
       
@@ -238,7 +238,7 @@ module.exports =
   ###
   getUserList: (done) ->
     User.find({}).sort("-_id").exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       
       # console.log(data);
       done data
@@ -256,7 +256,7 @@ module.exports =
     
     # console.log(arg);
     User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done data
 
     return
@@ -276,7 +276,7 @@ module.exports =
     
     #Check if the targeted user exist
     User.findById(uTo.id).exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       currentDate = new Date
       
       #existing user
@@ -346,7 +346,7 @@ module.exports =
           rateDate: currentDate
           rating: data.rating
     ).exec (err, doc) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       idx = (if doc.challengeRate then doc.challengeRate.indexOf(idSplice) else -1)
       
       # is it valid?
@@ -391,7 +391,7 @@ module.exports =
     ,
       multi: true
     ).exec (err, user) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       console.log user
       done true
 
@@ -412,7 +412,7 @@ module.exports =
   #
   globalLeaderboard: (done) ->
     User.find().sort("-globalScore").where("globalScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done challengers
       return
 
@@ -420,7 +420,7 @@ module.exports =
 
   monthlyLeaderboard: (done) ->
     User.find().sort("-monthlyScore").where("monthlyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done challengers
       return
 
@@ -428,7 +428,7 @@ module.exports =
 
   weeklyLeaderboard: (done) ->
     User.find().sort("-weeklyScore").where("weeklyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done challengers
       return
 
@@ -436,7 +436,7 @@ module.exports =
 
   dailyLeaderboard: (done) ->
     User.find().sort("-dailyScore").where("dailyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err
       done challengers
       return
 

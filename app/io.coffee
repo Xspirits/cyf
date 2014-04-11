@@ -1,4 +1,4 @@
-module.exports = (io, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio) ->
+module.exports = (io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio) ->
   
   # We configure the socket.io authorization handler (handshake)
   io.set "authorization", (data, callback) ->

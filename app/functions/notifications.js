@@ -86,7 +86,7 @@
         multi: true
       }, function(err, result) {
         if (err) {
-          throw err;
+          consol.log(err);
         }
         return result;
       });

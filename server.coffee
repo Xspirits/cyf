@@ -25,6 +25,7 @@ path            = require("path")
 moment          = require("moment")
 moment          = require('moment-timezone')
 mandrill        = require('mandrill-api/mandrill')
+nodemailer      = require("nodemailer")
 flash           = require("connect-flash")
 scheduler       = require("node-schedule")
 genUID          = require("shortid")
@@ -44,7 +45,7 @@ relations       = require("./config/relations")
 games           = require("./config/game")
 social          = require("./config/social")
 ladder          = require("./config/ladder")
-mailer          = require("./config/mailer")(mandrill_client, appKeys, moment)
+mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)
 google          = require("./config/google")
 
 # functions Import
@@ -55,7 +56,7 @@ xp              = require("./app/functions/xp")(sio)
 
 # configuration ===============================================================
 mongoose.connect configDB.url # connect to our database
-require("./config/passport") passport, genUID, xp, notifs, mailer, google # pass passport for configuration
+require("./config/passport") passport, mailer, genUID, xp, notifs, google # pass passport for configuration
 
 app.configure ->
   
@@ -84,16 +85,16 @@ app.configure ->
 
 
 # routes ======================================================================
-require("./app/routes") app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, mailer, google 
+require("./app/routes") app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
-require("./app/schedule") scheduler, _,  sio, ladder, moment, social, appKeys, xp, notifs
+require("./app/schedule") scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs
 
 # launch ======================================================================
 server.listen port
 
 # sockets awesomization
-require("./app/io") io, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
+require("./app/io") io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
 console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
 console.log 'Current Application time : '+moment().format()

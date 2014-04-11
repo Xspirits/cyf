@@ -108,7 +108,7 @@ module.exports = (sio) ->
       $set:
         xpNext: levelUp[1]
     ).exec (err, userUpdated) ->
-      throw err if err
+      mailer.cLog 'Error at '+__filename,err
       text = _.values(_.pick(xpRewardAction, action))[0]
       if levelUp[0]
         notifs.gainedLevel userUpdated, uLvl + 1
@@ -123,7 +123,7 @@ module.exports = (sio) ->
 
   updateDaily: (done)->
     User.find().exec (err, users) ->
-      throw err if err
+      mailer.cLog 'Error at '+__filename,err
 
       for user in users then do (user) =>
         #generate object of the day: freez the xp and level achieved
@@ -135,5 +135,5 @@ module.exports = (sio) ->
           $push:
             xpHistoric: garbage
         ).exec (err, userUpdated) ->
-          throw err  if err
+          console.log err  if err
           return done true

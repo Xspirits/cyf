@@ -3,7 +3,7 @@ isLoggedIn = (req, res, next) ->
   res.redirect "/"
   return
   
-module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder,mailer, shortUrl) ->
+module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
     res.render "about.ejs",

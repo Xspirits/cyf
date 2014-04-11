@@ -19,15 +19,11 @@
       return User.findOne({
         verfiy_hash: hash
       }, function(err, user) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         if (user) {
           user.verified = true;
           user.save(function(err) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             console.log(user);
             return done(true);
           });
@@ -56,9 +52,7 @@
         }
         console.log(query);
         User.findByIdAndUpdate(data._id, query, function(err) {
-          if (err) {
-            throw err;
-          }
+          mailer.cLog('Error at ' + __filename, err);
           done(true);
         });
       } else {
@@ -70,9 +64,7 @@
         path: 'friends.idUser',
         select: '-notifications'
       }).exec(function(err, user) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         console.log(user);
         return done(user);
       });
@@ -153,9 +145,7 @@
     unlinkLol: function(id, done) {
       User.findById(id).exec(function(err, user) {
         var lol;
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         lol = user.leagueoflegend;
         lol.idProfile = undefined;
         lol.name = undefined;
@@ -163,9 +153,7 @@
         lol.revisionDate = undefined;
         lol.summonerLevel = undefined;
         user.save(function(err) {
-          if (err) {
-            throw err;
-          }
+          mailer.cLog('Error at ' + __filename, err);
           console.log(user);
           return done(true);
         });
@@ -175,9 +163,7 @@
       User.findByIdAndUpdate(user._id, {
         isOnline: false
       }, function(err) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         done(true);
       });
     },
@@ -210,9 +196,7 @@
           $near: nearNum
         }
       }).limit(num).exec(function(err, randomUser) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         return done(randomUser);
       });
     },
@@ -236,9 +220,7 @@
       }, {
         multi: true
       }).exec(function(err, randomUser) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         return done(true);
       });
     },
@@ -264,9 +246,7 @@
         }
       }).exec(function(err, doc) {
         var idx;
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         console.log(doc);
         idx = (doc.tribunal ? doc.tribunal.indexOf(idSplice) : -1);
         if (idx !== -1) {
@@ -292,9 +272,7 @@
      */
     getUserList: function(done) {
       User.find({}).sort("-_id").exec(function(err, data) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         return done(data);
       });
     },
@@ -309,9 +287,7 @@
       User.findOne({
         idCool: id
       }).populate("friends.idUser").exec(function(err, data) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         return done(data);
       });
     },
@@ -328,9 +304,7 @@
       uTo = data.to;
       User.findById(uTo.id).exec(function(err, data) {
         var currentDate;
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         currentDate = new Date;
         if (data) {
           relations.create(from, uTo, true, function(result) {
@@ -399,9 +373,7 @@
         }
       }).exec(function(err, doc) {
         var idx;
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         idx = (doc.challengeRate ? doc.challengeRate.indexOf(idSplice) : -1);
         if (idx !== -1) {
           doc.challengeRate.splice(idx, 1);
@@ -438,9 +410,7 @@
       }, {
         multi: true
       }).exec(function(err, user) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         console.log(user);
         return done(true);
       });
@@ -455,33 +425,25 @@
     },
     globalLeaderboard: function(done) {
       User.find().sort("-globalScore").where("globalScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         done(challengers);
       });
     },
     monthlyLeaderboard: function(done) {
       User.find().sort("-monthlyScore").where("monthlyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         done(challengers);
       });
     },
     weeklyLeaderboard: function(done) {
       User.find().sort("-weeklyScore").where("weeklyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         done(challengers);
       });
     },
     dailyLeaderboard: function(done) {
       User.find().sort("-dailyScore").where("dailyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          throw err;
-        }
+        mailer.cLog('Error at ' + __filename, err);
         done(challengers);
       });
     },

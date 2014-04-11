@@ -20,7 +20,7 @@
 
   configAuth = require("./auth");
 
-  module.exports = function(passport, genUID, xp, notifs, mailer, shortUrl) {
+  module.exports = function(passport, mailer, genUID, xp, notifs, shortUrl) {
     passport.serializeUser(function(user, done) {
       done(null, user.id);
     });
@@ -58,9 +58,7 @@
             req.session.user = userfound;
             userfound.isOnline = true;
             return userfound.save(function(err) {
-              if (err) {
-                throw err;
-              }
+              mailer.cLog('Error at ' + __filename, err);
               notifs.login(userfound);
               return done(null, userfound);
             });
@@ -111,9 +109,7 @@
                 console.log(gravatarUrl);
                 newUser.icon = gravatarUrl;
                 newUser.save(function(err, user) {
-                  if (err) {
-                    throw err;
-                  }
+                  mailer.cLog('Error at ' + __filename, err);
                   return mailer.accountConfirm(user, function(returned) {
                     if (configAuth.app_config.email_confirm === false) {
                       req.session.user = user;
@@ -133,9 +129,7 @@
           user.local.password = user.generateHash(password);
           user.local.pseudo = req.body.pseudo;
           user.save(function(err) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             return done(null, user);
           });
         }
@@ -163,9 +157,7 @@
                 user.facebook.name = profile.name.givenName + " " + profile.name.familyName;
                 user.facebook.email = profile.emails[0].value;
                 user.save(function(err) {
-                  if (err) {
-                    throw err;
-                  }
+                  mailer.cLog('Error at ' + __filename, err);
                   return done(null, user);
                 });
               }
@@ -177,9 +169,7 @@
               newUser.facebook.name = profile.name.givenName + " " + profile.name.familyName;
               newUser.facebook.email = profile.emails[0].value;
               newUser.save(function(err) {
-                if (err) {
-                  throw err;
-                }
+                mailer.cLog('Error at ' + __filename, err);
                 return done(null, newUser);
               });
             }
@@ -191,9 +181,7 @@
           user.facebook.name = profile.name.givenName + " " + profile.name.familyName;
           user.facebook.email = profile.emails[0].value;
           user.save(function(err) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             return done(null, user);
           });
         }
@@ -245,9 +233,7 @@
               newUser.twitter.username = profile.username;
               newUser.twitter.displayName = profile.displayName;
               newUser.save(function(err) {
-                if (err) {
-                  throw err;
-                }
+                mailer.cLog('Error at ' + __filename, err);
                 return done(null, newUser);
               });
             }
@@ -260,9 +246,7 @@
           user.twitter.username = profile.username;
           user.twitter.displayName = profile.displayName;
           user.save(function(err) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             console.log(user);
             return done(null, user);
           });
@@ -291,9 +275,7 @@
                 user.google.name = profile.displayName;
                 user.google.email = profile.emails[0].value;
                 user.save(function(err) {
-                  if (err) {
-                    throw err;
-                  }
+                  mailer.cLog('Error at ' + __filename, err);
                   return done(null, user);
                 });
               }
@@ -305,9 +287,7 @@
               newUser.google.name = profile.displayName;
               newUser.google.email = profile.emails[0].value;
               newUser.save(function(err) {
-                if (err) {
-                  throw err;
-                }
+                mailer.cLog('Error at ' + __filename, err);
                 return done(null, newUser);
               });
             }
@@ -319,9 +299,7 @@
           user.google.name = profile.displayName;
           user.google.email = profile.emails[0].value;
           user.save(function(err) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             return done(null, user);
           });
         }

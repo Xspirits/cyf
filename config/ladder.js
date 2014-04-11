@@ -30,9 +30,7 @@
         return _.each(userSorted, function(user, rank) {
           console.log(user.local.pseudo + ' for ' + rank);
           return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             if (type === 'dailyRank') {
               user.dailyRank = rank + 1;
             } else if (type === 'weeklyRank') {
@@ -42,9 +40,7 @@
             }
             console.log(user.local.pseudo + ' who was ' + user.dailyArchives.rank + ' is now #' + user.dailyRank);
             return user.save(function(err) {
-              if (err) {
-                throw err;
-              }
+              mailer.cLog('Error at ' + __filename, err);
               if (rank + 1 < 4) {
                 leaders.push(user);
               }
@@ -78,9 +74,7 @@
         return getScore(prepareGlobal, function(globalScore) {
           console.log("new global score for " + user.local.pseudo + " is " + globalScore);
           return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             yesterday.day = moment().subtract("days", 1).day();
             user.globalScore = globalScore;
             user.dailyScore = score;
@@ -90,9 +84,7 @@
             user.daily.shareTW = 0;
             user.dailyArchives.push(yesterday);
             return user.save(function(err) {
-              if (err) {
-                throw err;
-              }
+              mailer.cLog('Error at ' + __filename, err);
               return done(user);
             });
           });
@@ -113,9 +105,7 @@
         return getScore(prepareGlobal, function(globalScore) {
           console.log("new global score for " + user.local.pseudo + " is " + globalScore);
           return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             lastWeek.week = moment().subtract("weeks", 1).week();
             user.globalScore = globalScore;
             user.weeklyScore = score;
@@ -126,9 +116,7 @@
             lastWeek.rank = user.weeklyRank;
             user.weeklyArchives.push(lastWeek);
             return user.save(function(err) {
-              if (err) {
-                throw err;
-              }
+              mailer.cLog('Error at ' + __filename, err);
               return done(user);
             });
           });
@@ -149,9 +137,7 @@
         return getScore(prepareGlobal, function(globalScore) {
           console.log("new global score for " + user.local.pseudo + " is " + globalScore);
           return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              throw err;
-            }
+            mailer.cLog('Error at ' + __filename, err);
             lastMonth.month = moment().subtract("months", 1).month();
             user.globalScore = globalScore;
             user.monthlyScore = score;
@@ -162,9 +148,7 @@
             lastMonth.rank = user.monthlyRank;
             user.monthlyArchives.push(lastMonth);
             return user.save(function(err) {
-              if (err) {
-                throw err;
-              }
+              mailer.cLog('Error at ' + __filename, err);
               return done(user);
             });
           });
@@ -261,9 +245,7 @@
         return User.findByIdAndUpdate(user._id, {
           $inc: query
         }).exec(function(err, userUpdated) {
-          if (err) {
-            throw err;
-          }
+          mailer.cLog('Error at ' + __filename, err);
           console.log(userUpdated.local.pseudo + " weekly stats : TW " + userUpdated.weekly.shareTW + " FB " + userUpdated.weekly.shareFB);
           return console.log(userUpdated.local.pseudo + " monthly stats : TW " + userUpdated.monthly.shareTW + " FB " + userUpdated.monthly.shareFB);
         });

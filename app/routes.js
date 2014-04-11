@@ -9,7 +9,7 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, mailer, shortUrl) {
+  module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false

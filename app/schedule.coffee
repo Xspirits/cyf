@@ -1,4 +1,4 @@
-module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs) ->
+module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs) ->
   
   # =============================================================================
   # XP&LEVEL HISTORY   ==========================================================
@@ -63,10 +63,10 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
 
           #define the new leader
           if user.dailyRank == 1
-            newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+            newLeader += user.local.pseudo + if user.twitter.username then ' (@' + user.twitter.username + ')' else ''
           #define the new follower
           if user.weeklyRank == 2
-            newFollower += 'and '+ user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ') 2nd' else ''
+            newFollower += 'and '+ user.local.pseudo + if user.twitter.username then ' (@' + user.twitter.username + ') 2nd' else ''
 
           if it + 1 >= top3.length
             # Tweet
@@ -120,10 +120,10 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
 
           #define the new leader
           if user.weeklyRank == 1
-            newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+            newLeader += user.local.pseudo + if user.twitter.username then ' (@' + user.twitter.username + ')' else ''
           #define the new follower
           if user.weeklyRank == 2
-            newFollower += 'and '+ user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ') 2nd' else ''
+            newFollower += 'and '+ user.local.pseudo + if user.twitter.username then ' (@' + user.twitter.username + ') 2nd' else ''
 
           sio.glob "fa fa-star", '<i class="fa fa-star"></i> ' + uText
           if it + 1 >= top3.length
@@ -177,10 +177,10 @@ module.exports = (schedule, _, sio, ladder, moment, social, appKeys, xp, notifs)
           
           #define the new leader
           if user.monthlyRank == 1
-            newLeader += user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+            newLeader += user.local.pseudo + if user.twitter.username then ' (@' + user.twitter.username + ')' else ''
           #define the new follower
           if user.monthlyRank == 2
-            newFollower += ' followed by '+user.local.pseudo + if user.twitter then ' (@' + user.twitter.username + ')' else ''
+            newFollower += ' followed by '+user.local.pseudo + if user.twitter.username then ' (@' + user.twitter.username + ')' else ''
 
           sio.glob "fa fa-star", '<i class="fa fa-star"></i><i class="fa fa-star"></i> ' + uText
           if it + 1 >= top3.length

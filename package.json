@@ -29,7 +29,8 @@
     "grvtr": "latest",
     "leagueapi": "latest",
     "irelia": "^0.2.3",
-    "moment-timezone": "0.0.3"
+    "moment-timezone": "0.0.3",
+    "nodemailer": "^0.6.2"
   },
   "devDependencies": {}
 }

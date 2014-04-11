@@ -119,9 +119,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           }
         }).exec(function(err, userUpdated) {
           var text;
-          if (err) {
-            throw err;
-          }
+          mailer.cLog('Error at ' + __filename, err);
           text = _.values(_.pick(xpRewardAction, action))[0];
           if (levelUp[0]) {
             notifs.gainedLevel(userUpdated, uLvl + 1);
@@ -135,9 +133,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
       updateDaily: function(done) {
         return User.find().exec(function(err, users) {
           var user, _i, _len, _results;
-          if (err) {
-            throw err;
-          }
+          mailer.cLog('Error at ' + __filename, err);
           _results = [];
           for (_i = 0, _len = users.length; _i < _len; _i++) {
             user = users[_i];
@@ -154,7 +150,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
                   }
                 }).exec(function(err, userUpdated) {
                   if (err) {
-                    throw err;
+                    console.log(err);
                   }
                   return done(true);
                 });
