@@ -92,6 +92,10 @@ require("./app/schedule") scheduler, mailer, _,  sio, ladder, moment, social, ap
 
 # launch ======================================================================
 server.listen port
+ping = ->
+  sio.alive()
+  return setTimeout ping, 50000
+ping()
 
 # sockets awesomization
 require("./app/io") io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio

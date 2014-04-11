@@ -5,7 +5,7 @@
       if (!data.headers.cookie) {
         return callback("No cookie transmitted.", false);
       }
-      cookieParser(data, {}, function(parseErr) {
+      return cookieParser(data, {}, function(parseErr) {
         var sidCookie;
         if (parseErr) {
           return callback("Error parsing cookies.", false);
@@ -14,17 +14,17 @@
         if (sidCookie) {
           sidCookie = sidCookie.slice(2).split(".")[0];
         }
-        sessionStore.load(sidCookie, function(err, session) {
+        return sessionStore.load(sidCookie, function(err, session) {
           if (err || !session || session.isLogged !== true) {
-            callback("Not logged in.", false);
+            return callback("Not logged in.", false);
           } else {
             data.session = session;
-            callback(null, true);
+            return callback(null, true);
           }
         });
       });
     });
-    io.on("connection", function(socket) {
+    return io.on("connection", function(socket) {
       var hs, user;
       hs = socket.handshake;
       user = hs.session.user;
@@ -38,9 +38,9 @@
         hs.session.save();
       }
       socket.set("nickname", user.local.pseudo);
-      socket.on("just happened", function(data) {
-        socket.get("nickname", function(err, name) {
-          sio.glob(data.icon, data.event);
+      return socket.on("just happened", function(data) {
+        return socket.get("nickname", function(err, name) {
+          return sio.glob(data.icon, data.event);
         });
       });
     });

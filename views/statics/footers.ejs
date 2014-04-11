@@ -36,6 +36,10 @@
 		//http://localhost:8080/leaderboard
 		socket = io.connect(resultURL);
 		// socket = io.connect('http://challenge-friends.herokuapp.com');
+
+		socket.on('alive', function (data) {
+			console.log('Challenger alive: '+data.date);
+		});
 		<% if (currentUser) { %>
 
 			socket.on('globalevent', function (data) {
@@ -114,31 +118,10 @@
 
 			// Progress animation
 			function animateProgress() {
-
-				var progressNumber = $('.tinyProgress').length;
-				//All progress are now at their expected value, cast out the setInterval
-				if(progressNumber < 1 ){					
-					console.log(progressNumber)
-					clearInterval(timerId);
-				} else {
-
-					$('.tinyProgress').each(function(){
-
-						var _this   = $(this)
-						, currWidth = _this.width()/10
-						, tarWidth  = _this.attr('data-percent');
-
-						var currWidth = (currWidth === 0) ? 0.05 : currWidth;
-						var incVal 	= (currWidth + (tarWidth * Math.random()));	
-
-						if(incVal >= tarWidth || isMobile) 
-							_this.width(tarWidth + '%');
-						else{
-							_this.width(incVal + '%');
-							setTimeout(animateProgress, 333);
-						}
-					});	
-				}
+				$('.tinyProgress').each(function(){
+					var w   = $(this).attr('data-percent');
+					$(this).width(w + '%');
+				});	
 			}	
 			function notif (queue,i) {     
 

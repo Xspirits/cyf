@@ -6,8 +6,13 @@
 
   module.exports = function(io) {
     return {
+      alive: function() {
+        return io.sockets.emit("alive", {
+          date: new Date
+        });
+      },
       glob: function(icon, text, desc) {
-        io.sockets.emit("globalevent", {
+        return io.sockets.emit("globalevent", {
           icon: (icon ? icon : "fa fa-circle-o"),
           message: text,
           desc: (desc ? desc : ""),

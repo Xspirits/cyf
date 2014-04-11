@@ -30,13 +30,6 @@ module.exports = (io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKI
           # You can access it later with "socket.handshake.session"
           data.session = session
           callback null, true
-        return
-
-      return
-
-    return
-
-  
   # upon connection, start a periodic task that emits (every 1s) the current timestamp
   io.on "connection", (socket) ->
     hs = socket.handshake
@@ -54,14 +47,6 @@ module.exports = (io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKI
     socket.on "just happened", (data) ->
       socket.get "nickname", (err, name) ->
         sio.glob data.icon, data.event
-        return
-
-      return
-
-    return
-
-  return
-
 # socket.on('disconnect', function() {
 #  io.sockets.emit('globalevent', { icon: 'glyphicon glyphicon-log-out',message: user.local.pseudo + ' disconnected'});
 # });
