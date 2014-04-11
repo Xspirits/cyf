@@ -70,7 +70,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
           req.session.user = userfound
           userfound.isOnline = true
           userfound.save (err) ->
-            mailer.cLog 'Error at '+__filename,err
+            mailer.cLog 'Error at '+__filename,err if err
             notifs.login userfound
             done null, userfound
   )
@@ -129,7 +129,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
               console.log gravatarUrl
               newUser.icon = gravatarUrl
               newUser.save (err, user) ->
-                 mailer.cLog 'Error at '+__filename,err
+                 mailer.cLog 'Error at '+__filename,err if err
                  # send an email confirmation link
                  mailer.accountConfirm user, (returned) ->
 
@@ -152,7 +152,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
         user.local.password = user.generateHash(password)
         user.local.pseudo = req.body.pseudo
         user.save (err) ->
-          mailer.cLog 'Error at '+__filename,err
+          mailer.cLog 'Error at '+__filename,err if err
           done null, user
 
       return
@@ -187,7 +187,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
               user.facebook.name = profile.name.givenName + " " + profile.name.familyName
               user.facebook.email = profile.emails[0].value
               user.save (err) ->
-                mailer.cLog 'Error at '+__filename,err
+                mailer.cLog 'Error at '+__filename,err if err
                 done null, user
 
             done null, user # user found, return that user
@@ -200,7 +200,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
             newUser.facebook.name = profile.name.givenName + " " + profile.name.familyName
             newUser.facebook.email = profile.emails[0].value
             newUser.save (err) ->
-              mailer.cLog 'Error at '+__filename,err
+              mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
 
           return
@@ -214,7 +214,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
         user.facebook.name = profile.name.givenName + " " + profile.name.familyName
         user.facebook.email = profile.emails[0].value
         user.save (err) ->
-          mailer.cLog 'Error at '+__filename,err
+          mailer.cLog 'Error at '+__filename,err if err
           done null, user
 
       return
@@ -268,7 +268,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
             newUser.twitter.username = profile.username
             newUser.twitter.displayName = profile.displayName
             newUser.save (err) ->
-              mailer.cLog 'Error at '+__filename,err
+              mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
 
           return
@@ -285,7 +285,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
         user.twitter.username = profile.username
         user.twitter.displayName = profile.displayName
         user.save (err) ->
-          mailer.cLog 'Error at '+__filename,err
+          mailer.cLog 'Error at '+__filename,err if err
           console.log user
           done null, user
 
@@ -321,7 +321,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
               user.google.name = profile.displayName
               user.google.email = profile.emails[0].value # pull the first email
               user.save (err) ->
-                mailer.cLog 'Error at '+__filename,err
+                mailer.cLog 'Error at '+__filename,err if err
                 done null, user
 
             done null, user
@@ -332,7 +332,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
             newUser.google.name = profile.displayName
             newUser.google.email = profile.emails[0].value # pull the first email
             newUser.save (err) ->
-              mailer.cLog 'Error at '+__filename,err
+              mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
 
           return
@@ -346,7 +346,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
         user.google.name = profile.displayName
         user.google.email = profile.emails[0].value # pull the first email
         user.save (err) ->
-          mailer.cLog 'Error at '+__filename,err
+          mailer.cLog 'Error at '+__filename,err if err
           done null, user
 
       return

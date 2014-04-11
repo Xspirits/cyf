@@ -18,7 +18,9 @@
       Relation.findOne({
         idUser: idUser
       }).exec(function(err, data) {
-        mailer.cLog('Error at ' + __filename, err);
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
         console.log(data);
         return done(data.pendingRequests);
       });
@@ -69,7 +71,9 @@
           }
         ]
       }).exec(function(err, relation) {
-        mailer.cLog('Error at ' + __filename, err);
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
         console.log(relation);
         if (!relation) {
           console.log("Lets update");
@@ -104,7 +108,9 @@
           }
         }
       }, function(err, relationFrom) {
-        mailer.cLog('Error at ' + __filename, err);
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
         console.log(relationFrom);
         User.findByIdAndUpdate(to.id, {
           $pull: {
@@ -121,7 +127,9 @@
           }
         }, function(err, relationTo) {
           var newRelation;
-          mailer.cLog('Error at ' + __filename, err);
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
           newRelation = [relationFrom, relationTo];
           return done(newRelation);
         });
@@ -135,7 +143,9 @@
           }
         }
       }, function(err, relation) {
-        mailer.cLog('Error at ' + __filename, err);
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
         User.findByIdAndUpdate(to.id, {
           $pull: {
             sentRequests: {
@@ -143,7 +153,9 @@
             }
           }
         }, function(err, relation) {
-          mailer.cLog('Error at ' + __filename, err);
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
           return done(true);
         });
       });
@@ -164,7 +176,9 @@
           }
         }
       }, function(err, relation) {
-        mailer.cLog('Error at ' + __filename, err);
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
         return done(true);
       });
     }

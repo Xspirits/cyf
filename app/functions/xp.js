@@ -119,7 +119,9 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           }
         }).exec(function(err, userUpdated) {
           var text;
-          mailer.cLog('Error at ' + __filename, err);
+          if (err) {
+            console.log(err);
+          }
           text = _.values(_.pick(xpRewardAction, action))[0];
           if (levelUp[0]) {
             notifs.gainedLevel(userUpdated, uLvl + 1);

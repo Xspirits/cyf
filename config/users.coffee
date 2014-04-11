@@ -1,19 +1,28 @@
 # load up the user model
+appKeys = require("./auth")
 User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
 notifs = require("../app/functions/notifications")
 relations = require("./relations")
 social = require("./social")
 _ = require("underscore")
+moment          = require("moment")
+moment          = require('moment-timezone')
+mandrill        = require('mandrill-api/mandrill')
+nodemailer      = require("nodemailer")
+moment().tz("Europe/London").format()
+mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
+mailer          = require("./mailer")(mandrill_client, nodemailer, appKeys, moment)
+
 module.exports =
   validateEmail: (hash, done) ->
     User.findOne {verfiy_hash:hash}, (err, user) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
 
       if user
         user.verified = true        
         user.save (err) ->
-          mailer.cLog 'Error at '+__filename,err
+          mailer.cLog 'Error at '+__filename,err if err
 
           console.log user
           done true
@@ -33,7 +42,7 @@ module.exports =
           "share.twitter": data.value
       console.log query
       User.findByIdAndUpdate data._id, query, (err) ->
-        mailer.cLog 'Error at '+__filename,err
+        mailer.cLog 'Error at '+__filename,err if err
         done true
         return
 
@@ -43,7 +52,7 @@ module.exports =
 
   getFriendList: (id, done) ->
     User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
-        mailer.cLog 'Error at '+__filename,err
+        mailer.cLog 'Error at '+__filename,err if err
         console.log user
         done user
 
@@ -103,7 +112,7 @@ module.exports =
   ###
   unlinkLol: (id, done) ->
     User.findById(id).exec (err, user) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       lol = user.leagueoflegend
       lol.idProfile = `undefined`
       lol.name = `undefined`
@@ -111,7 +120,7 @@ module.exports =
       lol.revisionDate = `undefined`
       lol.summonerLevel = `undefined`
       user.save (err) ->
-        mailer.cLog 'Error at '+__filename,err
+        mailer.cLog 'Error at '+__filename,err if err
         console.log user
         done true
 
@@ -123,7 +132,7 @@ module.exports =
     User.findByIdAndUpdate user._id,
       isOnline: false
     , (err) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done true
       return
 
@@ -158,7 +167,7 @@ module.exports =
       userRand:
         $near: nearNum
     ).limit(num).exec (err, randomUser) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done randomUser
 
     return
@@ -180,7 +189,7 @@ module.exports =
     ,
       multi: true
     ).exec (err, randomUser) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done true
 
     return
@@ -204,7 +213,7 @@ module.exports =
           answer: data.answer
           voteDate: currentDate
     ).exec (err, doc) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log doc
       idx = (if doc.tribunal then doc.tribunal.indexOf(idSplice) else -1)
       
@@ -238,7 +247,7 @@ module.exports =
   ###
   getUserList: (done) ->
     User.find({}).sort("-_id").exec (err, data) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # console.log(data);
       done data
@@ -256,7 +265,7 @@ module.exports =
     
     # console.log(arg);
     User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done data
 
     return
@@ -276,7 +285,7 @@ module.exports =
     
     #Check if the targeted user exist
     User.findById(uTo.id).exec (err, data) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       currentDate = new Date
       
       #existing user
@@ -346,7 +355,7 @@ module.exports =
           rateDate: currentDate
           rating: data.rating
     ).exec (err, doc) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       idx = (if doc.challengeRate then doc.challengeRate.indexOf(idSplice) else -1)
       
       # is it valid?
@@ -391,7 +400,7 @@ module.exports =
     ,
       multi: true
     ).exec (err, user) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log user
       done true
 
@@ -412,7 +421,7 @@ module.exports =
   #
   globalLeaderboard: (done) ->
     User.find().sort("-globalScore").where("globalScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 
@@ -420,7 +429,7 @@ module.exports =
 
   monthlyLeaderboard: (done) ->
     User.find().sort("-monthlyScore").where("monthlyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 
@@ -428,7 +437,7 @@ module.exports =
 
   weeklyLeaderboard: (done) ->
     User.find().sort("-weeklyScore").where("weeklyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 
@@ -436,7 +445,7 @@ module.exports =
 
   dailyLeaderboard: (done) ->
     User.find().sort("-dailyScore").where("dailyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 

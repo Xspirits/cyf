@@ -108,7 +108,7 @@ module.exports = (sio) ->
       $set:
         xpNext: levelUp[1]
     ).exec (err, userUpdated) ->
-      mailer.cLog 'Error at '+__filename,err
+      console.log err  if err
       text = _.values(_.pick(xpRewardAction, action))[0]
       if levelUp[0]
         notifs.gainedLevel userUpdated, uLvl + 1
