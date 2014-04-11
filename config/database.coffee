@@ -1,4 +1,3 @@
-# config/database.js
 module.exports =
   # url: "mongodb://localhost"  
   url: 'mongodb://xspirits:221988@ds029787.mongolab.com:29787/heroku_app23193994'
