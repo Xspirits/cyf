@@ -123,7 +123,7 @@ module.exports = (sio) ->
 
   updateDaily: (done)->
     User.find().exec (err, users) ->
-      mailer.cLog 'Error at '+__filename,err
+      console.log err if err
 
       for user in users then do (user) =>
         #generate object of the day: freez the xp and level achieved

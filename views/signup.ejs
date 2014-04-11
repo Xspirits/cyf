@@ -43,9 +43,23 @@
 				<% if (message) { %>
 				<div class="alert alert-danger"><%= message %></div>
 				<% } %>
-				<% if (waitingConfirm) { %>
+				<% if (waitingConfirm) {
+
+					if(currentUser) {
+				 %>
+				 <div class="alert alert-success">
+				 	<h2>Welcome <%= currentUser.local.pseudo%></h2>
+				 	<p>
+				 		Your account has been created: <strong>enjoy!</strong>
+				 	</p>
+				 </div>
+				 <%
+						} else {
+				 %>
+
 				<div class="alert alert-success"><strong>One last step!</strong> We sent you an email, please check your inbox and confirm your adress to enter the arena!</div>
-				<% } else { %>
+				<% } 
+				} else { %>
 
 
 

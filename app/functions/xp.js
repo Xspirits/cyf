@@ -135,7 +135,9 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
       updateDaily: function(done) {
         return User.find().exec(function(err, users) {
           var user, _i, _len, _results;
-          mailer.cLog('Error at ' + __filename, err);
+          if (err) {
+            console.log(err);
+          }
           _results = [];
           for (_i = 0, _len = users.length; _i < _len; _i++) {
             user = users[_i];

@@ -67,7 +67,6 @@ module.exports =
         User.findByIdAndUpdate(from.id, query).exec (err, updated) ->
           done true
           return
-
       else
         done false, "already asked"
       return

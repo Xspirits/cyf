@@ -87,7 +87,7 @@
               return done(err);
             }
             if (user) {
-              done(null, false, req.flash("signupMessage", "That email is already taken."));
+              return done(null, false, req.flash("signupMessage", "That email is already taken."));
             } else {
               newUser = new User();
               newUser.idCool = uID;
@@ -103,26 +103,29 @@
               newUser.local.sentRequests = [];
               newUser.local.pendingRequests = [];
               newUser.local.followers = [];
-              grvtr.create(email, {
+              return grvtr.create(email, {
                 size: 150,
                 defaultImage: "identicon",
                 rating: "g"
               }, function(gravatarUrl) {
                 console.log(gravatarUrl);
                 newUser.icon = gravatarUrl;
-                newUser.save(function(err, user) {
+                return newUser.save(function(err, user) {
                   if (err) {
                     mailer.cLog('Error at ' + __filename, err);
                   }
-                  return mailer.accountConfirm(user, function(returned) {
-                    if (configAuth.app_config.email_confirm === false) {
-                      req.session.user = user;
-                      req.session.isLogged = true;
-                      req.session.newUser = true;
-                    }
+                  if (configAuth.app_config.email_confirm === false) {
+                    req.session.user = user;
+                    req.session.isLogged = true;
+                    req.session.newUser = true;
                     xp.xpReward(user, "user.register");
                     return done(null, newUser);
-                  });
+                  } else {
+                    return mailer.accountConfirm(user, function(returned) {
+                      xp.xpReward(user, "user.register");
+                      return done(null, newUser);
+                    });
+                  }
                 });
               });
             }

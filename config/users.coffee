@@ -262,15 +262,17 @@ module.exports =
   @return {[type]}        [description]
   ###
   getUser: (id, done) ->
-    
-    # console.log(arg);
-    User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      done data
-
-    return
-
-  
+    checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+    isObj = checkForHexRegExp.test(id)
+    console.log isObj
+    if isObj
+      User.findById(id).populate("friends.idUser").exec (err, data) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        done data
+    else
+      User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        done data  
   ###
   Request a friendship with another user
   @param  {Object}   data [From, id, to, id]
@@ -291,15 +293,10 @@ module.exports =
       #existing user
       if data
         relations.create from, uTo, true, (result) ->
-          relations.create uTo, from, false, done  if result
-          return
-
+          relations.create uTo, from, false, (result) ->
+            return done data 
       else
         done false, " desired user not found"
-      return
-
-    return
-
   
   ###
   Confirm a friend relationship with another user

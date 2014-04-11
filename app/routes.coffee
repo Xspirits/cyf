@@ -295,10 +295,9 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
 
     notifs.launchChall data.from, data.idChallenged
     challenge.launch data, (result) ->
-      res.send true
-
-  # @TODO
-
+      users.getUser result._idChallenged, (uRet)->
+        mailer.sendMail uRet,'[Cyf]Heads up '+uRet.local.pseudo+', you have been challenged by '+req.user.local.pseudo+'!','<h2>A new challenger appears!</h2> <p>The Challenger <strong>'+req.user.local.pseudo+'</strong>(LvL.'+req.user.level+') just challenged you!</p><p>The challenge id is '+result.idCool+',. If you accept, it <strong>will start on</strong><br> '+result.launchDate+'<br> and <strong> must be completed by</strong>:<br>'+result.deadLine+'</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>',false
+        res.send true
   #Ask a challenge validation to another user
   app.post "/validationRequest", isLoggedIn, (req, res) ->
     shortUrl.googleUrl req.body.proofLink1, (imgUrl1) ->
@@ -597,7 +596,9 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
         userName: nameFriend
 
     notifs.askFriend req.user, obj.to
-    users.askFriend obj, (result) ->
+    users.askFriend obj, (result) ->  
+      console.log result
+      mailer.sendMail result,'[Cyf] Friend request from '+req.user.local.pseudo,'<h2>'+result.local.pseudo+' your are getting famous!</h2> <p>The Challenger <strong>'+req.user.local.pseudo+'</strong>(LvL.'+req.user.level+') just send you a friend request on Cyf!</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>',true
       res.send true
 
   app.post "/confirmFriend", isLoggedIn, (req, res) ->
@@ -688,7 +689,7 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
     nowConfirm = (if req.params.done is "great" then true else false)
     res.render "signup.ejs",
       waitingConfirm: nowConfirm
-      currentUser: req.user unless req.user
+      currentUser: if req.isAuthenticated() then req.user else false
       message: ""
 
   app.post "/signup", passport.authenticate("local-signup",

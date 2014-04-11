@@ -322,14 +322,27 @@
     @return {[type]}        [description]
      */
     getUser: function(id, done) {
-      User.findOne({
-        idCool: id
-      }).populate("friends.idUser").exec(function(err, data) {
-        if (err) {
-          mailer.cLog('Error at ' + __filename, err);
-        }
-        return done(data);
-      });
+      var checkForHexRegExp, isObj;
+      checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+      isObj = checkForHexRegExp.test(id);
+      console.log(isObj);
+      if (isObj) {
+        return User.findById(id).populate("friends.idUser").exec(function(err, data) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          return done(data);
+        });
+      } else {
+        return User.findOne({
+          idCool: id
+        }).populate("friends.idUser").exec(function(err, data) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          return done(data);
+        });
+      }
     },
 
     /*
@@ -342,20 +355,20 @@
       var from, uTo;
       from = data.from;
       uTo = data.to;
-      User.findById(uTo.id).exec(function(err, data) {
+      return User.findById(uTo.id).exec(function(err, data) {
         var currentDate;
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
         }
         currentDate = new Date;
         if (data) {
-          relations.create(from, uTo, true, function(result) {
-            if (result) {
-              relations.create(uTo, from, false, done);
-            }
+          return relations.create(from, uTo, true, function(result) {
+            return relations.create(uTo, from, false, function(result) {
+              return done(data);
+            });
           });
         } else {
-          done(false, " desired user not found");
+          return done(false, " desired user not found");
         }
       });
     },

@@ -129,23 +129,18 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
               console.log gravatarUrl
               newUser.icon = gravatarUrl
               newUser.save (err, user) ->
-                 mailer.cLog 'Error at '+__filename,err if err
-                 # send an email confirmation link
-                 mailer.accountConfirm user, (returned) ->
-
-                   # Instantiate the sessions for socket.io 
-                   if configAuth.app_config.email_confirm == false
-                    req.session.user = user
-                    req.session.isLogged = true
-                    req.session.newUser = true
-                   xp.xpReward user, "user.register"
-                   done null, newUser
-
-              return
-
-
-          return
-
+                mailer.cLog 'Error at '+__filename,err if err
+                # send an email confirmation link
+                if configAuth.app_config.email_confirm == false
+                  req.session.user = user
+                  req.session.isLogged = true
+                  req.session.newUser = true
+                  xp.xpReward user, "user.register"
+                  done null, newUser
+                else
+                  mailer.accountConfirm user, (returned) ->
+                    xp.xpReward user, "user.register"
+                    done null, newUser
       else
         user = req.user
         user.local.email = email

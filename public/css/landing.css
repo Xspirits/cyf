@@ -61,7 +61,10 @@ section .container p {
 	opacity: 1;
 }
 #slide-1,#slide-2,#slide-3,.transi-slide {cursor: default;color: #F1F1F1;}
+section .container .row {
 
+margin: 2em inherit;
+}
 .transi-slide{
 	min-height: 250px;
 	background: url('../img/px_bg.png') repeat;
@@ -76,7 +79,6 @@ section .container p {
 	}
 	.transi-slide .container p {
 		color: rgb(245,245,245);
-		text-shadow: 0 2px 0 #000;
 	}
 	.transi-slide .btn-block {
 		margin: 20px auto 10px !important;

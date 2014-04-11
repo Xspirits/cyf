@@ -296,7 +296,10 @@
       };
       notifs.launchChall(data.from, data.idChallenged);
       return challenge.launch(data, function(result) {
-        return res.send(true);
+        return users.getUser(result._idChallenged, function(uRet) {
+          mailer.sendMail(uRet, '[Cyf]Heads up ' + uRet.local.pseudo + ', you have been challenged by ' + req.user.local.pseudo + '!', '<h2>A new challenger appears!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just challenged you!</p><p>The challenge id is ' + result.idCool + ',. If you accept, it <strong>will start on</strong><br> ' + result.launchDate + '<br> and <strong> must be completed by</strong>:<br>' + result.deadLine + '</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', false);
+          return res.send(true);
+        });
       });
     });
     app.post("/validationRequest", isLoggedIn, function(req, res) {
@@ -510,6 +513,8 @@
       };
       notifs.askFriend(req.user, obj.to);
       return users.askFriend(obj, function(result) {
+        console.log(result);
+        mailer.sendMail(result, '[Cyf] Friend request from ' + req.user.local.pseudo, '<h2>' + result.local.pseudo + ' your are getting famous!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just send you a friend request on Cyf!</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', true);
         return res.send(true);
       });
     });
@@ -618,7 +623,7 @@
       nowConfirm = (req.params.done === "great" ? true : false);
       return res.render("signup.ejs", {
         waitingConfirm: nowConfirm,
-        currentUser: !req.user ? req.user : void 0,
+        currentUser: req.isAuthenticated() ? req.user : false,
         message: ""
       });
     });
