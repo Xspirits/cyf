@@ -3,8 +3,8 @@
 # expose our config directly to our application using module.exports
 module.exports =
   app_config:
-    email_confirm: false
-    twitterPushNews: false
+    email_confirm: true
+    twitterPushNews: true
   cyf :
     app_domain: "http://www.cyf-app.co"
     # domain: "http://localhost:8080"

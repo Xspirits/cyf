@@ -2,8 +2,8 @@
 (function() {
   module.exports = {
     app_config: {
-      email_confirm: false,
-      twitterPushNews: false
+      email_confirm: true,
+      twitterPushNews: true
     },
     cyf: {
       app_domain: "http://www.cyf-app.co"
