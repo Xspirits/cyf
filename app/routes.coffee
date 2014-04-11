@@ -12,8 +12,7 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
   # show the home page (will also have our login links)
   app.get "/", (req, res) ->
     if req.isAuthenticated()
-      res.render "index_logged.ejs",
-        currentUser: req.user
+      res.redirect "/profile"    
     else
       res.render 'index.ejs',
         currentUser: false

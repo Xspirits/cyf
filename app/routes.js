@@ -17,9 +17,7 @@
     });
     app.get("/", function(req, res) {
       if (req.isAuthenticated()) {
-        return res.render("index_logged.ejs", {
-          currentUser: req.user
-        });
+        return res.redirect("/profile");
       } else {
         return res.render('index.ejs', {
           currentUser: false
