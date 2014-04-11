@@ -1407,7 +1407,7 @@ input.gStyle:focus {
 .hover-me.x9:hover {border: 1px dotted rgba(0, 0, 0, 0.7);}
 
 .challenge-card {
-  border-radius: 0;min-height: 200px;
+  border-radius: 0;min-height: 250px;
   -webkit-transition: all .22s ease;
   -moz-transition: all .22s ease;
   -ms-transition: all .22s ease;
@@ -1423,7 +1423,7 @@ input.gStyle:focus {
 }
 .challenge-card > div{
   border: 1px solid transparent;
-  min-height: 200px;
+  min-height: 250px;
 }
 .hover-me.challenge-card:hover > div{
   border-radius: 5px;

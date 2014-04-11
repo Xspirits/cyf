@@ -78,7 +78,7 @@
 								<% if (currentUser.google.token) { %>
 								<span class="label label-danger">Google</span>
 								<% } %>
-								<% if (currentUser.leagueoflegend.idProfile) { %>
+								<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed) { %>
 								<span class="label label-info">League of Legend</span>
 								<% } %>
 								<% if (currentUser.twitter.token) { %>

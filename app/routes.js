@@ -49,11 +49,11 @@
       var hash;
       hash = req.params.hash;
       return users.validateEmail(hash, function(result) {
-        if (result) {
-          return res.redirect("/login");
-        } else {
-          return res.redirect("/");
+        if (result === false) {
+          res.redirect("/");
         }
+        mailer.sendMail(result, '[Cyf] Account Confirmed, welcome aboard ' + result.local.pseudo + '!', '<h2>Your journey is about to begins!</h2><p>Thank you for taking the time to confirm your e-mail address.</p><p>We are proud to count you among the challengers on Cyf dear <strong>' + result.local.pseudo + '</strong>!</p><p>You can now enjoy fully Challenge your Friends, <a href="http://cyf-app.co/users">connect with some challengers</a> now and start <a href="" title="">sending and accepting</a> challenges right away! </p>', false);
+        return res.redirect("/login");
       });
     });
     app.get("/logout", isLoggedIn, function(req, res) {
@@ -297,7 +297,7 @@
       notifs.launchChall(data.from, data.idChallenged);
       return challenge.launch(data, function(result) {
         return users.getUser(result._idChallenged, function(uRet) {
-          mailer.sendMail(uRet, '[Cyf]Heads up ' + uRet.local.pseudo + ', you have been challenged by ' + req.user.local.pseudo + '!', '<h2>A new challenger appears!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just challenged you!</p><p>The challenge id is ' + result.idCool + ',. If you accept, it <strong>will start on</strong><br> ' + result.launchDate + '<br> and <strong> must be completed by</strong>:<br>' + result.deadLine + '</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', false);
+          mailer.sendMail(uRet, '[Cyf]Heads up ' + uRet.local.pseudo + ', you have been challenged by ' + req.user.local.pseudo + '!', '<h2>A new challenger appears!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just challenged you!</p><p>The challenge id is ' + result.idCool + ',. If you accept, it <strong>will start on</strong><br> ' + result.launchDate + '<br> and <strong> must be completed by</strong>:<br>' + result.deadLine + '</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', true);
           return res.send(true);
         });
       });
@@ -317,8 +317,8 @@
               proofLink2: imgUrl2,
               confirmComment: req.body.confirmComment
             };
-            console.log(data);
             return challenge.requestValidation(data, function(result) {
+              mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
               return res.send(result);
             });
           });
@@ -330,8 +330,8 @@
             proofLink2: '',
             confirmComment: req.body.confirmComment
           };
-          console.log(data);
           return challenge.requestValidation(data, function(result) {
+            mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
             return res.send(result);
           });
         }
@@ -443,6 +443,7 @@
         id: req.body.id
       };
       return challenge.sendTribunal(obj, function(result) {
+        mailer.sendMail(result._idChallenged, '[Cyf]Tribunal case submitted: ' + result._idChallenge.idCool, '<h2>Your ongoing challenge has been submitted to the tribunal.</h2> <p>We are sorry to heard that you have been missjudged! To help you fix this a Tribunal composed by 3 members of the community selected randomly will now examine your challenge.</p><p>You can check its status on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', false);
         return res.send(true);
       });
     });
@@ -513,7 +514,6 @@
       };
       notifs.askFriend(req.user, obj.to);
       return users.askFriend(obj, function(result) {
-        console.log(result);
         mailer.sendMail(result, '[Cyf] Friend request from ' + req.user.local.pseudo, '<h2>' + result.local.pseudo + ' your are getting famous!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just send you a friend request on Cyf!</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', true);
         return res.send(true);
       });

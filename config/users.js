@@ -45,9 +45,8 @@
               mailer.cLog('Error at ' + __filename, err);
             }
             console.log(user);
-            return done(true);
+            return done(user);
           });
-          return;
         } else {
           done(false);
         }

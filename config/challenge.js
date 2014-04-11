@@ -590,7 +590,7 @@
     @return {[type]}        [description]
      */
     sendTribunal: function(data, done) {
-      Ongoing.findById(data.id).exec(function(err, ongoing) {
+      Ongoing.findById(data.id).populate('_idChallenged _idChallenger _idChallenge').exec(function(err, ongoing) {
         var exclude;
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
@@ -622,7 +622,7 @@
                     if (err) {
                       mailer.cLog('Error at ' + __filename, err);
                     }
-                    return done(true);
+                    return done(ongoing);
                   });
                 } else {
                   throw "something went wrong here";

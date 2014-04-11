@@ -581,7 +581,7 @@ module.exports =
   @return {[type]}        [description]
   ###
   sendTribunal: (data, done) ->
-    Ongoing.findById(data.id).exec (err, ongoing) ->
+    Ongoing.findById(data.id).populate('_idChallenged _idChallenger _idChallenge').exec (err, ongoing) ->
       
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
@@ -621,7 +621,7 @@ module.exports =
                 # console.log(ongoing);
                 ongoing.save (err, result) ->
                   mailer.cLog 'Error at '+__filename,err if err
-                  done true
+                  done ongoing
 
               else
                 throw "something went wrong here"

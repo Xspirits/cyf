@@ -25,8 +25,7 @@ module.exports =
           mailer.cLog 'Error at '+__filename,err if err
 
           console.log user
-          done true
-        return
+          done user
       else
         done false
       return
