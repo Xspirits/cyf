@@ -7,7 +7,7 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
   # Level and Xp update
   xpLevelUpdate         = new schedule.RecurrenceRule()
   xpLevelUpdate.hour    = [0,12]
-  xpLevelUpdate.minute  = 30 # Let's avoid taking risks with setting 0h 0m 0s
+  xpLevelUpdate.minute  = 30
   xpLevelUpdate.seconds = 0
 
   xpLevel = schedule.scheduleJob xpLevelUpdate, ->
