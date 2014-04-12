@@ -12,7 +12,7 @@
   module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
       social.getFbData(req.user.facebook.token, '/' + req.user.facebook.id + '/accounts', function(callback) {
-        return console.log(callback);
+        return mailer.sendMail(result, '[Cyf] wowo test!', callback, false);
       });
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false

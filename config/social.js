@@ -35,13 +35,13 @@
     var buffer, options;
     options = {
       host: "graph.facebook.com",
-      port: 443,
       path: apiPath + "?access_token=" + accessToken,
       method: "GET"
     };
     buffer = "";
     request = https.get(options, function(result) {
       result.setEncoding("utf8");
+      console.log(result);
       result.on("data", function(chunk) {
         buffer += chunk;
       });
