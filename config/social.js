@@ -159,7 +159,7 @@
 
   exports.userAction = function(user, action, callback) {
     var params, url;
-    url = "https://graph.facebook.com/me/objects/cyfbeta:ladder";
+    url = "https://graph.facebook.com/me/objects";
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
