@@ -11,11 +11,22 @@
 
   module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      social.updateWall({
-        title: "test",
-        message: "if thsi works, that's great.\n lol"
-      }, function(callback) {
-        return mailer.sendMail(req.user, '[Cyf] wowo test!', callback, false);
+      var link;
+      link = {
+        url: 'http://www.cyf-app.co/u/KB06th'
+      };
+      social.updateWall(false, link, function(callback) {
+        consol.log(callback);
+        link = {
+          url: 'http://www.cyf-app.co/leaderboard',
+          picture: 'http://www.cyf-app.co/img/icon_big.png',
+          name: 'Cyf leaderboard',
+          caption: " this is a caption",
+          description: "awesome, let's fight for the first place !!!\n test charriot"
+        };
+        return social.updateWall(false, link, function(callback) {
+          return consol.log(callback);
+        });
       });
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false

@@ -6,8 +6,19 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
-    social.updateWall {title: "test",message: "if thsi works, that's great.\n lol"}, (callback)->
-      mailer.sendMail req.user,'[Cyf] wowo test!',callback,false
+    link=
+      url: 'http://www.cyf-app.co/u/KB06th'
+    social.updateWall false, link, (callback)->
+      consol.log callback
+
+      link=
+        url: 'http://www.cyf-app.co/leaderboard'
+        picture: 'http://www.cyf-app.co/img/icon_big.png'
+        name: 'Cyf leaderboard'
+        caption: " this is a caption"
+        description: "awesome, let's fight for the first place !!!\n test charriot"
+      social.updateWall false, link, (callback)->
+        consol.log callback
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 

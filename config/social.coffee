@@ -68,7 +68,7 @@ exports.postTwitter = (accessToken, message, callback) ->
   form = r.form()
   form.append "status", message
   return
-
+# Post to an user'wall
 exports.postFbMessage = (accessToken, message, link, callback) ->
   url = "https://graph.facebook.com/me/feed"
   
@@ -84,8 +84,6 @@ exports.postFbMessage = (accessToken, message, link, callback) ->
     name: message.title
     description: message.body
 
-  
-  # callback('TO ENABLE GOTO social.js Line 30');
   request.post
     url: url
     qs: params
@@ -95,19 +93,36 @@ exports.postFbMessage = (accessToken, message, link, callback) ->
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
 
-exports.updateWall = (message, callback) ->
+exports.updateWall = (message,link, callback) ->
   url = "https://graph.facebook.com/"+auth.facebookPage.id+"/feed"
   
-  # Get page accss token here: https://developers.facebook.com/tools/explorer
-  #    
-  params =
-    access_token: auth.facebookPage.accessToken
-    link: "https://www.cyf-app.co"
-    name: message.title
-    description: message.body
-
-  
-  # callback('TO ENABLE GOTO social.js Line 30');
+  # Get page accsss token here: https://developers.facebook.com/tools/explorer
+  # message:  The main body of the post, otherwise called the status message. Either link or message must be supplied.string
+  # OR 
+  # link:     The URL of a link to attach to the post. 
+  #            Either link or message must be supplied. Additional fields associated with link are shown below.
+  #   picture:  Determines the preview image associated with the link.  string
+  #   name:     Overwrites the title of the link preview. string
+  #   caption:  Overwrites the caption under the title in the link preview. string
+  #   description: Overwrites the description in the link preview string
+  # OPTIONS ================
+  # actions:  The action links attached to the post. array[]
+  # place:    Page ID of a location associated with this post. string
+  # tags: Comma-separated list of user IDs of people tagged in this post. You cannot specify this field without also specifying a place. csv[string]
+  if message
+    params =
+      access_token: auth.facebookPage.accessToken
+      link: link.url || auth.cyf.app_domain
+      picture: link.picture || false
+      name: link.name || false
+      caption: link.caption || false
+      description: link.description || false
+  else
+    params =
+      access_token: auth.facebookPage.accessToken
+      link: "https://www.cyf-app.co"
+      name: message.title
+      description: message.body
   request.post
     url: url
     qs: params
