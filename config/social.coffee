@@ -70,6 +70,7 @@ exports.postTwitter = (accessToken, message, callback) ->
   return
 # Post to an user'wall
 # https://developers.facebook.com/docs/graph-api/reference/user/feed
+# social.postFbMessage req.user.facebook, message, false, (data) ->
 exports.postFbMessage = (userFB, message, link, callback) ->
   url = "https://graph.facebook.com/"+userFB.id+"/feed"
 
@@ -148,18 +149,14 @@ exports.updateWall = (message,link, callback) ->
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
 
-exports.userAction =  (userFB, action, link, title, desc, callback) ->
+exports.userAction =  (user, action, link, title, desc, callback) ->
   # cyfbeta:rank
-  url = "https://graph.facebook.com/"+userFB.id+"/cyfbeta:"+action
+  url = "https://graph.facebook.com/"+user.facebook.id+"/cyfbeta:"+action
 
   params =
-    access_token: userFB.token
+    access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
-    website: auth.cyf.app_domain
-    type: "website"
-    url: link || auth.cyf.app_domain
-    title: title || false
-    description: desc  || false
+    website: auth.cyf.app_domain + '/u/'+user.idCool
 
   request.post
     url: url

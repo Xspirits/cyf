@@ -6,12 +6,9 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
-
-    message = "This is a test push. No purpose for humans."
-    social.postFbMessage req.user.facebook, message, false, (data) ->
-      social.userAction req.user.facebook, 'rank', 'http://www.cyf-app.co/u/KB06th', false, false, (cb)->
-        mailer.sendMail req.user,data
-        mailer.sendMail req.user,cb
+    
+    social.userAction req.user, 'rank', (cb)->
+      mailer.sendMail req.user,cb
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 

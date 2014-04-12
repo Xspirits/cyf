@@ -11,13 +11,8 @@
 
   module.exports = function(app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      var message;
-      message = "This is a test push. No purpose for humans.";
-      social.postFbMessage(req.user.facebook, message, false, function(data) {
-        return social.userAction(req.user.facebook, 'rank', 'http://www.cyf-app.co/u/KB06th', false, false, function(cb) {
-          mailer.sendMail(req.user, data);
-          return mailer.sendMail(req.user, cb);
-        });
+      social.userAction(req.user, 'rank', function(cb) {
+        return mailer.sendMail(req.user, cb);
       });
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false

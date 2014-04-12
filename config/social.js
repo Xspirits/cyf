@@ -157,17 +157,13 @@
     });
   };
 
-  exports.userAction = function(userFB, action, link, title, desc, callback) {
+  exports.userAction = function(user, action, link, title, desc, callback) {
     var params, url;
-    url = "https://graph.facebook.com/" + userFB.id + "/cyfbeta:" + action;
+    url = "https://graph.facebook.com/" + user.facebook.id + "/cyfbeta:" + action;
     params = {
-      access_token: userFB.token,
+      access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
-      website: auth.cyf.app_domain,
-      type: "website",
-      url: link || auth.cyf.app_domain,
-      title: title || false,
-      description: desc || false
+      website: auth.cyf.app_domain + '/u/' + user.idCool
     };
     return request.post({
       url: url,
