@@ -80,9 +80,11 @@ exports.postFbMessage = (accessToken, message, link, callback) ->
   #    
   params =
     access_token: accessToken
-    link: "https://graph.facebook.com/"
-    name: message.title
-    description: message.body
+    link: link.url || auth.cyf.app_domain
+    picture: link.picture || false
+    name: message.title || false
+    caption: link.caption || false
+    description: lmessage.body || false
 
   request.post
     url: url
@@ -112,8 +114,7 @@ exports.updateWall = (message,link, callback) ->
   if message
     params =
       access_token: auth.facebookPage.accessToken
-      name: message.title
-      description: message.body
+      message: message
   else
     params =
       access_token: auth.facebookPage.accessToken

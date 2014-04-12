@@ -96,9 +96,11 @@
     url = "https://graph.facebook.com/me/feed";
     params = {
       access_token: accessToken,
-      link: "https://graph.facebook.com/",
-      name: message.title,
-      description: message.body
+      link: link.url || auth.cyf.app_domain,
+      picture: link.picture || false,
+      name: message.title || false,
+      caption: link.caption || false,
+      description: lmessage.body || false
     };
     return request.post({
       url: url,
@@ -121,8 +123,7 @@
     if (message) {
       params = {
         access_token: auth.facebookPage.accessToken,
-        name: message.title,
-        description: message.body
+        message: message
       };
     } else {
       params = {
