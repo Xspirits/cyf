@@ -12,8 +12,8 @@ logs
 results
 sass
 
-config/secretDatabase.js
-config/secretAuth.js
+config/auth.coffee
+config/auth.js
 
 # OS generated files
 ####################
