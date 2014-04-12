@@ -156,6 +156,9 @@ exports.userAction =  (user, action, callback) ->
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
+    notify: true
+    image: auth.cyf.app_domain + '/img/favicon-128.png'
+    ref: auth.cyf.app_domain + '/u/' + user.idCool
     level:
       title: "Level 5!"
 
