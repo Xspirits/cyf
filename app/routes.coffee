@@ -697,7 +697,6 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
     scope: [
       "email"
       "publish_actions"
-      "publish_stream"
       "manage_pages"
     ]
   )
