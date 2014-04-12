@@ -151,7 +151,7 @@ exports.updateWall = (message,link, callback) ->
 
 exports.userAction =  (user, action, callback) ->
   # cyfbeta:rank
-  url = "https://graph.facebook.com/me/objects/cyfbeta:level"
+  url = "//graph.facebook.com/me"
 
   params =
     access_token: user.facebook.token
