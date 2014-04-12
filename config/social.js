@@ -121,18 +121,17 @@
     if (message) {
       params = {
         access_token: auth.facebookPage.accessToken,
+        name: message.title,
+        description: message.body
+      };
+    } else {
+      params = {
+        access_token: auth.facebookPage.accessToken,
         link: link.url || auth.cyf.app_domain,
         picture: link.picture || false,
         name: link.name || false,
         caption: link.caption || false,
         description: link.description || false
-      };
-    } else {
-      params = {
-        access_token: auth.facebookPage.accessToken,
-        link: "https://www.cyf-app.co",
-        name: message.title,
-        description: message.body
       };
     }
     return request.post({

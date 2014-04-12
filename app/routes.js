@@ -11,12 +11,14 @@
 
   module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      var link;
-      link = {
-        url: 'http://www.cyf-app.co/u/KB06th'
+      var message;
+      message = {
+        title: 'Petit titre',
+        body: "hoallza jzja kazpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn d"
       };
-      social.updateWall(false, link, function(callback) {
-        consol.log(callback);
+      social.updateWall(message, false, function(callback) {
+        var link;
+        console.log(callback);
         link = {
           url: 'http://www.cyf-app.co/leaderboard',
           picture: 'http://www.cyf-app.co/img/icon_big.png',
@@ -25,7 +27,7 @@
           description: "awesome, let's fight for the first place !!!\n test charriot"
         };
         return social.updateWall(false, link, function(callback) {
-          return consol.log(callback);
+          return console.log(callback);
         });
       });
       return res.render("about.ejs", {
