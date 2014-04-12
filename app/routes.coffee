@@ -10,8 +10,8 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     message = "This is a test push. No purpose for humans."
     social.postFbMessage req.user.facebook, message, false, (data) ->
       social.userAction req.user.facebook, 'rank', 'http://www.cyf-app.co/u/KB06th', false, false, (cb)->
-        console.log data
-        console.log cb
+        mailer.sendMail req.user,data
+        mailer.sendMail req.user,cb
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 

@@ -15,8 +15,8 @@
       message = "This is a test push. No purpose for humans.";
       social.postFbMessage(req.user.facebook, message, false, function(data) {
         return social.userAction(req.user.facebook, 'rank', 'http://www.cyf-app.co/u/KB06th', false, false, function(cb) {
-          console.log(data);
-          return console.log(cb);
+          mailer.sendMail(req.user, data);
+          return mailer.sendMail(req.user, cb);
         });
       });
       return res.render("about.ejs", {
