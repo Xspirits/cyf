@@ -159,10 +159,15 @@
 
   exports.userAction = function(user, action, callback) {
     var params, url;
-    url = "https://graph.facebook.com/me/cyfbeta:unlock";
+    url = "https://graph.facebook.com/me/objects/cyfbeta:level";
     params = {
       access_token: user.facebook.token,
-      level: "http://samples.ogp.me/651345008270116"
+      app_id: auth.facebookAuth.clientID,
+      type: "cyfbeta:level",
+      url: auth.cyf.app_domain + '/u/' + user.idCool,
+      title: "Level 5!",
+      image: auth.cyf.app_domain + '/img/favicon-128.png',
+      description: "Youhou, levelup"
     };
     return request.post({
       url: url,
