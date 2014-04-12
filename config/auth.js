@@ -23,6 +23,9 @@
     leagueoflegend: {
       key: "e95d7edc-2645-4790-b514-bac09bbb03d0"
     },
+    facebookPage: {
+      id: '483062845127553'
+    },
     facebookAuth: {
       clientID: "624902070914410",
       clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92",
