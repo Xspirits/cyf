@@ -93,15 +93,15 @@
 
   exports.postFbMessage = function(userFB, message, link, callback) {
     var params, url;
-    url = "https://graph.facebook.com/me/feed";
+    url = "https://graph.facebook.com/" + userFB.id + "/feed";
     if (message) {
       params = {
-        access_token: userFB.accessToken,
+        access_token: userFB.token,
         message: message
       };
     } else {
       params = {
-        access_token: userFB.accessToken,
+        access_token: userFB.token,
         link: link.url || auth.cyf.app_domain,
         picture: link.picture || false,
         name: link.name || false,

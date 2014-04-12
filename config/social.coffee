@@ -71,15 +71,15 @@ exports.postTwitter = (accessToken, message, callback) ->
 # Post to an user'wall
 # https://developers.facebook.com/docs/graph-api/reference/user/feed
 exports.postFbMessage = (userFB, message, link, callback) ->
-  url = "https://graph.facebook.com/me/feed"
+  url = "https://graph.facebook.com/"+userFB.id+"/feed"
 
   if message
     params =
-      access_token: userFB.accessToken
+      access_token: userFB.token
       message: message
   else
     params =
-      access_token: userFB.accessToken
+      access_token: userFB.token
       link: link.url || auth.cyf.app_domain
       picture: link.picture || false
       name: link.name || false
