@@ -156,7 +156,6 @@ exports.userAction =  (user, action, callback) ->
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
-    type: "cyfbeta:ladder"
     url: auth.cyf.app_domain + '/leaderboard'
     title: "Sample Ladder"
     image: "https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
