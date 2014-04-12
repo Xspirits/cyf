@@ -159,7 +159,7 @@
 
   exports.userAction = function(user, action, callback) {
     var params, url;
-    url = "https://graph.facebook.com/" + userFB.id + "/cyfbeta:rank";
+    url = "https://graph.facebook.com/" + user.facebook.id + "/cyfbeta:rank";
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
