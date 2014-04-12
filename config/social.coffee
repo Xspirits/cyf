@@ -69,22 +69,22 @@ exports.postTwitter = (accessToken, message, callback) ->
   form.append "status", message
   return
 # Post to an user'wall
-exports.postFbMessage = (accessToken, message, link, callback) ->
-  url = "https://graph.facebook.com/me/feed"
-  
-  #
-  #    picture Determines the preview image associated with the link. string
-  #    name Overwrites the title of the link preview. string
-  #    caption Overwrites the caption under the title in the link preview. string
-  #    description Overwrites the description in the link preview string
-  #    
-  params =
-    access_token: accessToken
-    link: link.url || auth.cyf.app_domain
-    picture: link.picture || false
-    name: message.title || false
-    caption: link.caption || false
-    description: lmessage.body || false
+# https://developers.facebook.com/docs/graph-api/reference/user/feed
+exports.postFbMessage = (userFB, message, link, callback) ->
+  url = "https://graph.facebook.com/"+userFB.id+"/feed"
+
+  if message
+    params =
+      access_token: userFB.accessToken
+      message: message
+  else
+    params =
+      access_token: userFB.accessToken
+      link: link.url || auth.cyf.app_domain
+      picture: link.picture || false
+      name: link.name || false
+      caption: link.caption || false
+      description: link.description || false
 
   request.post
     url: url
@@ -99,6 +99,8 @@ exports.updateWall = (message,link, callback) ->
   url = "https://graph.facebook.com/"+auth.facebookPage.id+"/feed"
   
   # Get page accsss token here: https://developers.facebook.com/tools/explorer
+  # https://developers.facebook.com/docs/graph-api/reference/page/feed/
+  # Made with love tx to http://stackoverflow.com/questions/8231877/facebook-access-token-for-pages
   # message:  The main body of the post, otherwise called the status message. Either link or message must be supplied.string
   # OR 
   # link:     The URL of a link to attach to the post. 
@@ -109,9 +111,8 @@ exports.updateWall = (message,link, callback) ->
   #   description: Overwrites the description in the link preview string
   # OPTIONS ================
   # actions:  The action links attached to the post. array[]
-  # place:    Page ID of a location associated with this post. string
-  # tags: Comma-separated list of user IDs of people tagged in this post. You cannot specify this field without also specifying a place. csv[string]
-  
+  #   name: The name or label of the action link. string
+  #   link: The URL of the action link itself. string  
 
   # EXEMPLES
     # message= "hoallza jzja kazpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn d"
@@ -138,6 +139,27 @@ exports.updateWall = (message,link, callback) ->
       name: link.name || false
       caption: link.caption || false
       description: link.description || false
+  request.post
+    url: url
+    qs: params
+  , (err, resp, body) ->
+    return console.error("Error occured: ", err)  if err
+    body = JSON.parse(body)
+    return console.error("Error returned from facebook: ", body.error)  if body.error
+    callback JSON.stringify(body, null, "\t")
+
+exports.userAction =  (userFB, action, link, title, desc, callback) ->
+  # cyfbeta:rank
+  url = "https://graph.facebook.com/"+userFB.id+"/cyfbeta:"+action
+
+  params =
+    access_token: userFB.token
+    app_id: auth.facebookAuth.clientID,
+    type: "website",
+    url: link || auth.cyf.app_domain,
+    title: title || false,
+    description: desc  || false
+
   request.post
     url: url
     qs: params

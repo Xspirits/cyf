@@ -73,7 +73,7 @@
 								<span class="label label-default">CyF</span>
 								<% } %>
 								<% if (currentUser.facebook.token) { %>
-								<span class="label label-primary">Facebook</span>
+								<a href="https://www.facebook.com/profile.php?id=/<%= currentUser.facebook.id %>" title="see <%= currentUser.facebook.name %> on Facebook" target="_blank" class="label label-primary">Facebook</a>
 								<% } %>
 								<% if (currentUser.google.token) { %>
 								<span class="label label-danger">Google</span>

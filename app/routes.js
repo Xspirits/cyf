@@ -9,8 +9,16 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
+  module.exports = function(app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
+      var message;
+      message = "This is a test push. No purpose for humans.";
+      social.postFbMessage(req.user.facebook, message, false, function(data) {
+        return social.userAction(req.user.facebook, 'rank', 'http://www.cyf-app.co/u/KB06th', false, false, function(cb) {
+          console.log(data);
+          return console.log(cb);
+        });
+      });
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false
       });
@@ -214,7 +222,7 @@
             sio.glob("glyphicon glyphicon-tower", ioText);
             notifs.successChall(done);
             if (done._idChallenged.share.twitter === true && done._idChallenged.twitter.token) {
-              twitt = "I just completed a challenge (http://goo.gl/gskvYu) on Challenge your Friends! Join me now @cyf_app #challenge";
+              twitt = "I just completed a challenge (" + appKeys.cyf.app_domain + "/o/" + done.idCool(+") on Challenge your Friends! Join me now @cyf_app #challenge");
               social.postTwitter(req.user.twitter, twitt, function(data) {
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>.";
@@ -223,11 +231,8 @@
               });
             }
             if (done._idChallenged.share.facebook === true && done._idChallenged.facebook.token) {
-              message = {
-                title: "I won a challenge threw by " + done._idChallenger.local.pseudo + "!",
-                body: "Hurray! I just completed the challenge \"" + done.title + "\"\"  on Challenge Your friends! I won " + xp.getValue("ongoing.succeed") + "XP! http://localhost:8080/o/" + done.idCool
-              };
-              social.postFbMessage(done._idChallenged.facebook.token, message, "http://localhost:8080/o/" + done.idCool, function(data) {
+              message = "I just completed the challenge \"" + done.title + "\"\"  on Challenge Your friends (@cyfapp)! I won " + xp.getValue("ongoing.succeed") + "XP! " + appKeys.cyf.app_domain + "/o/" + done.idCool;
+              social.postFbMessage(done._idChallenged.facebook, message, false, function(data) {
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on facebook.";
                 sio.glob("fa fa-facebook", text);

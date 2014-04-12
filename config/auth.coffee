@@ -5,6 +5,7 @@ module.exports =
   app_config:
     email_confirm: true
     twitterPushNews: true
+    facebookPushNews: true
   cyf :
     app_domain: "http://www.cyf-app.co"
     # domain: "http://localhost:8080"

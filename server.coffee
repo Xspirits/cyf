@@ -85,7 +85,7 @@ app.configure ->
 
 
 # routes ======================================================================
-require("./app/routes") app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
+require("./app/routes") app,appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
 require("./app/schedule") scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs

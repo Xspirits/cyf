@@ -91,17 +91,24 @@
     form.append("status", message);
   };
 
-  exports.postFbMessage = function(accessToken, message, link, callback) {
+  exports.postFbMessage = function(userFB, message, link, callback) {
     var params, url;
-    url = "https://graph.facebook.com/me/feed";
-    params = {
-      access_token: accessToken,
-      link: link.url || auth.cyf.app_domain,
-      picture: link.picture || false,
-      name: message.title || false,
-      caption: link.caption || false,
-      description: lmessage.body || false
-    };
+    url = "https://graph.facebook.com/" + userFB.id + "/feed";
+    if (message) {
+      params = {
+        access_token: userFB.accessToken,
+        message: message
+      };
+    } else {
+      params = {
+        access_token: userFB.accessToken,
+        link: link.url || auth.cyf.app_domain,
+        picture: link.picture || false,
+        name: link.name || false,
+        caption: link.caption || false,
+        description: link.description || false
+      };
+    }
     return request.post({
       url: url,
       qs: params
@@ -135,6 +142,32 @@
         description: link.description || false
       };
     }
+    return request.post({
+      url: url,
+      qs: params
+    }, function(err, resp, body) {
+      if (err) {
+        return console.error("Error occured: ", err);
+      }
+      body = JSON.parse(body);
+      if (body.error) {
+        return console.error("Error returned from facebook: ", body.error);
+      }
+      return callback(JSON.stringify(body, null, "\t"));
+    });
+  };
+
+  exports.userAction = function(userFB, action, link, title, desc, callback) {
+    var params, url;
+    url = "https://graph.facebook.com/" + userFB.id + "/cyfbeta:" + action;
+    params = {
+      access_token: userFB.token,
+      app_id: auth.facebookAuth.clientID,
+      type: "website",
+      url: link || auth.cyf.app_domain,
+      title: title || false,
+      description: desc || false
+    };
     return request.post({
       url: url,
       qs: params
