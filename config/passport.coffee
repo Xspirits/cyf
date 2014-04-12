@@ -167,7 +167,9 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
     
     # asynchronous
     process.nextTick ->
-      
+      console.log token
+      console.log refreshToken
+      console.log profile
       # check if the user is already logged in
       unless req.user
         User.findOne
@@ -211,10 +213,6 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
         user.save (err) ->
           mailer.cLog 'Error at '+__filename,err if err
           done null, user
-
-      return
-
-    return
   )
   
   # =========================================================================

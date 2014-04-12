@@ -697,6 +697,7 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
     scope: [
       "email"
       "publish_actions"
+      "manage_pages"
     ]
   )
   app.get "/auth/facebook/callback", passport.authenticate("facebook",

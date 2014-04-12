@@ -631,7 +631,7 @@
       failureFlash: true
     }));
     app.get("/auth/facebook", passport.authenticate("facebook", {
-      scope: ["email", "publish_actions"]
+      scope: ["email", "publish_actions", "manage_pages"]
     }));
     app.get("/auth/facebook/callback", passport.authenticate("facebook", {
       successRedirect: "/profile",

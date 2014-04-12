@@ -150,10 +150,13 @@
       callbackURL: configAuth.facebookAuth.callbackURL,
       passReqToCallback: true
     }, function(req, token, refreshToken, profile, done) {
-      process.nextTick(function() {
+      return process.nextTick(function() {
         var user;
+        console.log(token);
+        console.log(refreshToken);
+        console.log(profile);
         if (!req.user) {
-          User.findOne({
+          return User.findOne({
             "facebook.id": profile.id
           }, function(err, user) {
             var newUser;
@@ -193,7 +196,7 @@
           user.facebook.token = token;
           user.facebook.name = profile.name.givenName + " " + profile.name.familyName;
           user.facebook.email = profile.emails[0].value;
-          user.save(function(err) {
+          return user.save(function(err) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
