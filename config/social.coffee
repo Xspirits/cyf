@@ -151,16 +151,12 @@ exports.updateWall = (message,link, callback) ->
 
 exports.userAction =  (user, action, callback) ->
   # cyfbeta:rank
-  url = "https://graph.facebook.com/me"
+  url = "https://graph.facebook.com/me/cyfbeta:reach"
 
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
-    type: "objects/cyfbeta:level"
-    url: auth.cyf.app_domain + '/u/' + user.idCool
-    title: "Level 5!"
-    image: auth.cyf.app_domain + '/img/favicon-128.png'
-    description: "Youhou, levelup"
+    level: "Level 5!"
 
   request.post
     url: url
