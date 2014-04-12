@@ -76,9 +76,11 @@ exports.postFbMessage = (userFB, message, link, callback) ->
   if message
     params =
       access_token: userFB.accessToken
+      app_id: auth.facebookAuth.clientID
       message: message
   else
     params =
+      app_id: auth.facebookAuth.clientID
       access_token: userFB.accessToken
       link: link.url || auth.cyf.app_domain
       picture: link.picture || false
@@ -154,10 +156,10 @@ exports.userAction =  (userFB, action, link, title, desc, callback) ->
 
   params =
     access_token: userFB.token
-    app_id: auth.facebookAuth.clientID,
-    type: "website",
-    url: link || auth.cyf.app_domain,
-    title: title || false,
+    app_id: auth.facebookAuth.clientID
+    type: "website"
+    url: link || auth.cyf.app_domain
+    title: title || false
     description: desc  || false
 
   request.post

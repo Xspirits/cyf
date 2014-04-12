@@ -97,10 +97,12 @@
     if (message) {
       params = {
         access_token: userFB.accessToken,
+        app_id: auth.facebookAuth.clientID,
         message: message
       };
     } else {
       params = {
+        app_id: auth.facebookAuth.clientID,
         access_token: userFB.accessToken,
         link: link.url || auth.cyf.app_domain,
         picture: link.picture || false,
