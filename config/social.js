@@ -159,11 +159,15 @@
 
   exports.userAction = function(user, action, callback) {
     var params, url;
-    url = "https://graph.facebook.com/" + user.facebook.id + "/cyfbeta:ladder";
+    url = "https://graph.facebook.com/me/objects/cyfbeta:ladder";
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
-      ladder: auth.cyf.app_domain + '/leaderboard'
+      type: "cyfbeta:ladder",
+      url: auth.cyf.app_domain + '/leaderboard',
+      title: "Sample Ladder",
+      image: "https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png",
+      description: ""
     };
     return request.post({
       url: url,
