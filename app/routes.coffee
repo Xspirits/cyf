@@ -6,7 +6,7 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
-    social.getFbData req.user.facebook.token, '/'+req.user.facebook.id+'/accounts', (callback)->
+    social.updateWall {title: "test",message: "if thsi works, that's great.\n lol"}, (callback)->
       mailer.sendMail req.user,'[Cyf] wowo test!',callback,false
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false

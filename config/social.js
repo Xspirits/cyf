@@ -100,7 +100,7 @@
       name: message.title,
       description: message.body
     };
-    request.post({
+    return request.post({
       url: url,
       qs: params
     }, function(err, resp, body) {
@@ -111,7 +111,31 @@
       if (body.error) {
         return console.error("Error returned from facebook: ", body.error);
       }
-      callback(JSON.stringify(body, null, "\t"));
+      return callback(JSON.stringify(body, null, "\t"));
+    });
+  };
+
+  exports.updateWall = function(message, callback) {
+    var params, url;
+    url = "https://graph.facebook.com/" + auth.facebookPage.id + "/feed";
+    params = {
+      access_token: auth.facebookPage.accessToken,
+      link: "https://www.cyf-app.co",
+      name: message.title,
+      description: message.body
+    };
+    return request.post({
+      url: url,
+      qs: params
+    }, function(err, resp, body) {
+      if (err) {
+        return console.error("Error occured: ", err);
+      }
+      body = JSON.parse(body);
+      if (body.error) {
+        return console.error("Error returned from facebook: ", body.error);
+      }
+      return callback(JSON.stringify(body, null, "\t"));
     });
   };
 

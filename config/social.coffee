@@ -94,6 +94,25 @@ exports.postFbMessage = (accessToken, message, link, callback) ->
     body = JSON.parse(body)
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
-    return
 
-  return
+exports.updateWall = (message, callback) ->
+  url = "https://graph.facebook.com/"+auth.facebookPage.id+"/feed"
+  
+  # Get page accss token here: https://developers.facebook.com/tools/explorer
+  #    
+  params =
+    access_token: auth.facebookPage.accessToken
+    link: "https://www.cyf-app.co"
+    name: message.title
+    description: message.body
+
+  
+  # callback('TO ENABLE GOTO social.js Line 30');
+  request.post
+    url: url
+    qs: params
+  , (err, resp, body) ->
+    return console.error("Error occured: ", err)  if err
+    body = JSON.parse(body)
+    return console.error("Error returned from facebook: ", body.error)  if body.error
+    callback JSON.stringify(body, null, "\t")

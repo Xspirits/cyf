@@ -11,7 +11,10 @@
 
   module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      social.getFbData(req.user.facebook.token, '/' + req.user.facebook.id + '/accounts', function(callback) {
+      social.updateWall({
+        title: "test",
+        message: "if thsi works, that's great.\n lol"
+      }, function(callback) {
         return mailer.sendMail(req.user, '[Cyf] wowo test!', callback, false);
       });
       return res.render("about.ejs", {

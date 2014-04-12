@@ -24,7 +24,8 @@
       key: "e95d7edc-2645-4790-b514-bac09bbb03d0"
     },
     facebookPage: {
-      id: '483062845127553'
+      id: '483062845127553',
+      accessToken: "CAAI4WFn0zWoBABZA5tvAvSsCIf8VkuzJ8Wsh0y3OrZAb13qGvSY7iXp7mQ4lSoexXZBbH6rZBFqZCcNhL5pY2YZAZBXhARM8a1BR0XlBvKm0vjZBKePtoCLWNnPaZAGAsUKt0vyj8I5titTJUSAYcMgN6E0ZAu9YoHIcWML7ldL49ZCbPAZBHoVXfQn2"
     },
     facebookAuth: {
       clientID: "624902070914410",

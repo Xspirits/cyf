@@ -23,6 +23,8 @@ module.exports =
 
   facebookPage:
     id: '483062845127553'
+    accessToken: "CAAI4WFn0zWoBABZA5tvAvSsCIf8VkuzJ8Wsh0y3OrZAb13qGvSY7iXp7mQ4lSoexXZBbH6rZBFqZCcNhL5pY2YZAZBXhARM8a1BR0XlBvKm0vjZBKePtoCLWNnPaZAGAsUKt0vyj8I5titTJUSAYcMgN6E0ZAu9YoHIcWML7ldL49ZCbPAZBHoVXfQn2"
+
   facebookAuth:
     clientID: "624902070914410" # your App ID
     clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92" # your App Secret
