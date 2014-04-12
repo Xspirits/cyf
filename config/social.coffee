@@ -149,14 +149,14 @@ exports.updateWall = (message,link, callback) ->
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
 
-exports.userAction =  (user, action, link, title, desc, callback) ->
+exports.userAction =  (user, action, callback) ->
   # cyfbeta:rank
-  url = "https://graph.facebook.com/"+user.facebook.id+"/cyfbeta:"+action
+  url = "https://graph.facebook.com/" + user.facebook.id + "/cyfbeta:" + action
 
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
-    website: auth.cyf.app_domain + '/u/'+user.idCool
+    website: auth.cyf.app_domain + '/u/' + user.idCool
 
   request.post
     url: url

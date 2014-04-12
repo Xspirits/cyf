@@ -157,7 +157,7 @@
     });
   };
 
-  exports.userAction = function(user, action, link, title, desc, callback) {
+  exports.userAction = function(user, action, callback) {
     var params, url;
     url = "https://graph.facebook.com/" + user.facebook.id + "/cyfbeta:" + action;
     params = {
