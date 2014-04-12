@@ -156,7 +156,8 @@ exports.userAction =  (user, action, callback) ->
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
-    level: "Level 5!"
+    level:
+      title: "Level 5!"
 
   request.post
     url: url
