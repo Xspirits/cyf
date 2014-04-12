@@ -7,7 +7,7 @@ module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, cha
 
   app.get "/about", (req,res) ->
     social.getFbData req.user.facebook.token, '/'+req.user.facebook.id+'/accounts', (callback)->
-      mailer.sendMail result,'[Cyf] wowo test!',callback,false
+      mailer.sendMail req.user.local.email,'[Cyf] wowo test!',callback,false
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 
