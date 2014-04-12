@@ -159,7 +159,7 @@
 
   exports.userAction = function(user, action, callback) {
     var params, url;
-    url = "//graph.facebook.com/me";
+    url = "https://graph.facebook.com/me";
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
