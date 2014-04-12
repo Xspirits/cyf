@@ -151,16 +151,12 @@ exports.updateWall = (message,link, callback) ->
 
 exports.userAction =  (user, action, callback) ->
   # cyfbeta:rank
-  url = "https://graph.facebook.com/me/objects/cyfbeta:ladder"
+  url = "https://graph.facebook.com/me/cyfbeta:unlock"
 
   params =
     access_token: user.facebook.token
-    app_id: auth.facebookAuth.clientID
-    url: auth.cyf.app_domain + '/leaderboard'
-    title: "Sample Ladder"
-    image: "https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-    description: ""
-
+    level: "http://samples.ogp.me/651345008270116"
+    
   request.post
     url: url
     qs: params
