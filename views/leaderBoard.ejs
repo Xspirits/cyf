@@ -2,7 +2,35 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="leaderboard, ranking, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Leaderboards of challenge your friends">
+    <meta name="description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="article"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Leaderboards of challenge your friends">
+    <meta property="og:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="Leaderboards of challenge your friends">
+    <meta name="twitter:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <!-- Twitter card end -->
+	<title>Leaderboards, <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> #1</title>
 </head>
 <body>
 
@@ -12,11 +40,11 @@
 		<div class="container">
 			<div class="row">
 				<div class="tabbable tabs-left col-lg-12 clearfix">
-					<ul id="myTab1" class="nav nav-tabs nav-justified">
-						<li class="active"><a href="#daily" data-toggle="tab">Daily Ladder</a></li>
-						<li><a href="#weekly" 	data-toggle="tab">Weekly Ladder</a></li>
-						<li><a href="#monthly" 	data-toggle="tab">Monthly Ladder</a></li>
-						<li><a href="#global" 	data-toggle="tab">General Ladder</a></li>
+					<ul id="leadTab" class="nav nav-tabs nav-justified">
+						<li class="active"><a href="#daily" data-toggle="tab"><img src="./img/ladder_a.png" class="img-responsive">daily</a></li>
+						<li><a href="#weekly" data-toggle="tab"><img src="./img/ladder_b.png" class="img-responsive">weekly</a></li>
+						<li><a href="#monthly" data-toggle="tab"><img src="./img/ladder_c.png" class="img-responsive">monthly</a></li>
+						<li><a href="#global" data-toggle="tab"><img src="./img/ladder_g.png" class="img-responsive">global</a></li>
 
 					</ul>
 					<div id="leaderboardcontainer" class="tab-content">
@@ -31,7 +59,7 @@
 										<th>Score</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody> 
 									<% if(ranking.daily.length > 0 ) { %>
 									<% for(var i=0; i< ranking.daily.length; i++) { %>
 									<tr class="animated flipInX">
@@ -135,7 +163,10 @@
 				</div>
 				<div class="col-lg-12">					
 					<p>
-						Rankings are updated each day, week and month at midnight. Challengers have 24 hours to gather the maximum of bonus points by completing challenge, gathering experience, level uping and sharing on social-networks.
+						Rankings are updated each day, week and month at midnight. 
+					</p>
+					<p>
+						Challengers have 24 hours to gather the maximum of bonus points by completing challenge, gathering experience, level uping and sharing on social-networks.
 					</p>	
 				</div>
 			</div>

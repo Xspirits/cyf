@@ -1,13 +1,34 @@
 <div id="sharePost"></div>
 </div> <!-- End .canvas -->
 
+    <!--  FOOTER -->
+    <footer id="footer">
+      <div class="container">
+        <div class="row">
+          <section class="col-md-12">
+            <a href="https://plus.google.com/109925245483936264439" title="Follow us on Goolg+!" target="_blank" rel="publisher">Google+</a>
+            | <a href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a>
+            | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
 
-<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(18,18,18); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas>
-<script src="/js/init.js"></script>
+            <a href="./about" class="pull-right" title="Like us on Facebook!">About</a>            
+          </section>
+        </div>        
+      </div>
+    </footer>
+<!-- 
+<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(18,18,18); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas> -->
+<div id="fb-root"></div>
+
+<script type="text/javascript">
+(function(e,t,n){var r,i=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;r=e.createElement(t);r.id=n;r.src="//connect.facebook.net/en_US/all.js#xfbml=1&appId=624902070914410";i.parentNode.insertBefore(r,i)})(document,"script","facebook-jssdk");(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/platform.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/plusone.js?publisherid=109925245483936264439";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();!function(e,t,n){var r,i=e.getElementsByTagName(t)[0],s=/^http:/.test(e.location)?"http":"https";if(!e.getElementById(n)){r=e.createElement(t);r.id=n;r.src=s+"://platform.twitter.com/widgets.js";i.parentNode.insertBefore(r,i)}}(document,"script","twitter-wjs")</script>
 <script src="/socket.io/socket.io.js"></script>
+
+<script src="/js/init.js"></script>
 <script type="text/javascript">
 	$(function() {
+    	moment().zone('+0200').format();
 
+		var isMobile = ($(window).width() < 800) ? true : false;
 		var url = window.location.href;
 		var arr = url.split("/");
 		var resultURL = arr[0] + "//" + arr[2];
@@ -15,6 +36,10 @@
 		//http://localhost:8080/leaderboard
 		socket = io.connect(resultURL);
 		// socket = io.connect('http://challenge-friends.herokuapp.com');
+
+		socket.on('alive', function (data) {
+			console.log('Challenger alive: '+data.date);
+		});
 		<% if (currentUser) { %>
 
 			socket.on('globalevent', function (data) {
@@ -31,20 +56,6 @@
 
 			}
 
-			var isMobile = ($(window).width() < 800) ? true : false;
-		//Avatars/identicons
-		// $('.identicon').each( function(){
-		// 	var _this = $(this);
-		// 	var data = _this.attr('data-hashMe')
-		// 	, size = _this.attr('data-size') ? _this.attr('data-size') : 100;
-
-		// 	var hash = CryptoJS.MD5(data);
-		// 	_this.text(hash);
-		// 	_this.identicon5({
-		// 		rotate: true,
-		// 		size: size
-		// 	});
-		// })
 		// nprogress Is disabled for now, could be using it in the future though.
 		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
 		var flatten = Math.round((myLevel * .8)*100);
@@ -83,21 +94,13 @@
 						// <%= (notif[i].persist && currentUser.allowDeskNotif) ? true : false %>
 						console.log(<%= i %> + ' ' + <%= limit %> + ' max ' + <%= notif.length %>+ ' queue ' + queue.length);
 						<% 
-						/*if(limit <= 0 || i == notif.length-1){
-							%>
-							console.log('fired')
-							notif(queue, queue.length -1); 
-							challengeAlert(); 
-							<%
-							break;
-						}*/
 					} 
 				}
 			}
 		} %>
 
 		notif(queue, queue.length -1); 
-		challengeAlert(); 
+		// challengeAlert(); 
 		readability();
 		readabilityAgo();
 
@@ -109,38 +112,14 @@
 			});
 		}, 1000);
 
-		$('.loaderProgress').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-			animateProgress();
-		});
-
 			// Progress animation
-			function animateProgress() {
-
-				var progressNumber = $('.tinyProgress').length;
-				//All progress are now at their expected value, cast ou the setInterval
-				if(progressNumber <= 0 ){					
-					console.log(progressNumber)
-					clearInterval(timerId);
-				} else {
-
-					$('.tinyProgress').each(function(){
-
-						var _this   = $(this)
-						, currWidth = _this.width()/10
-						, tarWidth  = _this.attr('data-percent');
-
-						var currWidth = (currWidth === 0) ? 0.05 : currWidth;
-						var incVal 	= (currWidth + (tarWidth * Math.random()));	
-
-						if(incVal >= tarWidth) 
-							_this.width(tarWidth + '%');
-						else{
-							_this.width(incVal + '%');
-							setTimeout(animateProgress, 333);
-						}
-					});	
-				}
-			}	
+			(function animateProgress() {
+				$('.tinyProgress').each(function(){
+					var w   = $(this).attr('data-percent');
+					$(this).width(w + '%');
+				});	
+			})();
+				
 			function notif (queue,i) {     
 
 				setTimeout(function () {  
@@ -150,6 +129,16 @@
 					}    			
 				}, 220)
 			} 
+			$('.righty').hover(function(){
+				if(!$('.liveFeed').hasClass('sticked'))
+					$('.liveFeed').addClass('active');
+			},function(){
+				if(!$('.liveFeed').hasClass('sticked'))
+					$('.liveFeed').removeClass('active');
+			});
+			$('.righty').on('click', function(){
+				$('.liveFeed').toggleClass('sticked');
+			})
 			$('#dismissBoxChall').click(function(e){
 				e.preventDefault();
 				$('#gotchaChallenge,#gotaBoxContent')

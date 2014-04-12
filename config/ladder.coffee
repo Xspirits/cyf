@@ -22,7 +22,7 @@ module.exports =
         console.log user.local.pseudo+ ' for ' + rank
 
         User.findById(user._id).exec (err, user) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           
           if type == 'dailyRank'
             user.dailyRank            = rank + 1         
@@ -34,7 +34,7 @@ module.exports =
           console.log user.local.pseudo + ' who was ' + user.dailyArchives.rank + ' is now #' + user.dailyRank
 
           user.save (err) ->
-            throw err  if err
+            mailer.cLog 'Error at '+__filename,err if err
             leaders.push user if (rank+1 < 4) 
             callback leaders if (rank+1 > 3) or (rank + 1 >= userSorted.length)
 
@@ -61,7 +61,7 @@ module.exports =
       getScore prepareGlobal, (globalScore) ->
         console.log "new global score for " + user.local.pseudo + " is " + globalScore
         User.findById(user._id).exec (err, user) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           
           #Number of the week, for statistics purpose.
           yesterday.day = moment().subtract("days", 1).day()
@@ -81,7 +81,7 @@ module.exports =
           #take weekly value and push them into the archives
           user.dailyArchives.push yesterday
           user.save (err) ->
-            throw err  if err
+            mailer.cLog 'Error at '+__filename,err if err
             done user
 
   weeklyUpdate: (user, done) ->
@@ -100,7 +100,7 @@ module.exports =
       getScore prepareGlobal, (globalScore) ->
         console.log "new global score for " + user.local.pseudo + " is " + globalScore
         User.findById(user._id).exec (err, user) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           
           #Number of the week, for statistics purpose.
           lastWeek.week = moment().subtract("weeks", 1).week()
@@ -121,7 +121,7 @@ module.exports =
           #take weekly value and push them into the archives
           user.weeklyArchives.push lastWeek
           user.save (err) ->
-            throw err  if err
+            mailer.cLog 'Error at '+__filename,err if err
             done user
 
   monthlyUpdate: (user, done) ->
@@ -140,7 +140,7 @@ module.exports =
       getScore prepareGlobal, (globalScore) ->
         console.log "new global score for " + user.local.pseudo + " is " + globalScore
         User.findById(user._id).exec (err, user) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           
           #Number of the week, for statistics purpose.
           lastMonth.month = moment().subtract("months", 1).month()
@@ -162,7 +162,7 @@ module.exports =
           #take monthly value and push them into the archives
           user.monthlyArchives.push lastMonth
           user.save (err) ->
-            throw err  if err
+            mailer.cLog 'Error at '+__filename,err if err
             done user
   
   ###
@@ -187,7 +187,7 @@ module.exports =
   @param  {Function} done [description]
   @return {[type]}        [description]
   ###
-  createWeeklyLadder: ->
+  createWeeklyLadder: (callback) ->
     self = this
     
     #Users Loop
@@ -203,7 +203,7 @@ module.exports =
   @param  {Function} done [description]
   @return {[type]}        [description]
   ###
-  createMonthlyLadder: ->
+  createMonthlyLadder: (callback) ->
     self = this
     
     #Users Loop
@@ -232,6 +232,6 @@ module.exports =
       User.findByIdAndUpdate(user._id,
         $inc: query
       ).exec (err, userUpdated) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         console.log userUpdated.local.pseudo + " weekly stats : TW " + userUpdated.weekly.shareTW + " FB " + userUpdated.weekly.shareFB
         console.log userUpdated.local.pseudo + " monthly stats : TW " + userUpdated.monthly.shareTW + " FB " + userUpdated.monthly.shareFB

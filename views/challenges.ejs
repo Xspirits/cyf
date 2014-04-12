@@ -2,7 +2,35 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title>Launch a challenge</title>
+	<!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="List of challenges - Challenge your Friends">
+    <meta name="description" content="There are currently <%= challenges.length %> challenges on Challenge your Friends. See each challenge, filter and discover the highest rated ones.">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="article"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="List of challenges - Challenge your Friends">
+    <meta property="og:description" content="There are currently <%= challenges.length %> challenges on Challenge your Friends. See each challenge, filter and discover the highest rated ones.">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="List of challenges - Challenge your Friends">
+    <meta name="twitter:description" content="There are currently <%= challenges.length %> challenges on Challenge your Friends. See each challenge, filter and discover the highest rated ones.">
+    <!-- Twitter card end -->
+	<title>List of challenges - Challenge your Friends</title>
 </head>
 <body>
 
@@ -23,26 +51,32 @@
 							<input type="search" class="form-control" placeholder="Search a challenge">
 						</div>	
 					</div>
+					<hr>
 					<div class="row">
 						<% for(var i=0; i< challenges.length; i++) { %>
-						<div class="col-lg-4 col-xs-12 challenge-card hover-me animated fadeInDown" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
-							<div class="rounded-2">
-								<h4><%= challenges[i].title %></h4>
-								<% for(var z=0; z< challenges[z].completedBy.length; z++) { %>
-								<%= challenges[i].completedBy[z] %>
-
-								<% } %>
-								<p><%= challenges[i].description %></p>
-								<strong><small><%= challenges[i].game %></small></strong>
-								<hr class="subtle-divider hr-white">
-								<i class="fa fa-clock-o"></i>
-								<strong><%= challenges[i].durationH %></strong> Hours
-								<% if (challenges[i].durationD > 0 ) { %> 
-								<strong><%= challenges[i].durationD %></strong> Days
-								<% } %>
-								<span class="pull-right">
-									<span class="value-text"><%= challenges[i].value %></span>
-								</span>
+						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 challenge-card hover-me animated fadeInDown" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+							<div class="rounded-2 well">
+								<a href="./c/<%= challenges[i].idCool %>">
+									
+									<h4><%= challenges[i].title %></h4>
+									<h5><small><%= challenges[i].game %></small></h5>
+									<% for(var z=0; z< challenges[z].completedBy.length; z++) { %>
+									<%= challenges[i].completedBy[z] %>
+									<% } %>
+									<p><%= challenges[i].description %></p>
+									<hr class="subtle-divider hr-white">
+									<i class="fa fa-clock-o"></i>
+									<strong><%= challenges[i].durationH %></strong> Hours
+									<% if (challenges[i].durationD > 0 ) { %> 
+									<strong><%= challenges[i].durationD %></strong> Days
+									<% } %>
+									<span class="pull-right">
+										<span class="valueChall"><span class="label label-info">Value <i class="fa fa-fire"></i><%= challenges[i].value %></span></span>
+									</span>
+									<hr class="subtle-divider hr-white">
+									<div class="fb-share-button" data-href="http://challenge-friends.herokuapp.com/c/<%= challenges[i].idCool %>" data-type="button_count"></div>
+									<a href="https://twitter.com/share" class="twitter-share-button" data-text="Look at this challenge: <%= challenges[i].title %> with a value of <%= challenges[i].value %>, rated <%= challenges[i].rateValue %> overall by  <%= challenges[i].rateNumber %> #challengers!" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
+								</a>
 							</div>
 						</div>
 						<% } %>

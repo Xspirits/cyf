@@ -1,113 +1,150 @@
 <!doctype html>
 <html>
 <head>
+    <% include statics/headers %>
 
-	<% include statics/headers %>
-	<link rel="stylesheet" type="text/css" href="./css/landing.css">
-	<title>Challenge your Friends</title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Challenge or be challenged by your friends and gamers">
+    <meta name="description" content="Launch challenge to your friends and players around the world, on any game at any time and from anywhere! Become a true champion and find back your initial enjoyement of playing games.">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="website"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Challenge or be challenged by your friends and gamers">
+    <meta property="og:description" content="Launch challenge to your friends and players around the world, on any game at any time and from anywhere! Become a true champion and find back your initial enjoyement of playing games">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:title" content="Challenge or be challenged by your friends and gamers">
+    <meta name="twitter:description" content="Tired of playing the same game every day, but still loving it? Join Challenge your Friends today and start accepting and launching in-game challenges right away! Works with ANY game.">
+    <meta name="twitter:image:width" content="750">
+    <!-- Twitter card end -->
+
+    <link rel="stylesheet" type="text/css" href="./css/landing.css">
+    <title>Challenge your Friends</title>
 </head>
 <body>
+  <div class="navbar navbar-default navbar-static-top" id="headNav" role="navigation">
+        <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <i class="fa fa-ellipsis-v"></i>
+          </button>
+            <a class="navbar-brand animated flipInX" href="./">
+                    <img src="./img/logo.png" alt="go home">
+            </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
+            <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+        </div>
+    </div>
 
-	<div class="navbar navbar-default landing navbar-static-top" id="headNav" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<i class="fa fa-ellipsis-v"></i>
-				</button>
-				<a class="navbar-brand animated flipInX" href="./">
-					<img src="./img/tinylogo.png" >
-				</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li class="active animated fadeInX"><a href="/profile">Home</a></li>
-					<li class="animated fadeInX"><a href="/leaderboard">LeaderBoard</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-					<li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
-				</ul>
-			</div><!--/.nav-collapse -->
-		</div>
-	</div>
+    <section id="slide-1" class="homeSlide">
+      <div class="container">
+          <div class="row animated fadeIn">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- <ol class="carousel-indicators">
+                  <li data-target="#truechampion" data-slide-to="0" class="active"></li>
+                  <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                  <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                </ol> -->
 
-	<section id="slide-1" class="homeSlide">
-		<div class="bcg skrollable" data-center="background-position: 0% 0%;" data-top-bottom="background-position: 50% 0;" data-anchor-target="#slide-1">
-			<div class="hsContainer animated flipInX">
-				<div class="hsContent">
-					<div class="container text-right">
-						<h5>Challenge Friends and compete</h5>
-						<h5>Gather experience and level up</h5>
-						<h5>Try to reach the top of the ladder</h5>
+                <div class="carousel-inner">
+                  <div class="item active">
+                    <img src="./img/landing_1.jpg" alt="ahahah">
+                    <div class="carousel-caption"></div>
+                  </div>
+                  <div class="item">
+                    <img src="./img/landing_1_2.jpg" alt="ahahah">
+                    <div class="carousel-caption"></div>
+                  </div>
+                  <div class="item">
+                    <img src="./img/landing_1_3.jpg" alt="ahahah">
+                    <div class="carousel-caption"></div>
+                  </div>
+                </div>
 
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section id="slide-2">
-		<div class="bcg skrollable " data-220-top="background-color:rgb(250,250,250);" data--100-bottom="background-color:rgb(6,2,3);" data-anchor-target="#slide-2">
-			<div class="hsContainer">
-				<div class="hsContent">
-					<div data-220-top="opacity: 1" data--100-bottom="opacity: 0" data-anchor-target="#slide-2" class="skrollable">
-						<h2 class="animated flipInX">GIVE A NEW LIFE TO GAMING</h2>
-						<h5>challenge other players and see if they can reach you.</h5>
-						<h5>Challenge Friends and compete</h5>
-						<h5>Gather experience and level up</h5>
-						<h5>Try to reach the top of the ladder</h5>
-					</div>
-				</div>
-			</div>
-			<div class="item"  data-150-bottom="background-position: -200% 0;"  data-top="background-position: 20% 0;" data-center="background-position: 50% 0;" data-top-bottom="background-position: 50% 0;" data-anchor-target="#slide-2"></div>
-			<div class="item2"  data-150-bottom="background-position: 200% 0;"  data-top="background-position: 80% 0;" data-center="background-position: 50% 0;" data-top-bottom="background-position: 50% 0;" data-anchor-target="#slide-2"></div>
-		</div>
-	</section>
-	<div class="container">
-		
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-		<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	</div>
-</section>
-<div class="container">
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                  <span class="fa fa-angle-left chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                  <span class="fa fa-angle-right chevron-right"></span>
+                </a>
+              </div>
+          </div>
+      </div>
+    </section>
 
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-</div>
-</section>
-<div class="container">
+    <section class="transi-slide">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2 text-center">
+            <a href="./signup" class="btn btn-primary btn-lg btn-block youSeeMeRollin"><span class="animated">BECOME A CHALLENGER NOW</span></a>
+            <a href="./discover#slide-3">Read more</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+          <h3>Challenge your friends on any game</h3>
+          <p>
+            Challenge your Friends allows you to throw challenges to any of your friends in the community. <strong>Whatch they succeed...or fall.</strong>
+            </p>
+            <p>Find a <strong>new way to enjoy playing</strong> your favorites games, immediately and <strong>for free</strong>!<br>
+             <strong>Discover</strong> new competitive game through new challenges, explore new opportunties and become a <strong>true challenger</strong>.
+          </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!--  FOOTER -->
+    <footer id="footer">
+      <div class="container">
+        <div class="row">
+          <section class="col-md-12">
+            <a href="https://plus.google.com/109925245483936264439" title="Follow us on Goolg+!" target="_blank" rel="publisher">Google+</a>
+            | <a href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a>
+            | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
 
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-</div>
-</section>
-<div class="container">
-
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-	<h5 class="animated fadeIn">Challenge Friends and compete</h5>
-</div>
-
+            <a href="./about" class="pull-right" title="Like us on Facebook!">About</a>            
+          </section>
+        </div>        
+      </div>
+    </footer>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./js/skrollr.min.js"></script>
-<script type="text/javascript" src="./js/landing.js"></script>
 
 <script type="text/javascript">
-	$(function () {
-		var s = skrollr.init();
-	});
+    $(function () {
+      var rolling = setInterval( function() {
+        var texts = ['NEW CHALLENGE: JOIN THE ARENA','BECOME A CHALLENGER NOW','READY TO BEGIN YOUR JOURNEY?','READY TO REVIVE YOURSELF?']
+        var datText = texts[Math.floor(Math.random()*texts.length)];
+          $('.youSeeMeRollin > span').addClass('fadeOutLeft');
+
+          $('.youSeeMeRollin > span').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).text(datText).removeClass('fadeOutLeft').addClass('fadeInRight');
+          });
+
+        }, 5000);
+    });
 
 </script>
 

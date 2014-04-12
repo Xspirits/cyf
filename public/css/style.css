@@ -1,9 +1,10 @@
+@charset "UTF-8";
+@import url("http://fonts.googleapis.com/css?family=Signika");
 /* custom scrollbar */
 /* line 6, ../../sass/style.scss */
 ::-webkit-scrollbar {
   width: .95em;
 }
-
 /* line 10, ../../sass/style.scss */
 ::-webkit-scrollbar-track {
   background-color: rgba(217, 217, 217, 0.5);
@@ -14,8 +15,9 @@
   background: rgba(184, 184, 184, 0.5);
   box-shadow: inset 0.05em 0.05em 0 rgba(0, 0, 0, 0.1), inset 0 -0.05em 0 rgba(0, 0, 0, 0.07);
 }
-@charset "UTF-8";
-@import url("http://fonts.googleapis.com/css?family=Signika");
+/* Don't show shadows when selecting text */
+::-moz-selection { background: #5af; color: #fff; text-shadow: none; }
+::selection { background: #5af; color: #fff; text-shadow: none; }
 
 /* COLORS */
 .bittersweet {
@@ -30,6 +32,12 @@
 .bittersweet:hover,.bittersweet:active,.bittersweet:visited {
   background: #E9573F;
   border: 1px solid #FC6E51;
+}
+.bittersweet-color {
+  color: #FC6E51;
+}
+.bittersweet-color:hover,.bittersweet-color:active,.bittersweet-color:visited {
+  color: #E9573F;
 }
 .mediumgrey {
   background: #CCD1D9;
@@ -83,6 +91,31 @@
   background: #F6BB42;
   border: 1px solid #FFCE54;
 }
+.sunflower-color {
+  color: #FFCE54;
+}
+.sunflower-color:hover,.sunflower-color:active,.sunflower-color:visited  {
+  color: #F6BB42;
+}
+.aqua {
+  background: #4FC1E9; 
+  border-color: #3BAFDA;
+  border: 1px solid #3BAFDA;
+
+  -moz-box-shadow: #3BAFDA 0 2px 0;
+  -webkit-box-shadow: #3BAFDA 0 2px 0;
+  box-shadow: #3BAFDA 0 2px 0
+}
+.aqua:hover,.aqua:active,.aqua:visited  {
+  background: #3BAFDA;
+  border: 1px solid #4FC1E9;
+}
+.aqua-color {
+  color: #4FC1E9;
+}
+.aqua-color:hover,.aqua-color:active,.aqua-color:visited  {
+  color: #3BAFDA;
+}
 .pinked {
   background: #EC87C0;
   border-color: #D770AD;
@@ -109,26 +142,54 @@
   background: #DA4453;
   border: 1px solid #ED5565;
 }
+.grapefruit-color {
+  color: #ED5565;
+}
+.grapefruit-color:hover,.grapefruit-color:active,.grapefruit-color:visited  {
+  color: #DA4453;
+}
 
-
+/* Magic css fix */
+.fb-share-button{ top: -4px; }
+canvas {
+  display: block;
+}
 /* line 21, ../../sass/style.scss */
 
 html, body {
   height: 100%;
-  /*background: rgb(54, 71, 65);*/
-  background-color: rgb(252,252,252);
+    margin: 0;
+    padding: 0;
+  background: url('../img/px_bg.png') repeat;
   font-size: .865em;
-  font-family: "Signika", sans-serif !important; 
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: normal;
 
 }
-
 body.modal-open .canvas{
   -webkit-filter: blur(7px);
   -moz-filter: blur(15px);
   -o-filter: blur(15px);
   -ms-filter: blur(15px);
   filter: blur(15px);
+}
+
+#footer {
+  height: 41px;
+  background-color: #1F1F1F;
+  border-top: 1px solid rgb(82, 73, 73);
+  z-index: 2;
+  position: relative;
+}
+  #footer > .container > .row > section {
+    line-height: 40px;
+  }
+  #footer > .container > .row > section a {
+    color: #979797;
+    font-weight: normal;
+  }
+#footer h4 {
+  color: rgb(69, 107, 114);
 }
 #animeBg {
   position: absolute;
@@ -146,13 +207,13 @@ body.modal-open .canvas{
   left: 0;
   z-index: 2;
   min-height: 100%;
-  padding: 0;
-  background: url('../img/px_bg.jpg') repeat;
-  -webkit-box-shadow: -5px 0 5px 0 rgba(231, 225, 225, 1);
-  -moz-box-shadow: -5px 0 5px 0 rgba(231, 225, 225, 1);
-  -ms-box-shadow: -5px 0 5px 0 rgba(231, 225, 225, 1);
-  -o-box-shadow: -5px 0 5px 0 rgba(231, 225, 225, 1);
-  box-shadow: -5px 0 5px 0 rgba(231, 225, 225, 1);
+  padding: 10px 0;
+  background: url('data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABkAAD/4QMraHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjk4MTI4NjJBQkQ3MjExRTNBOTcyRkM4RjcyMTNDNTczIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjk4MTI4NjI5QkQ3MjExRTNBOTcyRkM4RjcyMTNDNTczIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QzIzRTY3RjFCQjIwMTFFM0E2N0RFNjg0MEQ0QzE0RTAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QzIzRTY3RjJCQjIwMTFFM0E2N0RFNjg0MEQ0QzE0RTAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7/7gAOQWRvYmUAZMAAAAAB/9sAhAABAQEBAQEBAQEBAQEBAQEBAQEB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') repeat;
+  -webkit-box-shadow: -5px 0 5px 0 rgba(36, 29, 29, 1);
+  -moz-box-shadow: -5px 0 5px 0 rgba(36, 29, 29, 1);
+  -ms-box-shadow: -5px 0 5px 0 rgba(36, 29, 29, 1);
+  -o-box-shadow: -5px 0 5px 0 rgba(36, 29, 29, 1);
+  box-shadow: -5px 0 5px 0 rgba(36, 29, 29, 1);
   -webkit-transition: all .22s ease-in-out;
   -moz-transition: all .22s ease-in-out;
   -ms-transition: all .22s ease-in-out;
@@ -160,114 +221,17 @@ body.modal-open .canvas{
   transition: all .22s ease-in-out;
 
 }
-
-.skrollr body { 
-  background: rgb(6,2,3);
+.canvas > .container > .row {
+  margin-top: 10px;
+}
+/* Usefull class to center canvas */
+.c-center {
+    padding: 0;
+    margin: 0 auto;
+    vertical-align: top;
+    display: block;
 }
 
-/* Skrollr */
-
-.hsContainer {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-.hsContent {
-  max-width: 450px;
-  margin: -150px auto 0 auto;
-  display: table-cell;
-  vertical-align: middle;
-  color: #ebebeb;
-  padding: 0 8%;
-  text-align: left
-}
-.hsContent h5, .hsContent h2{
-  margin: 20px 0 0 0px;
-  color: #13D234;
-  padding: 0;
-
-  animation: colorAnimate ease-out 6s;
-  -webkit-animation: colorAnimate ease-out 6s;
-  -moz-animation: colorAnimate ease-out 6s;
-  -o-animation: colorAnimate ease-out 6s;
-  -ms-animation: colorAnimate ease-out 6s;
-}
-
-.hsContent h5:first-child{
-  margin-top: 50px;
-}
-.bcg {
-  background-position: top right;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: rgb(6,2,3);
-  height: 100%;
-  width: 100%;
-}
-#slide-1 {
-  height: 600px;
-  color: rgb(252,252,252);
-}
-#slide-1 h5 {
-  text-shadow: 0px 1px 1px #000;
-}
-#slide-1 .bcg {background:url('../img/landing_1.jpg') no-repeat;}
-
-#slide-2 {position: relative;}
-#slide-2 .item {background:url('../img/land_2_item_1.png') no-repeat; height: 100px;margin: -100px 0;}
-#slide-2 .item2 {background:url('../img/land_2_item_1_2.png') no-repeat; height: 100px;margin: -100px 0;}
-#slide-2 .bcg {
-  background: none;
-  background-color: #010101;
-  height: 310px;
-  text-align: center;
-  color: rgb(245,245,245);
-}
-
-#slide-2 h2 {
-  color: rgb(39, 179, 245);
-  margin-top: -70px;
-  border-bottom: 2px solid;
-  text-shadow: 0px 1px 1px #1F3D8A;
-}
-#slide-2 h5 {
-  color: #8F8F8F;
-  text-shadow: 0px 1px 1px #FFFFFF;
-}
-@-ms-keyframes colorAnimate{
-  0% {opacity: 1;}
-  50% {opacity: 0.6;}
-  100% {opacity: 1;}
-}
-
-@-moz-keyframes colorAnimate{
-  0% {opacity: 1;}
-  50% {opacity: 0.6;}
-  100% {opacity: 1;}
-}
-
-@-o-keyframes colorAnimate {
-  0% {opacity: 1;}
-  50% {opacity: 0.6;}
-  100% {opacity: 1;}
-}
-
-@-webkit-keyframes colorAnimate
-{
-  0% {opacity: 1;}
-  50% {opacity: 0.6;}
-  100% {opacity: 1;}
-}
-
-@keyframes colorAnimate
-{
-  0% {opacity: 1;}
-  50% {opacity: 0.6;}
-  100% {opacity: 1;}
-}
 .modal-backdrop {background: #f7f7f7;}
 .modal-content {background: #EBECEE; border: 0;}
 .modal-header {
@@ -308,15 +272,26 @@ body.modal-open .canvas{
   font-weight: bold;
   color: rgb(139,94,60);
 }
-ul.userlist > li {
+ul.userlist >div > li {
   margin-top: 0;
 }
 
-ul.userlist > li > div > a > img {
- max-width: 35px;
+ul.userlist >div > li > a > img {
+ max-width: 55px;
  height: auto;
 }
 
+#pickedIcon > img {
+  max-width: 80px;  
+}
+.pickme > img {
+  cursor: pointer;
+  max-width: 75px;
+  border: 3px solid transparent;
+}
+.pickme:hover > img {
+  border: 3px solid #48CFAD;
+}
 .value-text {
   color: rgb(240, 73,50);
   line-height: 25px;
@@ -406,27 +381,16 @@ ul.userlist > li > div > a > img {
 }
 
 hr.subtle-divider {
-  background-color: #213c44;
+  background-color: #d9d9d9;
   border: 0;
-  border-top: 1px solid #213c44;
-  border-bottom: 1px solid #16282e;
-  color: #213c44;
+  background-color: #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #fbfbfb;
+  color: #d9d9d9;
   position: relative;
   display: block;
   box-sizing: border-box;
   height: 2px;
-}
-hr.subtle-divider.hr-white {
-  background-color: #d9d9d9;
-  border-top: 1px solid #d9d9d9;
-  border-bottom: 1px solid #fbfbfb;
-  color: #d9d9d9;
-}
-.white-stone hr.subtle-divider {
-  background-color: #d9d9d9;
-  border-top: 1px solid #d9d9d9;
-  border-bottom: 1px solid #fbfbfb;
-  color: #d9d9d9;
 }
 .challenge, .friends{
   margin-top: 24px;
@@ -437,6 +401,10 @@ hr.subtle-divider.hr-white {
   position: relative;
   padding: 15px;
   border: 2px solid #213c44;
+  -webkit-transition: box-shadow .8s ease-out;
+  -moz-transition: box-shadow .8s ease-out;
+  -ms-transition: box-shadow .8s ease-out;
+  -o-transition: box-shadow .8s ease-out;
   transition: box-shadow .8s ease-out;
 }
 .challenge .card .badge:first-child {
@@ -477,6 +445,20 @@ hr.subtle-divider.hr-white {
   border-bottom: 1px solid rgb(245,245,245);
   color: rgb(235,235,235);
 }
+.valueChall {
+  margin: 0 5px;
+}
+#leadTab>li>a {
+  font-weight: bolder;
+  font-size: 1.2em;
+  font-variant: small-caps;
+}
+#leadTab>li>a>img {
+max-height: 30px;
+float: left;
+margin-top: -8px;
+}
+
 #streams .list-group-item {
   border: 0;
   border-radius: 0;
@@ -485,13 +467,17 @@ hr.subtle-divider.hr-white {
 
 #streams li {
   padding: 0 5px;
-  border-bottom: 1px solid #FFF;
-  color: #373F32;
+  border-bottom: 1px solid #696969;
+  color: #F0F0F0;
   margin: 0 15px 0 0;
 }
 #streams li a {
-  color: #ECB045;
-  transition:color 220ms ease-in-out;
+  color: #6DEC45;
+  -webkit-transition: color 220ms ease-in-out;
+  -moz-transition: color 220ms ease-in-out;
+  -ms-transition: color 220ms ease-in-out;
+  -o-transition: color 220ms ease-in-out;
+  transition: color 220ms ease-in-out;
 }
 #streams li a:hover,
 #streams li a:active {
@@ -511,6 +497,9 @@ hr.subtle-divider.hr-white {
   position: absolute;
   right: 0;
   color: rgb(211, 205, 205);
+}
+.label a,.label a:hover {
+  color: #fff;
 }
 .friends .boxy {
   cursor: pointer;
@@ -577,8 +566,6 @@ hr.subtle-divider.hr-white {
   zoom: 1.23;
   border: 1px solid rgb(21,34,35);
 }
-
-
 .vh-center {  
   position: relative;
   text-align: center;
@@ -719,6 +706,12 @@ hr.subtle-divider.hr-white {
 #user_header .loaderProgress {
   margin-top: .5em;
   margin-bottom: .5em;
+
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
 }
 #user_header h2 a {
 
@@ -745,6 +738,13 @@ hr.subtle-divider.hr-white {
 .xp {
   font-weight: bold;
 }
+.loaderProgress > .xp {
+  position: absolute;
+  top: 13px;
+  right: 5px;
+  color: rgb(140, 143, 145);
+  text-shadow: 0 1px 0 white;
+}
 h2 > #scorebox  {
   margin: 0;
 }
@@ -755,7 +755,7 @@ h2 > #scorebox .level {
 /* CONTAINER */
 /* line 158, ../../sass/style.scss */
 .loaderProgress {
-  height: 2px;
+  height: auto;
   background: #808080;
   background: -webkit-gradient(linear, 0 0, 0 100%, from(#666666), to(gray));
   background: -webkit-linear-gradient(#666666, gray);
@@ -775,23 +775,25 @@ h2 > #scorebox .level {
 .tinyProgress {
   position: relative;
   width: 100%;
-  height: 2px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
+  height: 8px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-transition: width .8s ease;
+  -moz-transition: width .8s ease;
+  -ms-transition: width .8s ease;
+  -o-transition: width .8s ease;
   transition: width .8s ease;
-  /* css transition applied to width */
 }
 
 /* SPHERE */
 /* line 187, ../../sass/style.scss */
 .tinyProgress:after {
-  content: '';
   position: absolute;
-  right: -2px;
-  top: -4px;
-  height: 10px;
-  width: 10px;
+  right: 3px;
+  top: 1.5px;
+  height: 5px;
+  width: 5px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -805,17 +807,18 @@ h2 > #scorebox .level {
   background: -moz-linear-gradient(#0080ff, #0099ff);
   background: -o-linear-gradient(#0080ff, #0099ff);
   background: linear-gradient(#0080ff, #0099ff);
-  -webkit-box-shadow: 0 0 20px #0080ff;
-  -moz-box-shadow: 0 0 20px #0080ff;
-  box-shadow: 0 0 20px #0080ff;
+  -webkit-box-shadow: 0 0 5px #1C87F1;
+  -moz-box-shadow: 0 0 5px #1C87F1;
+  box-shadow: 0 0 5px #1C87F1;
+  border: 1px solid rgba(255, 255, 255, 0.54);
 }
 
 /* line 211, ../../sass/style.scss */
 .tinyBlue:after {
-  background: #3cf;
-  -webkit-box-shadow: 0 0 20px #0080ff;
-  -moz-box-shadow: 0 0 20px #0080ff;
-  box-shadow: 0 0 20px #0080ff;
+  background: #82D4CB;
+  -webkit-box-shadow: 0 0px 1px #2A3D4D;
+  -moz-box-shadow: 0 0px 1px #2A3D4D;
+  box-shadow: 0 0px 1px #2A3D4D;
 }
 
 /* line 218, ../../sass/style.scss */
@@ -826,17 +829,18 @@ h2 > #scorebox .level {
   background: -moz-linear-gradient(#bfff00, #99ff00);
   background: -o-linear-gradient(#bfff00, #99ff00);
   background: linear-gradient(#bfff00, #99ff00);
-  -webkit-box-shadow: 0 0 20px #bfff00;
-  -moz-box-shadow: 0 0 20px #bfff00;
-  box-shadow: 0 0 20px #bfff00;
+  -webkit-box-shadow: 0 0 5px #bfff00;
+  -moz-box-shadow: 0 0 5px #bfff00;
+  box-shadow: 0 0 5px #bfff00;
+  border: 1px solid rgba(255, 255, 255, 0.54);
 }
 
 /* line 230, ../../sass/style.scss */
 .tinyGreen:after {
   background: #bfff00;
-  -webkit-box-shadow: 0 0 20px #bfff00;
-  -moz-box-shadow: 0 0 20px #bfff00;
-  box-shadow: 0 0 20px #bfff00;
+  -webkit-box-shadow: 0 0 1px #bfff00;
+  -moz-box-shadow: 0 0 1px #bfff00;
+  box-shadow: 0 0 1px #bfff00;
 }
 
 /* line 237, ../../sass/style.scss */
@@ -847,17 +851,18 @@ h2 > #scorebox .level {
   background: -moz-linear-gradient(indianred, indianred);
   background: -o-linear-gradient(indianred, indianred);
   background: linear-gradient(#cd5c5c, #cd5c5c);
-  -webkit-box-shadow: 0 0 20px #cd5c5c;
-  -moz-box-shadow: 0 0 20px #cd5c5c;
-  box-shadow: 0 0 20px indianred;
+  -webkit-box-shadow: 0 0 5px #cd5c5c;
+  -moz-box-shadow: 0 0 5px #cd5c5c;
+  box-shadow: 0 0 5px indianred;
+  border: 1px solid rgba(255, 255, 255, 0.54);
 }
 
 /* line 249, ../../sass/style.scss */
 .tinyRed:after {
   background: #cd5c5c;
-  -webkit-box-shadow: 0 0 20px #cd5c5c;
-  -moz-box-shadow: 0 0 20px #cd5c5c;
-  box-shadow: 0 0 20px indianred;
+  -webkit-box-shadow: 0 0 1px #cd5c5c;
+  -moz-box-shadow: 0 0 1px #cd5c5c;
+  box-shadow: 0 0 1px indianred;
 }
 
 /* line 256, ../../sass/style.scss */
@@ -868,32 +873,23 @@ h2 > #scorebox .level {
   background: -moz-linear-gradient(#cd00cd, #cc00cc);
   background: -o-linear-gradient(#cd00cd, #cc00cc);
   background: linear-gradient(#cd00cd, #cc00cc);
-  box-shadow: 0 0 20px #cd00cd;
+  box-shadow: 0 0 5px #cd00cd;
+  border: 1px solid rgba(255, 255, 255, 0.54);
 }
 
 /* line 266, ../../sass/style.scss */
 .tinyPurple:after {
   background: #cd00cd;
-  -webkit-box-shadow: 0 0 20px #cd00cd;
-  -moz-box-shadow: 0 0 20px #cd00cd;
-  box-shadow: 0 0 20px #cd00cd;
+  -webkit-box-shadow: 0 0 1px #cd00cd;
+  -moz-box-shadow: 0 0 1px #cd00cd;
+  box-shadow: 0 0 1px #cd00cd;
 }
-
-/*
- * Off Canvas
- * --------------------------------------------------
- */
- /* line 278, ../../sass/style.scss */
-/*  #headNav {
- margin-bottom: 0px;
- border-bottom: 4px solid #474645;
- background-color: rgb(41, 105, 105);
-} */
 #headNav {
-  /*background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA6CAIAAAD+yqSwAAAAWUlEQVQYV3WNsQ2AQAwDz+6YgpL6pd+C8aFnFFMQQC9EFcu6c9xa89RXH9vuIIs4yIAFRhgwyJC6YydRLk71Ki+hcnn6bl1/5NyZP76ysMLLSw8zdLn8vswnKTUVpl2iSXQAAAAASUVORK5CIIA=');*/
-  background: url('../img/head_bg.jpg');
-  height: 58px;
+  /*background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA6CAIAAAD+yqSwAAAAWUlEQVQYV3WNsQ2AQAwDz+6YgpL6pd+C8aFnFFMQQC9EFcu6c9xa89RXH9vuIIs4yIAFRhgwyJC6YydRLk71Ki+hcnn6bl1/5NyZP76ysMLLSw8zdLn8vswnKTUVpl2iSXQAAAAASUVORK5CIIA=') bottom;*/
+  background: url('data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABkAAD/4QMraHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkM1NkU0RDlCQkIyMjExRTNBMjM3QUE0OUM1NDc4OUM3IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkM1NkU0RDlDQkIyMjExRTNBMjM3QUE0OUM1NDc4OUM3Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QzU2RTREOTlCQjIyMTFFM0EyMzdBQTQ5QzU0Nzg5QzciIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QzU2RTREOUFCQjIyMTFFM0EyMzdBQTQ5QzU0Nzg5QzciLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7/7gAOQWRvYmUAZMAAAAAB/9sAhAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAgICAgICAgICAgIDAwMDAwMDAwMDAQEBAQEBAQIBAQICAgECAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwP/wAARCAA6AAEDAREAAhEBAxEB/8QAdQABAAMAAAAAAAAAAAAAAAAABAYICgEBAAIDAQAAAAAAAAAAAAAAAgMFAQQHCBAAAQEDDAMAAAAAAAAAAAAAAAFhkRLwEVGBoQJSE1QFBhaW1pgRAAECAwkBAAAAAAAAAAAAAAABEfASA0Fh0pMEVJQFFdP/2gAMAwEAAhEDEQA/AM2fcN20fFvBeE+vnffH6na6bKp4Tz76XabvWZ9b6EdLGU0REC4UsEyQ4JhGWjHEkWkcwuBKElWNlC6iJmoJiMRCy69BtcYdS1vyuU/MLngn/9k=') top;
+  height: auto;
   background-repeat: repeat-x;
+  margin-bottom: 0;
   border: none;
   border-color: transparent;
 }
@@ -948,22 +944,12 @@ h2 > #scorebox .level {
   padding: 0;
 }
 .canvas > .container {
-  /*background: rgba(38, 44, 45, 0.56);
-  box-shadow: 0 0 5px 2px rgba(29, 34, 25, 0.23);*/
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 2px 5px 0 rgba(226, 226, 226, 0.96);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 2px 0 rgba(139, 139, 139, 1);
   border-radius: 5px;
 }
 .datetimepicker {
   color: #FAFAFA;
-}
-.navbar-brand > img {
-  max-width: 35px;
-}
-
-.navbar a.identicon {
-  padding: 10px 0 0;
-  margin: 0;
 }
 ul.nav.navbar-nav.navbar-right > a > canvas {
   background: #F1F1F1;
@@ -982,21 +968,46 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 }
 
 /* line 283, ../../sass/style.scss */
-.navbar-toggle.lefty {
+.lefty {
   float: left;
   margin-left: 15px;
+}
+.righty {
+  float: right;
+  margin-right: 1%;
+  color: white;
+  margin-top: -3.2em;
+  cursor: pointer;
+}
+
+.righty.navbar-text {
+  color: #fafafa;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
   background-color: #50677a;
   color: #FFF;
 }
 /* line 288, ../../sass/style.scss */
-.navmenu {
-  z-index: 1;
+.liveFeed {
+  z-index: 5;
   padding-top: 65px;
+  margin-right: -206px;
+  background: url('../img/px_bg.png') repeat;
+  -webkit-transition: margin .22s ease-in; 
+  -moz-transition: margin .22s ease-in;
+  -ms-transition: margin .22s ease-in;
+  -o-transition: margin .22s ease-in;
+  transition: margin .22s ease-in;
 }
+  .liveFeed.sticked, .liveFeed.active {
+    margin-right: 0 !important;
+  }
 .navbar-brand {
   padding: 5px;
+}
+.navbar-brand img {
+  max-width: 95px;
+  height: auto;
 }
 .navbar-default .navbar-nav>li>a,.navbar-default .navbar-nav>li>a:hover  {
   color: #f7f7f7;
@@ -1014,6 +1025,14 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 }
 
 @media (max-width: 767px) {
+
+  .c-center {
+    margin: 0;
+  }
+  .c-center-x {
+    overflow-x: hidden;
+  }
+
 
   .navbar-nav {
   margin: 0 -15px;
@@ -1059,9 +1078,9 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 
 }
 hr {
- height: 1px;
- border: 0;
-  background: #6A6A6A;
+  height: 1px;
+  border: 0;
+  background: #D8D8D8;
 }
 
 @media (min-width: 0) {
@@ -1408,6 +1427,220 @@ input.gStyle:focus {
 .hover-me.x9:hover {border: 1px dotted rgba(0, 0, 0, 0.7);}
 
 .challenge-card {
-  border: 1.8px dashed rgba(0, 0, 0, 0); border-radius: 0;
+  border-radius: 0;min-height: 250px;
+  -webkit-transition: all .22s ease;
+  -moz-transition: all .22s ease;
+  -ms-transition: all .22s ease;
+  -o-transition: all .22s ease;
+  transition: all .22s ease;
+  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0);
+  -moz-transform: translateY(0);
+  -webkit-transform: translateY(0);
+  -o-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
 }
-.hover-me.challenge-card:hover{border: 1.8px dashed rgba(249, 249, 249, 0.7); border-radius: 5px;}
+.challenge-card > div{
+  border: 1px solid transparent;
+  min-height: 250px;
+}
+.hover-me.challenge-card:hover > div{
+  border-radius: 5px;
+  -webkit-box-shadow: 0 2px 2px rgba(197, 197, 197, 0.69);
+  box-shadow: 0 2px 2px rgba(197, 197, 197, 0.69);
+  -moz-transform: translateY(-2px);
+  -webkit-transform: translateY(-2px);
+  -o-transform: translateY(-2px);
+  -ms-transform: translateY(-2px);
+  transform: translateY(-2px);
+}
+.hover-me.challenge-card.active > div{
+  border-radius: 5px;
+  border-color: #274B55;
+
+}
+
+.hover-me.challenge-card.active > div > a,.hover-me.challenge-card > div > a,.hover-me.challenge-card:hover > div > a{
+  color: inherit;
+}
+
+/* LOL SPRITES */
+
+.lol-p-icon0,.lol-p-icon1,.lol-p-icon10,.lol-p-icon11,.lol-p-icon12,.lol-p-icon13,.lol-p-icon14,.lol-p-icon15,.lol-p-icon16,.lol-p-icon17,.lol-p-icon18,.lol-p-icon19,.lol-p-icon2,.lol-p-icon20,.lol-p-icon21,.lol-p-icon22,.lol-p-icon23,.lol-p-icon24,.lol-p-icon25,.lol-p-icon26,.lol-p-icon27,.lol-p-icon28,.lol-p-icon3,.lol-p-icon4,.lol-p-icon5,.lol-p-icon501,.lol-p-icon502,.lol-p-icon503,.lol-p-icon504,.lol-p-icon505,.lol-p-icon506,.lol-p-icon507,.lol-p-icon508,.lol-p-icon509,.lol-p-icon510,.lol-p-icon511,.lol-p-icon512,.lol-p-icon513,.lol-p-icon514,.lol-p-icon515,.lol-p-icon516,.lol-p-icon517,.lol-p-icon518,.lol-p-icon519,.lol-p-icon520,.lol-p-icon521,.lol-p-icon522,.lol-p-icon523,.lol-p-icon524,.lol-p-icon525,.lol-p-icon526,.lol-p-icon527,.lol-p-icon528,.lol-p-icon529,.lol-p-icon530,.lol-p-icon531,.lol-p-icon532,.lol-p-icon533,.lol-p-icon534,.lol-p-icon535,.lol-p-icon536,.lol-p-icon537,.lol-p-icon538,.lol-p-icon539,.lol-p-icon540,.lol-p-icon541,.lol-p-icon542,.lol-p-icon543,.lol-p-icon544,.lol-p-icon545,.lol-p-icon546,.lol-p-icon547,.lol-p-icon548,.lol-p-icon549,.lol-p-icon550,.lol-p-icon551,.lol-p-icon552,.lol-p-icon553,.lol-p-icon554,.lol-p-icon555,.lol-p-icon556,.lol-p-icon557,.lol-p-icon558,.lol-p-icon559,.lol-p-icon560,.lol-p-icon561,.lol-p-icon562,.lol-p-icon563,.lol-p-icon564,.lol-p-icon565,.lol-p-icon566,.lol-p-icon567,.lol-p-icon568,.lol-p-icon569,.lol-p-icon570,.lol-p-icon571,.lol-p-icon572,.lol-p-icon573,.lol-p-icon574,.lol-p-icon575,.lol-p-icon576,.lol-p-icon577,.lol-p-icon578,.lol-p-icon579,.lol-p-icon580,.lol-p-icon581,.lol-p-icon582,.lol-p-icon583,.lol-p-icon584,.lol-p-icon585,.lol-p-icon586,.lol-p-icon587,.lol-p-icon588,.lol-p-icon589,.lol-p-icon590,.lol-p-icon591,.lol-p-icon592,.lol-p-icon593,.lol-p-icon594,.lol-p-icon595,.lol-p-icon596,.lol-p-icon597,.lol-p-icon598,.lol-p-icon599,.lol-p-icon6,.lol-p-icon600,.lol-p-icon601,.lol-p-icon602,.lol-p-icon603,.lol-p-icon604,.lol-p-icon605,.lol-p-icon606,.lol-p-icon607,.lol-p-icon608,.lol-p-icon609,.lol-p-icon610,.lol-p-icon611,.lol-p-icon612,.lol-p-icon613,.lol-p-icon614,.lol-p-icon615,.lol-p-icon616,.lol-p-icon617,.lol-p-icon618,.lol-p-icon619,.lol-p-icon620,.lol-p-icon621,.lol-p-icon622,.lol-p-icon623,.lol-p-icon624,.lol-p-icon625,.lol-p-icon626,.lol-p-icon627,.lol-p-icon628,.lol-p-icon629,.lol-p-icon630,.lol-p-icon631,.lol-p-icon632,.lol-p-icon633,.lol-p-icon634,.lol-p-icon635,.lol-p-icon636,.lol-p-icon637,.lol-p-icon638,.lol-p-icon639,.lol-p-icon640,.lol-p-icon641,.lol-p-icon642,.lol-p-icon7,.lol-p-icon8,.lol-p-icon9 {
+  display: block; background: url('../img/assets_lol/icons/profileicon0.png') no-repeat;
+  /*basic */
+  width: 48px;
+  height: 48px;
+}
+.lol-p-icon0 {background-position:-0px -0px;}
+.lol-p-icon1 {background-position:-48px -0px;}
+.lol-p-icon10 {background-position:-96px -0px;}
+.lol-p-icon11 {background-position:-144px -0px;}
+.lol-p-icon12 {background-position:-192px -0px;}
+.lol-p-icon13 {background-position:-240px -0px;}
+.lol-p-icon14 {background-position:-288px -0px;}
+.lol-p-icon15 {background-position:-336px -0px;}
+.lol-p-icon16 {background-position:-384px -0px;}
+.lol-p-icon17 {background-position:-432px -0px;}
+.lol-p-icon18 {background-position:-0px -48px;}
+.lol-p-icon19 {background-position:-48px -48px;}
+.lol-p-icon2 {background-position:-96px -48px;}
+.lol-p-icon20 {background-position:-144px -48px;}
+.lol-p-icon21 {background-position:-192px -48px;}
+.lol-p-icon22 {background-position:-240px -48px;}
+.lol-p-icon23 {background-position:-288px -48px;}
+.lol-p-icon24 {background-position:-336px -48px;}
+.lol-p-icon25 {background-position:-384px -48px;}
+.lol-p-icon26 {background-position:-432px -48px;}
+.lol-p-icon27 {background-position:-0px -96px;}
+.lol-p-icon28 {background-position:-48px -96px;}
+.lol-p-icon3 {background-position:-144px -96px;}
+.lol-p-icon4 {background-position:-192px -144px;}
+.lol-p-icon5 {background-position:-384px -144px;}
+.lol-p-icon501 {background-position:-432px -144px;}
+.lol-p-icon502 {background-position:-0px -192px;}
+.lol-p-icon503 {background-position:-48px -192px;}
+.lol-p-icon504 {background-position:-96px -192px;}
+.lol-p-icon505 {background-position:-144px -192px;}
+.lol-p-icon506 {background-position:-192px -192px;}
+.lol-p-icon507 {background-position:-240px -192px;}
+.lol-p-icon508 {background-position:-288px -192px;}
+.lol-p-icon509 {background-position:-336px -192px;}
+.lol-p-icon510 {background-position:-384px -192px;}
+.lol-p-icon511 {background-position:-432px -192px;}
+.lol-p-icon512 {background-position:-0px -240px;}
+.lol-p-icon513 {background-position:-48px -240px;}
+.lol-p-icon514 {background-position:-96px -240px;}
+.lol-p-icon515 {background-position:-144px -240px;}
+.lol-p-icon516 {background-position:-192px -240px;}
+.lol-p-icon517 {background-position:-240px -240px;}
+.lol-p-icon518 {background-position:-288px -240px;}
+.lol-p-icon519 {background-position:-336px -240px;}
+.lol-p-icon520 {background-position:-384px -240px;}
+.lol-p-icon521 {background-position:-432px -240px;}
+.lol-p-icon522 {background-position:-0px -288px;}
+.lol-p-icon523 {background-position:-48px -288px;}
+.lol-p-icon524 {background-position:-96px -288px;}
+.lol-p-icon525 {background-position:-144px -288px;}
+.lol-p-icon526 {background-position:-192px -288px;}
+.lol-p-icon527 {background-position:-240px -288px;}
+.lol-p-icon528 {background-position:-288px -288px;}
+.lol-p-icon529 {background-position:-336px -288px;}
+.lol-p-icon530 {background-position:-384px -288px;}
+.lol-p-icon531 {background-position:-432px -288px;}
+.lol-p-icon532 {background-position:-0px -336px;}
+.lol-p-icon533 {background-position:-48px -336px;}
+.lol-p-icon534 {background-position:-96px -336px;}
+.lol-p-icon535 {background-position:-144px -336px;}
+.lol-p-icon536 {background-position:-192px -336px;}
+.lol-p-icon537 {background-position:-240px -336px;}
+.lol-p-icon538 {background-position:-288px -336px;}
+.lol-p-icon539 {background-position:-336px -336px;}
+.lol-p-icon540 {background-position:-384px -336px;}
+.lol-p-icon541 {background-position:-432px -336px;}
+.lol-p-icon542 {background-position:-0px -384px;}
+.lol-p-icon543 {background-position:-48px -384px;}
+.lol-p-icon544 {background-position:-96px -384px;}
+.lol-p-icon545 {background-position:-144px -384px;}
+.lol-p-icon546 {background-position:-192px -384px;}
+.lol-p-icon547 {background-position:-240px -384px;}
+.lol-p-icon548 {background-position:-288px -384px;}
+.lol-p-icon549 {background-position:-336px -384px;}
+.lol-p-icon550 {background-position:-384px -384px;}
+.lol-p-icon551 {background-position:-432px -384px;}
+.lol-p-icon552 {background-position:-0px -432px;}
+.lol-p-icon553 {background-position:-48px -432px;}
+.lol-p-icon554 {background-position:-96px -432px;}
+.lol-p-icon555 {background-position:-144px -432px;}
+.lol-p-icon556 {background-position:-192px -432px;}
+.lol-p-icon557 {background-position:-240px -432px;}
+.lol-p-icon558 {background-position:-288px -432px;}
+.lol-p-icon559 {background-position:-336px -432px;}
+.lol-p-icon560 {background-position:-384px -432px;}
+.lol-p-icon561 {background-position:-432px -432px;}
+.lol-p-icon562 {background-position:-0px -480px;}
+.lol-p-icon563 {background-position:-48px -480px;}
+.lol-p-icon564 {background-position:-96px -480px;}
+.lol-p-icon565 {background-position:-144px -480px;}
+.lol-p-icon566 {background-position:-192px -480px;}
+.lol-p-icon567 {background-position:-240px -480px;}
+.lol-p-icon568 {background-position:-288px -480px;}
+.lol-p-icon569 {background-position:-336px -480px;}
+.lol-p-icon570 {background-position:-384px -480px;}
+.lol-p-icon571 {background-position:-432px -480px;}
+.lol-p-icon572 {background-position:-0px -528px;}
+.lol-p-icon573 {background-position:-48px -528px;}
+.lol-p-icon574 {background-position:-96px -528px;}
+.lol-p-icon575 {background-position:-336px -528px;}
+.lol-p-icon576 {background-position:-384px -528px;}
+.lol-p-icon577 {background-position:-432px -528px;}
+.lol-p-icon578 {background-position:-0px -576px;}
+.lol-p-icon579 {background-position:-48px -576px;}
+.lol-p-icon580 {background-position:-96px -576px;}
+.lol-p-icon581 {background-position:-144px -576px;}
+.lol-p-icon582 {background-position:-192px -576px;}
+.lol-p-icon583 {background-position:-240px -576px;}
+.lol-p-icon584 {background-position:-288px -576px;}
+.lol-p-icon585 {background-position:-336px -576px;}
+.lol-p-icon586 {background-position:-384px -576px;}
+.lol-p-icon587 {background-position:-432px -576px;}
+.lol-p-icon588 {background-position:-0px -624px;}
+.lol-p-icon589 {background-position:-48px -624px;}
+.lol-p-icon590 {background-position:-96px -624px;}
+.lol-p-icon591 {background-position:-144px -624px;}
+.lol-p-icon592 {background-position:-192px -624px;}
+.lol-p-icon593 {background-position:-240px -624px;}
+.lol-p-icon594 {background-position:-288px -624px;}
+.lol-p-icon595 {background-position:-336px -624px;}
+.lol-p-icon596 {background-position:-384px -624px;}
+.lol-p-icon597 {background-position:-432px -624px;}
+.lol-p-icon598 {background-position:-0px -672px;}
+.lol-p-icon599 {background-position:-48px -672px;}
+.lol-p-icon6 {background-position:-144px -528px;}
+.lol-p-icon600 {background-position:-96px -672px;}
+.lol-p-icon601 {background-position:-144px -672px;}
+.lol-p-icon602 {background-position:-192px -672px;}
+.lol-p-icon603 {background-position:-240px -672px;}
+.lol-p-icon604 {background-position:-288px -672px;}
+.lol-p-icon605 {background-position:-336px -672px;}
+.lol-p-icon606 {background-position:-384px -672px;}
+.lol-p-icon607 {background-position:-432px -672px;}
+.lol-p-icon608 {background-position:-0px -720px;}
+.lol-p-icon609 {background-position:-48px -720px;}
+.lol-p-icon610 {background-position:-96px -720px;}
+.lol-p-icon611 {background-position:-144px -720px;}
+.lol-p-icon612 {background-position:-192px -720px;}
+.lol-p-icon613 {background-position:-240px -720px;}
+.lol-p-icon614 {background-position:-288px -720px;}
+.lol-p-icon615 {background-position:-336px -720px;}
+.lol-p-icon616 {background-position:-384px -720px;}
+.lol-p-icon617 {background-position:-432px -720px;}
+.lol-p-icon618 {background-position:-0px -768px;}
+.lol-p-icon619 {background-position:-48px -768px;}
+.lol-p-icon620 {background-position:-96px -768px;}
+.lol-p-icon621 {background-position:-144px -768px;}
+.lol-p-icon622 {background-position:-192px -768px;}
+.lol-p-icon623 {background-position:-240px -768px;}
+.lol-p-icon624 {background-position:-288px -768px;}
+.lol-p-icon625 {background-position:-336px -768px;}
+.lol-p-icon626 {background-position:-384px -768px;}
+.lol-p-icon627 {background-position:-432px -768px;}
+.lol-p-icon628 {background-position:-0px -816px;}
+.lol-p-icon629 {background-position:-48px -816px;}
+.lol-p-icon630 {background-position:-96px -816px;}
+.lol-p-icon631 {background-position:-144px -816px;}
+.lol-p-icon632 {background-position:-192px -816px;}
+.lol-p-icon633 {background-position:-240px -816px;}
+.lol-p-icon634 {background-position:-288px -816px;}
+.lol-p-icon635 {background-position:-336px -816px;}
+.lol-p-icon636 {background-position:-384px -816px;}
+.lol-p-icon637 {background-position:-432px -816px;}
+.lol-p-icon638 {background-position:-0px -864px;}
+.lol-p-icon639 {background-position:-48px -864px;}
+.lol-p-icon640 {background-position:-96px -864px;}
+.lol-p-icon641 {background-position:-144px -864px;}
+.lol-p-icon642 {background-position:-192px -864px;}
+.lol-p-icon7 {background-position:-192px -528px;}
+.lol-p-icon8 {background-position:-240px -528px;}
+.lol-p-icon9 {background-position:-288px -528px;}

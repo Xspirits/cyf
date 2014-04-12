@@ -1,12 +1,34 @@
 <!doctype html>
 <html>
 <head>
-	<meta property="og:title" content="<%= currentUser.local.pseudo %>, challenger level <%= currentUser.level %>" />
-	<meta property="og:type" content="profile:<%= currentUser.local.idCool %>" />
-	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
-	<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" />
 	<% include statics/headers %>
-	<title></title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta name="description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s).<%= currentUser.twitter.username ? 'twitter @'+currentUser.twitter.username :'' %> ">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="profile:<%= currentUser.local.idCool %>"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com/u/<%= currentUser.idCool %>">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="<%= currentUser.icon %>.png">
+    <meta property="og:image:width" content="200">
+    <meta property="og:title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta property="og:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="<%= currentUser.icon %>.png">
+    <meta name="twitter:image:width" content="200">
+    <meta name="twitter:title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta name="twitter:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
+    <!-- Twitter card end -->
+	<title>This is your profile, <%= currentUser.local.pseudo %> - Challenge your Friends</title>
 	<link rel="stylesheet" href="./css/timeline.css">
 
 </head>
@@ -15,19 +37,16 @@
 	<% include statics/navTop %>
 	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
 
-	<div class="canvas">
+	<div class="canvas c-center-x">
 		
 		<div class="container">
 			<div class="row">
 				<div id="user_header" class="col-lg-8">
-					<div class="">
 						<div class="row">
-							<div class="col-lg-2" href="#">
-								<span class="navbar-text animated rotateIn">
+							<div class="col-lg-2 col-xs-2 animated fadeInDown" href="#">
 									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
-								</span>
 							</div>
-							<h2 class="col-lg-10 animated bounceInUp">
+							<h2 class="col-lg-10 animated fadeInDown">
 								<%= currentUser.local.pseudo %> 
 
 								<span id="scorebox">
@@ -39,37 +58,31 @@
 								</span>
 								<small> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
 							</h2>
-							<div class="col-lg-12">
-								<div class="row">
-									<div class="col-lg-2">
-										<div class="xp text-center">
-											<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
-										</div>
-									</div>
-									<div class="col-lg-10">
-										<div class="loaderProgress animated flipInY">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<div class="loaderProgress animated fadeInDown">
 											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-										</div>
-									</div>
 
-								</div>
+											<div class="xp text-center">
+												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+											</div>
+										</div>
 							</div>
 							<div class="col-lg-12">	
 								<strong>Linked accounts: </strong>
 								<% if (currentUser.local.pseudo) { %>
 								<span class="label label-default">CyF</span>
 								<% } %>
-								<% if (currentUser.facebook.name) { %>
+								<% if (currentUser.facebook.token) { %>
 								<span class="label label-primary">Facebook</span>
 								<% } %>
-								<% if (currentUser.google.name) { %>
+								<% if (currentUser.google.token) { %>
 								<span class="label label-danger">Google</span>
 								<% } %>
-								<% if (currentUser.leagueoflegend.idProfile) { %>
+								<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed) { %>
 								<span class="label label-info">League of Legend</span>
 								<% } %>
-								<% if (currentUser.twitter.username) { %>
-								<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+								<% if (currentUser.twitter.token) { %>
+								<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= currentUser.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
 								<% } %>
 								<a href="./settings" title="add an account" class="label label-default">
 									<span class="fa fa-plus"></span>
@@ -95,27 +108,51 @@
 									</tbody>
 								</table>
 							</div>
+
+							<div class="col-md-12 col-lg-12 col-xs-1O col-sm-1O">
+								<div class="panel">
+									<div class="tabbable tabs-left clearfix">
+										<ul id="tabbyTab" class="nav nav-tabs nav-justified">
+											<li class="active"><a href="#xpTab" data-toggle="tab">XP Progression</a></li>
+											<li><a href="#levelTab" data-toggle="tab">Level Progression</a></li>
+											<li><a href="#ranksTab" data-toggle="tab">Ranks Historic</a></li>
+										</ul>
+										<div id="tabby" class="tab-content">
+											<div class="tab-pane active" id="xpTab">
+												<canvas id="historygraph"></canvas>
+											</div>
+											<div class="tab-pane" id="levelTab">
+												<canvas id="levelgraph"></canvas>
+											</div>
+											<div class="tab-pane" id="ranksTab">
+												<canvas id="ranksgraph"></canvas>
+											<div class="text-left">
+												
+											Yesterday's <i class="fa fa-square grapefruit-color "></i>
+											Last Week <i class="fa fa-square sunflower-color"></i>
+											Last Month <i class="fa fa-square aqua-color"></i>
+											</div>
+											</div>
+											<div class="text-right">
+												<small class="timer"></small>
+											</div>	
+										</div
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
+						</div>
 				</div>
-				<div class="col-lg-4  badggies">
+				<div class="col-lg-4 badggies">
 					<h4>My Badges</h4>
 					<section class="badgeList">
 						
-						<% for (var i = 2; i >= 0; i--) { %>
 						<img src="./img/badges/daily_ranked_1.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/daily_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/daily_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/friends_10.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/friends_20.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
 						<img src="./img/badges/friends_30.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_1.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/weekly_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_1.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/monthly_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<% } %>
 					</section>
 				</div>
 			</div>
@@ -124,10 +161,10 @@
 					<% var notif = currentUser.notifications;
 					for (var i = notif.length - 1; i >= 0; i--) {
 						if(notif[i].persist === true) { 
-							var isOdd =  (i % 2) ? 'fadeInLeft' : 'fadeInRight timeline-inverted'
+							var isOdd =  (i % 2) ? '' : 'timeline-inverted'
 							, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
 							%>
-							<li class="animated <%= isOdd %> ">
+							<li class="<%= isOdd %> ">
 								<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
 								<div class="timeline-panel glow-shad ">
 									<div class="timeline-heading">
@@ -150,18 +187,46 @@
 			</div>
 		</div>
 	</div>
+		
 	<% include statics/footers %>
+	<script type="text/javascript" src="../js/chart.min.js"></script>
 	<script type="text/javascript">
-
 		$(function() {
+
+			//$(".graphsTab input[type=checkbox]").bootstrapSwitch();
+
+			function offsetArray (arr,lie,val) {
+				var cL = arr.length;
+				var val = val?val:0;
+				if (lie) {
+					for (var i = cL; i < lie; i++) {
+						arr.push(val)
+					};
+					arr.reverse();
+					// console.log(arr)
+					return arr;
+				} else
+				return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+			}
+			// return an array composed of a list of the days' number from 1 month ago until today, not included.
+			function getAllDays() {
+				var e = moment();
+				var s = moment().subtract('months', 1);
+				var a = [];
+
+				while(s.isBefore(e)) {
+					a.push(s.format("MMM - DD"));
+					s = s.add('days', 1);
+				}
+				return a;
+			}
+
 			$('.badggies img').hover(function(e){
 				$(this).tooltip('show')
 			},function(){
 				$(this).tooltip('hide')
 
 			})
-
-
 			
 			var meNot = false;
 			$('.linked').hover(function(){
@@ -174,8 +239,185 @@
 				_this.children('a').addClass('hidden');
 				_this.children('.meany').removeClass('hidden');
 			});
-		});
+			//pop it
+			timer();
+			setInterval(function(){
+				timer();
+			},60000);
+			//================================================
+			// User Xp Historic graph
+			//================================================
+			//Setup vars
+			var dota2 = []
+			, warcraft4 = []
+			, dailyR = []
+			, weeklyR = []
+			, monthlyR = [];
+			var dataLabels = getAllDays();
 
+			//Load our data
+			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
+			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse()
+			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>').reverse();
+			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>').reverse();
+
+			<% if(currentUser.dailyRank > 0) {%>
+
+				rHistDaily.push({'rank': <%=currentUser.dailyRank %>});
+			<%} %>
+			<% if(currentUser.weeklyRank > 0) {%>
+				rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>});
+			<%} %>
+			<% if(currentUser.monthlyRank > 0) {%>
+				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>});
+			<%} %>
+
+			// position our start at the end of the graph by reversing it.
+			for (var i = 0; i < dataLabels.length; i++) {
+				// Reverse the value of our historic
+				thisOne = historic[i] ? historic[i].xp : 0;
+				thatOne = historic[i] ? historic[i].level : 0;
+				thisdaily = rHistDaily[i] ? (rHistDaily[i].rank == 0 ? false:rHistDaily[i].rank) : false;
+				thisWeekly = rHistWeekly[i] ? (rHistWeekly[i].rank == 0 ? false:rHistWeekly[i].rank) : false;
+				thisMonthly = rHistMonthly[i] ? (rHistMonthly[i].rank == 0 ? false:rHistMonthly[i].rank) : false;
+
+				if(thisOne > 0)
+					dota2.push(thisOne);
+
+				if(thatOne > 0)		
+					warcraft4.push(thatOne);
+
+				if(thisdaily)	
+					dailyR.push(thisdaily);
+
+				if(thisWeekly)	
+					weeklyR.push(thisWeekly);
+
+				if(thisMonthly)	
+					monthlyR.push(thisMonthly);
+			};
+
+			// We need at LEAST 2 values (it's a graph, yep)
+			dota2 = offsetArray(dota2).reverse();
+			warcraft4 = offsetArray(warcraft4).reverse();
+
+			// determine the length (X) we need for our ranking's array
+			var whichLongest=rHistDaily.length>rHistWeekly.length?rHistDaily.length>rHistMonthly.length?rHistDaily:rHistMonthly:rHistWeekly.length>rHistMonthly.length?rHistWeekly:rHistMonthly
+
+			// Put all our ranking graph to the same length
+			dailyR = offsetArray(dailyR,whichLongest.length,9999);
+			weeklyR = offsetArray(weeklyR,whichLongest.length,9999);
+			monthlyR = offsetArray(monthlyR,whichLongest.length,9999);
+			// Now take the labels to the same length (slice or take the last X ones)
+			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
+
+			// =========================
+			//BUILD CHARTS
+			// =========================
+			var spec = []
+			for (var i = 0; i < dataLabels.length; i++) {
+				spec.push(dataLabels[i]+' AM');
+				spec.push(dataLabels[i]+' PM');
+			};
+			var xpLab = dota2.length < spec.length ? spec.slice(spec.length - dota2.length,spec.length) : spec;
+			console.log(xpLab);
+			var dataXp = {
+				labels : xpLab,
+				datasets : [
+					{
+						fillColor : "rgba(16,100,83,0.2)",
+						strokeColor : "rgba(16,100,83,0.6)",
+						pointColor : "rgba(16,100,83,0.8)",
+						pointStrokeColor : "#fff",
+						data : dota2
+					}
+				]
+			}
+			//Level Graph
+			var lvlLab = warcraft4.length < dataLabels.length ? dataLabels.slice(dataLabels.length - warcraft4.length,dataLabels.length) : dataLabels;
+			var optLvl = {
+					scaleOverride : true,
+					scaleSteps : <%- currentUser.level*2 %>,
+					scaleStepWidth : 1,
+					scaleStartValue : 0
+			}
+			var dataLevel = {
+				labels : lvlLab,
+				datasets : [
+					{
+						fillColor : "rgba(159,238,0,0.3)",
+						strokeColor : "rgba(159,238,0,0.6)",
+						pointColor : "rgba(159,238,0,0.8)",
+						pointStrokeColor : "#fff",
+						data : warcraft4
+					}
+				]
+			}
+			//Ranks Graph
+			var optRk = {
+				datasetFill : false,
+				bezierCurve : false
+			}
+			var dataRanks = {
+				labels : rankLab,
+				datasets : [
+					{
+						fillColor : "rgba(237,85,101,0.3)",
+						strokeColor : "rgba(237,85,101,0.6)",
+						pointColor : "rgba(237,85,101,0.8)",
+						pointStrokeColor : "#fff",
+						data : dailyR
+					},
+					{
+						fillColor : "rgba(255,206,84,0.3)",
+						strokeColor : "rgba(255,206,84,0.6)",
+						pointColor : "rgba(255,206,84,0.8)",
+						pointStrokeColor : "#fff",
+						data : weeklyR
+					},
+					{
+						fillColor : "rgba(79,193,233,0.3)",
+						strokeColor : "rgba(79,193,233,0.6)",
+						pointColor : "rgba(79,193,233,0.8)",
+						pointStrokeColor : "#fff",
+						data : monthlyR
+					}
+				]
+			}
+			// Build Canvas
+			var desiredRatio = $("#historygraph").parent().width(); // Used for all graphs
+			var canvasXp = $("#historygraph")[0];
+
+			var ctxXp = canvasXp.getContext("2d");
+
+			canvasXp.setAttribute('width', desiredRatio);
+			canvasXp.setAttribute('height', desiredRatio/2.5);
+
+			var canvasLevel = $("#levelgraph")[0];
+			var ctxLevel = canvasLevel.getContext("2d");
+			canvasLevel.setAttribute('width', desiredRatio);
+			canvasLevel.setAttribute('height', desiredRatio/2.5);
+
+			var canvasRanks = $("#ranksgraph")[0];
+			var ctxRanks = canvasRanks.getContext("2d");
+			canvasRanks.setAttribute('width', desiredRatio);
+			canvasRanks.setAttribute('height', desiredRatio/2.5);
+			//Build charts
+			new Chart(ctxXp).Line(dataXp);
+			new Chart(ctxLevel).Line(dataLevel,optLvl);
+			new Chart(ctxRanks).Line(dataRanks,optRk);
+
+		});
+		var timer = function (){				
+			var d = new Date();
+			var x = d.setHours(12,30,0,0);
+			var x2 = d.setHours(0,1,0,0);
+			d.setHours(0,0,1,0);
+			var converted = moment(d).countdown(new Date(),countdown.HOURS|countdown.MINUTES, NaN, 0).toString();
+			var convertedx = moment(x).countdown(new Date(),countdown.HOURS|countdown.MINUTES, NaN, 0).toString();
+			var convertedx2 = moment(x2).countdown(new Date(),countdown.HOURS|countdown.MINUTES, NaN, 0).toString();
+			$('.timer').html('xp Next update <strong>'+convertedx+'</strong> then <strong>'+convertedx2+'</strong>.<br> Ranks next update: <strong>'+converted+'</strong>');
+		}
 	</script>
 </body>
 </html>

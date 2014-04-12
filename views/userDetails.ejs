@@ -2,7 +2,33 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="<%= user.local.pseudo %>'s profile on challenge your Friends">
+    <meta name="description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %> ">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="profile:<%= user.local.idCool %>"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com/u/<%= user.idCool %>">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="<%= user.icon %>.png">
+    <meta property="og:image:width" content="200">
+    <meta property="og:title" content="<%= user.local.pseudo %>'s profile on challenge your Friends">
+    <meta property="og:description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s) <%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>  ">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="<%= user.icon %>.png">
+    <meta name="twitter:image:width" content="200">
+    <meta name="twitter:title" content="<%= user.local.pseudo %>'s profile on challenge your Friends">
+    <meta name="twitter:description" content="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s) <%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>  ">
+    <!-- Twitter card end -->
+	<title><%= user.local.pseudo %> profile- Challenge your Friends</title>
 </head>
 <body>
 
@@ -13,10 +39,8 @@
 			<div class="row">
 				<div id="user_header" class="col-lg-8">
 						<div class="row">
-							<div class="col-lg-2" href="#">
-								<span class="navbar-text animated rotateIn">
+							<div class="col-lg-2 col-xs-2 animated fadeInUp" href="#">
 									<img src="<%= user.icon %>" class="img-responsive img-rounded">
-								</span>
 							</div>
 							<h2 class="col-lg-10 animated bounceInUp">
 								<%= user.local.pseudo %> 
@@ -53,7 +77,7 @@
 								%>
 								<% if (currentUser._id.toString() === user._id.toString()) { %>
 								<p>
-									<button class="btn btn-punch btn-default disabled" >
+									<button class="ladda-button btn btn-punch btn-default disabled" >
 										<span class="ladda-label">
 											<span class="glyphicon glyphicon-info-sign"></span> It's you!
 										</span>
@@ -62,7 +86,7 @@
 								<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
 
 								<p>
-									<button class="btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
+									<button class="ladda-button btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
 										<span class="ladda-label">
 											<span class="glyphicon glyphicon-time"></span> Pending, see your requests
 										</span>
@@ -101,6 +125,11 @@
 								<% if (user.twitter.username) { %>
 								<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
 								<% } %>
+								<section class="pull-right">
+									<div class="fb-share-button" data-href="http://challenge-friends.herokuapp.com/u/<%= user.idCool %>" data-type="button_count"></div>
+									<div class="g-plus" data-action="share" data-annotation="bubble"></div>
+									<a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
+								</section>
 							</div>
 							<div class="col-lg-12">
 								<h3>Ladders ranking</h3>	
@@ -133,9 +162,7 @@
 
 
 		<script type="text/javascript">
-
-			// Bind normal buttons
-			Ladda.bind( 'button', { timeout: 2000 } );
+			Ladda.bind( '.ladda-button', { timeout: 2000 } );
 			$("#newFriend").click( function(e){
 				e.preventDefault();
 				

@@ -1,6 +1,5 @@
 .timeline {
     list-style: none;
-    padding: 20px 0 20px;
     position: relative;
 }
 
@@ -45,6 +44,7 @@
             float: left;
             border: 1px solid #d4d4d4;
             border-radius: 2px;
+            background: white;
             padding: 20px;
             position: relative;
             -webkit-transition: all .22s ease;

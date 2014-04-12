@@ -45,7 +45,7 @@
       newChallenge.author = user._id;
       newChallenge.save(function(err) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(newChallenge);
       });
@@ -98,7 +98,6 @@
           return done(err);
         }
         chall = doc[0];
-        console.log(chall.author + " <> " + currentUser);
         if (chall.author === currentUser) {
           return chall.remove(done);
         } else {
@@ -116,7 +115,7 @@
     getList: function(done) {
       Challenge.find({}).sort("-value").exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(data);
       });
@@ -133,7 +132,7 @@
         idCool: id
       }).populate("author").exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(data);
       });
@@ -158,7 +157,7 @@
       }).exec(function(err, challenge) {
         var averageDifficulty, averageQuick, averagefun, bonusUpdated, diff, diffiFive, diffiRate, difficultyCoeffs, fun, funCoeffs, funFive, funRate, newDiffiCount, newDiffiSum, newFunCount, newFunSum, newQuickCount, newQuickSum, ponderatedAvgDiff, ponderatedAvgFun, ponderatedAvgQuick, quick, quickFive, quickRate, quicknessCoeffs;
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         diff = challenge.rating.difficulty;
         diffiRate = data.difficulty;
@@ -278,7 +277,7 @@
         challenge.save(function(err, result) {
           var obj, theChallenge, theNote;
           if (err) {
-            throw err;
+            mailer.cLog('Error at ' + __filename, err);
           }
           obj = {
             id: result._id,
@@ -332,7 +331,7 @@
         idCool: id
       }).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(data);
       });
@@ -356,7 +355,7 @@
         ]
       }).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(data);
       });
@@ -373,7 +372,7 @@
         _idChallenger: id
       }).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(data);
       });
@@ -390,7 +389,7 @@
         _idChallenged: id
       }).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(data);
       });
@@ -423,7 +422,7 @@
       oCha.deadLine = moment(data.launchDate).utc().add(query);
       oCha.save(function(err) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(oCha);
       });
@@ -449,7 +448,7 @@
         var passing, testiD, uString;
         passing = chall;
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         testiD = chall._idChallenged._id.toString();
         uString = idUser.toString();
@@ -458,7 +457,7 @@
           chall.accepted = true;
           chall.save(function(err) {
             if (err) {
-              throw err;
+              mailer.cLog('Error at ' + __filename, err);
             }
             return done(passing);
           });
@@ -482,7 +481,7 @@
         _id: idChallenge
       }).exec(function(err, chall) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         console.log(chall._idChallenged + " <> " + idUser);
         console.log(chall._idChallenged.toString() === idUser.toString());
@@ -500,7 +499,7 @@
         _idChallenged: data.idUser
       }).populate("_idChallenge _idChallenged _idChallenger").exec(function(err, ongoing) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         ongoing.waitingConfirm = true;
         ongoing.confirmAsk = new Date;
@@ -509,7 +508,7 @@
         ongoing.confirmComment = (data.confirmComment ? data.confirmComment : "");
         ongoing.save(function(err) {
           if (err) {
-            throw err;
+            mailer.cLog('Error at ' + __filename, err);
           }
           return done(ongoing);
         });
@@ -548,7 +547,7 @@
         idCool: data.oId
       }).populate("_idChallenged _idChallenger _idChallenge").exec(function(err, ongoing) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         ongoing.waitingConfirm = false;
         ongoing.validated = data.pass;
@@ -556,7 +555,7 @@
         ongoing.save(function(err) {
           var completedByArr;
           if (err) {
-            throw err;
+            mailer.cLog('Error at ' + __filename, err);
           }
           completedByArr = [ongoing._idChallenged._id];
           self.completedBy(ongoing._idChallenge._id, completedByArr, function(done) {
@@ -591,10 +590,10 @@
     @return {[type]}        [description]
      */
     sendTribunal: function(data, done) {
-      Ongoing.findById(data.id).exec(function(err, ongoing) {
+      Ongoing.findById(data.id).populate('_idChallenged _idChallenger _idChallenge').exec(function(err, ongoing) {
         var exclude;
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         if (ongoing.tribunal === false) {
           if (data.idUser.toString() === ongoing._idChallenged.toString()) {
@@ -621,9 +620,9 @@
                   ongoing.tribunalVote = judges;
                   ongoing.save(function(err, result) {
                     if (err) {
-                      throw err;
+                      mailer.cLog('Error at ' + __filename, err);
                     }
-                    return done(true);
+                    return done(ongoing);
                   });
                 } else {
                   throw "something went wrong here";
@@ -658,7 +657,7 @@
       }).exec(function(err, cases) {
         var userData;
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         userData = {
           id: cases._id,
@@ -677,7 +676,7 @@
       }).populate("_idChallenged _idChallenger _idChallenge").exec(function(err, cases) {
         var deny, i, judges, validate;
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         deny = 0;
         validate = 0;
@@ -699,7 +698,7 @@
         cases.caseClosedDate = new Date;
         cases.save(function(err) {
           if (err) {
-            throw err;
+            mailer.cLog('Error at ' + __filename, err);
           }
           return done(cases);
         });
@@ -711,7 +710,7 @@
       }).exec(function(err, req) {
         var counter, i, judges;
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         counter = 0;
         judges = req.tribunalVote;

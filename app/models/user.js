@@ -40,6 +40,22 @@
       type: Number,
       "default": 0
     },
+    xpHistoric: [
+      {
+        xp: {
+          type: Number,
+          "default": 0
+        },
+        level: {
+          type: Number,
+          "default": 0
+        },
+        date: {
+          type: Date,
+          "default": Date.now
+        }
+      }
+    ],
     xpNext: {
       type: Number,
       "default": 100
@@ -240,9 +256,18 @@
       }
     },
     leagueoflegend: {
+      confirmed: {
+        type: Boolean,
+        "default": false
+      },
       idProfile: Number,
       name: String,
+      region: String,
       profileIconId: Number,
+      profileIconId_confirm: {
+        type: Number,
+        "default": 0
+      },
       revisionDate: Date,
       summonerLevel: Number,
       lastUpdated: {

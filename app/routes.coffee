@@ -1,27 +1,41 @@
-
 isLoggedIn = (req, res, next) ->
   return next()  if req.isAuthenticated()
   res.redirect "/"
   return
   
-module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img) ->
+module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
+
+  app.get "/about", (req,res) ->
+    res.render "about.ejs",
+      currentUser: if req.isAuthenticated() then req.user else false
 
   # show the home page (will also have our login links)
   app.get "/", (req, res) ->
     if req.isAuthenticated()
-      res.render "index_logged.ejs",
+      res.redirect "/profile"    
+    else
+      res.render 'index.ejs',
+        currentUser: false
+
+  app.get "/discover", (req, res) ->
+    if req.isAuthenticated()
+      res.render "discover.ejs",
         currentUser: req.user
     else
-      res.render "index.ejs",
-        currentUser: false
+      ua = req.header 'user-agent'
+      if /mobile/i.test(ua)
+        res.render 'discover_mobile.ejs',
+          currentUser: false
+      else
+        res.render 'discover.ejs',
+          currentUser: false
 
   app.get "/eval/:hash", (req, res) ->
     hash = req.params.hash
     users.validateEmail hash, (result) ->
-      if result
-        res.redirect "/login"
-      else
-        res.redirect "/"
+      res.redirect "/" if result == false
+      mailer.sendMail result,'[Cyf] Account Confirmed, welcome aboard '+result.local.pseudo+'!','<h2>Your journey is about to begins!</h2><p>Thank you for taking the time to confirm your e-mail address.</p><p>We are proud to count you among the challengers on Cyf dear <strong>'+result.local.pseudo+'</strong>!</p><p>You can now enjoy fully Challenge your Friends, <a href="http://cyf-app.co/users">connect with some challengers</a> now and start <a href="" title="">sending and accepting</a> challenges right away! </p>',false
+      res.redirect "/login"        
 
   # LOGOUT ==============================
   app.get "/logout", isLoggedIn, (req, res) ->
@@ -37,7 +51,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
   # FRIENDS LIST SECTION ======================
   app.get "/friends", isLoggedIn, (req, res) ->
     users.getFriendList req.user._id, (fList) ->
-
       res.render "friendList.ejs",
         currentUser: req.user
         friends: fList.friends
@@ -105,8 +118,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     
     #get Ongoing challenges for the current user
     challenge.userAcceptedChallenge req.user._id, (data) ->
-      cStart = undefined
-      eStart = undefined
       upcomingChall = []
       ongoingChall = []
       endedChall = []
@@ -119,25 +130,25 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         # If yes, mark it as not completed, failed        
         if moment(cEnd).isSame() or moment(cEnd).isBefore()
           console.log moment(cEnd).isSame() or moment(cEnd).isBefore()
-          console.log data[i].idCool
-          challenge.crossedDeadline data[i]._id
-          endedChall.push data[i]
+          console.log data[key].idCool
+          challenge.crossedDeadline data[key]._id
+          endedChall.push data[key]
         
         # Challenge is awaiting validation
         # To determine if its belong to the current user or not will be done client-side.
-        else if data[i].waitingConfirm is true and data[i].progress < 100
-          reqValidation.push data[i]
-          console.log "parsed reqValidation : " + data[i].waitingConfirm
+        else if data[key].waitingConfirm is true and data[key].progress < 100
+          reqValidation.push data[key]
+          console.log "parsed reqValidation : " + data[key].waitingConfirm
         
         # Start hasn't been reached
-        else if not moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[i].progress < 100
-          upcomingChall.push data[i]
-          console.log "parsed upcoming : " + data[i]._id
+        else if not moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+          upcomingChall.push data[key]
+          console.log "parsed upcoming : " + data[key]._id
         
         # Start has been reached but not end
-        else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[i].progress < 100
-          ongoingChall.push data[i]
-          console.log "parsed ongoing : " + data[i]._id
+        else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+          ongoingChall.push data[key]
+          console.log "parsed ongoing : " + data[key]._id
 
       res.render "ongoing.ejs",
         currentUser: req.user
@@ -207,7 +218,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
           
           #automaticall share on Twitter if allowed
           if done._idChallenged.share.twitter is true and done._idChallenged.twitter.token
-            twitt = "I just completed a challenge (http://goo.gl/gskvYu) on League of Legend! Join me now @cyf_app #challenge"
+            twitt = "I just completed a challenge (http://goo.gl/gskvYu) on Challenge your Friends! Join me now @cyf_app #challenge"
             social.postTwitter req.user.twitter, twitt, (data) ->
               text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>."
               sio.glob "fa fa-twitter", text
@@ -279,19 +290,18 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       idChallenge: req.body.idChallenge
       deadLine: req.body.deadLine
       launchDate: req.body.launchDate
-
     notifs.launchChall data.from, data.idChallenged
     challenge.launch data, (result) ->
-      res.send true
-
-  # @TODO
+      users.getUser result._idChallenged, (uRet)->
+        mailer.sendMail uRet,'[Cyf]Heads up '+uRet.local.pseudo+', you have been challenged by '+req.user.local.pseudo+'!','<h2>A new challenger appears!</h2> <p>The Challenger <strong>'+req.user.local.pseudo+'</strong>(LvL.'+req.user.level+') just challenged you!</p><p>The challenge id is '+result.idCool+',. If you accept, it <strong>will start on</strong><br> '+result.launchDate+'<br> and <strong> must be completed by</strong>:<br>'+result.deadLine+'</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>',true
+        res.send true
 
   #Ask a challenge validation to another user
   app.post "/validationRequest", isLoggedIn, (req, res) ->
-    img.googleUrl req.body.proofLink1, (imgUrl1) ->
+    shortUrl.googleUrl req.body.proofLink1, (imgUrl1) ->
       console.log "\nuploaded %s to %s", req.body.proofLink1, imgUrl1
       if req.body.proofLink2
-        img.googleUrl req.body.proofLink2, (imgUrl2) ->
+        shortUrl.googleUrl req.body.proofLink2, (imgUrl2) ->
           console.log "\nuploaded %s to %s", req.body.proofLink2, imgUrl2
           data =
             idUser: req.user._id
@@ -299,20 +309,18 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
             proofLink1: imgUrl1
             proofLink2: imgUrl2
             confirmComment: req.body.confirmComment
-
-          console.log data
           challenge.requestValidation data, (result) ->
+            mailer.sendMail result._idChallenged,'[Cyf]Challenge '+result._idChallenge.idCool+' validation request from '+result._idChallenged.local.pseudo,'<h2>'+result._idChallenger.local.pseudo+' as completed your challenge!</h2> <p>Your friend <strong>'+result._idChallenger.local.pseudo+'</strong>(LvL.'+result._idChallenger.level+') is asking your approval over the challenge '+result._idChallenge.idCool+'!</p><p>Here is one of his/her response: <img src="'+result._idChallenge.confirmLink1+'" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>',true
             res.send result
       else
         data =
           idUser: req.user._id
           idChallenge: req.body.idChallenge
           proofLink1: imgUrl1
-          proofLink2: imgUrl2
+          proofLink2: ''
           confirmComment: req.body.confirmComment
-
-        console.log data
         challenge.requestValidation data, (result) ->
+          mailer.sendMail result._idChallenged,'[Cyf]Challenge '+result._idChallenge.idCool+' validation request from '+result._idChallenged.local.pseudo,'<h2>'+result._idChallenger.local.pseudo+' as completed your challenge!</h2> <p>Your friend <strong>'+result._idChallenger.local.pseudo+'</strong>(LvL.'+result._idChallenger.level+') is asking your approval over the challenge '+result._idChallenge.idCool+'!</p><p>Here is one of his/her response: <img src="'+result._idChallenge.confirmLink1+'" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>',true
           res.send result
 
   # =============================================================================
@@ -358,17 +366,33 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
 
   app.post "/linkLol", isLoggedIn, (req, res) ->
     obj =
-      _id: req.user._id
+      id: req.user._id
       region: req.body.region
       summonerName: req.body.summonerName
 
     users.linkLol obj, (result) ->
-      if result is true
+      console.log result
+      if result == true
         xp.xpReward req.user, "connect.game"
         notifs.linkedGame req.user, "League of Legend"
         res.send true
       else
-        res.send false
+        res.send false,result[1]
+
+  app.post "/linklol_pickicon", isLoggedIn, (req, res) ->
+    obj =
+      id: req.user._id
+      profileIconId_confirm: req.body.iconPicked
+
+    users.linkLolIconPick obj, (result) ->
+      console.log result      
+      res.send if result == true then true else false
+
+  app.post "/linkLol_confirm", isLoggedIn, (req, res) ->
+
+    users.linkLol_confirm req.user, (result) ->
+      console.log result      
+      res.send if result == true then true else false
 
   app.post "/updateSettings", isLoggedIn, (req, res) ->
     obj =
@@ -509,6 +533,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
       id: req.body.id
 
     challenge.sendTribunal obj, (result) ->
+      mailer.sendMail result._idChallenged,'[Cyf]Tribunal case submitted: '+result._idChallenge.idCool,'<h2>Your ongoing challenge has been submitted to the tribunal.</h2> <p>We are sorry to heard that you have been missjudged! To help you fix this a Tribunal composed by 3 members of the community selected randomly will now examine your challenge.</p><p>You can check its status on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>',false
       res.send true
   app.post "/rateChallenges", isLoggedIn, (req, res) ->
     obj =
@@ -568,7 +593,8 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
         userName: nameFriend
 
     notifs.askFriend req.user, obj.to
-    users.askFriend obj, (result) ->
+    users.askFriend obj, (result) ->  
+      mailer.sendMail result,'[Cyf] Friend request from '+req.user.local.pseudo,'<h2>'+result.local.pseudo+' your are getting famous!</h2> <p>The Challenger <strong>'+req.user.local.pseudo+'</strong>(LvL.'+req.user.level+') just send you a friend request on Cyf!</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>',true
       res.send true
 
   app.post "/confirmFriend", isLoggedIn, (req, res) ->
@@ -659,7 +685,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     nowConfirm = (if req.params.done is "great" then true else false)
     res.render "signup.ejs",
       waitingConfirm: nowConfirm
-      currentUser: req.user unless req.user
+      currentUser: if req.isAuthenticated() then req.user else false
       message: ""
 
   app.post "/signup", passport.authenticate("local-signup",
@@ -671,6 +697,7 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     scope: [
       "email"
       "publish_actions"
+      "manage_pages"
     ]
   )
   app.get "/auth/facebook/callback", passport.authenticate("facebook",
@@ -692,15 +719,15 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     successRedirect: "/profile"
     failureRedirect: "/"
   )
-  app.get "/connect/local", (req, res) ->
-    res.render "connect-local.ejs",
-      message: req.flash("loginMessage")
-
-  app.post "/connect/local", passport.authenticate("local-signup",
-    successRedirect: "/profile"
-    failureRedirect: "/connect/local"
-    failureFlash: true
-  )
+  # app.get "/connect/local", (req, res) ->
+    # res.render "connect-local.ejs",
+      # message: req.flash("loginMessage")
+# 
+  # app.post "/connect/local", passport.authenticate("local-signup",
+    # successRedirect: "/profile"
+    # failureRedirect: "/connect/local"
+    # failureFlash: true
+  # )
   app.get "/connect/facebook", passport.authorize("facebook",
     scope: [
       "email"
@@ -753,3 +780,6 @@ module.exports = (app, _, sio, passport, genUID, xp, notifs, moment, challenge, 
     user.google.token = `undefined`
     user.save (err) ->
       res.redirect "/profile"
+
+  app.get "*", (req, res) ->
+    res.redirect "/"

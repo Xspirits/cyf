@@ -120,7 +120,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
         }).exec(function(err, userUpdated) {
           var text;
           if (err) {
-            throw err;
+            console.log(err);
           }
           text = _.values(_.pick(xpRewardAction, action))[0];
           if (levelUp[0]) {
@@ -130,6 +130,38 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           }
           notifs.gainedXp(userUpdated, value, bonus, text);
           return "woo";
+        });
+      },
+      updateDaily: function(done) {
+        return User.find().exec(function(err, users) {
+          var user, _i, _len, _results;
+          if (err) {
+            console.log(err);
+          }
+          _results = [];
+          for (_i = 0, _len = users.length; _i < _len; _i++) {
+            user = users[_i];
+            _results.push((function(_this) {
+              return function(user) {
+                var garbage;
+                garbage = {
+                  xp: user.xp,
+                  level: user.level
+                };
+                return User.findByIdAndUpdate(user._id, {
+                  $push: {
+                    xpHistoric: garbage
+                  }
+                }).exec(function(err, userUpdated) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  return done(true);
+                });
+              };
+            })(this)(user));
+          }
+          return _results;
         });
       }
     };

@@ -9,27 +9,49 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, img) {
+  module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
+    app.get("/about", function(req, res) {
+      return res.render("about.ejs", {
+        currentUser: req.isAuthenticated() ? req.user : false
+      });
+    });
     app.get("/", function(req, res) {
       if (req.isAuthenticated()) {
-        return res.render("index_logged.ejs", {
+        return res.redirect("/profile");
+      } else {
+        return res.render('index.ejs', {
+          currentUser: false
+        });
+      }
+    });
+    app.get("/discover", function(req, res) {
+      var ua;
+      if (req.isAuthenticated()) {
+        return res.render("discover.ejs", {
           currentUser: req.user
         });
       } else {
-        return res.render("index.ejs", {
-          currentUser: false
-        });
+        ua = req.header('user-agent');
+        if (/mobile/i.test(ua)) {
+          return res.render('discover_mobile.ejs', {
+            currentUser: false
+          });
+        } else {
+          return res.render('discover.ejs', {
+            currentUser: false
+          });
+        }
       }
     });
     app.get("/eval/:hash", function(req, res) {
       var hash;
       hash = req.params.hash;
       return users.validateEmail(hash, function(result) {
-        if (result) {
-          return res.redirect("/login");
-        } else {
-          return res.redirect("/");
+        if (result === false) {
+          res.redirect("/");
         }
+        mailer.sendMail(result, '[Cyf] Account Confirmed, welcome aboard ' + result.local.pseudo + '!', '<h2>Your journey is about to begins!</h2><p>Thank you for taking the time to confirm your e-mail address.</p><p>We are proud to count you among the challengers on Cyf dear <strong>' + result.local.pseudo + '</strong>!</p><p>You can now enjoy fully Challenge your Friends, <a href="http://cyf-app.co/users">connect with some challengers</a> now and start <a href="" title="">sending and accepting</a> challenges right away! </p>', false);
+        return res.redirect("/login");
       });
     });
     app.get("/logout", isLoggedIn, function(req, res) {
@@ -102,31 +124,29 @@
     });
     app.get("/ongoing", isLoggedIn, function(req, res) {
       return challenge.userAcceptedChallenge(req.user._id, function(data) {
-        var cStart, eStart, endedChall, ongoingChall, reqValidation, upcomingChall;
-        cStart = void 0;
-        eStart = void 0;
+        var endedChall, ongoingChall, reqValidation, upcomingChall;
         upcomingChall = [];
         ongoingChall = [];
         endedChall = [];
         reqValidation = [];
         _.each(data, function(value, key) {
-          var cEnd;
+          var cEnd, cStart;
           cStart = data[key].launchDate;
           cEnd = data[key].deadLine;
           if (moment(cEnd).isSame() || moment(cEnd).isBefore()) {
             console.log(moment(cEnd).isSame() || moment(cEnd).isBefore());
-            console.log(data[i].idCool);
-            challenge.crossedDeadline(data[i]._id);
-            return endedChall.push(data[i]);
-          } else if (data[i].waitingConfirm === true && data[i].progress < 100) {
-            reqValidation.push(data[i]);
-            return console.log("parsed reqValidation : " + data[i].waitingConfirm);
-          } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[i].progress < 100) {
-            upcomingChall.push(data[i]);
-            return console.log("parsed upcoming : " + data[i]._id);
-          } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[i].progress < 100) {
-            ongoingChall.push(data[i]);
-            return console.log("parsed ongoing : " + data[i]._id);
+            console.log(data[key].idCool);
+            challenge.crossedDeadline(data[key]._id);
+            return endedChall.push(data[key]);
+          } else if (data[key].waitingConfirm === true && data[key].progress < 100) {
+            reqValidation.push(data[key]);
+            return console.log("parsed reqValidation : " + data[key].waitingConfirm);
+          } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+            upcomingChall.push(data[key]);
+            return console.log("parsed upcoming : " + data[key]._id);
+          } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+            ongoingChall.push(data[key]);
+            return console.log("parsed ongoing : " + data[key]._id);
           }
         });
         return res.render("ongoing.ejs", {
@@ -194,7 +214,7 @@
             sio.glob("glyphicon glyphicon-tower", ioText);
             notifs.successChall(done);
             if (done._idChallenged.share.twitter === true && done._idChallenged.twitter.token) {
-              twitt = "I just completed a challenge (http://goo.gl/gskvYu) on League of Legend! Join me now @cyf_app #challenge";
+              twitt = "I just completed a challenge (http://goo.gl/gskvYu) on Challenge your Friends! Join me now @cyf_app #challenge";
               social.postTwitter(req.user.twitter, twitt, function(data) {
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>.";
@@ -274,15 +294,18 @@
       };
       notifs.launchChall(data.from, data.idChallenged);
       return challenge.launch(data, function(result) {
-        return res.send(true);
+        return users.getUser(result._idChallenged, function(uRet) {
+          mailer.sendMail(uRet, '[Cyf]Heads up ' + uRet.local.pseudo + ', you have been challenged by ' + req.user.local.pseudo + '!', '<h2>A new challenger appears!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just challenged you!</p><p>The challenge id is ' + result.idCool + ',. If you accept, it <strong>will start on</strong><br> ' + result.launchDate + '<br> and <strong> must be completed by</strong>:<br>' + result.deadLine + '</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', true);
+          return res.send(true);
+        });
       });
     });
     app.post("/validationRequest", isLoggedIn, function(req, res) {
-      return img.googleUrl(req.body.proofLink1, function(imgUrl1) {
+      return shortUrl.googleUrl(req.body.proofLink1, function(imgUrl1) {
         var data;
         console.log("\nuploaded %s to %s", req.body.proofLink1, imgUrl1);
         if (req.body.proofLink2) {
-          return img.googleUrl(req.body.proofLink2, function(imgUrl2) {
+          return shortUrl.googleUrl(req.body.proofLink2, function(imgUrl2) {
             var data;
             console.log("\nuploaded %s to %s", req.body.proofLink2, imgUrl2);
             data = {
@@ -292,8 +315,8 @@
               proofLink2: imgUrl2,
               confirmComment: req.body.confirmComment
             };
-            console.log(data);
             return challenge.requestValidation(data, function(result) {
+              mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
               return res.send(result);
             });
           });
@@ -302,11 +325,11 @@
             idUser: req.user._id,
             idChallenge: req.body.idChallenge,
             proofLink1: imgUrl1,
-            proofLink2: imgUrl2,
+            proofLink2: '',
             confirmComment: req.body.confirmComment
           };
-          console.log(data);
           return challenge.requestValidation(data, function(result) {
+            mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
             return res.send(result);
           });
         }
@@ -355,18 +378,36 @@
     app.post("/linkLol", isLoggedIn, function(req, res) {
       var obj;
       obj = {
-        _id: req.user._id,
+        id: req.user._id,
         region: req.body.region,
         summonerName: req.body.summonerName
       };
       return users.linkLol(obj, function(result) {
+        console.log(result);
         if (result === true) {
           xp.xpReward(req.user, "connect.game");
           notifs.linkedGame(req.user, "League of Legend");
           return res.send(true);
         } else {
-          return res.send(false);
+          return res.send(false, result[1]);
         }
+      });
+    });
+    app.post("/linklol_pickicon", isLoggedIn, function(req, res) {
+      var obj;
+      obj = {
+        id: req.user._id,
+        profileIconId_confirm: req.body.iconPicked
+      };
+      return users.linkLolIconPick(obj, function(result) {
+        console.log(result);
+        return res.send(result === true ? true : false);
+      });
+    });
+    app.post("/linkLol_confirm", isLoggedIn, function(req, res) {
+      return users.linkLol_confirm(req.user, function(result) {
+        console.log(result);
+        return res.send(result === true ? true : false);
       });
     });
     app.post("/updateSettings", isLoggedIn, function(req, res) {
@@ -400,6 +441,7 @@
         id: req.body.id
       };
       return challenge.sendTribunal(obj, function(result) {
+        mailer.sendMail(result._idChallenged, '[Cyf]Tribunal case submitted: ' + result._idChallenge.idCool, '<h2>Your ongoing challenge has been submitted to the tribunal.</h2> <p>We are sorry to heard that you have been missjudged! To help you fix this a Tribunal composed by 3 members of the community selected randomly will now examine your challenge.</p><p>You can check its status on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', false);
         return res.send(true);
       });
     });
@@ -470,6 +512,7 @@
       };
       notifs.askFriend(req.user, obj.to);
       return users.askFriend(obj, function(result) {
+        mailer.sendMail(result, '[Cyf] Friend request from ' + req.user.local.pseudo, '<h2>' + result.local.pseudo + ' your are getting famous!</h2> <p>The Challenger <strong>' + req.user.local.pseudo + '</strong>(LvL.' + req.user.level + ') just send you a friend request on Cyf!</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>', true);
         return res.send(true);
       });
     });
@@ -578,7 +621,7 @@
       nowConfirm = (req.params.done === "great" ? true : false);
       return res.render("signup.ejs", {
         waitingConfirm: nowConfirm,
-        currentUser: !req.user ? req.user : void 0,
+        currentUser: req.isAuthenticated() ? req.user : false,
         message: ""
       });
     });
@@ -588,7 +631,7 @@
       failureFlash: true
     }));
     app.get("/auth/facebook", passport.authenticate("facebook", {
-      scope: ["email", "publish_actions"]
+      scope: ["email", "publish_actions", "manage_pages"]
     }));
     app.get("/auth/facebook/callback", passport.authenticate("facebook", {
       successRedirect: "/profile",
@@ -605,16 +648,6 @@
     app.get("/auth/google/callback", passport.authenticate("google", {
       successRedirect: "/profile",
       failureRedirect: "/"
-    }));
-    app.get("/connect/local", function(req, res) {
-      return res.render("connect-local.ejs", {
-        message: req.flash("loginMessage")
-      });
-    });
-    app.post("/connect/local", passport.authenticate("local-signup", {
-      successRedirect: "/profile",
-      failureRedirect: "/connect/local",
-      failureFlash: true
     }));
     app.get("/connect/facebook", passport.authorize("facebook", {
       scope: ["email", "publish_actions"]
@@ -663,13 +696,16 @@
         return res.redirect("/profile");
       });
     });
-    return app.get("/unlink/google", function(req, res) {
+    app.get("/unlink/google", function(req, res) {
       var user;
       user = req.user;
       user.google.token = undefined;
       return user.save(function(err) {
         return res.redirect("/profile");
       });
+    });
+    return app.get("*", function(req, res) {
+      return res.redirect("/");
     });
   };
 

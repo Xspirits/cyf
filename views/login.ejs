@@ -2,7 +2,35 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title></title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="login, signin, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Login - Challenge your Friends">
+    <meta name="description" content="Login to Challenge your friends and join the arena now!">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="article"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Login - Challenge your Friends">
+    <meta property="og:description" content="Login to Challenge your friends and join the arena now!">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="Login - Challenge your Friends">
+    <meta name="twitter:description" content="Login to Challenge your friends and join the arena now!">
+    <!-- Twitter card end -->
+	<title>Login - Challenge your Friends</title>
 </head>
 <body>
 
@@ -10,7 +38,7 @@
 	<div class="canvas">
 		
 		<div class="container">
-			<div class="col-sm-6 col-sm-offset-3">
+			<div class="col-md-6 col-md-offset-3">
 
 				<h1><span class="fa fa-sign-in"></span> Login</h1>
 
@@ -38,7 +66,20 @@
 			</div>
 		</div>
 	</div>
-	
-	<% include statics/footersFix %>
+
+    <!--  FOOTER -->
+    <footer id="footer">
+      <div class="container">
+        <div class="row">
+          <section class="col-md-12">
+            <a href="https://plus.google.com/109925245483936264439" title="Follow us on Goolg+!" target="_blank" rel="publisher">Google+</a>
+            | <a href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a>
+            | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
+
+            <a href="./about" class="pull-right" title="Like us on Facebook!">About</a>            
+          </section>
+        </div>        
+      </div>
+    </footer>
 </body>
 </html>

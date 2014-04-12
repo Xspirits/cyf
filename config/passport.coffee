@@ -8,9 +8,11 @@ GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
 User = require("../app/models/user")
 challenge = require("../config/challenge")
 grvtr = require('grvtr')
+social = require("../config/social")
+
 # load the auth variables
 configAuth = require("./auth") # use this one for testing
-module.exports = (passport, genUID, xp, notifs, mailer) ->
+module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
   
   # =========================================================================
   # passport session setup ==================================================
@@ -68,7 +70,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
           req.session.user = userfound
           userfound.isOnline = true
           userfound.save (err) ->
-            throw err  if err
+            mailer.cLog 'Error at '+__filename,err if err
             notifs.login userfound
             done null, userfound
   )
@@ -111,7 +113,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
               0
             ]
             newUser.verfiy_hash = uIDHash
-            newUser.verified = true if !configAuth.app_config.email_confirm
+            newUser.verified = true unless configAuth.app_config.email_confirm
             newUser.local.email = email
             newUser.local.password = newUser.generateHash(password)
             newUser.local.friends = []
@@ -127,30 +129,25 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
               console.log gravatarUrl
               newUser.icon = gravatarUrl
               newUser.save (err, user) ->
-                 throw err  if err
-                 # send an email confirmation link
-                 mailer.accountConfirm user, (returned) ->
-
-                   # Instantiate the sessions for socket.io 
-                   unless configAuth.app_config.email_confirm
-                    req.session.user = user
-                    req.session.isLogged = true
-                    req.session.newUser = true
-                   xp.xpReward user, "user.register"
-                   done null, newUser
-
-              return
-
-
-          return
-
+                mailer.cLog 'Error at '+__filename,err if err
+                # send an email confirmation link
+                if configAuth.app_config.email_confirm == false
+                  req.session.user = user
+                  req.session.isLogged = true
+                  req.session.newUser = true
+                  xp.xpReward user, "user.register"
+                  done null, newUser
+                else
+                  mailer.accountConfirm user, (returned) ->
+                    xp.xpReward user, "user.register"
+                    done null, newUser
       else
         user = req.user
         user.local.email = email
         user.local.password = user.generateHash(password)
         user.local.pseudo = req.body.pseudo
         user.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           done null, user
 
       return
@@ -170,7 +167,9 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
     
     # asynchronous
     process.nextTick ->
-      
+      console.log token
+      console.log refreshToken
+      console.log profile
       # check if the user is already logged in
       unless req.user
         User.findOne
@@ -185,7 +184,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
               user.facebook.name = profile.name.givenName + " " + profile.name.familyName
               user.facebook.email = profile.emails[0].value
               user.save (err) ->
-                throw err  if err
+                mailer.cLog 'Error at '+__filename,err if err
                 done null, user
 
             done null, user # user found, return that user
@@ -198,7 +197,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             newUser.facebook.name = profile.name.givenName + " " + profile.name.familyName
             newUser.facebook.email = profile.emails[0].value
             newUser.save (err) ->
-              throw err  if err
+              mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
 
           return
@@ -212,12 +211,8 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
         user.facebook.name = profile.name.givenName + " " + profile.name.familyName
         user.facebook.email = profile.emails[0].value
         user.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           done null, user
-
-      return
-
-    return
   )
   
   # =========================================================================
@@ -247,13 +242,18 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             user.twitter.username = profile.username
             user.twitter.displayName = profile.displayName
             user.save (err) ->
-              throw err  if err
-              done null, user
-
-            done null, user # user found, return that user
+              throw err if err
+              profileUrl = configAuth.cyf.app_domain + '/'+ user.idCool
+              shortUrl.googleUrl profileUrl, (shortened) ->
+                console.log "New twitter linked %s to %s", profileUrl, shortened
+                if configAuth.app_config.twitterPushNews
+                  # Lets push on our timeline to let players now about the new member!             
+                  twitt = "Welcome @"+user.twitter.username+" ("+shortened+") on Challenge your Friends! You are "+user.level+", a journey awaits you! @cyf_app #challenge"
+                  social.postTwitter false, twitt, (data) ->
+                    done null, user
           else
-            
-            # if there is no user, create them
+            # NOT OPERATING ANYMORE. Users Must create a local user. 
+            # if there is no user, create them 
             newUser = new User()
             newUser.twitter.id = profile.id
             newUser.twitter.token = token
@@ -261,7 +261,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             newUser.twitter.username = profile.username
             newUser.twitter.displayName = profile.displayName
             newUser.save (err) ->
-              throw err  if err
+              mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
 
           return
@@ -278,7 +278,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
         user.twitter.username = profile.username
         user.twitter.displayName = profile.displayName
         user.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           console.log user
           done null, user
 
@@ -314,7 +314,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
               user.google.name = profile.displayName
               user.google.email = profile.emails[0].value # pull the first email
               user.save (err) ->
-                throw err  if err
+                mailer.cLog 'Error at '+__filename,err if err
                 done null, user
 
             done null, user
@@ -325,7 +325,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
             newUser.google.name = profile.displayName
             newUser.google.email = profile.emails[0].value # pull the first email
             newUser.save (err) ->
-              throw err  if err
+              mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
 
           return
@@ -339,7 +339,7 @@ module.exports = (passport, genUID, xp, notifs, mailer) ->
         user.google.name = profile.displayName
         user.google.email = profile.emails[0].value # pull the first email
         user.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           done null, user
 
       return

@@ -108,7 +108,7 @@ module.exports = (sio) ->
       $set:
         xpNext: levelUp[1]
     ).exec (err, userUpdated) ->
-      throw err  if err
+      console.log err  if err
       text = _.values(_.pick(xpRewardAction, action))[0]
       if levelUp[0]
         notifs.gainedLevel userUpdated, uLvl + 1
@@ -120,3 +120,20 @@ module.exports = (sio) ->
       "woo"
 
     return
+
+  updateDaily: (done)->
+    User.find().exec (err, users) ->
+      console.log err if err
+
+      for user in users then do (user) =>
+        #generate object of the day: freez the xp and level achieved
+        garbage=
+          xp: user.xp
+          level: user.level
+
+        User.findByIdAndUpdate(user._id,
+          $push:
+            xpHistoric: garbage
+        ).exec (err, userUpdated) ->
+          console.log err  if err
+          return done true

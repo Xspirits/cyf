@@ -34,7 +34,17 @@ userSchema = mongoose.Schema(
   xp:
     type: Number
     default: 0
-
+  xpHistoric: [
+    xp:
+      type: Number
+      default: 0
+    level:
+      type: Number
+      default: 0
+    date:
+      type: Date
+      default: Date.now
+  ]
   xpNext:
     type: Number
     default: 100
@@ -220,15 +230,21 @@ userSchema = mongoose.Schema(
       default: Date.now
 
   leagueoflegend:
+    confirmed: 
+      type:Boolean
+      default: false
     idProfile: Number
     name: String
+    region: String
     profileIconId: Number
+    profileIconId_confirm: 
+      type: Number
+      default: 0
     revisionDate: Date
     summonerLevel: Number
     lastUpdated:
       type: Date
       default: Date.now
-
     linkedOnce:
       type: Boolean
       default: true

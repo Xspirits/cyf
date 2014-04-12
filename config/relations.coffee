@@ -12,7 +12,7 @@ module.exports =
   ###
   getPending: (idUser, done) ->
     Relation.findOne(idUser: idUser).exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log data
       
       #return an array of objects
@@ -60,14 +60,13 @@ module.exports =
         }
       ]
     ).exec (err, relation) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log relation
       unless relation
         console.log "Lets update"
         User.findByIdAndUpdate(from.id, query).exec (err, updated) ->
           done true
           return
-
       else
         done false, "already asked"
       return
@@ -94,7 +93,7 @@ module.exports =
           idCool: to.idCool
           userName: to.userName
     , (err, relationFrom) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log relationFrom
       User.findByIdAndUpdate to.id,
         $pull:
@@ -107,7 +106,7 @@ module.exports =
             idCool: to.idCool
             userName: from.userName
       , (err, relationTo) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         newRelation = [
           relationFrom
           relationTo
@@ -124,13 +123,13 @@ module.exports =
         pendingRequests:
           idUser: to.id
     , (err, relation) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       User.findByIdAndUpdate to.id,
         $pull:
           sentRequests:
             idUser: from.id
       , (err, relation) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         done true
 
       return
@@ -151,7 +150,7 @@ module.exports =
         sentRequests:
           idUser: from.id
     , (err, relation) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done true
 
     return

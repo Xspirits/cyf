@@ -1,35 +1,28 @@
 https   = require("https")
 request = require("request")
 auth    = require("./auth")
-RiotApi = require("../app/functions/riot-api")
+RiotApi = require('irelia')
 _       = require("underscore")
-api     = new RiotApi(auth.leagueoflegend.key)
+riotApi  = new RiotApi({host: 'prod.api.pvp.net',path: '/api/lol/',key: auth.leagueoflegend.key,debug: true});
 
 exports.findSummonerLol = (region, name, callback) ->
-  region = undefined
-  name = undefined
-  url = undefined
-  buffer = {}
-  api.getSummoner
-    region: region
-    summonerName: name  #-OR-'summonerId': 60783
-  , (data) ->
-    buffer = _.values(data)[0]
-    callback buffer
-    return
-
-  return
+  console.log region
+  console.log name
+  riotApi.getSummonerByName region,name, (err, summoner) ->
+    throw err if err
+    summoner = _.values(summoner)[0]
+    callback summoner
 
 exports.getFbData = (accessToken, apiPath, callback) ->
   options =
     host: "graph.facebook.com"
-    port: 443
     path: apiPath + "?access_token=" + accessToken
     method: "GET"
 
   buffer = ""
   request = https.get(options, (result) ->
     result.setEncoding "utf8"
+    console.log result
     result.on "data", (chunk) ->
       buffer += chunk
       return
@@ -49,11 +42,18 @@ exports.getFbData = (accessToken, apiPath, callback) ->
 
 exports.postTwitter = (accessToken, message, callback) ->
   url = "https://api.twitter.com/1.1/statuses/update.json"
-  params =
-    consumer_key: auth.twitterAuth.consumerKey
-    consumer_secret: auth.twitterAuth.consumerSecret
-    token: accessToken.token
-    token_secret: accessToken.tokenSecret
+  unless accessToken
+    params =
+      consumer_key: auth.twitterAuth.consumerKey
+      consumer_secret: auth.twitterAuth.consumerSecret
+      token: auth.twitterCyf.token
+      token_secret: auth.twitterCyf.tokenSecret
+  else
+    params =
+      consumer_key: auth.twitterAuth.consumerKey
+      consumer_secret: auth.twitterAuth.consumerSecret
+      token: accessToken.token
+      token_secret: accessToken.tokenSecret
 
   r = request.post(
     url: url
@@ -61,14 +61,14 @@ exports.postTwitter = (accessToken, message, callback) ->
   , (err, resp, body) ->
     return console.error("Error occured: ", err)  if err
     body = JSON.parse(body)
-    return console.error("Error returned from facebook: ", body.error)  if body.error
-    callback body
-    return
+    return console.error("Error returned from  twitter: ", body.error)  if body.error
+    console.log body
+    return callback body
   )
   form = r.form()
   form.append "status", message
   return
-
+# Post to an user'wall
 exports.postFbMessage = (accessToken, message, link, callback) ->
   url = "https://graph.facebook.com/me/feed"
   
@@ -80,12 +80,12 @@ exports.postFbMessage = (accessToken, message, link, callback) ->
   #    
   params =
     access_token: accessToken
-    link: "https://graph.facebook.com/"
-    name: message.title
-    description: message.body
+    link: link.url || auth.cyf.app_domain
+    picture: link.picture || false
+    name: message.title || false
+    caption: link.caption || false
+    description: lmessage.body || false
 
-  
-  # callback('TO ENABLE GOTO social.js Line 30');
   request.post
     url: url
     qs: params
@@ -94,6 +94,55 @@ exports.postFbMessage = (accessToken, message, link, callback) ->
     body = JSON.parse(body)
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
-    return
 
-  return
+exports.updateWall = (message,link, callback) ->
+  url = "https://graph.facebook.com/"+auth.facebookPage.id+"/feed"
+  
+  # Get page accsss token here: https://developers.facebook.com/tools/explorer
+  # message:  The main body of the post, otherwise called the status message. Either link or message must be supplied.string
+  # OR 
+  # link:     The URL of a link to attach to the post. 
+  #            Either link or message must be supplied. Additional fields associated with link are shown below.
+  #   picture:  Determines the preview image associated with the link.  string
+  #   name:     Overwrites the title of the link preview. string
+  #   caption:  Overwrites the caption under the title in the link preview. string
+  #   description: Overwrites the description in the link preview string
+  # OPTIONS ================
+  # actions:  The action links attached to the post. array[]
+  # place:    Page ID of a location associated with this post. string
+  # tags: Comma-separated list of user IDs of people tagged in this post. You cannot specify this field without also specifying a place. csv[string]
+  
+
+  # EXEMPLES
+    # message= "hoallza jzja kazpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn d"
+    # social.updateWall message, false, (callback)->
+    #   console.log callback
+    # link=
+    #   url: 'http://www.cyf-app.co/leaderboard'
+    #   picture: 'http://www.cyf-app.co/img/favicon-128.png'
+    #   name: 'Cyf leaderboard'
+    #   caption: " this is a caption"
+    #   description: "awesome, let's fight for the first place !!!\n test charriot"
+    # social.updateWall false, link, (callback)->
+    #   console.log callback
+
+  if message
+    params =
+      access_token: auth.facebookPage.accessToken
+      message: message
+  else
+    params =
+      access_token: auth.facebookPage.accessToken
+      link: link.url || auth.cyf.app_domain
+      picture: link.picture || false
+      name: link.name || false
+      caption: link.caption || false
+      description: link.description || false
+  request.post
+    url: url
+    qs: params
+  , (err, resp, body) ->
+    return console.error("Error occured: ", err)  if err
+    body = JSON.parse(body)
+    return console.error("Error returned from facebook: ", body.error)  if body.error
+    callback JSON.stringify(body, null, "\t")

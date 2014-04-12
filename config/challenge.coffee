@@ -38,7 +38,7 @@ module.exports =
     
     # console.log(newChallenge);
     newChallenge.save (err) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done newChallenge
 
     return
@@ -90,7 +90,6 @@ module.exports =
       # if there are any errors, return the error
       return done(err)  if err
       chall = doc[0]
-      console.log chall.author + " <> " + currentUser
       if chall.author is currentUser
         chall.remove done
       else
@@ -107,7 +106,7 @@ module.exports =
   ###
   getList: (done) ->
     Challenge.find({}).sort("-value").exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # console.log(data);
       done data
@@ -125,7 +124,7 @@ module.exports =
     Challenge.findOne(idCool: id).populate("author").exec (err, data) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # else we return the data
       done data
@@ -151,7 +150,7 @@ module.exports =
     Challenge.findOne(idCool: data.id).exec (err, challenge) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # Add this user on the users historical
       # challenge.completedBy = data.idUser;
@@ -267,7 +266,7 @@ module.exports =
       console.log "new averages d:" + averageDifficulty + " (" + ponderatedAvgDiff + "/" + diff.count + ") q:" + averageQuick + " (" + ponderatedAvgQuick + "/" + quick.count + ") f:" + averagefun + " (" + ponderatedAvgFun + "/" + fun.count + ") New bonus :" + bonusUpdated
       challenge.value = bonusUpdated
       challenge.save (err, result) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         obj =
           id: result._id
           idUser: data.idUser
@@ -325,7 +324,7 @@ module.exports =
     Ongoing.findOne(idCool: id).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # else we return the data
       done data
@@ -353,7 +352,7 @@ module.exports =
     ).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # else we return the data
       done data
@@ -371,7 +370,7 @@ module.exports =
     Ongoing.find(_idChallenger: id).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # else we return the data
       done data
@@ -389,7 +388,7 @@ module.exports =
     Ongoing.find(_idChallenged: id).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # else we return the data
       done data
@@ -418,7 +417,7 @@ module.exports =
     oCha.launchDate = moment(data.launchDate).utc()
     oCha.deadLine = moment(data.launchDate).utc().add(query)
     oCha.save (err) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done oCha
 
     return
@@ -441,14 +440,14 @@ module.exports =
       passing = chall
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       testiD = chall._idChallenged._id.toString()
       uString = idUser.toString()
       console.log testiD + " " + uString
       if testiD is uString
         chall.accepted = true
         chall.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           done passing
 
       else
@@ -470,7 +469,7 @@ module.exports =
     Ongoing.findOne(_id: idChallenge).exec (err, chall) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log chall._idChallenged + " <> " + idUser
       console.log (chall._idChallenged.toString() is idUser.toString())
       if chall._idChallenged.toString() is idUser.toString()
@@ -489,14 +488,14 @@ module.exports =
     ).populate("_idChallenge _idChallenged _idChallenger").exec (err, ongoing) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       ongoing.waitingConfirm = true
       ongoing.confirmAsk = new Date
       ongoing.confirmLink1 = data.proofLink1
       ongoing.confirmLink2 = (if (data.proofLink2) then data.proofLink2 else "")
       ongoing.confirmComment = (if (data.confirmComment) then data.confirmComment else "")
       ongoing.save (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         done ongoing
 
       return
@@ -533,12 +532,12 @@ module.exports =
     Ongoing.findOne(idCool: data.oId).populate("_idChallenged _idChallenger _idChallenge").exec (err, ongoing) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       ongoing.waitingConfirm = false
       ongoing.validated = data.pass
       ongoing.progress = 100
       ongoing.save (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         completedByArr = [ongoing._idChallenged._id]
         self.completedBy ongoing._idChallenge._id, completedByArr, (done) ->
           done ongoing
@@ -582,10 +581,10 @@ module.exports =
   @return {[type]}        [description]
   ###
   sendTribunal: (data, done) ->
-    Ongoing.findById(data.id).exec (err, ongoing) ->
+    Ongoing.findById(data.id).populate('_idChallenged _idChallenger _idChallenge').exec (err, ongoing) ->
       
       # if there are any errors, return the error
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       #Does this ongoing already has an opened case? 
       #if yes, we do nothing.
@@ -621,8 +620,8 @@ module.exports =
                 
                 # console.log(ongoing);
                 ongoing.save (err, result) ->
-                  throw err  if err
-                  done true
+                  mailer.cLog 'Error at '+__filename,err if err
+                  done ongoing
 
               else
                 throw "something went wrong here"
@@ -655,7 +654,7 @@ module.exports =
         "tribunalVote.$.hasVoted": true
         "tribunalVote.$.voteDate": new Date
     ).exec (err, cases) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       userData =
         id: cases._id
         idUser: data.idUser
@@ -673,7 +672,7 @@ module.exports =
 
   completeCase: (idCase, done) ->
     Ongoing.findOne(idCool: idCase).populate("_idChallenged _idChallenger _idChallenge").exec (err, cases) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       deny = 0
       validate = 0
       judges = cases.tribunalVote
@@ -695,7 +694,7 @@ module.exports =
       cases.caseClosed = true
       cases.caseClosedDate = new Date
       cases.save (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         done cases
 
       return
@@ -704,7 +703,7 @@ module.exports =
 
   remainingCaseVotes: (idCase, done) ->
     Ongoing.findOne(idCool: idCase).exec (err, req) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       counter = 0
       judges = req.tribunalVote
       i = judges.length - 1

@@ -19,7 +19,7 @@
         idUser: idUser
       }).exec(function(err, data) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         console.log(data);
         return done(data.pendingRequests);
@@ -72,7 +72,7 @@
         ]
       }).exec(function(err, relation) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         console.log(relation);
         if (!relation) {
@@ -109,7 +109,7 @@
         }
       }, function(err, relationFrom) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         console.log(relationFrom);
         User.findByIdAndUpdate(to.id, {
@@ -128,7 +128,7 @@
         }, function(err, relationTo) {
           var newRelation;
           if (err) {
-            throw err;
+            mailer.cLog('Error at ' + __filename, err);
           }
           newRelation = [relationFrom, relationTo];
           return done(newRelation);
@@ -144,7 +144,7 @@
         }
       }, function(err, relation) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         User.findByIdAndUpdate(to.id, {
           $pull: {
@@ -154,7 +154,7 @@
           }
         }, function(err, relation) {
           if (err) {
-            throw err;
+            mailer.cLog('Error at ' + __filename, err);
           }
           return done(true);
         });
@@ -177,7 +177,7 @@
         }
       }, function(err, relation) {
         if (err) {
-          throw err;
+          mailer.cLog('Error at ' + __filename, err);
         }
         return done(true);
       });

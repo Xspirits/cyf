@@ -2,7 +2,35 @@
 <html>
 <head>
 	<% include statics/headers %>
-	<title>Launch a challenge</title>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
+    <meta name="description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="article"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
+    <meta property="og:description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
+    <meta name="twitter:description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
+    <!-- Twitter card end -->
+	<title>Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %></title>
 </head>
 <body>
 
@@ -110,10 +138,9 @@
 						</h3>
 						<div class="row challenge">
 							<% for(var i=0; i< challenges.length; i++) { 
-								isOdd = i%2? 'col-xs-offset-1 col-lg-offset-0' : '';
 								%>
-								<div class="col-lg-6 col-xs-5 <%= isOdd %> imInABox animated flipInX" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
-									<div class="rounded-2 glow-shad grad-blue-main card">
+								<div class="col-lg-6 col-xs-6 imInABox animated fadeInDown  challenge-card hover-me" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+									<div class="rounded-2 well">
 										<span class="badge"><%= challenges[i].game %></span>
 
 										<h3 class="hidden-xs"><%= challenges[i].title %></h3>
@@ -153,7 +180,7 @@
 										</div>
 
 									</div>
-									<span class="identicon" data-size="100" data-hashMe="<%= userList[i].idUser.idCool %>"></span>
+									<img src="<%= userList[i].idUser.icon %>" class="img-responsive img-rounded">
 
 								</div>
 								<% } %>

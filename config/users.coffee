@@ -1,23 +1,31 @@
 # load up the user model
+appKeys = require("./auth")
 User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
 notifs = require("../app/functions/notifications")
 relations = require("./relations")
 social = require("./social")
 _ = require("underscore")
+moment          = require("moment")
+moment          = require('moment-timezone')
+mandrill        = require('mandrill-api/mandrill')
+nodemailer      = require("nodemailer")
+moment().tz("Europe/London").format()
+mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
+mailer          = require("./mailer")(mandrill_client, nodemailer, appKeys, moment)
+
 module.exports =
   validateEmail: (hash, done) ->
     User.findOne {verfiy_hash:hash}, (err, user) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
 
       if user
         user.verified = true        
         user.save (err) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
 
           console.log user
-          done true
-        return
+          done user
       else
         done false
       return
@@ -33,7 +41,7 @@ module.exports =
           "share.twitter": data.value
       console.log query
       User.findByIdAndUpdate data._id, query, (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         done true
         return
 
@@ -43,37 +51,58 @@ module.exports =
 
   getFriendList: (id, done) ->
     User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         console.log user
         done user
 
   linkLol: (data, done) ->
     region = data.region
     name = data.summonerName
-    social.findSummonerLol region, name, (summoner) ->
+    UID = data.id
+    social.findSummonerLol region, name, (summoner)->
       if summoner.id
-        User.findById(data._id).exec (err, user) ->
-          throw err  if err
-          lol = user.leagueoflegend
-          lol.idProfile = parseInt(summoner.id, 10)
-          lol.name = summoner.name
-          lol.profileIconId = parseInt(summoner.profileIconId, 10)
-          lol.revisionDate = new Date(summoner.revisionDate * 1000)
-          lol.summonerLevel = parseInt(summoner.summonerLevel, 10)
-          user.save (err) ->
-            throw err  if err
-            console.log user
-            done true
-
-          return
-
+        lol =
+          idProfile : parseInt(summoner.id, 10)
+          name : summoner.name
+          region : region
+          profileIconId : parseInt(summoner.profileIconId, 10)
+          revisionDate : new Date(summoner.revisionDate * 1000)
+          summonerLevel : parseInt(summoner.summonerLevel, 10)
+          profileIconId_confirm: 0
+        console.log lol
+        User.findByIdAndUpdate UID,
+          leagueoflegend: lol
+        , (err, user) ->
+          throw err if err
+          console.log user
+          return done true
       else
-        done false, "summoner not found"
-      return
+        return done false, "summoner not found"
 
-    return
+  linkLolIconPick: (data, done)->
+    UID = data.id
+    icon = parseInt(data.profileIconId_confirm,10)
+    User.findByIdAndUpdate UID,
+      'leagueoflegend.profileIconId_confirm': icon
+    , (err, user) ->
+      throw err if err
+      return done true
 
-  
+  linkLol_confirm: (user, done)->
+    region = user.leagueoflegend.region
+    name = user.leagueoflegend.name
+    UID = user._id
+    social.findSummonerLol region, name, (summoner)->
+      console.log ( summoner.profileIconId+' == '+user.leagueoflegend.profileIconId_confirm)
+      
+      if summoner.profileIconId == user.leagueoflegend.profileIconId_confirm
+        User.findByIdAndUpdate UID,
+          'leagueoflegend.confirmed': true
+        , (err, user) ->
+          throw err if err
+          return done true
+      else
+        return done false, "Icons did not match!"
   ###
   Unlink a league of legend account
   @param  {[type]}   user [description]
@@ -82,7 +111,7 @@ module.exports =
   ###
   unlinkLol: (id, done) ->
     User.findById(id).exec (err, user) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       lol = user.leagueoflegend
       lol.idProfile = `undefined`
       lol.name = `undefined`
@@ -90,7 +119,7 @@ module.exports =
       lol.revisionDate = `undefined`
       lol.summonerLevel = `undefined`
       user.save (err) ->
-        throw err  if err
+        mailer.cLog 'Error at '+__filename,err if err
         console.log user
         done true
 
@@ -102,7 +131,7 @@ module.exports =
     User.findByIdAndUpdate user._id,
       isOnline: false
     , (err) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done true
       return
 
@@ -137,7 +166,7 @@ module.exports =
       userRand:
         $near: nearNum
     ).limit(num).exec (err, randomUser) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done randomUser
 
     return
@@ -159,7 +188,7 @@ module.exports =
     ,
       multi: true
     ).exec (err, randomUser) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done true
 
     return
@@ -183,7 +212,7 @@ module.exports =
           answer: data.answer
           voteDate: currentDate
     ).exec (err, doc) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log doc
       idx = (if doc.tribunal then doc.tribunal.indexOf(idSplice) else -1)
       
@@ -217,7 +246,7 @@ module.exports =
   ###
   getUserList: (done) ->
     User.find({}).sort("-_id").exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       
       # console.log(data);
       done data
@@ -232,15 +261,17 @@ module.exports =
   @return {[type]}        [description]
   ###
   getUser: (id, done) ->
-    
-    # console.log(arg);
-    User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
-      throw err  if err
-      done data
-
-    return
-
-  
+    checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+    isObj = checkForHexRegExp.test(id)
+    console.log isObj
+    if isObj
+      User.findById(id).populate("friends.idUser").exec (err, data) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        done data
+    else
+      User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        done data  
   ###
   Request a friendship with another user
   @param  {Object}   data [From, id, to, id]
@@ -255,21 +286,16 @@ module.exports =
     
     #Check if the targeted user exist
     User.findById(uTo.id).exec (err, data) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       currentDate = new Date
       
       #existing user
       if data
         relations.create from, uTo, true, (result) ->
-          relations.create uTo, from, false, done  if result
-          return
-
+          relations.create uTo, from, false, (result) ->
+            return done data 
       else
         done false, " desired user not found"
-      return
-
-    return
-
   
   ###
   Confirm a friend relationship with another user
@@ -325,7 +351,7 @@ module.exports =
           rateDate: currentDate
           rating: data.rating
     ).exec (err, doc) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       idx = (if doc.challengeRate then doc.challengeRate.indexOf(idSplice) else -1)
       
       # is it valid?
@@ -370,7 +396,7 @@ module.exports =
     ,
       multi: true
     ).exec (err, user) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       console.log user
       done true
 
@@ -391,7 +417,7 @@ module.exports =
   #
   globalLeaderboard: (done) ->
     User.find().sort("-globalScore").where("globalScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 
@@ -399,7 +425,7 @@ module.exports =
 
   monthlyLeaderboard: (done) ->
     User.find().sort("-monthlyScore").where("monthlyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 
@@ -407,7 +433,7 @@ module.exports =
 
   weeklyLeaderboard: (done) ->
     User.find().sort("-weeklyScore").where("weeklyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 
@@ -415,7 +441,7 @@ module.exports =
 
   dailyLeaderboard: (done) ->
     User.find().sort("-dailyScore").where("dailyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      throw err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       done challengers
       return
 

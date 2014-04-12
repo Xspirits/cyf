@@ -19,7 +19,7 @@
       var regex;
       regex = new RegExp(search, "i");
       console.log(search + " => " + regex);
-      Game.find({
+      return Game.find({
         title: regex
       }).sort({
         updated_at: -1
@@ -38,7 +38,7 @@
             go: 404
           };
         }
-        done(ret);
+        return done(ret);
       });
     }
   };

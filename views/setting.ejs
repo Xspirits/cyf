@@ -1,12 +1,8 @@
 <!doctype html>
 <html>
 <head>
-	<meta property="og:title" content="<%= currentUser.local.pseudo %>, challenger level <%= currentUser.level %>" />
-	<meta property="og:type" content="profile:<%= currentUser.local.idCool %>" />
-	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
-	<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" />
 	<% include statics/headers %>
-	<title>Settings</title>
+	<title>Your settings - Challenge your Friends</title>
 </head>
 <body>
 	<% include statics/navTop %>
@@ -106,50 +102,104 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="tab-pane fade in" id="linkGames">
 									<div class="row">
-										<div class="col-md-6 col-xs-6 col-lg-5">
-											<h4><i class="fa fa-link"></i> League of Legend</h4>
-											<% if (currentUser.leagueoflegend.idProfile) { %>
-											<span class="linked label label-success">
-												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.leagueoflegend.name %>
-												<a href="/unlink/game_lol" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
-											</span>
+										<div class="col-md-12 col-xs-12">
+											<h3><i class="fa fa-link"></i> League of Legend</h3>
+											<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed === true) { %>
+											<div class="pull-left">
+												<img class="img-responsive" src="./img/assets_lol/icons/<%= currentUser.leagueoflegend.profileIconId %>.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account.">
+											</div>
 											<h4><%= currentUser.leagueoflegend.name %> - Summoner level <%= currentUser.leagueoflegend.summonerLevel %></h4>
+											<h5 class="linked label label-success">
+												<i class="fa fa-check-square meany"></i> Connected!
+												<a href="/unlink/game_lol" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
+											</h5>
+											<% } else if (!currentUser.leagueoflegend.idProfile || currentUser.leagueoflegend.profileIconId_confirm === 0) { %>
+											<div class="row" id="linkingLoL">
+												<div id="step-1">													
+													<div class="col-xs-4">
+														<select name="region" id="lol_region" class="form-control">
+															<option value="na">na</option>
+															<option value="br">br</option>
+															<option value="euw">euw</option>
+															<option value="eune">eune</option>
+															<option value="lan">lan</option>
+															<option value="las">las</option>
+															<option value="oce">oce</option>											
+														</select>
+													</div>
+													<div class="col-xs-4">
+														<input type="text" class="form-control" id="lol_name" placeholder="Summoner name">
+													</div>
+													<div class="col-xs-4">
+														<button type="button" id="lol_link" class="btn btn-default">Link!</button>
+													</div>
+												</div>
+												<div id="step-2" class="hidden col-md-12">
+												<h4>Confirm your account</h4>
+													<p>
+														To confirm your account, please select one of the following summoner icon. Then, login in League of Legend and change your summoner's icon to this one and come back and hit "Check my profile icon" to confirm your account.
+													</p>
+													<ul class="list-unstyled list-inline">
+													</ul>
+													<p><small><strong>Note:</strong> once your account confirmed, you can use whichever icon you want! We will only do this once.</small></p>
+												</div>
+
+												<div id="step-3" class="hidden col-md-12">
+													<h4>Confirm your account</h4>
+													<p>You picked the following icon: </p>
+													<div id="pickedIcon"></div>
+													<p>Please, change your profile icon in League of legend to this one and click in the following button:
+													<button id="confirmLoL" class="btn btn-info">Check my profile icon</button>
+													</p>
+												</div>
+											</div>
 											<% } else { %>
 											<div class="row" id="linkingLoL">
-												<div class="col-xs-4">
-													<select name="region" id="lol_region" class="form-control">
-														<option value="na">na</option>
-														<option value="br">br</option>
-														<option value="euw">euw</option>
-														<option value="eune">eune</option>
-														<option value="lan">lan</option>
-														<option value="las">las</option>
-														<option value="oce">oce</option>											
-													</select>
-												</div>
-												<div class="col-xs-4">
-													<input type="text" class="form-control" id="lol_name" placeholder="Summoner name">
-												</div>
-												<div class="col-xs-4">
-													<button type="button" id="lol_link" class="btn btn-default">Link!</button>
 
+												<div id="step-3" class="col-md-12">
+													<h4>Confirm your account</h4>
+													<p>You picked the following icon: </p>
+													<div id="pickedIcon">
+													<img class="img-responsive" src="./img/assets_lol/icons/<%= currentUser.leagueoflegend.profileIconId_confirm %>.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account.">
+													</div>
+													<p>Please, change your profile icon in League of legend to this one and click in the following button:
+													<button id="confirmLoL" class="btn btn-info ladda-button" data-style="expand-right"><span class="ladda-label">Verify my account</span></button>
+													</p>
 												</div>
 											</div>
 											<% } %>
 										</div>
 									</div>
 								</div>
-
-
-
-
-
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<span class="glyphicon glyphicon-ok"></span>
+						Account Linked!
+					</h3>
+					</div>
+				<div class="panel-body">
+					<div class="media">
+                        <div class="pull-left">
+                        	<div class="lol-p-icon642"></div>
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">Well met challenger!</h4>
+                          <p>Congratulation, you have confirmed your League of Legend account!</p>
+                        </div>
+                      </div>
+
 				</div>
 			</div>
 		</div>
@@ -180,7 +230,28 @@
 					}
 				});
 			});
+			$('#confirmLoL').click(function(e){
+				e.preventDefault();
+				$.ajax({
+					type: 'POST',
+					url: './linkLol_confirm',						
+					success: function(data) {
+						if(data === true) {
+						
+							$('#successModal').modal('show');
 
+							window.setTimeout(function(){
+								window.location.href = "./profile";
+							}, 2333);
+
+						} else {
+							var newContent = '<div class="alert alert-danger"><i class="fa facheck"></i><strong>Oups!</strong> '+data[1]+'</div>'
+							$('#linkingLoL')
+							.append(newContent);
+						}
+					}
+				});
+			})
 			$('#lol_link').click(function(e) {
 				e.preventDefault();
 
@@ -194,16 +265,49 @@
 					contentType: 'application/json',
 					url: './linkLol',						
 					success: function(data) {
-						var newContent = '<div class="alert alert-success"><i class="fa facheck"></i><strong>Success!</strong> Your account has been linked!</div>'
-						$('#linkingLoL')
-						.addClass('animated flipOutX')
-						.html(newContent)
-						.addClass('flipInX')
-						.removeClass('flipOutX');
+
+						if(data === true) {
+							lolStep2();
+
+						} else {
+							var newContent = '<div class="alert alert-danger"><i class="fa facheck"></i><strong>Oups!</strong> '+data[1]+'</div>'
+							$('#linkingLoL')
+							.addClass('animated flipOutX')
+							.html(newContent)
+							.addClass('flipInX')
+							.removeClass('flipOutX');
+						}
 					}
 				});
 			});
+			$('body').on('click', '.pickme>img', function () {
+				console.log('fired')
+				var id = $(this).attr('id')
+				var target          = {};
+				target.iconPicked   = id;
 
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(target),
+					contentType: 'application/json',
+					url: './linklol_pickicon',						
+					success: function(data) {
+						if(data === true) {
+							$('#pickedIcon').append('<img class="img-responsive" src="./img/assets_lol/icons/'+id+'.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account." >')
+							lolStep3();
+
+						} else {
+							var newContent = '<div class="alert alert-danger"><i class="fa facheck"></i><strong>Oups!</strong> '+data[1]+'</div>'
+							$('#linkingLoL')
+							.addClass('animated flipOutX')
+							.html(newContent)
+							.addClass('flipInX')
+							.removeClass('flipOutX');
+						}
+					}
+				});
+			});
+			/// ==================================
 			var meNot = false;
 			$('.linked').hover(function(){
 				var _this = $(this);
@@ -213,7 +317,41 @@
 				var _this = $(this);
 				_this.children('a').addClass('hidden');
 			});
+			function randNum (icons) {
+				var a = _.random(0, 28);
+				console.log(a)
+				return $.inArray(a,icons) === -1 ? a: randNum (icons);
+			}
+			function lolStep3() {
+				$s2 = $('#step-2')
+				$s3 = $('#step-3')
+				$s2.addClass('animated fadeOut');
+				$s2.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+					$s2.hide();
+					$s3.removeClass('hidden');
+				});
+			}
+			function lolStep2() {
+				//pick 5 random lol icons
+				var icons = [];
+				for (var i =10 - 1; i >= 0; i--) {
+					icons.push(randNum());
+				};
+
+				$('#step-1').addClass('animated fadeOut');
+				$s2 = $('#step-2')
+				$ul = $s2.find('ul').first();
+				_.each(icons, function(numb){
+					$ul.append('<li class="pickme"><img  id="'+numb+'" class="img-responsive" src="./img/assets_lol/icons/'+numb+'.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account." ></li>');
+				})
+				$('#step-1').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+					$('#step-1').hide();
+					$s2.removeClass('hidden');
+				});
+				
+			}
 		});
+
 
 </script>
 </body>
