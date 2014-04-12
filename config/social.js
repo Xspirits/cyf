@@ -159,11 +159,11 @@
 
   exports.userAction = function(user, action, callback) {
     var params, url;
-    url = "https://graph.facebook.com/me/objects/cyfbeta:level";
+    url = "https://graph.facebook.com/me";
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
-      type: "cyfbeta:level",
+      type: "objects/cyfbeta:level",
       url: auth.cyf.app_domain + '/u/' + user.idCool,
       title: "Level 5!",
       image: auth.cyf.app_domain + '/img/favicon-128.png',
