@@ -163,6 +163,7 @@
     params = {
       access_token: userFB.token,
       app_id: auth.facebookAuth.clientID,
+      website: auth.cyf.app_domain,
       type: "website",
       url: link || auth.cyf.app_domain,
       title: title || false,
