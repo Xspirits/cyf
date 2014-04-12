@@ -11,22 +11,6 @@
 
   module.exports = function(app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      var message;
-      message = "hoallza jzja kazpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn d";
-      social.updateWall(message, false, function(callback) {
-        var link;
-        console.log(callback);
-        link = {
-          url: 'http://www.cyf-app.co/leaderboard',
-          picture: 'http://www.cyf-app.co/img/icon_big.png',
-          name: 'Cyf leaderboard',
-          caption: " this is a caption",
-          description: "awesome, let's fight for the first place !!!\n test charriot"
-        };
-        return social.updateWall(false, link, function(callback) {
-          return console.log(callback);
-        });
-      });
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false
       });

@@ -111,6 +111,21 @@ exports.updateWall = (message,link, callback) ->
   # actions:  The action links attached to the post. array[]
   # place:    Page ID of a location associated with this post. string
   # tags: Comma-separated list of user IDs of people tagged in this post. You cannot specify this field without also specifying a place. csv[string]
+  
+
+  # EXEMPLES
+    # message= "hoallza jzja kazpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn d"
+    # social.updateWall message, false, (callback)->
+    #   console.log callback
+    # link=
+    #   url: 'http://www.cyf-app.co/leaderboard'
+    #   picture: 'http://www.cyf-app.co/img/favicon-128.png'
+    #   name: 'Cyf leaderboard'
+    #   caption: " this is a caption"
+    #   description: "awesome, let's fight for the first place !!!\n test charriot"
+    # social.updateWall false, link, (callback)->
+    #   console.log callback
+
   if message
     params =
       access_token: auth.facebookPage.accessToken

@@ -6,17 +6,6 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
-    message= "hoallza jzja kazpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn azpon oanzdn aqsdknq bdnqsn d"
-    social.updateWall message, false, (callback)->
-      console.log callback
-      link=
-        url: 'http://www.cyf-app.co/leaderboard'
-        picture: 'http://www.cyf-app.co/img/icon_big.png'
-        name: 'Cyf leaderboard'
-        caption: " this is a caption"
-        description: "awesome, let's fight for the first place !!!\n test charriot"
-      social.updateWall false, link, (callback)->
-        console.log callback
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 
