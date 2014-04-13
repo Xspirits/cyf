@@ -149,19 +149,69 @@ exports.updateWall = (message,link, callback) ->
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
 
+# EXEMPLE
+# obj=
+#   name: "Challenge your Friends"
+#   description: req.user.local.pseudo + ' is a challenger...'
+#   message: "I can't wait to be level 30 !!!! This website is truely #AWESOME !"
+# social.userActionWallPost req.user, obj, (cb)->
+#   console.log cb
+exports.userActionWallPost =  (user, object, callback) ->
+  url = "https://graph.facebook.com/me/feed"
+  params =
+    access_token: user.facebook.token
+    picture: object.img || auth.cyf.app_domain + '/img/favicon-64.png'
+    name: object.name || false
+    message: object.message || false # The message. Hashtags works
+    application: auth.facebookAuth.clientID
+    description: object.description || false # description of the link
+    actions: JSON.stringify([
+      "name": "Challenge Your Friend",
+      "link": auth.cyf.app_domain
+    ])
+    status_type: 'published_story'
+    type: "status"
+
+  request.post
+    url: url
+    qs: params
+  , (err, resp, body) ->
+    return console.error("Error occured: ", err)  if err
+    body = JSON.parse(body)
+    return console.error("Error returned from facebook: ", body.error)  if body.error
+    callback JSON.stringify(body, null, "\t")
+
+# This will add an event in the user timeline 'activity log'. It should appear in the top right feed too. 
+# action=
+#   name: 'reach'
+#   link: appKeys.cyf.app_domain + '/u/' + req.user.idCool
+# social.userAction req.user, action, (cb)->
+#   mailer.sendMail req.user,cb
 exports.userAction =  (user, action, callback) ->
-  # cyfbeta:rank
-  url = "https://graph.facebook.com/me/cyfbeta:reach"
+  url = "https://graph.facebook.com/me/cyfbeta:"+action.name
 
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
     notify: true
-    image: auth.cyf.app_domain + '/img/favicon-128.png'
-    ref: auth.cyf.app_domain + '/u/' + user.idCool
-    level:
-      title: "Level 5!"
+    image: action.image || auth.cyf.app_domain + '/img/favicon-128.png'
+    ref: action.link || auth.cyf.app_domain + '/u/' + user.idCool
 
+  # cyfbeta:rank
+  if(action.name == 'rank')
+    obj=
+      ladder:
+        title: action.rankText || 'in the Cyf leaderboard'
+
+  # cyfbeta:reach
+  if(action.name == 'reach')
+    obj=
+      level:
+        title: action.levelText || 'a new level'
+
+  _.extend(params, obj) 
+
+  console.log params
   request.post
     url: url
     qs: params

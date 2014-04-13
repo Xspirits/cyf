@@ -11,9 +11,6 @@
 
   module.exports = function(app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
-      social.userAction(req.user, 'rank', function(cb) {
-        return mailer.sendMail(req.user, cb);
-      });
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false
       });

@@ -8,7 +8,7 @@ module.exports =
     facebookPushNews: true
   cyf :
     app_domain: "http://www.cyf-app.co"
-    # domain: "http://localhost:8080"
+    # app_domain: "http://localhost:8080"
   mandrill_key: "w_F27RXK5GmLNtZoePLczA"
   support :
     email: "cyf.app@gmail.com"
@@ -29,7 +29,7 @@ module.exports =
   facebookAuth:
     clientID: "624902070914410" # your App ID
     clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92" # your App Secret
-    callbackURL: "http://www.cyf-app.co/auth/facebook/callback"
+    callbackURL: "http://localhost:8080/auth/facebook/callback"
 
   twitterAuth:
     consumerKey: "KqGJkpnwthwuOcrVpLoKA"

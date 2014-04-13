@@ -157,19 +157,66 @@
     });
   };
 
-  exports.userAction = function(user, action, callback) {
+  exports.userActionWallPost = function(user, object, callback) {
     var params, url;
-    url = "https://graph.facebook.com/me/cyfbeta:reach";
+    url = "https://graph.facebook.com/me/feed";
+    params = {
+      access_token: user.facebook.token,
+      picture: object.img || auth.cyf.app_domain + '/img/favicon-64.png',
+      name: object.name || false,
+      message: object.message || false,
+      application: auth.facebookAuth.clientID,
+      description: object.description || false,
+      actions: JSON.stringify([
+        {
+          "name": "Challenge Your Friend",
+          "link": auth.cyf.app_domain
+        }
+      ]),
+      status_type: 'published_story',
+      type: "status"
+    };
+    return request.post({
+      url: url,
+      qs: params
+    }, function(err, resp, body) {
+      if (err) {
+        return console.error("Error occured: ", err);
+      }
+      body = JSON.parse(body);
+      if (body.error) {
+        return console.error("Error returned from facebook: ", body.error);
+      }
+      return callback(JSON.stringify(body, null, "\t"));
+    });
+  };
+
+  exports.userAction = function(user, action, callback) {
+    var obj, params, url;
+    url = "https://graph.facebook.com/me/cyfbeta:" + action.name;
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
       notify: true,
-      image: auth.cyf.app_domain + '/img/favicon-128.png',
-      ref: auth.cyf.app_domain + '/u/' + user.idCool,
-      level: {
-        title: "Level 5!"
-      }
+      image: action.image || auth.cyf.app_domain + '/img/favicon-128.png',
+      ref: action.link || auth.cyf.app_domain + '/u/' + user.idCool
     };
+    if (action.name === 'rank') {
+      obj = {
+        ladder: {
+          title: action.rankText || 'in the Cyf leaderboard'
+        }
+      };
+    }
+    if (action.name === 'reach') {
+      obj = {
+        level: {
+          title: action.levelText || 'a new level'
+        }
+      };
+    }
+    _.extend(params, obj);
+    console.log(params);
     return request.post({
       url: url,
       qs: params
