@@ -298,6 +298,14 @@
         throw "wrong whilst splicing";
       });
     },
+    getUsers: function(limit, done) {
+      return User.find({}).sort("-_id").limit(limit).exec(function(err, data) {
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
+        return done(data);
+      });
+    },
 
     /*
     Return the list of existing users
@@ -306,7 +314,7 @@
     @return {[type]}        [description]
      */
     getUserList: function(done) {
-      User.find({}).sort("-_id").exec(function(err, data) {
+      return User.find({}).sort("-_id").exec(function(err, data) {
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
         }

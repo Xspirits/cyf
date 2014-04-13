@@ -9,7 +9,7 @@
     xpLevel = schedule.scheduleJob(xpLevelUpdate, function() {
       console.log('xpLevel update start');
       return xp.updateDaily(function(result) {
-        return console.log(result);
+        return mailer.cLog('[Cyf-auto] Daily xp update done', result);
       });
     });
     dailyRanking = new schedule.RecurrenceRule();
@@ -17,67 +17,13 @@
     dailyRanking.minute = 1;
     dailyRanking.seconds = 0;
     dailyLadder = schedule.scheduleJob(dailyRanking, function() {
+      var daily;
       console.log('dailyLadder');
-      return ladder.createDailyLadder(function() {
-        return ladder.rankUser('dailyRank', function(top3) {
-          var nFFB, nLFb, newFollower, newLeader, yesterday;
-          yesterday = moment().subtract('d', 1).format("ddd Do MMM");
-          newLeader = '';
-          nLFb = '';
-          newFollower = '';
-          nFFB = '';
-          return _.each(top3, function(user, it) {
-            var diff, diffIcon, lastTime, notif, text, twitt, uText, variable, wasRanked;
-            lastTime = user.dailyArchives.length - 1;
-            diff = user.dailyArchives[lastTime].rank - user.dailyRank;
-            wasRanked = user.dailyArchives[lastTime].rank > 0 ? true : false;
-            diffIcon = diff > 0 ? 'arrow-up' : diff === 0 ? 'minus' : 'arrow-down';
-            diff = Math.abs(diff);
-            variable = wasRanked ? '<i class="fa fa-' + diffIcon + '"></i> ' + diff : 'previously unranked';
-            uText = user.local.pseudo + ' is now ranked <strong>' + user.dailyRank + '</strong>, ' + variable + '! daily <i class="fa fa-list"></i>. ';
-            sio.glob("fa fa-star", uText);
-            notif = {
-              type: 'newLadderRank',
-              idFrom: user._id,
-              from: 'Challenge Master',
-              link1: './leaderboard',
-              title: 'Congratulation!! You are now ranked ' + user.dailyRank,
-              icon: 'fa fa-star',
-              to: '',
-              link2: '',
-              message: ''
-            };
-            notifs.newNotif([user._id], true, notif);
-            if (user.dailyRank === 1) {
-              newLeader += user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ')' : '');
-              nLFb += user.local.pseudo;
-            }
-            if (user.dailyRank === 2) {
-              newFollower += 'and ' + user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ') 2nd' : '');
-              nFFB += 'and ' + user.local.pseudo + ' for his/her 2nd place';
-            }
-            if (it + 1 >= top3.length) {
-              if (appKeys.app_config.twitterPushNews === true) {
-                twitt = "New #dailyRanking " + yesterday + " up! #GG " + newLeader + " 1st " + newFollower + "!! http://goo.gl/3VjsJd #CyfLadder #CYFDaily.";
-                return social.postTwitter(false, twitt, function(tweetD) {
-                  var message, text;
-                  if (appKeys.app_config.facebookPushNews === true) {
-                    message = "The daily #ranking for yesterday " + yesterday + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFDaily";
-                    return social.updateWall(message, false, function(data) {
-                      var text;
-                      text = 'The daily ranking for yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a> <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + data.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
-                      return sio.glob("fa fa-list", text);
-                    });
-                  } else {
-                    text = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
-                    return sio.glob("fa fa-list", text);
-                  }
-                });
-              } else {
-                text = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>!';
-                return sio.glob("fa fa-list", text);
-              }
-            }
+      daily = 1;
+      return ladder.generateLadder(daily, function() {
+        return ladder.rankUser(daily, function(top3) {
+          return ladder.spreadLadder(top3, daily, function(done) {
+            return mailer.cLog('[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"), result);
           });
         });
       });
@@ -88,67 +34,12 @@
     weeklyRanking.minute = 2;
     weeklyRanking.seconds = 0;
     weekLadder = schedule.scheduleJob(weeklyRanking, function() {
-      return ladder.createWeeklyLadder(function() {
-        return ladder.rankUser('weeklyRank', function(top3) {
-          var lastWeek, nFFB, nLFb, newFollower, newLeader;
-          lastWeek = moment().subtract('w', 1).format("w");
-          console.log("Updating ladder for the past week " + lastWeek);
-          newLeader = '';
-          nLFb = '';
-          newFollower = '';
-          nFFB = '';
-          return _.each(top3, function(user, it) {
-            var diff, diffIcon, lastTime, notif, text, twitt, uText, variable, wasRanked;
-            lastTime = user.weeklyArchives.length - 1;
-            diff = user.weeklyArchives[lastTime].rank - user.weeklyRank;
-            wasRanked = user.weeklyArchives[lastTime].rank > 0 ? true : false;
-            diffIcon = diff > 0 ? 'arrow-up' : diff === 0 ? 'minus' : 'arrow-down';
-            diff = Math.abs(diff);
-            variable = wasRanked ? '<i class="fa fa-' + diffIcon + '"></i> ' + diff : 'previously unranked';
-            uText = user.local.pseudo + ' is now ranked <strong>' + user.weeklyRank + '</strong>, ' + variable + '! weekly <i class="fa fa-list"></i>. ';
-            notif = {
-              type: 'newLadderRank',
-              idFrom: user._id,
-              from: 'Challenge Master',
-              link1: './leaderboard',
-              title: 'Congratulation!! You are now ranked ' + user.dailyRank,
-              icon: 'fa fa-star',
-              to: '',
-              link2: '',
-              message: ''
-            };
-            notifs.newNotif([user._id], true, notif);
-            if (user.weeklyRank === 1) {
-              newLeader += user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ')' : '');
-              nLFb += user.local.pseudo;
-            }
-            if (user.weeklyRank === 2) {
-              newFollower += 'and ' + user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ') 2nd' : '');
-              nFFB += 'and ' + user.local.pseudo + ' for his/her 2nd place';
-            }
-            sio.glob("fa fa-star", '<i class="fa fa-star"></i> ' + uText);
-            if (it + 1 >= top3.length) {
-              twitt = "Weekly #ranking #" + lastWeek + " live! #GG " + newLeader + " 1st " + newFollower + "! http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
-              if (appKeys.app_config.twitterPushNews === true) {
-                return social.postTwitter(false, twitt, function(tweetD) {
-                  var message, text;
-                  if (appKeys.app_config.facebookPushNews === true) {
-                    message = "Our weekly #ranking for the week " + lastWeek + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
-                    return social.updateWall(message, false, function(data) {
-                      var text;
-                      text = 'The weekly ranking <strong>' + lastWeek + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a> <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + data.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
-                      return sio.glob("fa fa-list", text);
-                    });
-                  } else {
-                    text = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
-                    return sio.glob("fa fa-list", text);
-                  }
-                });
-              } else {
-                text = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>!';
-                return sio.glob("fa fa-list", text);
-              }
-            }
+      var weekly;
+      weekly = 2;
+      return ladder.generateLadder(weekly, function() {
+        return ladder.rankUser(weekly, function(top3) {
+          return ladder.spreadLadder(top3, weekly, function(done) {
+            return mailer.cLog('[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"), result);
           });
         });
       });
@@ -159,67 +50,12 @@
     monthlyRanking.minute = 3;
     monthlyRanking.seconds = 0;
     return monthlyLadder = schedule.scheduleJob(monthlyRanking, function() {
-      return ladder.createMonthlyLadder(function() {
-        return ladder.rankUser('monthlyRank', function(top3) {
-          var lastMonth, nFFB, nLFb, newFollower, newLeader;
-          lastMonth = moment().subtract('m', 1).format("MMMM GGGG");
-          console.log("Updated ladder for the past month " + lastMonth);
-          newLeader = '';
-          nLFb = '';
-          newFollower = '';
-          nFFB = '';
-          return _.each(top3, function(user, it) {
-            var diff, diffIcon, lastTime, notif, text, twitt, uText, variable, wasRanked;
-            lastTime = user.monthlyArchives.length - 1;
-            diff = user.monthlyArchives[lastTime].rank - user.monthlyRank;
-            wasRanked = user.monthlyArchives[lastTime].rank > 0 ? true : false;
-            diffIcon = diff > 0 ? 'arrow-up' : diff === 0 ? 'minus' : 'arrow-down';
-            diff = Math.abs(diff);
-            variable = wasRanked ? '<i class="fa fa-' + diffIcon + '"></i> ' + diff : 'previously unranked';
-            uText = user.local.pseudo + ' is now ranked <strong>' + user.monthlyRank + '</strong>, ' + variable + '! monthly <i class="fa fa-list"></i>. ';
-            notif = {
-              type: 'newLadderRank',
-              idFrom: user._id,
-              from: 'Challenge Master',
-              link1: './leaderboard',
-              title: 'Congratulation!! You are now ranked ' + user.monthlyRank,
-              icon: 'fa fa-star',
-              to: '',
-              link2: '',
-              message: ''
-            };
-            notifs.newNotif([user._id], true, notif);
-            if (user.monthlyRank === 1) {
-              newLeader += user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ')' : '');
-              nLFb += user.local.pseudo;
-            }
-            if (user.monthlyRank === 2) {
-              newFollower += 'and ' + user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ') 2nd' : '');
-              nFFB += 'and ' + user.local.pseudo + ' for his/her 2nd place';
-            }
-            sio.glob("fa fa-star", '<i class="fa fa-star"></i><i class="fa fa-star"></i> ' + uText);
-            if (it + 1 >= top3.length) {
-              twitt = "The #ranking for " + lastMonth + ": 1st " + newLeader + " " + newFollower + " #GG! http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
-              if (appKeys.app_config.twitterPushNews === true) {
-                return social.postTwitter(false, twitt, function(tweetD) {
-                  var message, text;
-                  if (appKeys.app_config.facebookPushNews === true) {
-                    message = "The #ranking for " + lastMonth + " is now available! Our deepest congratulations to the leader of the past month " + nLFb + " " + nFFB + "! You can see the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
-                    return social.updateWall(message, false, function(data) {
-                      var text;
-                      text = 'The ranking for ' + lastMonth + ' <a href="./leaderboard" title="leaderboard">is now available</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a> <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + data.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
-                      return sio.glob("fa fa-list", text);
-                    });
-                  } else {
-                    text = 'The ranking for <strong>' + lastMonth + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + data.user.screen_name + '/status/' + data.id_str + '" title="see tweet"><i class="fa fa-twitter"></i> see</a>.';
-                    return sio.glob("fa fa-list", text);
-                  }
-                });
-              } else {
-                text = 'The ranking for <strong>' + lastMonth + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>!';
-                return sio.glob("fa fa-list", text);
-              }
-            }
+      var monthly;
+      monthly = 3;
+      return ladder.generateLadder(monthly, function() {
+        return ladder.rankUser(monthly, function(top3) {
+          return ladder.spreadLadder(top3, monthly, function(done) {
+            return mailer.cLog('[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"), result);
           });
         });
       });

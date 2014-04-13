@@ -37,21 +37,22 @@ moment().tz("Europe/London").format()
 genUID.seed 664
 mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 
+# functions Import
+notifs          = require("./app/functions/notifications")
+sio             = require("./app/functions/sio")(io)
+xp              = require("./app/functions/xp")(sio)
+
 # Config Import
+google          = require("./config/google")
 configDB        = require("./config/database")
 challenge       = require("./config/challenge")
 users           = require("./config/users")
 relations       = require("./config/relations")
 games           = require("./config/game")
 social          = require("./config/social")
-ladder          = require("./config/ladder")
 mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)
-google          = require("./config/google")
+ladder          = require("./config/ladder")(scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
 
-# functions Import
-notifs          = require("./app/functions/notifications")
-sio             = require("./app/functions/sio")(io)
-xp              = require("./app/functions/xp")(sio)
 
 
 # configuration ===============================================================

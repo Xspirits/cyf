@@ -101,9 +101,9 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
-											<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
-											<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
+											<td><%= currentUser.dailyRank === 0 ? 'not ranked yet!' : currentUser.dailyRank %></td>
+											<td><%= currentUser.weeklyRank === 0 ? 'not ranked yet!' : currentUser.weeklyRank %></td>
+											<td><%= currentUser.monthlyRank === 0 ? 'not ranked yet!' : currentUser.monthlyRank %></td>
 										</tr>
 									</tbody>
 								</table>
@@ -257,20 +257,23 @@
 
 			//Load our data
 			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
-			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse()
-			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>').reverse();
-			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>').reverse();
+			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>');
+			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>');
+			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>');
 
+			// Add the current rank!
 			<% if(currentUser.dailyRank > 0) {%>
-
 				rHistDaily.push({'rank': <%=currentUser.dailyRank %>});
-			<%} %>
-			<% if(currentUser.weeklyRank > 0) {%>
+			<%} if(currentUser.weeklyRank > 0) {%>
 				rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>});
-			<%} %>
-			<% if(currentUser.monthlyRank > 0) {%>
+			<%} if(currentUser.monthlyRank > 0) {%>
 				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>});
 			<%} %>
+
+			rHistDaily = rHistDaily.reverse();
+			rHistWeekly = rHistWeekly.reverse();
+			rHistMonthly = rHistMonthly.reverse();
+			//And now, we reverse
 
 			// position our start at the end of the graph by reversing it.
 			for (var i = 0; i < dataLabels.length; i++) {
@@ -304,10 +307,19 @@
 			// determine the length (X) we need for our ranking's array
 			var whichLongest=rHistDaily.length>rHistWeekly.length?rHistDaily.length>rHistMonthly.length?rHistDaily:rHistMonthly:rHistWeekly.length>rHistMonthly.length?rHistWeekly:rHistMonthly
 
+			console.log(dailyR.length);
+			console.log(weeklyR.length);
+			console.log(monthlyR.length);
+			whatCanIDoToday = _.max(dailyR)
 			// Put all our ranking graph to the same length
-			dailyR = offsetArray(dailyR,whichLongest.length,9999);
-			weeklyR = offsetArray(weeklyR,whichLongest.length,9999);
-			monthlyR = offsetArray(monthlyR,whichLongest.length,9999);
+			dailyR = offsetArray(dailyR,whichLongest.length-1,whatCanIDoToday*2);
+			if(weeklyR.length > 0)
+				weeklyR = offsetArray(weeklyR,whichLongest.length-1,whatCanIDoToday*2);
+			if(monthlyR.length > 0)
+				monthlyR = offsetArray(monthlyR,whichLongest.length-1,whatCanIDoToday*2);
+			console.log(dailyR);
+			console.log(weeklyR);
+			console.log(monthlyR);
 			// Now take the labels to the same length (slice or take the last X ones)
 			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
 
@@ -320,7 +332,10 @@
 				spec.push(dataLabels[i]+' PM');
 			};
 			var xpLab = dota2.length < spec.length ? spec.slice(spec.length - dota2.length,spec.length) : spec;
+
+			console.log(dota2);
 			console.log(xpLab);
+
 			var dataXp = {
 				labels : xpLab,
 				datasets : [

@@ -238,6 +238,11 @@ module.exports =
     return
 
   
+  getUsers: (limit, done) ->
+    User.find({}).sort("-_id").limit(limit).exec (err, data) ->
+      mailer.cLog 'Error at '+__filename,err if err
+      done data
+
   ###
   Return the list of existing users
   @param  {String} arg    [(optional) parameters]
@@ -247,13 +252,7 @@ module.exports =
   getUserList: (done) ->
     User.find({}).sort("-_id").exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
-      
-      # console.log(data);
       done data
-
-    return
-
-  
   ###
   Return the result of a given query for the user model
   @param  {String} arg    [(optional) parameters]

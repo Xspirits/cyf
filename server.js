@@ -58,6 +58,14 @@
 
   mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 
+  notifs = require("./app/functions/notifications");
+
+  sio = require("./app/functions/sio")(io);
+
+  xp = require("./app/functions/xp")(sio);
+
+  google = require("./config/google");
+
   configDB = require("./config/database");
 
   challenge = require("./config/challenge");
@@ -70,17 +78,9 @@
 
   social = require("./config/social");
 
-  ladder = require("./config/ladder");
-
   mailer = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment);
 
-  google = require("./config/google");
-
-  notifs = require("./app/functions/notifications");
-
-  sio = require("./app/functions/sio")(io);
-
-  xp = require("./app/functions/xp")(sio);
+  ladder = require("./config/ladder")(scheduler, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs);
 
   mongoose.connect(configDB.url);
 

@@ -11,264 +11,295 @@
   getScore = function(data, done) {
     var finalScore;
     finalScore = void 0;
-    console.log(data);
     finalScore = (data.xp * (1 + data.level)) + (250 * data.shareTW) + (250 * data.shareFB);
     return done(finalScore);
   };
 
-  module.exports = {
-    rankUser: function(type, callback) {
-      var sort, sorting;
-      sorting = type === 'dailyRank' ? 'dailyScore' : type === 'weeklyRank' ? 'weeklyScore' : 'monthlyScore';
-      sort = '-' + sorting;
-      return User.find({}).sort(sort).exec(function(err, userSorted) {
-        var leaders;
-        if (err) {
-          throw err;
-        }
-        leaders = [];
-        return _.each(userSorted, function(user, rank) {
-          console.log(user.local.pseudo + ' for ' + rank);
-          return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            if (type === 'dailyRank') {
-              user.dailyRank = rank + 1;
-            } else if (type === 'weeklyRank') {
-              user.weeklyRank = rank + 1;
-            } else if (type === 'monthlyRank') {
-              user.monthlyRank = rank + 1;
-            }
-            console.log(user.local.pseudo + ' who was ' + user.dailyArchives.rank + ' is now #' + user.dailyRank);
-            return user.save(function(err) {
-              if (err) {
-                mailer.cLog('Error at ' + __filename, err);
-              }
-              if (rank + 1 < 4) {
-                leaders.push(user);
-              }
-              if ((rank + 1 > 3) || (rank + 1 >= userSorted.length)) {
-                return callback(leaders);
-              }
-            });
-          });
-        });
-      });
-    },
-    dailyUpdate: function(user, done) {
-      var yesterday;
-      yesterday = {
-        rank: user.dailyRank,
-        xp: user.daily.xp,
-        level: user.daily.level,
-        shareFB: user.daily.shareFB,
-        shareTW: user.daily.shareTW
-      };
-      console.log(yesterday);
-      return getScore(yesterday, function(score) {
-        var prepareGlobal;
-        console.log("new score for " + user.local.pseudo + " today is " + score);
-        prepareGlobal = {
-          xp: user.xp,
-          level: user.level,
-          shareTW: user.global.shareTW,
-          shareFB: user.global.shareFB
-        };
-        return getScore(prepareGlobal, function(globalScore) {
-          console.log("new global score for " + user.local.pseudo + " is " + globalScore);
-          return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            yesterday.day = moment().subtract("days", 1).day();
-            user.globalScore = globalScore;
-            user.dailyScore = score;
-            user.daily.xp = 0;
-            user.daily.level = 0;
-            user.daily.shareFB = 0;
-            user.daily.shareTW = 0;
-            user.dailyArchives.push(yesterday);
-            return user.save(function(err) {
-              if (err) {
-                mailer.cLog('Error at ' + __filename, err);
-              }
-              return done(user);
-            });
-          });
-        });
-      });
-    },
-    weeklyUpdate: function(user, done) {
-      var lastWeek;
-      lastWeek = user.weekly;
-      return getScore(lastWeek, function(score) {
-        var prepareGlobal;
-        console.log("new score for " + user.local.pseudo + " is " + score);
-        prepareGlobal = {};
-        prepareGlobal.xp = user.xp;
-        prepareGlobal.level = user.level;
-        prepareGlobal.shareTW = user.global.shareTW;
-        prepareGlobal.shareFB = user.global.shareFB;
-        return getScore(prepareGlobal, function(globalScore) {
-          console.log("new global score for " + user.local.pseudo + " is " + globalScore);
-          return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            lastWeek.week = moment().subtract("weeks", 1).week();
-            user.globalScore = globalScore;
-            user.weeklyScore = score;
-            user.weekly.xp = 0;
-            user.weekly.level = 0;
-            user.weekly.shareFB = 0;
-            user.weekly.shareTW = 0;
-            lastWeek.rank = user.weeklyRank;
-            user.weeklyArchives.push(lastWeek);
-            return user.save(function(err) {
-              if (err) {
-                mailer.cLog('Error at ' + __filename, err);
-              }
-              return done(user);
-            });
-          });
-        });
-      });
-    },
-    monthlyUpdate: function(user, done) {
-      var lastMonth;
-      lastMonth = user.monthly;
-      return getScore(lastMonth, function(score) {
-        var prepareGlobal;
-        console.log("new monthly score for " + user.local.pseudo + " is " + score);
-        prepareGlobal = {};
-        prepareGlobal.xp = user.xp;
-        prepareGlobal.level = user.level;
-        prepareGlobal.shareTW = user.global.shareTW;
-        prepareGlobal.shareFB = user.global.shareFB;
-        return getScore(prepareGlobal, function(globalScore) {
-          console.log("new global score for " + user.local.pseudo + " is " + globalScore);
-          return User.findById(user._id).exec(function(err, user) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            lastMonth.month = moment().subtract("months", 1).month();
-            user.globalScore = globalScore;
-            user.monthlyScore = score;
-            user.monthly.xp = 0;
-            user.monthly.level = 0;
-            user.monthly.shareFB = 0;
-            user.monthly.shareTW = 0;
-            lastMonth.rank = user.monthlyRank;
-            user.monthlyArchives.push(lastMonth);
-            return user.save(function(err) {
-              if (err) {
-                mailer.cLog('Error at ' + __filename, err);
-              }
-              return done(user);
-            });
-          });
-        });
-      });
-    },
-
-    /*
-    This will render the leaderboard for the week. Upgrade scores and res
-    @param  {Function} done [description]
-    @return {[type]}        [description]
-     */
-    createDailyLadder: function(callback) {
-      var self;
-      self = this;
-      return User.find({}).sort("-_id").exec(function(err, usersList) {
-        return _.each(usersList, function(element, ii, list) {
-          return self.dailyUpdate(element, function(done) {
-            var ranking, user;
-            ranking = (function() {
-              var _i, _len, _results;
-              _results = [];
-              for (_i = 0, _len = done.length; _i < _len; _i++) {
-                user = done[_i];
-                _results.push(user);
-              }
-              return _results;
-            })();
-            console.log("User " + done.local.pseudo + " has been updated day " + done.dailyScore + " g " + done.globalScore);
-            console.log((ii + 1) + ' ' + usersList.length);
-            if (ii + 1 >= usersList.length) {
-              return callback();
-            }
-          });
-        });
-      });
-    },
-
-    /*
-    This will render the leaderboard for the week. Upgrade scores and res
-    @param  {Function} done [description]
-    @return {[type]}        [description]
-     */
-    createWeeklyLadder: function(callback) {
-      var self;
-      self = this;
-      return User.find({}).sort("-_id").exec(function(err, usersList) {
-        _.each(usersList, function(element, index) {
-          return self.weeklyUpdate(element, function(done) {
-            return console.log("User " + done.local.pseudo + " has been updated w " + done.weeklyScore + " g " + done.globalScore);
-          });
-        });
-        return callback();
-      });
-    },
-
-    /*
-    This will render the leaderboard for the week. Upgrade scores and res
-    @param  {Function} done [description]
-    @return {[type]}        [description]
-     */
-    createMonthlyLadder: function(callback) {
-      var self;
-      self = this;
-      return User.find({}).sort("-_id").exec(function(err, usersList) {
-        _.each(usersList, function(element, index, list) {
-          return self.monthlyUpdate(element, function(done) {
-            return console.log("User " + done.local.pseudo + " has been updated month " + done.monthlyScore + " g " + done.globalScore);
-          });
-        });
-        return callback();
-      });
-    },
-    actionInc: function(user, action) {
-      var query;
-      query = void 0;
-      if (action === "twitter") {
-        query = {
-          "weekly.shareTW": 1,
-          "monthly.shareTW": 1,
-          "global.shareTW": 1
-        };
-      } else if (action === "facebook") {
-        query = {
-          "weekly.shareFB": 1,
-          "monthly.shareFB": 1,
-          "global.shareFB": 1
-        };
-      } else {
-        query = false;
-        console.log(" ladders.js line 17 prompted");
-      }
-      if (query) {
-        return User.findByIdAndUpdate(user._id, {
-          $inc: query
-        }).exec(function(err, userUpdated) {
+  module.exports = function(schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs, users) {
+    return {
+      rankUser: function(type, callback) {
+        var sort, sorting;
+        sorting = type === 1 ? 'dailyScore' : type === 2 ? 'weeklyScore' : 'monthlyScore';
+        sort = '-' + sorting;
+        return User.find({}).sort(sort).exec(function(err, userSorted) {
+          var leaders;
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          console.log(userUpdated.local.pseudo + " weekly stats : TW " + userUpdated.weekly.shareTW + " FB " + userUpdated.weekly.shareFB);
-          return console.log(userUpdated.local.pseudo + " monthly stats : TW " + userUpdated.monthly.shareTW + " FB " + userUpdated.monthly.shareFB);
+          leaders = [];
+          return _.each(userSorted, function(user, rank) {
+            var ranked;
+            ranked = rank + 1;
+            console.log('[' + type + '] Updating ' + user.local.pseudo + ' who will now be ranked ' + ranked);
+            return User.findById(user._id).exec(function(err, user) {
+              var archives;
+              if (err) {
+                mailer.cLog('Error at ' + __filename, err);
+              }
+              archives = type === 'dailyRank' ? user.dailyArchives[user.dailyArchives.length - 1] : type === 'weeklyRank' ? user.weeklyArchives[user.weeklyArchives.length - 1] : user.monthlyArchives[user.monthlyArchives.length - 1];
+              if (type === 1) {
+                user.dailyRank = ranked;
+              } else if (type === 2) {
+                user.weeklyRank = ranked;
+              } else {
+                user.monthlyRank = ranked;
+              }
+              return user.save(function(err) {
+                console.log(user.local.pseudo + ' who was ' + archives.rank + ' is now #' + user.dailyRank);
+                if (err) {
+                  mailer.cLog('Error at ' + __filename, err);
+                }
+                if (ranked < 4) {
+                  leaders.push(user);
+                }
+                if ((ranked > 3) || (ranked >= userSorted.length)) {
+                  return callback(leaders);
+                }
+              });
+            });
+          });
         });
+      },
+      scoreUpdate: function(type, user, done) {
+        var lastData, typeTxt;
+        typeTxt = type === 1 ? 'Today' : type === 2 ? 'last Week' : 'last Month';
+        lastData = type === 1 ? user.daily : type === 2 ? user.weekly : user.monthly;
+        return getScore(lastData, function(score) {
+          var prepareGlobal;
+          console.log("[" + typeTxt + "] new score for " + user.local.pseudo + " " + typeTxt + " is " + score);
+          prepareGlobal = {
+            xp: user.xp,
+            level: user.level,
+            shareTW: user.global.shareTW,
+            shareFB: user.global.shareFB
+          };
+          return getScore(prepareGlobal, function(globalScore) {
+            console.log("[" + typeTxt + "] new global score for " + user.local.pseudo + " is " + globalScore);
+            return User.findById(user._id).exec(function(err, user) {
+              if (err) {
+                mailer.cLog('Error at ' + __filename, err);
+              }
+              user.globalScore = globalScore;
+              if (type === 1) {
+                lastData.day = moment().subtract("days", 1).day();
+                user.dailyScore = score;
+                user.daily.xp = 0;
+                user.daily.level = 0;
+                user.daily.shareFB = 0;
+                user.daily.shareTW = 0;
+                user.dailyArchives.push(lastData);
+              }
+              if (type === 2) {
+                lastData.week = moment().subtract("weeks", 1).week();
+                user.weeklyScore = score;
+                user.weekly.xp = 0;
+                user.weekly.level = 0;
+                user.weekly.shareFB = 0;
+                user.weekly.shareTW = 0;
+                lastData.rank = user.weeklyRank;
+                user.weeklyArchives.push(lastData);
+              }
+              if (type === 3) {
+                lastData.month = moment().subtract("months", 1).month();
+                user.monthlyScore = score;
+                user.monthly.xp = 0;
+                user.monthly.level = 0;
+                user.monthly.shareFB = 0;
+                user.monthly.shareTW = 0;
+                lastData.rank = user.monthlyRank;
+                user.monthlyArchives.push(lastData);
+              }
+              return user.save(function(err) {
+                if (err) {
+                  mailer.cLog('Error at ' + __filename, err);
+                }
+                return done(user);
+              });
+            });
+          });
+        });
+      },
+      generateLadder: function(type, callback) {
+        var self, typeTxt;
+        typeTxt = type === 1 ? 'Today' : type === 2 ? 'last Week' : 'last Month';
+        self = this;
+        return User.find({}).sort("-_id").exec(function(err, usersList) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          _.each(usersList, function(user, index) {
+            return self.scoreUpdate(type, user, function(done) {
+              var currScore;
+              currScore = type === 1 ? 'D-' + done.dailyScore : type === 2 ? 'W-' + done.weeklyScore : 'M-' + done.monthlyScore;
+              return console.log("[" + typeTxt + "] User " + done.local.pseudo + " has been updated " + currScore + " g " + done.globalScore);
+            });
+          });
+          return callback();
+        });
+      },
+      actionInc: function(user, action) {
+        var query;
+        query = void 0;
+        if (action === "twitter") {
+          query = {
+            "daily.shareTW": 1,
+            "weekly.shareTW": 1,
+            "monthly.shareTW": 1,
+            "global.shareTW": 1
+          };
+        } else if (action === "facebook") {
+          query = {
+            "daily.shareFB": 1,
+            "weekly.shareFB": 1,
+            "monthly.shareFB": 1,
+            "global.shareFB": 1
+          };
+        } else {
+          query = false;
+        }
+        if (query) {
+          return User.findByIdAndUpdate(user._id, {
+            $inc: query
+          }).exec(function(err, userUpdated) {
+            if (err) {
+              return mailer.cLog('Error at ' + __filename, err);
+            }
+          });
+        }
+      },
+      spreadLadder: function(top3, type, done) {
+        var fbWall, lastMonth, lastWeek, nFFB, nLFb, newFollower, newLeader, notifText, tweet, typeoff, yesterday;
+        if (type === 1) {
+          yesterday = moment().subtract('d', 1).format("ddd Do MMM");
+          typeoff = 'daily';
+        }
+        if (type === 2) {
+          lastWeek = moment().subtract('w', 1).format("w");
+          typeoff = 'weekly';
+        }
+        if (type === 3) {
+          lastMonth = moment().subtract('m', 1).format("MMMM GGGG");
+          typeoff = 'monthly';
+        }
+        newLeader = '';
+        nLFb = '';
+        newFollower = '';
+        nFFB = '';
+        _.each(top3, function(user, it) {
+          var archives, diff, diffIcon, lastTime, notif, ranked, uText, variable, wasRanked;
+          if (type === 1) {
+            archives = user.dailyArchives || [];
+            ranked = user.dailyRank;
+          }
+          if (type === 2) {
+            archives = user.weeklyArchives || [];
+            ranked = user.weeklyRank;
+          }
+          if (type === 3) {
+            archives = user.monthlyArchives || [];
+            ranked = user.monthlyRank;
+          }
+          diff = 0;
+          wasRanked = false;
+          if (archives.length > 0) {
+            lastTime = archives.length - 1;
+            diff = archives[lastTime].rank - ranked;
+            wasRanked = archives[lastTime].rank > 0 ? true : false;
+          }
+          diffIcon = diff > 0 ? 'arrow-up' : diff === 0 ? 'minus' : 'arrow-down';
+          diff = Math.abs(diff);
+          variable = wasRanked ? '<i class="fa fa-' + diffIcon + '"></i> ' + diff : 'previously unranked';
+          uText = user.local.pseudo + ' is now ranked <strong>' + ranked + '</strong>, ' + variable + ' on the ' + typeoff + ' <i class="fa fa-list"></i>. ';
+          sio.glob("fa fa-star", uText);
+          notif = {
+            type: 'newLadderRank',
+            idFrom: user._id,
+            from: 'Challenge Master',
+            link1: './leaderboard',
+            title: 'Congratulation!! You are now ranked ' + ranked,
+            icon: 'fa fa-star',
+            to: '',
+            link2: '',
+            message: ''
+          };
+          notifs.newNotif([user._id], true, notif);
+          if (ranked === 1) {
+            newLeader += user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ')' : '');
+            nLFb += user.local.pseudo;
+          }
+          if (ranked === 2) {
+            newFollower += 'and ' + user.local.pseudo + (user.twitter.username ? ' (@' + user.twitter.username + ') 2nd' : '');
+            return nFFB += 'and ' + user.local.pseudo + ' for his/her 2nd place';
+          }
+        });
+        if (type === 1) {
+          tweet = "New daily ranking " + yesterday + " up! #GG " + newLeader + " 1st " + newFollower + "!! http://goo.gl/3VjsJd #CyfLadder #CYFDaily.";
+          fbWall = "The daily #ranking for yesterday " + yesterday + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFDaily";
+        }
+        if (type === 2) {
+          tweet = "Weekly ranking #" + lastWeek + " live! #GG " + newLeader + " 1st " + newFollower + "! http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
+          fbWall = "Our weekly #ranking for the week " + lastWeek + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
+        }
+        if (type === 3) {
+          tweet = "New ranking for " + lastMonth + ": 1st " + newLeader + " " + newFollower + " #GG! http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
+          fbWall = "The #ranking for " + lastMonth + " is now available! Our deepest congratulations to the leader of the past month " + nLFb + " " + nFFB + "! You can see the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
+        }
+        if (appKeys.app_config.twitterPushNews === true) {
+          social.postTwitter(false, tweet, function(tweetD) {
+            var notifText;
+            if (appKeys.app_config.facebookPushNews === true) {
+              return social.updateWall(fbWall, false, function(dataFB) {
+                var notifText;
+                if (type === 1) {
+                  notifText = 'The daily ranking for yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a> <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + dataFB.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
+                }
+                if (type === 2) {
+                  notifText = 'The weekly ranking <strong>' + lastWeek + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a> <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + dataFB.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
+                }
+                if (type === 3) {
+                  return notifText = 'The ranking for ' + lastMonth + ' <a href="./leaderboard" title="leaderboard">is now available</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a> <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + dataFB.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
+                }
+              });
+            } else {
+              if (type === 1) {
+                notifText = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a>.';
+              }
+              if (type === 2) {
+                notifText = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a>.';
+              }
+              if (type === 3) {
+                return notifText = 'The ranking for <strong>' + lastMonth + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a>.';
+              }
+            }
+          });
+        } else if (appKeys.app_config.facebookPushNews === true) {
+          social.updateWall(fbWall, false, function(data) {
+            var notifText;
+            if (type === 1) {
+              notifText = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://www.facebook.com/cyfapp/posts/' + data.id + '" title="see facebook post"><i class="fa fa-facebook"></i></a>.';
+            }
+            if (type === 2) {
+              notifText = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a>.';
+            }
+            if (type === 3) {
+              return notifText = 'The ranking for <strong>' + lastMonth + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>! <a target="_blank" href="https://twitter.com/' + tweetD.user.screen_name + '/status/' + tweetD.id_str + '" title="see tweet"><i class="fa fa-twitter"></i></a>.';
+            }
+          });
+        } else {
+          if (type === 1) {
+            notifText = 'The ranking of yesterday <a href="./leaderboard" title="leaderboard">is live</a>!';
+          }
+          if (type === 2) {
+            notifText = 'The ranking for the week #' + lastWeek + ' <a href="./leaderboard" title="leaderboard">is live</a>!';
+          }
+          if (type === 3) {
+            notifText = 'The ranking for <strong>' + lastMonth + '</strong> <a href="./leaderboard" title="leaderboard">is live</a>!';
+          }
+        }
+        sio.glob("fa fa-list", notifText);
+        return done('ranking ' + typeoff + ' updated');
       }
-    }
+    };
   };
 
 }).call(this);
