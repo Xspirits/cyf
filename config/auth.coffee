@@ -29,7 +29,7 @@ module.exports =
   facebookAuth:
     clientID: "624902070914410" # your App ID
     clientSecret: "adeff0ed4fa13ed526ba4c133b1eed92" # your App Secret
-    callbackURL: "http://localhost:8080/auth/facebook/callback"
+    callbackURL: "http://www.cyf-app.co/auth/facebook/callback"
 
   twitterAuth:
     consumerKey: "KqGJkpnwthwuOcrVpLoKA"
