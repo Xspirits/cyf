@@ -93,7 +93,7 @@
             request: dataChallenged
           };
           return res.render("request.ejs", {
-            currentUser: (req.isAuthenticated() ? req.user : false),
+            currentUser: req.isAuthenticated() ? req.user : false,
             challenges: obj
           });
         });
@@ -116,8 +116,7 @@
       id = req.params.id;
       return challenge.ongoingDetails(id, function(data) {
         return res.render("ongoingDetails.ejs", {
-          currentUser: (req.isAuthenticated() ? req.user : false),
-          user: req.user,
+          currentUser: req.isAuthenticated() ? req.user : false,
           ongoing: data
         });
       });
@@ -161,7 +160,7 @@
     app.get("/challenges", function(req, res) {
       return challenge.getList(function(list) {
         return res.render("challenges.ejs", {
-          currentUser: (req.isAuthenticated() ? req.user : false),
+          currentUser: req.isAuthenticated() ? req.user : false,
           challenges: list
         });
       });
@@ -171,7 +170,7 @@
       cId = req.params.id;
       return challenge.getChallenge(cId, function(data) {
         return res.render("challengeDetails.ejs", {
-          currentUser: (req.isAuthenticated() ? req.user : false),
+          currentUser: req.isAuthenticated() ? req.user : false,
           challenge: data
         });
       });
@@ -335,16 +334,28 @@
     app.get("/users", function(req, res) {
       return users.getUserList(function(returned) {
         return res.render("userList.ejs", {
-          currentUser: (req.isAuthenticated() ? req.user : false),
+          currentUser: req.isAuthenticated() ? req.user : false,
           users: returned
         });
       });
     });
     app.get("/leaderboard", function(req, res) {
-      return users.getLeaderboards("score", function(returned) {
-        return res.render("leaderBoard.ejs", {
-          currentUser: (req.isAuthenticated() ? req.user : false),
-          ranking: returned
+      var buffer;
+      buffer = {};
+      return users.getLeaderboards("score", 'global', function(global) {
+        buffer.global = global;
+        return users.getLeaderboards("score", 'monthly', function(monthly) {
+          buffer.monthly = monthly;
+          return users.getLeaderboards("score", 'weekly', function(weekly) {
+            buffer.weekly = weekly;
+            return users.getLeaderboards("score", 'daily', function(daily) {
+              buffer.daily = daily;
+              return res.render("leaderBoard.ejs", {
+                currentUser: req.isAuthenticated() ? req.user : false,
+                ranking: buffer
+              });
+            });
+          });
         });
       });
     });
@@ -352,7 +363,7 @@
       return users.getUser(req.params.id, function(returned) {
         console.log(returned);
         return res.render("userDetails.ejs", {
-          currentUser: (req.isAuthenticated() ? req.user : false),
+          currentUser: req.isAuthenticated() ? req.user : false,
           user: returned
         });
       });

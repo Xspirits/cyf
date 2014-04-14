@@ -2,7 +2,7 @@
 (function() {
   var tempMailClose, tempMailOpen;
 
-  tempMailOpen = '<table cellpadding="0" cellspacing="0" style="border-radius:4px;margin:0;padding:0;width:100%;max-width:664px;border:1px solid #dadedf" border="0"><tbody><tr><td style="padding:40px 40px 37px 40px;background-color:#f5f6f7;border-bottom:1px solid #dadedf"><table cellpadding="0" cellspacing="0" style="padding:0;width:100%;margin:0;text-align:left" border="0"><tbody><tr><td><img src="http://cyf-app.co/img/logo_black.png" style="max-width: 200px;"></td></tr></tbody></table></td></tr><tr><td style="font-size:17px;color:#47515d;border-bottom:1px solid #dadedf;padding:36px 40px 40px 40px;font-family:Arial,Verdana,sans-serif;text-align:left">';
+  tempMailOpen = '<table cellpadding="0" cellspacing="0"  style="border-radius:4px;margin:0;padding:0;width:100%;max-width:664px;border:1px solid #dadedf" border="0"><tbody><tr><td style="padding:40px 40px 37px 40px;background-color:#f5f6f7;border-bottom:1px solid #dadedf"><table cellpadding="0" cellspacing="0" style="padding:0;width:100%;margin:0;text-align:left" border="0"><tbody><tr><td><img src="http://cyf-app.co/img/logo_black.png" style="max-width: 200px;"></td></tr></tbody></table></td></tr><tr><td style="font-size:17px;color:#47515d;border-bottom:1px solid #dadedf;padding:36px 40px 40px 40px;font-family:Arial,Verdana,sans-serif;text-align:left">';
 
   tempMailClose = '<br><br>- The Team</td></tr><tr><td style="padding:40px;background-color:#f5f6f7"><table cellpadding="0" cellspacing="0" style="padding:0;width:100%;margin:0;text-align:left" border="0"><tbody><tr><td style="color:#92999f;width:100%;font-size:14px;font-family:Arial,Verdana,sans-serif;padding-right:40px">Challenge your Friends (CyF) is a new service which allows you to receive and send challenge to gamers around the world on any game.<a style="color:#0bacff;text-decoration:none" href="http://cyf-app.co/discover" target="_blank"><u></u>Learn more<u></u></a><br> For the latest news, follows us on <a  style="color:#FE480C;text-decoration:none" href="https://plus.google.com/109925245483936264439" title="Follow us on Goolg+!" target="_blank" rel="publisher">Google+</a>, <a  style="color:#0bacff;text-decoration:none" href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a> and <a  style="color:#0bacff;text-decoration:none" href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a></td><td><img src="http://cyf-app.co/img/favicon-64.png"></td></tr></tbody></table></td></tr></tbody></table>';
 
@@ -26,7 +26,7 @@
         };
         return transport.sendMail(mailOptions, function(err, response) {
           if (err) {
-            throw err;
+            console.log(err);
           }
           console.log(response.message);
           return console.log(type + ' - A mail has been sent to ' + cFrom);
@@ -58,7 +58,7 @@
       },
       sendMail: function(user, title, message, track, tags) {
         var gotoUrl, mailOptions, no_reply, transport;
-        no_reply = 'no-reply@cyf-app.co';
+        no_reply = keys.support.email;
         gotoUrl = keys.cyf.app_domain + '/eval/' + user.verfiy_hash;
         if (track === true) {
           tags = tags && tags.length > 0 ? tags : 'basic-email';
@@ -108,7 +108,7 @@
           };
           return transport.sendMail(mailOptions, function(err, response) {
             if (err) {
-              throw err;
+              console.log(err);
             }
             console.log(response.message);
             return console.log('A No-reply mail "' + title + '" has been sent to ' + user.local.email);

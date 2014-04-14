@@ -39,6 +39,9 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
+			<%= ranking.daily %>
+			<%= ranking.weekly %>
+			<%= ranking.monthly %>
 				<div class="tabbable tabs-left col-lg-12 clearfix">
 					<ul id="leadTab" class="nav nav-tabs nav-justified">
 						<li class="active"><a href="#daily" data-toggle="tab"><img src="./img/ladder_a.png" class="img-responsive">daily</a></li>
@@ -64,7 +67,7 @@
 									<% for(var i=0; i< ranking.daily.length; i++) { %>
 									<tr class="animated flipInX">
 										<td class="daily"><%= i+1 %></td>
-										<td><%= ranking.daily[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.daily[i].idCool %>" title="See <%= ranking.daily[i].local.pseudo %>'s profile"><%= ranking.daily[i].local.pseudo %></a></td>
 										<td><%= ranking.daily[i].level %></td>
 										<td><%= ranking.daily[i].dailyScore %></td>
 									</tr>
@@ -93,7 +96,7 @@
 									<% for(var i=0; i< ranking.weekly.length; i++) { %>
 									<tr class="animated flipInX">
 										<td class="weekly"><%= i+1 %></td>
-										<td><%= ranking.weekly[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.weekly[i].idCool %>" title="See <%= ranking.weekly[i].local.pseudo %>'s profile"><%= ranking.weekly[i].local.pseudo %></a></td>
 										<td><%= ranking.weekly[i].level %></td>
 										<td><%= ranking.weekly[i].weeklyScore %></td>
 									</tr>
@@ -121,7 +124,7 @@
 									<% for(var i=0; i< ranking.monthly.length; i++) { %>
 									<tr class="animated flipInX">
 										<td class="monthly"><%= i+1 %></td>
-										<td><%= ranking.monthly[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.monthly[i].idCool %>" title="See <%= ranking.monthly[i].local.pseudo %>'s profile"><%= ranking.monthly[i].local.pseudo %></a></td>
 										<td><%= ranking.monthly[i].level %></td>
 										<td><%= ranking.monthly[i].monthlyScore %></td>
 									</tr>
@@ -150,7 +153,7 @@
 									<% for(var i=0; i< ranking.global.length; i++) { %>
 									<tr class="animated flipInX">
 										<td class="global"><%= i+1 %></td>
-										<td><%= ranking.global[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.global[i].idCool %>" title="See <%= ranking.global[i].local.pseudo %>'s profile"><%= ranking.global[i].local.pseudo %></a></td>
 										<td><%= ranking.global[i].level %></td>
 										<td><%= ranking.global[i].globalScore %></td>
 									</tr>

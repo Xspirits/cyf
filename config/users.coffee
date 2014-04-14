@@ -414,58 +414,10 @@ module.exports =
   #
   # LEADER BOARD
   #
-  globalLeaderboard: (done) ->
-    User.find().sort("-globalScore").where("globalScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      done challengers
-      return
-
-    return
-
-  monthlyLeaderboard: (done) ->
-    User.find().sort("-monthlyScore").where("monthlyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      done challengers
-      return
-
-    return
-
-  weeklyLeaderboard: (done) ->
-    User.find().sort("-weeklyScore").where("weeklyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      done challengers
-      return
-
-    return
-
-  dailyLeaderboard: (done) ->
-    User.find().sort("-dailyScore").where("dailyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      done challengers
-      return
-
-    return
-
-  getLeaderboards: (type, done) ->
-    buffer = {}
+  getLeaderboards: (type,scale, done) ->
     self = this
     if type is "score"
-      
-      # I heard you like nested async functions?
-      self.globalLeaderboard (global) ->
-        buffer.global = global
-        self.monthlyLeaderboard (monthly) ->
-          buffer.monthly = monthly
-          self.weeklyLeaderboard (weekly) ->
-            buffer.weekly = weekly
-            self.dailyLeaderboard (daily) ->
-              buffer.daily = daily
-              done buffer
-
-            return
-
-          return
-
-        return
-
-    return
+      User.find({}).sort("-" + scale + "Score").where(scale + "Score").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        console.log challengers
+        done challengers

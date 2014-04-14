@@ -22,23 +22,16 @@ exports.getFbData = (accessToken, apiPath, callback) ->
   buffer = ""
   request = https.get(options, (result) ->
     result.setEncoding "utf8"
-    console.log result
     result.on "data", (chunk) ->
       buffer += chunk
       return
 
     result.on "end", ->
       callback buffer
-      return
-
-    return
   )
   request.on "error", (e) ->
     console.log "error from facebook.getFbData: " + e.message
-    return
-
   request.end()
-  return
 
 exports.postTwitter = (accessToken, message, callback) ->
   url = "https://api.twitter.com/1.1/statuses/update.json"
@@ -62,17 +55,16 @@ exports.postTwitter = (accessToken, message, callback) ->
     return console.error("Error occured: ", err)  if err
     body = JSON.parse(body)
     return console.error("Error returned from  twitter: ", body.error)  if body.error
-    console.log body
     return callback body
   )
   form = r.form()
   form.append "status", message
-  return
+
 # Post to an user'wall
 # https://developers.facebook.com/docs/graph-api/reference/user/feed
 # social.postFbMessage req.user.facebook, message, false, (data) ->
 exports.postFbMessage = (userFB, message, link, callback) ->
-  url = "https://graph.facebook.com/"+userFB.id+"/feed"
+  url = "https://graph.facebook.com/me/feed"
 
   if message
     params =
@@ -146,7 +138,7 @@ exports.updateWall = (message,link, callback) ->
   , (err, resp, body) ->
     return console.error("Error occured: ", err)  if err
     body = JSON.parse(body)
-    return console.error("Error returned from facebook: ", body.error)  if body.error
+    return console.error("Error returned from facebook: ", body.errors)  if body.errors
     callback JSON.stringify(body, null, "\t")
 
 # EXEMPLE
@@ -160,7 +152,6 @@ exports.userActionWallPost =  (user, object, callback) ->
   url = "https://graph.facebook.com/me/feed"
   params =
     access_token: user.facebook.token
-    picture: object.img || auth.cyf.app_domain + '/img/favicon-64.png'
     name: object.name || false
     message: object.message || false # The message. Hashtags works
     application: auth.facebookAuth.clientID
@@ -190,12 +181,15 @@ exports.userActionWallPost =  (user, object, callback) ->
 exports.userAction =  (user, action, callback) ->
   url = "https://graph.facebook.com/me/cyfbeta:"+action.name
 
+  console.log 'FB Actions for ' + user.local.pseudo
   params =
     access_token: user.facebook.token
     app_id: auth.facebookAuth.clientID
     notify: true
+    'fb:explicitly_shared': true
+    message: action.message || false
     image: action.image || auth.cyf.app_domain + '/img/favicon-128.png'
-    ref: action.link || auth.cyf.app_domain + '/u/' + user.idCool
+    ref: action.link || auth.cyf.app_domain
 
   # cyfbeta:rank
   if(action.name == 'rank')
@@ -211,7 +205,6 @@ exports.userAction =  (user, action, callback) ->
 
   _.extend(params, obj) 
 
-  console.log params
   request.post
     url: url
     qs: params

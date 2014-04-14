@@ -77,7 +77,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
           request: dataChallenged
 
         res.render "request.ejs",
-          currentUser: (if (req.isAuthenticated()) then req.user else false)
+          currentUser: if req.isAuthenticated() then req.user else false
           challenges: obj
 
   # =============================================================================
@@ -109,8 +109,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       
       # console.log(data);
       res.render "ongoingDetails.ejs",
-        currentUser: (if (req.isAuthenticated()) then req.user else false)
-        user: req.user
+        currentUser: if req.isAuthenticated() then req.user else false
         ongoing: data
 
   # USER'S ONGOINGS SECTION =========================
@@ -165,7 +164,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   app.get "/challenges", (req, res) ->
     challenge.getList (list) ->
       res.render "challenges.ejs",
-        currentUser: (if (req.isAuthenticated()) then req.user else false)
+        currentUser: if req.isAuthenticated() then req.user else false
         challenges: list
 
   # CHALLENGE DETAILS SECTION =========================
@@ -173,7 +172,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     cId = req.params.id
     challenge.getChallenge cId, (data) ->
       res.render "challengeDetails.ejs",
-        currentUser: (if (req.isAuthenticated()) then req.user else false)
+        currentUser: if req.isAuthenticated() then req.user else false
         challenge: data
 
 
@@ -329,21 +328,29 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   app.get "/users", (req, res) ->
     users.getUserList (returned) ->
       res.render "userList.ejs",
-        currentUser: (if (req.isAuthenticated()) then req.user else false)
+        currentUser: if req.isAuthenticated() then req.user else false
         users: returned
 
   # leader board
   app.get "/leaderboard", (req, res) ->
-    users.getLeaderboards "score", (returned) ->
-      res.render "leaderBoard.ejs",
-        currentUser: (if (req.isAuthenticated()) then req.user else false)
-        ranking: returned
+    buffer = {}
+    users.getLeaderboards "score",'global', (global) ->
+      buffer.global = global
+      users.getLeaderboards "score", 'monthly', (monthly) ->
+        buffer.monthly = monthly
+        users.getLeaderboards "score", 'weekly', (weekly) ->
+          buffer.weekly = weekly
+          users.getLeaderboards "score", 'daily', (daily) ->
+            buffer.daily = daily
+            res.render "leaderBoard.ejs",
+              currentUser: if req.isAuthenticated() then req.user else false
+              ranking: buffer
 
   app.get "/u/:id", (req, res) ->
     users.getUser req.params.id, (returned) ->
       console.log returned
       res.render "userDetails.ejs",
-        currentUser: (if (req.isAuthenticated()) then req.user else false)
+        currentUser: if req.isAuthenticated() then req.user else false
         user: returned
   # =============================================================================
   # AJAX CALLS ==================================================================

@@ -41,18 +41,17 @@
     buffer = "";
     request = https.get(options, function(result) {
       result.setEncoding("utf8");
-      console.log(result);
       result.on("data", function(chunk) {
         buffer += chunk;
       });
-      result.on("end", function() {
-        callback(buffer);
+      return result.on("end", function() {
+        return callback(buffer);
       });
     });
     request.on("error", function(e) {
-      console.log("error from facebook.getFbData: " + e.message);
+      return console.log("error from facebook.getFbData: " + e.message);
     });
-    request.end();
+    return request.end();
   };
 
   exports.postTwitter = function(accessToken, message, callback) {
@@ -84,16 +83,15 @@
       if (body.error) {
         return console.error("Error returned from  twitter: ", body.error);
       }
-      console.log(body);
       return callback(body);
     });
     form = r.form();
-    form.append("status", message);
+    return form.append("status", message);
   };
 
   exports.postFbMessage = function(userFB, message, link, callback) {
     var params, url;
-    url = "https://graph.facebook.com/" + userFB.id + "/feed";
+    url = "https://graph.facebook.com/me/feed";
     if (message) {
       params = {
         access_token: userFB.token,
@@ -150,8 +148,8 @@
         return console.error("Error occured: ", err);
       }
       body = JSON.parse(body);
-      if (body.error) {
-        return console.error("Error returned from facebook: ", body.error);
+      if (body.errors) {
+        return console.error("Error returned from facebook: ", body.errors);
       }
       return callback(JSON.stringify(body, null, "\t"));
     });
@@ -162,7 +160,6 @@
     url = "https://graph.facebook.com/me/feed";
     params = {
       access_token: user.facebook.token,
-      picture: object.img || auth.cyf.app_domain + '/img/favicon-64.png',
       name: object.name || false,
       message: object.message || false,
       application: auth.facebookAuth.clientID,
@@ -194,12 +191,15 @@
   exports.userAction = function(user, action, callback) {
     var obj, params, url;
     url = "https://graph.facebook.com/me/cyfbeta:" + action.name;
+    console.log('FB Actions for ' + user.local.pseudo);
     params = {
       access_token: user.facebook.token,
       app_id: auth.facebookAuth.clientID,
       notify: true,
+      'fb:explicitly_shared': true,
+      message: action.message || false,
       image: action.image || auth.cyf.app_domain + '/img/favicon-128.png',
-      ref: action.link || auth.cyf.app_domain + '/u/' + user.idCool
+      ref: action.link || auth.cyf.app_domain
     };
     if (action.name === 'rank') {
       obj = {
@@ -216,7 +216,6 @@
       };
     }
     _.extend(params, obj);
-    console.log(params);
     return request.post({
       url: url,
       qs: params

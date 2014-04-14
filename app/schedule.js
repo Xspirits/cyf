@@ -23,7 +23,7 @@
       return ladder.generateLadder(daily, function() {
         return ladder.rankUser(daily, function(top3) {
           return ladder.spreadLadder(top3, daily, function(done) {
-            return mailer.cLog('[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"), result);
+            return mailer.cLog('[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"), done);
           });
         });
       });
@@ -31,7 +31,7 @@
     weeklyRanking = new schedule.RecurrenceRule();
     weeklyRanking.dayOfWeek = 1;
     weeklyRanking.hour = 0;
-    weeklyRanking.minute = 2;
+    weeklyRanking.minute = 5;
     weeklyRanking.seconds = 0;
     weekLadder = schedule.scheduleJob(weeklyRanking, function() {
       var weekly;
@@ -39,7 +39,7 @@
       return ladder.generateLadder(weekly, function() {
         return ladder.rankUser(weekly, function(top3) {
           return ladder.spreadLadder(top3, weekly, function(done) {
-            return mailer.cLog('[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"), result);
+            return mailer.cLog('[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"), done);
           });
         });
       });
@@ -47,7 +47,7 @@
     monthlyRanking = new schedule.RecurrenceRule();
     monthlyRanking.date = 1;
     monthlyRanking.hour = 0;
-    monthlyRanking.minute = 3;
+    monthlyRanking.minute = 10;
     monthlyRanking.seconds = 0;
     return monthlyLadder = schedule.scheduleJob(monthlyRanking, function() {
       var monthly;
@@ -55,7 +55,7 @@
       return ladder.generateLadder(monthly, function() {
         return ladder.rankUser(monthly, function(top3) {
           return ladder.spreadLadder(top3, monthly, function(done) {
-            return mailer.cLog('[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"), result);
+            return mailer.cLog('[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"), done);
           });
         });
       });

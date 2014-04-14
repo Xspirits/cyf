@@ -32,12 +32,12 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
     ladder.generateLadder daily, ->
       ladder.rankUser daily, (top3)-> 
         ladder.spreadLadder top3, daily, (done)->
-          mailer.cLog '[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"),result
+          mailer.cLog '[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"),done
   # Weekly Ladder
   weeklyRanking           = new schedule.RecurrenceRule()
   weeklyRanking.dayOfWeek = 1 #Monday
   weeklyRanking.hour      = 0
-  weeklyRanking.minute    = 2 # Let's avoid taking risks with setting 0h 0m 0s
+  weeklyRanking.minute    = 5 # Let's avoid taking risks with setting 0h 0m 0s
   weeklyRanking.seconds   = 0
 
   weekLadder = schedule.scheduleJob weeklyRanking, ->
@@ -46,13 +46,13 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
     ladder.generateLadder weekly, ->
       ladder.rankUser weekly, (top3)-> 
         ladder.spreadLadder top3, weekly, (done)->
-          mailer.cLog '[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"),result
+          mailer.cLog '[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"),done
 
   # Monthly Ladder
   monthlyRanking         = new schedule.RecurrenceRule()
   monthlyRanking.date    = 1 # 1st of each month
   monthlyRanking.hour    = 0 # at 1 AM
-  monthlyRanking.minute  = 3
+  monthlyRanking.minute  = 10
   monthlyRanking.seconds = 0
 
   monthlyLadder = schedule.scheduleJob monthlyRanking, ->
@@ -61,4 +61,4 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
     ladder.generateLadder monthly, ->
       ladder.rankUser monthly, (top3)-> 
         ladder.spreadLadder top3, monthly, (done)->
-          mailer.cLog '[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"),result
+          mailer.cLog '[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"),done

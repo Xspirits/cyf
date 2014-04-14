@@ -489,55 +489,16 @@
         return done(data);
       });
     },
-    globalLeaderboard: function(done) {
-      User.find().sort("-globalScore").where("globalScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          mailer.cLog('Error at ' + __filename, err);
-        }
-        done(challengers);
-      });
-    },
-    monthlyLeaderboard: function(done) {
-      User.find().sort("-monthlyScore").where("monthlyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          mailer.cLog('Error at ' + __filename, err);
-        }
-        done(challengers);
-      });
-    },
-    weeklyLeaderboard: function(done) {
-      User.find().sort("-weeklyScore").where("weeklyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          mailer.cLog('Error at ' + __filename, err);
-        }
-        done(challengers);
-      });
-    },
-    dailyLeaderboard: function(done) {
-      User.find().sort("-dailyScore").where("dailyScore").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-        if (err) {
-          mailer.cLog('Error at ' + __filename, err);
-        }
-        done(challengers);
-      });
-    },
-    getLeaderboards: function(type, done) {
-      var buffer, self;
-      buffer = {};
+    getLeaderboards: function(type, scale, done) {
+      var self;
       self = this;
       if (type === "score") {
-        self.globalLeaderboard(function(global) {
-          buffer.global = global;
-          self.monthlyLeaderboard(function(monthly) {
-            buffer.monthly = monthly;
-            self.weeklyLeaderboard(function(weekly) {
-              buffer.weekly = weekly;
-              self.dailyLeaderboard(function(daily) {
-                buffer.daily = daily;
-                return done(buffer);
-              });
-            });
-          });
+        return User.find({}).sort("-" + scale + "Score").where(scale + "Score").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          console.log(challengers);
+          return done(challengers);
         });
       }
     }
