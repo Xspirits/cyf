@@ -93,8 +93,8 @@ module.exports =
     name = user.leagueoflegend.name
     UID = user._id
     social.findSummonerLol region, name, (summoner)->
-      console.log ( summoner.profileIconId+' == '+user.leagueoflegend.profileIconId_confirm)
-      
+      console.log ( summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm)
+      mailer.cLog 'linkLol attempt for  '+user.local.pseudo,  summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm
       if summoner.profileIconId == user.leagueoflegend.profileIconId_confirm
         User.findByIdAndUpdate UID,
           'leagueoflegend.confirmed': true

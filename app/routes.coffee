@@ -393,6 +393,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       console.log result      
       res.send if result == true then true else false
 
+      # a
   app.post "/linkLol_confirm", isLoggedIn, (req, res) ->
 
     users.linkLol_confirm req.user, (result) ->

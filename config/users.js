@@ -144,6 +144,7 @@
       UID = user._id;
       return social.findSummonerLol(region, name, function(summoner) {
         console.log(summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
+        mailer.cLog('linkLol attempt for  ' + user.local.pseudo, summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
         if (summoner.profileIconId === user.leagueoflegend.profileIconId_confirm) {
           return User.findByIdAndUpdate(UID, {
             'leagueoflegend.confirmed': true
