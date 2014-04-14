@@ -102,7 +102,7 @@ module.exports =
           throw err if err
           return done true
       else
-        return done false, "Icons did not match!"
+        return done "Icons did not match!"
   ###
   Unlink a league of legend account
   @param  {[type]}   user [description]

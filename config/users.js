@@ -155,7 +155,7 @@
             return done(true);
           });
         } else {
-          return done(false, "Icons did not match!");
+          return done("Icons did not match!");
         }
       });
     },
