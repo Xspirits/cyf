@@ -634,7 +634,6 @@
       if (err) {
         throw err;
       }
-      console.log(object);
       return callback(object.games);
     });
   };

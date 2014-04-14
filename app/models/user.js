@@ -281,7 +281,7 @@
       lastGames: [
         {
           championId: Number,
-          createDate: Date,
+          createDate: String,
           championInfos: {
             id: Number,
             title: String,

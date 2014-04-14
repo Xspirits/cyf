@@ -44,7 +44,6 @@
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
-            console.log(user);
             return done(user);
           });
         } else {
@@ -69,7 +68,6 @@
             }
           };
         }
-        console.log(query);
         return User.findByIdAndUpdate(data._id, query, function(err) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
@@ -88,7 +86,6 @@
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
         }
-        console.log(user);
         return done(user);
       });
     },
@@ -145,7 +142,6 @@
         query.push(users[i]._id);
         i--;
       }
-      console.log(query);
       User.update({
         _id: {
           $in: query
@@ -188,7 +184,6 @@
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
         }
-        console.log(doc);
         idx = (doc.tribunal ? doc.tribunal.indexOf(idSplice) : -1);
         if (idx !== -1) {
           doc.tribunal.splice(idx, 1);
@@ -238,7 +233,6 @@
       var checkForHexRegExp, isObj;
       checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
       isObj = checkForHexRegExp.test(id);
-      console.log(isObj);
       if (isObj) {
         return User.findById(id).populate("friends.idUser").exec(function(err, data) {
           if (err) {
@@ -383,7 +377,6 @@
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
         }
-        console.log(user);
         return done(true);
       });
     },
@@ -431,14 +424,12 @@
             summonerLevel: parseInt(summoner.summonerLevel, 10),
             profileIconId_confirm: 0
           };
-          console.log(lol);
           return User.findByIdAndUpdate(UID, {
             leagueoflegend: lol
           }, function(err, user) {
             if (err) {
               throw err;
             }
-            console.log(user);
             return done(true);
           });
         } else {
@@ -504,7 +495,6 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          console.log(user);
           return done(true);
         });
       });
@@ -522,51 +512,58 @@
       if (user.leagueoflegend.confirmed === true) {
         championsList = social.lol_champion_list();
         return social.getLastGames(user.leagueoflegend.region, user.leagueoflegend.idProfile, function(last10) {
-          return User.findById(UID).exec(function(err, user) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            if (!user.leagueoflegend.lastGames) {
-              user.leagueoflegend.lastGames = [];
-            }
-            _.each(last10, function(game) {
-              var aGame, champ, g;
-              g = game;
-              champ = _.find(championsList, function(champ) {
-                return champ.id === g.championId;
-              });
-              console.log(champ);
-              aGame = {
-                championId: g.championId,
-                championInfos: champ,
-                createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm'),
-                fellowPlayers: [game.fellowPlayers],
-                gameId: g.gameId,
-                gameMode: g.gameMode,
-                gameType: g.gameType,
-                invalid: g.invalid,
-                ipEarned: g.ipEarned,
-                level: g.level,
-                mapId: g.mapId,
-                spell1: g.spell1,
-                spell2: g.spell2,
-                stats: g.stats,
-                subType: g.subType,
-                teamId: g.teamId
-              };
-              return user.leagueoflegend.lastGames.push(aGame);
-            });
-            return user.save(function(err) {
+          var test, uGl;
+          uGl = user.leagueoflegend.lastGames.length;
+          test = uGl === 0 || user.leagueoflegend.lastGames[uGl - 1].gameId !== last10[last10.length - 1].gameId;
+          console.log(test);
+          if (test === true) {
+            return User.findById(UID).exec(function(err, user) {
               if (err) {
-                throw err;
+                mailer.cLog('Error at ' + __filename, err);
               }
-              console.log(user.leagueoflegend.lastGames);
-              return done(true);
+              if (!user.leagueoflegend.lastGames) {
+                user.leagueoflegend.lastGames = [];
+              }
+              _.each(last10, function(game) {
+                var aGame, champ, g;
+                g = game;
+                champ = _.find(championsList, function(champ) {
+                  return champ.id === g.championId;
+                });
+                console.log(champ);
+                aGame = {
+                  championId: g.championId,
+                  championInfos: champ,
+                  createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm'),
+                  fellowPlayers: [game.fellowPlayers],
+                  gameId: g.gameId,
+                  gameMode: g.gameMode,
+                  gameType: g.gameType,
+                  invalid: g.invalid,
+                  ipEarned: g.ipEarned,
+                  level: g.level,
+                  mapId: g.mapId,
+                  spell1: g.spell1,
+                  spell2: g.spell2,
+                  stats: g.stats,
+                  subType: g.subType,
+                  teamId: g.teamId
+                };
+                return user.leagueoflegend.lastGames.push(aGame);
+              });
+              return user.save(function(err) {
+                if (err) {
+                  mailer.cLog('Error at ' + __filename, err);
+                }
+                return done(true);
+              });
             });
-          });
+          } else {
+            return done(false, 'already up to date');
+          }
         });
       } else {
-        return done(false);
+        return done(false, 'link an account firstly');
       }
     }
   };

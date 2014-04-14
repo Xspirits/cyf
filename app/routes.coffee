@@ -6,9 +6,6 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
-    # users.updateLastGames req.user, (done)->
-    #   console.log done
-
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 
@@ -380,6 +377,10 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     users.unlinkLol req.user._id, (result) ->
       console.log result
       res.redirect "/settings"
+
+  app.post "/syncLoLGames", isLoggedIn, (req,res) ->
+    users.updateLastGames req.user, (result)->
+      res.send if result then result else false
 
   app.post "/linkLol", isLoggedIn, (req, res) ->
     obj =

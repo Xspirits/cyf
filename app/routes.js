@@ -393,6 +393,11 @@
         return res.redirect("/settings");
       });
     });
+    app.post("/syncLoLGames", isLoggedIn, function(req, res) {
+      return users.updateLastGames(req.user, function(result) {
+        return res.send(result ? result : false);
+      });
+    });
     app.post("/linkLol", isLoggedIn, function(req, res) {
       var obj;
       obj = {

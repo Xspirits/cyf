@@ -250,7 +250,7 @@ userSchema = mongoose.Schema(
       default: true
     lastGames:[
       championId: Number   #int Champion ID associated with game.
-      createDate: Date    #long  Date that end game data was recorded, specified as epoch milliseconds.
+      createDate: String    #long  Date that end game data was recorded, specified as epoch milliseconds.
       championInfos:
         id:Number,
         title:String

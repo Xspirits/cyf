@@ -23,8 +23,6 @@ module.exports =
         user.verified = true        
         user.save (err) ->
           mailer.cLog 'Error at '+__filename,err if err
-
-          console.log user
           done user
       else
         done false
@@ -39,7 +37,6 @@ module.exports =
       else
         query = $set:
           "share.twitter": data.value
-      console.log query
       User.findByIdAndUpdate data._id, query, (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         done true
@@ -49,7 +46,6 @@ module.exports =
   getFriendList: (id, done) ->
     User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
         mailer.cLog 'Error at '+__filename,err if err
-        console.log user
         done user
 
   setOffline: (user, done) ->
@@ -100,7 +96,6 @@ module.exports =
     while i >= 0
       query.push users[i]._id
       i--
-    console.log query
     User.update(
       _id:
         $in: query
@@ -135,7 +130,6 @@ module.exports =
           voteDate: currentDate
     ).exec (err, doc) ->
       mailer.cLog 'Error at '+__filename,err if err
-      console.log doc
       idx = (if doc.tribunal then doc.tribunal.indexOf(idSplice) else -1)
       
       # is it valid?
@@ -184,7 +178,6 @@ module.exports =
   getUser: (id, done) ->
     checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
     isObj = checkForHexRegExp.test(id)
-    console.log isObj
     if isObj
       User.findById(id).populate("friends.idUser").exec (err, data) ->
         mailer.cLog 'Error at '+__filename,err if err
@@ -318,7 +311,6 @@ module.exports =
       multi: true
     ).exec (err, user) ->
       mailer.cLog 'Error at '+__filename,err if err
-      console.log user
       done true
 
     return
@@ -363,12 +355,10 @@ module.exports =
           revisionDate : new Date(summoner.revisionDate * 1000)
           summonerLevel : parseInt(summoner.summonerLevel, 10)
           profileIconId_confirm: 0
-        console.log lol
         User.findByIdAndUpdate UID,
           leagueoflegend: lol
         , (err, user) ->
           throw err if err
-          console.log user
           return done true
       else
         return done false, "summoner not found"
@@ -414,7 +404,6 @@ module.exports =
       lol.summonerLevel = `undefined`
       user.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
-        console.log user
         done true
 
   ###
@@ -429,41 +418,45 @@ module.exports =
       championsList = social.lol_champion_list()
       social.getLastGames user.leagueoflegend.region, user.leagueoflegend.idProfile, (last10)->
 
-        User.findById(UID).exec (err, user) ->
-          mailer.cLog 'Error at '+__filename,err if err
+        uGl = user.leagueoflegend.lastGames.length
+        test = (uGl == 0 || user.leagueoflegend.lastGames[uGl - 1].gameId != last10[last10.length - 1].gameId)
+        console.log test
+        if(test == true)
+          User.findById(UID).exec (err, user) ->
+            mailer.cLog 'Error at '+__filename,err if err
 
-          if(!user.leagueoflegend.lastGames)
-            user.leagueoflegend.lastGames = []
+            if(!user.leagueoflegend.lastGames)
+              user.leagueoflegend.lastGames = []
 
-          _.each last10, (game) ->
-            g = game
-            champ = _.find championsList, (champ) -> champ.id == g.championId
+            _.each last10, (game) ->
+              g = game
+              champ = _.find championsList, (champ) -> champ.id == g.championId
 
-            console.log champ
-            # Prepare detailed stats
-            # prepare object
-            aGame=
-              championId: g.championId   #int Champion ID associated with game.
-              championInfos: champ   
-              createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm')    #long  Date that end game data was recorded, specified as epoch milliseconds.
-              fellowPlayers: [game.fellowPlayers]    #[PlayerDto] Other players associated with the game.
-              gameId: g.gameId    #long  Game ID.
-              gameMode: g.gameMode    #string  Game mode. (legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, FIRSTBLOOD)
-              gameType: g.gameType    #string  Game type. (legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME)
-              invalid: g.invalid     # Invalid flag.
-              ipEarned: g.ipEarned    #int IP Earned.
-              level: g.level     # Level.
-              mapId: g.mapId     # Map ID.
-              spell1: g.spell1    #int ID of first summoner spell.
-              spell2: g.spell2    #int ID of second summoner spell.
-              stats: g.stats # Statistics associated with the game for this summoner.
-              subType: g.subType     #  Game sub-type. (legal values: NONE, NORMAL, BOT, RANKED_SOLO_5x5, RANKED_PREMADE_3x3, RANKED_PREMADE_5x5, ODIN_UNRANKED, RANKED_TEAM_3x3, RANKED_TEAM_5x5, NORMAL_3x3, BOT_3x3, CAP_5x5, ARAM_UNRANKED_5x5, ONEFORALL_5x5, FIRSTBLOOD_1x1, FIRSTBLOOD_2x2, SR_6x6, URF, URF_BOT)
-              teamId: g.teamId    #int Team ID associated with game. Team ID 100 is blue team. Team ID 200 is purple team.
+              console.log champ
+              # Prepare detailed stats
+              # prepare object
+              aGame=
+                championId: g.championId   #int Champion ID associated with game.
+                championInfos: champ   
+                createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm')    #long  Date that end game data was recorded, specified as epoch milliseconds.
+                fellowPlayers: [game.fellowPlayers]    #[PlayerDto] Other players associated with the game.
+                gameId: g.gameId    #long  Game ID.
+                gameMode: g.gameMode    #string  Game mode. (legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, FIRSTBLOOD)
+                gameType: g.gameType    #string  Game type. (legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME)
+                invalid: g.invalid     # Invalid flag.
+                ipEarned: g.ipEarned    #int IP Earned.
+                level: g.level     # Level.
+                mapId: g.mapId     # Map ID.
+                spell1: g.spell1    #int ID of first summoner spell.
+                spell2: g.spell2    #int ID of second summoner spell.
+                stats: g.stats # Statistics associated with the game for this summoner.
+                subType: g.subType     #  Game sub-type. (legal values: NONE, NORMAL, BOT, RANKED_SOLO_5x5, RANKED_PREMADE_3x3, RANKED_PREMADE_5x5, ODIN_UNRANKED, RANKED_TEAM_3x3, RANKED_TEAM_5x5, NORMAL_3x3, BOT_3x3, CAP_5x5, ARAM_UNRANKED_5x5, ONEFORALL_5x5, FIRSTBLOOD_1x1, FIRSTBLOOD_2x2, SR_6x6, URF, URF_BOT)
+                teamId: g.teamId    #int Team ID associated with game. Team ID 100 is blue team. Team ID 200 is purple team.
 
-            user.leagueoflegend.lastGames.push aGame
+              user.leagueoflegend.lastGames.push aGame
 
-          user.save (err) ->
-            throw err if err
-            console.log user.leagueoflegend.lastGames
-            done true
-    else done false
+            user.save (err) ->
+              mailer.cLog 'Error at '+__filename,err if err
+              done true
+        else done false, 'already up to date'
+    else done false, 'link an account firstly'
