@@ -41,7 +41,7 @@
 		
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-8">
+				<div id="user_header" class="<%= ongoings.length > 0 || currentUser.leagueoflegend.lastGames.length > 0 ? 'col-lg-8' : 'col-lg-12' %>">
 						<div class="row">
 							<div class="col-lg-2 col-xs-2 animated fadeInDown" href="#">
 									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
@@ -144,8 +144,59 @@
 						</div>
 				</div>
 				<div class="col-lg-4">
-					<h4>Challenges in progress</h4>
-						<% if ( ongoings.length > 0 ) { %>	
+					<div class="row">		
+						<div class="col-md-12">	
+							<div class="panel-group" id="lol_games">
+							  <div class="panel panel-default">
+							    <div class="panel-heading">
+							      <h4 class="panel-title">
+							        <a data-toggle="collapse" data-parent="#lol_games" href="#collapse_lol">
+							          Last 10 League of legend games
+							        </a>
+							      </h4>
+							    </div>
+							    <div id="collapse_lol" class="panel-collapse collapse in">
+							      <div class="panel-body">
+										<div class="row">		
+									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
+									<%  var games = currentUser.leagueoflegend.lastGames;
+										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
+										for (var i = lolilength; i >= 0; i--) { %>
+											<div class="col-lg-12 col-md-6 col-sm-6">	
+
+												<div class="media">
+													<div class="pull-left">
+														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">											
+													</div>
+													<div class="media-body">
+														<h6 class="pull-right text-center <%= games[i].stats.win ? 'won': 'lost' %>"><%= games[i].stats.win ? 'won': 'lost' %>
+
+														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
+														</h6>
+														<h4 class="media-heading"><%= games[i].subType %></h4>
+														<p><%= games[i].createDate %></p>
+													</div>
+												</div>
+											</div>
+							
+										<% } %>
+										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>
+											<div class="media-body">
+												<button>Sync Now</button>
+											</div>
+
+										<% } %>
+							      		</div>
+							    	</div>
+							    </div>
+							  </div>
+							</div>
+						</div>
+					</div>
+
+
+				<% if ( ongoings.length > 0 ) { %>
+					<h4>Challenges in progress</h4>	
 						<div class="row">				
 						<% for (var i = ongoings.length - 1; i >= 0; i--) { %>
 						<div class="col-md-12 ">
@@ -202,7 +253,6 @@
 								</div>
 							</div>
 						</div>
-						<% } %>
 						</div>
 
 						<% } %>
@@ -215,6 +265,7 @@
 					</section> 
 					</div>-->
 				</div>
+				<% } %>
 			</div>
 			<div class="row">
 				<ul class="timeline col-lg-12">

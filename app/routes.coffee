@@ -6,6 +6,9 @@ isLoggedIn = (req, res, next) ->
 module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
+    # users.updateLastGames req.user, (done)->
+    #   console.log done
+
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 

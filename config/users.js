@@ -70,14 +70,14 @@
           };
         }
         console.log(query);
-        User.findByIdAndUpdate(data._id, query, function(err) {
+        return User.findByIdAndUpdate(data._id, query, function(err) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          done(true);
+          return done(true);
         });
       } else {
-        done(false);
+        return done(false);
       }
     },
     getFriendList: function(id, done) {
@@ -92,109 +92,14 @@
         return done(user);
       });
     },
-    linkLol: function(data, done) {
-      var UID, name, region;
-      region = data.region;
-      name = data.summonerName;
-      UID = data.id;
-      return social.findSummonerLol(region, name, function(summoner) {
-        var lol;
-        if (summoner.id) {
-          lol = {
-            idProfile: parseInt(summoner.id, 10),
-            name: summoner.name,
-            region: region,
-            profileIconId: parseInt(summoner.profileIconId, 10),
-            revisionDate: new Date(summoner.revisionDate * 1000),
-            summonerLevel: parseInt(summoner.summonerLevel, 10),
-            profileIconId_confirm: 0
-          };
-          console.log(lol);
-          return User.findByIdAndUpdate(UID, {
-            leagueoflegend: lol
-          }, function(err, user) {
-            if (err) {
-              throw err;
-            }
-            console.log(user);
-            return done(true);
-          });
-        } else {
-          return done(false, "summoner not found");
-        }
-      });
-    },
-    linkLolIconPick: function(data, done) {
-      var UID, icon;
-      UID = data.id;
-      icon = parseInt(data.profileIconId_confirm, 10);
-      return User.findByIdAndUpdate(UID, {
-        'leagueoflegend.profileIconId_confirm': icon
-      }, function(err, user) {
-        if (err) {
-          throw err;
-        }
-        return done(true);
-      });
-    },
-    linkLol_confirm: function(user, done) {
-      var UID, name, region;
-      region = user.leagueoflegend.region;
-      name = user.leagueoflegend.name;
-      UID = user._id;
-      return social.findSummonerLol(region, name, function(summoner) {
-        console.log(summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
-        mailer.cLog('linkLol attempt for  ' + user.local.pseudo, summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
-        if (summoner.profileIconId === user.leagueoflegend.profileIconId_confirm) {
-          return User.findByIdAndUpdate(UID, {
-            'leagueoflegend.confirmed': true
-          }, function(err, user) {
-            if (err) {
-              throw err;
-            }
-            return done(true);
-          });
-        } else {
-          return done("Icons did not match!");
-        }
-      });
-    },
-
-    /*
-    Unlink a league of legend account
-    @param  {[type]}   user [description]
-    @param  {Function} done [description]
-    @return {[type]}        [description]
-     */
-    unlinkLol: function(id, done) {
-      User.findById(id).exec(function(err, user) {
-        var lol;
-        if (err) {
-          mailer.cLog('Error at ' + __filename, err);
-        }
-        lol = user.leagueoflegend;
-        lol.idProfile = undefined;
-        lol.name = undefined;
-        lol.profileIconId = undefined;
-        lol.revisionDate = undefined;
-        lol.summonerLevel = undefined;
-        user.save(function(err) {
-          if (err) {
-            mailer.cLog('Error at ' + __filename, err);
-          }
-          console.log(user);
-          return done(true);
-        });
-      });
-    },
     setOffline: function(user, done) {
-      User.findByIdAndUpdate(user._id, {
+      return User.findByIdAndUpdate(user._id, {
         isOnline: false
       }, function(err) {
         if (err) {
           mailer.cLog('Error at ' + __filename, err);
         }
-        done(true);
+        return done(true);
       });
     },
 
@@ -483,7 +388,7 @@
       });
     },
     userToRateChallenges: function(idUser, done) {
-      User.findById(idUser).populate("challengeRate").exec(function(err, data) {
+      return User.findById(idUser).populate("challengeRate").exec(function(err, data) {
         if (err) {
           return done(err);
         }
@@ -507,6 +412,161 @@
           }
           return done(challengers);
         });
+      }
+    },
+    linkLol: function(data, done) {
+      var UID, name, region;
+      region = data.region;
+      name = data.summonerName;
+      UID = data.id;
+      return social.findSummonerLol(region, name, function(summoner) {
+        var lol;
+        if (summoner.id) {
+          lol = {
+            idProfile: parseInt(summoner.id, 10),
+            name: summoner.name,
+            region: region,
+            profileIconId: parseInt(summoner.profileIconId, 10),
+            revisionDate: new Date(summoner.revisionDate * 1000),
+            summonerLevel: parseInt(summoner.summonerLevel, 10),
+            profileIconId_confirm: 0
+          };
+          console.log(lol);
+          return User.findByIdAndUpdate(UID, {
+            leagueoflegend: lol
+          }, function(err, user) {
+            if (err) {
+              throw err;
+            }
+            console.log(user);
+            return done(true);
+          });
+        } else {
+          return done(false, "summoner not found");
+        }
+      });
+    },
+    linkLolIconPick: function(data, done) {
+      var UID, icon;
+      UID = data.id;
+      icon = parseInt(data.profileIconId_confirm, 10);
+      return User.findByIdAndUpdate(UID, {
+        'leagueoflegend.profileIconId_confirm': icon
+      }, function(err, user) {
+        if (err) {
+          throw err;
+        }
+        return done(true);
+      });
+    },
+    linkLol_confirm: function(user, done) {
+      var UID, name, region;
+      region = user.leagueoflegend.region;
+      name = user.leagueoflegend.name;
+      UID = user._id;
+      return social.findSummonerLol(region, name, function(summoner) {
+        console.log(summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
+        mailer.cLog('linkLol attempt for  ' + user.local.pseudo, summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
+        if (summoner.profileIconId === user.leagueoflegend.profileIconId_confirm) {
+          return User.findByIdAndUpdate(UID, {
+            'leagueoflegend.confirmed': true
+          }, function(err, user) {
+            if (err) {
+              throw err;
+            }
+            return done(true);
+          });
+        } else {
+          return done("Icons did not match!");
+        }
+      });
+    },
+
+    /*
+    Unlink a league of legend account
+    @param  {[type]}   user [description]
+    @param  {Function} done [description]
+    @return {[type]}        [description]
+     */
+    unlinkLol: function(id, done) {
+      return User.findById(id).exec(function(err, user) {
+        var lol;
+        if (err) {
+          mailer.cLog('Error at ' + __filename, err);
+        }
+        lol = user.leagueoflegend;
+        lol.idProfile = undefined;
+        lol.name = undefined;
+        lol.profileIconId = undefined;
+        lol.revisionDate = undefined;
+        lol.summonerLevel = undefined;
+        return user.save(function(err) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          console.log(user);
+          return done(true);
+        });
+      });
+    },
+
+    /*
+    Unlink a league of legend account
+    @param  {[type]}   user [description]
+    @param  {Function} done [description]
+    @return {[type]}        [description]
+     */
+    updateLastGames: function(user, done) {
+      var UID, championsList;
+      UID = user._id;
+      if (user.leagueoflegend.confirmed === true) {
+        championsList = social.lol_champion_list();
+        return social.getLastGames(user.leagueoflegend.region, user.leagueoflegend.idProfile, function(last10) {
+          return User.findById(UID).exec(function(err, user) {
+            if (err) {
+              mailer.cLog('Error at ' + __filename, err);
+            }
+            if (!user.leagueoflegend.lastGames) {
+              user.leagueoflegend.lastGames = [];
+            }
+            _.each(last10, function(game) {
+              var aGame, champ, g;
+              g = game;
+              champ = _.find(championsList, function(champ) {
+                return champ.id === g.championId;
+              });
+              console.log(champ);
+              aGame = {
+                championId: g.championId,
+                championInfos: champ,
+                createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm'),
+                fellowPlayers: [game.fellowPlayers],
+                gameId: g.gameId,
+                gameMode: g.gameMode,
+                gameType: g.gameType,
+                invalid: g.invalid,
+                ipEarned: g.ipEarned,
+                level: g.level,
+                mapId: g.mapId,
+                spell1: g.spell1,
+                spell2: g.spell2,
+                stats: g.stats,
+                subType: g.subType,
+                teamId: g.teamId
+              };
+              return user.leagueoflegend.lastGames.push(aGame);
+            });
+            return user.save(function(err) {
+              if (err) {
+                throw err;
+              }
+              console.log(user.leagueoflegend.lastGames);
+              return done(true);
+            });
+          });
+        });
+      } else {
+        return done(false);
       }
     }
   };

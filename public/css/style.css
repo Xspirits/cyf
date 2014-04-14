@@ -331,6 +331,48 @@ ul.userlist >div > li > a > img {
   width: .5em;
 }
 /* tx LoL */
+#lol_games .media img {
+  max-width: 45px;
+  height: auto;
+}
+#lol_games .media h6 {
+  min-width: 70px;
+  margin: 0;
+  color: #f1F1F1;;
+  border-radius: 5px;
+}
+
+#lol_games .media p {
+  color: rgb(121, 126, 131);
+  }
+#lol_games .media h6 > p{
+  margin: 5px;
+  font-size: 11px;
+  font-variant: small-caps;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  color: rgb(71, 71, 71);
+  text-shadow: 0 1px 0 rgb(233, 227, 227);
+  background: rgb(211, 211, 211);
+}
+
+#lol_games .media h6.won > p{
+  border-top: 1px solid rgba(7, 106, 119, .8);
+}
+
+#lol_games .media h6.won {
+  color: rgb(7, 106, 119);
+}
+
+#lol_games .media h6.lost > p{
+  border-top: 1px solid rgba(204, 0, 57, .8);
+
+}
+#lol_games .media h6.lost {
+  color: rgb(204, 0, 57);
+}
+
 
 .white-stone {
   padding: 20px;

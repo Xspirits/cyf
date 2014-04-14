@@ -43,11 +43,8 @@ module.exports =
       User.findByIdAndUpdate data._id, query, (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         done true
-        return
-
     else
       done false
-    return
 
   getFriendList: (id, done) ->
     User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
@@ -55,87 +52,12 @@ module.exports =
         console.log user
         done user
 
-  linkLol: (data, done) ->
-    region = data.region
-    name = data.summonerName
-    UID = data.id
-    social.findSummonerLol region, name, (summoner)->
-      if summoner.id
-        lol =
-          idProfile : parseInt(summoner.id, 10)
-          name : summoner.name
-          region : region
-          profileIconId : parseInt(summoner.profileIconId, 10)
-          revisionDate : new Date(summoner.revisionDate * 1000)
-          summonerLevel : parseInt(summoner.summonerLevel, 10)
-          profileIconId_confirm: 0
-        console.log lol
-        User.findByIdAndUpdate UID,
-          leagueoflegend: lol
-        , (err, user) ->
-          throw err if err
-          console.log user
-          return done true
-      else
-        return done false, "summoner not found"
-
-  linkLolIconPick: (data, done)->
-    UID = data.id
-    icon = parseInt(data.profileIconId_confirm,10)
-    User.findByIdAndUpdate UID,
-      'leagueoflegend.profileIconId_confirm': icon
-    , (err, user) ->
-      throw err if err
-      return done true
-
-  linkLol_confirm: (user, done)->
-    region = user.leagueoflegend.region
-    name = user.leagueoflegend.name
-    UID = user._id
-    social.findSummonerLol region, name, (summoner)->
-      console.log ( summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm)
-      mailer.cLog 'linkLol attempt for  '+user.local.pseudo,  summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm
-      if summoner.profileIconId == user.leagueoflegend.profileIconId_confirm
-        User.findByIdAndUpdate UID,
-          'leagueoflegend.confirmed': true
-        , (err, user) ->
-          throw err if err
-          return done true
-      else
-        return done "Icons did not match!"
-  ###
-  Unlink a league of legend account
-  @param  {[type]}   user [description]
-  @param  {Function} done [description]
-  @return {[type]}        [description]
-  ###
-  unlinkLol: (id, done) ->
-    User.findById(id).exec (err, user) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      lol = user.leagueoflegend
-      lol.idProfile = `undefined`
-      lol.name = `undefined`
-      lol.profileIconId = `undefined`
-      lol.revisionDate = `undefined`
-      lol.summonerLevel = `undefined`
-      user.save (err) ->
-        mailer.cLog 'Error at '+__filename,err if err
-        console.log user
-        done true
-
-      return
-
-    return
-
   setOffline: (user, done) ->
     User.findByIdAndUpdate user._id,
       isOnline: false
     , (err) ->
       mailer.cLog 'Error at '+__filename,err if err
       done true
-      return
-
-    return
 
   
   ###
@@ -407,10 +329,6 @@ module.exports =
       # if there are any errors, return the error
       return done(err)  if err
       done data
-
-    return
-
-  
   #
   # LEADER BOARD
   #
@@ -426,3 +344,126 @@ module.exports =
       User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
         mailer.cLog 'Error at '+__filename,err if err
         done challengers
+
+  #
+  # GAMES
+  #
+
+  linkLol: (data, done) ->
+    region = data.region
+    name = data.summonerName
+    UID = data.id
+    social.findSummonerLol region, name, (summoner)->
+      if summoner.id
+        lol =
+          idProfile : parseInt(summoner.id, 10)
+          name : summoner.name
+          region : region
+          profileIconId : parseInt(summoner.profileIconId, 10)
+          revisionDate : new Date(summoner.revisionDate * 1000)
+          summonerLevel : parseInt(summoner.summonerLevel, 10)
+          profileIconId_confirm: 0
+        console.log lol
+        User.findByIdAndUpdate UID,
+          leagueoflegend: lol
+        , (err, user) ->
+          throw err if err
+          console.log user
+          return done true
+      else
+        return done false, "summoner not found"
+
+  linkLolIconPick: (data, done)->
+    UID = data.id
+    icon = parseInt(data.profileIconId_confirm,10)
+    User.findByIdAndUpdate UID,
+      'leagueoflegend.profileIconId_confirm': icon
+    , (err, user) ->
+      throw err if err
+      return done true
+
+  linkLol_confirm: (user, done)->
+    region = user.leagueoflegend.region
+    name = user.leagueoflegend.name
+    UID = user._id
+    social.findSummonerLol region, name, (summoner)->
+      console.log ( summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm)
+      mailer.cLog 'linkLol attempt for  '+user.local.pseudo,  summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm
+      if summoner.profileIconId == user.leagueoflegend.profileIconId_confirm
+        User.findByIdAndUpdate UID,
+          'leagueoflegend.confirmed': true
+        , (err, user) ->
+          throw err if err
+          return done true
+      else
+        return done "Icons did not match!"
+  ###
+  Unlink a league of legend account
+  @param  {[type]}   user [description]
+  @param  {Function} done [description]
+  @return {[type]}        [description]
+  ###
+  unlinkLol: (id, done) ->
+    User.findById(id).exec (err, user) ->
+      mailer.cLog 'Error at '+__filename,err if err
+      lol = user.leagueoflegend
+      lol.idProfile = `undefined`
+      lol.name = `undefined`
+      lol.profileIconId = `undefined`
+      lol.revisionDate = `undefined`
+      lol.summonerLevel = `undefined`
+      user.save (err) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        console.log user
+        done true
+
+  ###
+  Unlink a league of legend account
+  @param  {[type]}   user [description]
+  @param  {Function} done [description]
+  @return {[type]}        [description]
+  ###
+  updateLastGames: (user, done) ->
+    UID = user._id
+    if user.leagueoflegend.confirmed == true
+      championsList = social.lol_champion_list()
+      social.getLastGames user.leagueoflegend.region, user.leagueoflegend.idProfile, (last10)->
+
+        User.findById(UID).exec (err, user) ->
+          mailer.cLog 'Error at '+__filename,err if err
+
+          if(!user.leagueoflegend.lastGames)
+            user.leagueoflegend.lastGames = []
+
+          _.each last10, (game) ->
+            g = game
+            champ = _.find championsList, (champ) -> champ.id == g.championId
+
+            console.log champ
+            # Prepare detailed stats
+            # prepare object
+            aGame=
+              championId: g.championId   #int Champion ID associated with game.
+              championInfos: champ   
+              createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm')    #long  Date that end game data was recorded, specified as epoch milliseconds.
+              fellowPlayers: [game.fellowPlayers]    #[PlayerDto] Other players associated with the game.
+              gameId: g.gameId    #long  Game ID.
+              gameMode: g.gameMode    #string  Game mode. (legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, FIRSTBLOOD)
+              gameType: g.gameType    #string  Game type. (legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME)
+              invalid: g.invalid     # Invalid flag.
+              ipEarned: g.ipEarned    #int IP Earned.
+              level: g.level     # Level.
+              mapId: g.mapId     # Map ID.
+              spell1: g.spell1    #int ID of first summoner spell.
+              spell2: g.spell2    #int ID of second summoner spell.
+              stats: g.stats # Statistics associated with the game for this summoner.
+              subType: g.subType     #  Game sub-type. (legal values: NONE, NORMAL, BOT, RANKED_SOLO_5x5, RANKED_PREMADE_3x3, RANKED_PREMADE_5x5, ODIN_UNRANKED, RANKED_TEAM_3x3, RANKED_TEAM_5x5, NORMAL_3x3, BOT_3x3, CAP_5x5, ARAM_UNRANKED_5x5, ONEFORALL_5x5, FIRSTBLOOD_1x1, FIRSTBLOOD_2x2, SR_6x6, URF, URF_BOT)
+              teamId: g.teamId    #int Team ID associated with game. Team ID 100 is blue team. Team ID 200 is purple team.
+
+            user.leagueoflegend.lastGames.push aGame
+
+          user.save (err) ->
+            throw err if err
+            console.log user.leagueoflegend.lastGames
+            done true
+    else done false
