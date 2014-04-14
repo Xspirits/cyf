@@ -45,11 +45,10 @@
 											</p>
 										</div>
 										<div class="col-md-12">
-											<p>
-												<small><strong>Note:</strong> we will only tweet when you validate a challenge.</small>					
-												<small><strong>Exemple:</strong> "I just completed a challenge (//Link//) on League of Legend! Join me now @cyf_app #challenge."</small>												
-											</p>
-
+												<strong>What is shared?</strong>
+												<p>
+													When you complete a challenge, when you are ranked in the leaderboard, when you reach a new level.
+												</p>
 											
 										</div>
 									</div>
@@ -118,7 +117,7 @@
 											<% } else if (!currentUser.leagueoflegend.idProfile || currentUser.leagueoflegend.profileIconId_confirm === 0) { %>
 											<div class="row" id="linkingLoL">
 												<div id="step-1">													
-													<div class="col-xs-4">
+													<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 														<select name="region" id="lol_region" class="form-control">
 															<option value="na">na</option>
 															<option value="br">br</option>
@@ -129,10 +128,10 @@
 															<option value="oce">oce</option>											
 														</select>
 													</div>
-													<div class="col-xs-4">
+													<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 														<input type="text" class="form-control" id="lol_name" placeholder="Summoner name">
 													</div>
-													<div class="col-xs-4">
+													<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 														<button type="button" id="lol_link" class="btn btn-default">Link!</button>
 													</div>
 												</div>

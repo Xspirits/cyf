@@ -526,7 +526,7 @@
       };
       this.newNotif([caseClosed._idChallenged._id, caseClosed._idChallenger._id], true, notif);
       if (caseClosed.tribunalAnswered === true) {
-        this.successChall(caseClosed);
+        return this.successChall(caseClosed);
       }
     },
     linkedGame: function(user, gameName) {
@@ -539,12 +539,12 @@
         from: user.local.pseudo,
         icon: "fa-link",
         link1: "/u/" + user.idCool,
-        title: user.local.pseudo + " linked his " + gameName + " account!",
+        title: user.local.pseudo + " linked a " + gameName + " account!",
         link2: "",
         to: "",
         message: ""
       };
-      this.newNotif(friends, true, notif);
+      return this.newNotif(friends, true, notif);
     }
   };
 

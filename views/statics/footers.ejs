@@ -115,7 +115,7 @@
 			// Progress animation
 			(function animateProgress() {
 				$('.tinyProgress').each(function(){
-					var w   = $(this).attr('data-percent');
+					var w   = $(this).attr('data-percent') - 2;
 					$(this).width(w + '%');
 				});	
 			})();

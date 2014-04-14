@@ -491,14 +491,20 @@
       });
     },
     getLeaderboards: function(type, scale, done) {
-      var self;
+      var query, self, where;
       self = this;
       if (type === "score") {
-        return User.find({}).sort("-" + scale + "Score").where(scale + "Score").gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
+        if (scale === 'global') {
+          query = '-globalScore';
+          where = 'globalScore';
+        } else {
+          query = scale + "Rank";
+          where = query;
+        }
+        return User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          console.log(challengers);
           return done(challengers);
         });
       }

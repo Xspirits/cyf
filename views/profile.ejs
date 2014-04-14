@@ -41,7 +41,7 @@
 		
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-12">
+				<div id="user_header" class="col-lg-8">
 						<div class="row">
 							<div class="col-lg-2 col-xs-2 animated fadeInDown" href="#">
 									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
@@ -143,13 +143,78 @@
 						</div>
 						</div>
 				</div>
-				<!-- <div class="col-lg-4 badggies">
-					<h4>My Badges</h4>
+				<div class="col-lg-4">
+					<h4>Challenges in progress</h4>
+						<% if ( ongoings.length > 0 ) { %>	
+						<div class="row">				
+						<% for (var i = ongoings.length - 1; i >= 0; i--) { %>
+						<div class="col-md-12 ">
+							<div class="panel panel-<%= ((ongoings[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+								<div class="panel-heading">
+									<div class="panel-title text-right">
+										<span class="pull-left panel-title">
+
+											<span class="glyphicon glyphicon-star-empty"></span>
+											<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
+												<%= ongoings[i]._idChallenger.local.pseudo  %>
+											</a>
+											<span class="glyphicon glyphicon-flash"></span>
+											<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
+												<%= ongoings[i]._idChallenged.local.pseudo  %>
+											</a>
+
+										</span>
+										<a href='/o/<%= ongoings[i].idCool %>'>
+											<%= ongoings[i]._idChallenge.title %>
+										</a>
+
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<p class="lead text-center">
+											<%= ongoings[i]._idChallenge.description  %>
+										</p>									
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= ongoings[i].launchDate %>"></span>
+											</p>
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= ongoings[i].deadLine %>"></span>
+											</p>										
+										</div>
+										<div class="col-sm-6 text-right">
+											Value: <%= ongoings[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+										</div>									
+									</div>								
+								</div>
+								<div class="panel-footer">
+									<% if(ongoings[i].waitingConfirm === true) { %>
+									<%= ((ongoings[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  ongoings[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= ongoings[i].confirmAsk %>"></span>
+
+									<% } else { %>
+									<strong class="convertEnd" data-tEnd="<%= ongoings[i].deadLine %>"></strong>
+									<% } %>
+								</div>
+							</div>
+						</div>
+						<% } %>
+						</div>
+
+						<% } %>
+					<!-- <h4>My Badges</h4
+					<div class="badggies">
+
 					<section class="badgeList">
 						BADGES ARE COMMING SOON
 						<img src="TBD" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					</section>
-				</div> -->
+					</section> 
+					</div>-->
+				</div>
 			</div>
 			<div class="row">
 				<ul class="timeline col-lg-12">

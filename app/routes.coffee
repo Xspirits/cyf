@@ -57,8 +57,20 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
 
   # PROFILE SECTION ===========================
   app.get "/profile", isLoggedIn, (req, res) ->
-    res.render "profile.ejs",
-      currentUser: req.user
+
+    challenge.userAcceptedChallenge req.user._id, (data) ->
+      ongoingChall = []
+      _.each data, (value, key) ->
+        cStart = data[key].launchDate
+        cEnd = data[key].deadLine
+
+        # Start has been reached but not end
+        if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+          ongoingChall.push data[key]
+
+      res.render "profile.ejs",
+        ongoings: ongoingChall
+        currentUser: req.user
 
   app.get "/settings", isLoggedIn, (req, res) ->
     res.render "setting.ejs",
@@ -137,17 +149,14 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
         # To determine if its belong to the current user or not will be done client-side.
         else if data[key].waitingConfirm is true and data[key].progress < 100
           reqValidation.push data[key]
-          console.log "parsed reqValidation : " + data[key].waitingConfirm
         
         # Start hasn't been reached
         else if not moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
           upcomingChall.push data[key]
-          console.log "parsed upcoming : " + data[key]._id
         
         # Start has been reached but not end
         else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
           ongoingChall.push data[key]
-          console.log "parsed ongoing : " + data[key]._id
 
       res.render "ongoing.ejs",
         currentUser: req.user

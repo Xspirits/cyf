@@ -75,8 +75,21 @@
       });
     });
     app.get("/profile", isLoggedIn, function(req, res) {
-      return res.render("profile.ejs", {
-        currentUser: req.user
+      return challenge.userAcceptedChallenge(req.user._id, function(data) {
+        var ongoingChall;
+        ongoingChall = [];
+        _.each(data, function(value, key) {
+          var cEnd, cStart;
+          cStart = data[key].launchDate;
+          cEnd = data[key].deadLine;
+          if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+            return ongoingChall.push(data[key]);
+          }
+        });
+        return res.render("profile.ejs", {
+          ongoings: ongoingChall,
+          currentUser: req.user
+        });
       });
     });
     app.get("/settings", isLoggedIn, function(req, res) {
@@ -138,14 +151,11 @@
             challenge.crossedDeadline(data[key]._id);
             return endedChall.push(data[key]);
           } else if (data[key].waitingConfirm === true && data[key].progress < 100) {
-            reqValidation.push(data[key]);
-            return console.log("parsed reqValidation : " + data[key].waitingConfirm);
+            return reqValidation.push(data[key]);
           } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
-            upcomingChall.push(data[key]);
-            return console.log("parsed upcoming : " + data[key]._id);
+            return upcomingChall.push(data[key]);
           } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
-            ongoingChall.push(data[key]);
-            return console.log("parsed ongoing : " + data[key]._id);
+            return ongoingChall.push(data[key]);
           }
         });
         return res.render("ongoing.ejs", {

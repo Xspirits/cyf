@@ -417,7 +417,12 @@ module.exports =
   getLeaderboards: (type,scale, done) ->
     self = this
     if type is "score"
-      User.find({}).sort("-" + scale + "Score").where(scale + "Score").gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
+      if scale == 'global'
+        query = '-globalScore'
+        where = 'globalScore'
+      else
+        query = scale + "Rank"
+        where = query
+      User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
         mailer.cLog 'Error at '+__filename,err if err
-        console.log challengers
         done challengers

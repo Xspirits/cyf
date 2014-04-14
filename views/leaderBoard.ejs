@@ -30,6 +30,7 @@
     <meta name="twitter:title" content="Leaderboards of challenge your friends">
     <meta name="twitter:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
     <!-- Twitter card end -->
+
 	<title>Leaderboards, <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> #1</title>
 </head>
 <body>
@@ -39,9 +40,6 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-			<%= ranking.daily %>
-			<%= ranking.weekly %>
-			<%= ranking.monthly %>
 				<div class="tabbable tabs-left col-lg-12 clearfix">
 					<ul id="leadTab" class="nav nav-tabs nav-justified">
 						<li class="active"><a href="#daily" data-toggle="tab"><img src="./img/ladder_a.png" class="img-responsive">daily</a></li>
