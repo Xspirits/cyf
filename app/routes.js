@@ -392,13 +392,7 @@
       };
       return users.linkLol(obj, function(result) {
         console.log(result);
-        if (result === true) {
-          xp.xpReward(req.user, "connect.game");
-          notifs.linkedGame(req.user, "League of Legend");
-          return res.send(true);
-        } else {
-          return res.send(false, result[1]);
-        }
+        return res.send(result === true ? true : false);
       });
     });
     app.post("/linklol_pickicon", isLoggedIn, function(req, res) {
@@ -415,7 +409,13 @@
     app.post("/linkLol_confirm", isLoggedIn, function(req, res) {
       return users.linkLol_confirm(req.user, function(result) {
         console.log(result);
-        return res.send(result === true ? true : [false, result]);
+        if (result === true) {
+          xp.xpReward(req.user, "connect.game");
+          notifs.linkedGame(req.user, "League of Legend");
+          return res.send(true);
+        } else {
+          return res.send(false, result);
+        }
       });
     });
     app.post("/updateSettings", isLoggedIn, function(req, res) {
