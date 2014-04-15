@@ -702,6 +702,10 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   )
   app.get "/signup/:done?", (req, res) ->
     nowConfirm = (if req.params.done is "great" then true else false)
+    if nowConfirm && appKeys.app_config.email_confirm == true
+      req.session.notifLog = false
+      req.session.isLogged = false
+      req.logout()
     res.render "signup.ejs",
       waitingConfirm: nowConfirm
       currentUser: if req.isAuthenticated() then req.user else false

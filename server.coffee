@@ -56,8 +56,7 @@ challenge       = require("./config/challenge")(_, mailer, moment, genUID)
 users           = require("./config/users")(_, mailer, appKeys, social, relations, notifs, moment)
 ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
 
-
-require("./config/passport") passport, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration
+require("./config/passport") passport,challenge, social, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration
 
 app.configure ->
   

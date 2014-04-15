@@ -641,6 +641,11 @@
     app.get("/signup/:done?", function(req, res) {
       var nowConfirm;
       nowConfirm = (req.params.done === "great" ? true : false);
+      if (nowConfirm && appKeys.app_config.email_confirm === true) {
+        req.session.notifLog = false;
+        req.session.isLogged = false;
+        req.logout();
+      }
       return res.render("signup.ejs", {
         waitingConfirm: nowConfirm,
         currentUser: req.isAuthenticated() ? req.user : false,

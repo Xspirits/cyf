@@ -55,7 +55,8 @@
           if (err) {
             console.log(err);
           }
-          return console.log('A registration mail has been sent to ' + user.local.email);
+          console.log('A registration mail has been sent to ' + user.local.email);
+          return done(true);
         });
       },
       sendMail: function(user, title, message, track, tags) {

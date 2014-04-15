@@ -86,7 +86,7 @@
 
   ladder = require("./config/ladder")(async, scheduler, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs);
 
-  require("./config/passport")(passport, appKeys, mailer, genUID, xp, notifs, google);
+  require("./config/passport")(passport, challenge, social, appKeys, mailer, genUID, xp, notifs, google);
 
   app.configure(function() {
     app.use(express.bodyParser());

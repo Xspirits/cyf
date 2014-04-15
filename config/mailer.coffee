@@ -42,6 +42,7 @@ module.exports = (mandrill_client, nMailer, keys, moment) ->
     transport.sendMail mailOptions, (err, response)->
       console.log err if err
       console.log 'A registration mail has been sent to '+user.local.email
+      done true
 
   # user object, title, message, do we track this on mandrill? true/false, strings "aa","bb", cb
   sendMail: (user,title,message,track,tags) ->
