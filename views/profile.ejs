@@ -60,7 +60,7 @@
 							</h2>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="loaderProgress animated fadeInDown">
-											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+											<div class="tinyProgress tinyYellow" style="width: 0%" data-percent="<%= xpPer %>"></div>
 
 											<div class="xp text-center">
 												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
@@ -150,17 +150,18 @@
 							  <div class="panel panel-default">
 							    <div class="panel-heading">
 							      <h4 class="panel-title">
+							        <span class="pull-right gameSync">
+											<i class="fa fa-refresh"></i> 
+									</span>
 							        <a data-toggle="collapse" data-parent="#lol_games" href="#collapse_lol">
 							          Last 10 League of legend games
-							        </a>
+							        </a> 
 							      </h4>
 							    </div>
 							    <div id="collapse_lol" class="panel-collapse collapse in">
 							      <div class="panel-body">
-										<div class="row">		
-											<div class="media-body text-center">
-												<button id="gameSync" type="button" class="btn btn-info"> Sync my last games now</button>
-											</div>
+										<div class="row">
+										
 									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
 									<%  var games = currentUser.leagueoflegend.lastGames;
 										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
@@ -183,9 +184,10 @@
 											</div>
 							
 										<% } %>
-										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>
+										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
+
 											<div class="media-body text-center">
-												<button type="button" class="btn btn-info">Info</button>
+												<button type="button" class="btn btn-info gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
 											</div>
 
 										<% } %>
@@ -338,15 +340,22 @@
 				}
 				return a;
 			}
-			$('#gameSync').on('click', function(e){
+			$('.gameSync').on('click', function(e){
 				e.preventDefault();
-
+				_this = $(this)
+				_this.addClass('spinning');
 				$.ajax({
 					type: 'POST',
 					contentType: 'application/json',
 					url: './syncLoLGames',						
 					success: function(data) {
-						console.log(data);
+						_this.removeClass('spinning').fadeOut('slow', function() {
+						if(data === false)
+							_this.html('<i class="fa fa-check-square-o"></i> Up to date').fadeIn('slow');
+						else
+							_this.html('<i class="fa fa-info"></i> Updated').fadeIn('slow');
+
+						});
 					}
 				});	
 
