@@ -2,7 +2,7 @@
 User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
 
-module.exports =  (_, mailer, appKeys, social, relations, notifs, moment) ->
+module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment) ->
   validateEmail: (hash, done) ->
     User.findOne {verfiy_hash:hash}, (err, user) ->
       mailer.cLog 'Error at '+__filename,err if err
@@ -14,7 +14,27 @@ module.exports =  (_, mailer, appKeys, social, relations, notifs, moment) ->
           done user
       else
         done false
-      return
+
+  retrievePassword: (email, done) ->
+    # Fin our user:
+    User.findOne {'local.email': email}, (err, user)->
+      mailer.cLog 'Error at '+__filename,err if err
+      password = genUID.generate()
+      user.local.password = user.generateHash(password)
+      user.save (err, user) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        mailer.sendMail user,'[Cyf]Your password has been reseted','<h2>New Password</h2> <p>At your request we have generated a new password for your.</p><p> Your news credentials: <ul><li>email:<strong>' + user.local.email + '</strong></li><li>password: <strong> ' + password + '</strong></li></p><p>You can login here: <a href="http://www.cyf-app.co/login" target="_blank" title="Login">http://www.cyf-app.co/login</a></p><p><strong> You are the only person who have this information, if you want a new password, please reset it through the same procedure.</strong></p>',false
+        done true
+        
+  changePassword: (user, newPwd, done) ->
+    # Fin our user:
+    User.findById user._id, (err, user)->
+      mailer.cLog 'Error at '+__filename,err if err
+      user.local.password = user.generateHash(newPwd)
+      user.save (err, user) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        mailer.sendMail user,'[Cyf]Your password has been changed!','<h2>You have changed your Password</h2> <p>We send you this mail to confirm that your password has been updated successfully.</p><p> Your news credentials: <ul><li>email:<strong> ' + user.local.email + '</strong></li><li>password:<strong> ' + newPwd + '</strong></li></p><p>You can login here: <a href="http://www.cyf-app.co/login" target="_blank" title="Login">http://www.cyf-app.co/login</a></p><p><strong> You are the only person who have this information, if you want a new password, please reset it through the same procedure.</strong></p>',false
+        done true
 
   updateSettings: (data, done) ->
     query = undefined
@@ -299,22 +319,6 @@ module.exports =  (_, mailer, appKeys, social, relations, notifs, moment) ->
       # if there are any errors, return the error
       return done(err)  if err
       done data
-  #
-  # LEADER BOARD
-  #
-  getLeaderboards: (type,scale, done) ->
-    self = this
-    if type is "score"
-      if scale == 'global'
-        query = '-globalScore'
-        where = 'globalScore'
-      else
-        query = scale + "Rank"
-        where = query
-      User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
-        mailer.cLog 'Error at '+__filename,err if err
-        done challengers
-
   #
   # GAMES
   #

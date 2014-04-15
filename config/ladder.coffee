@@ -7,6 +7,23 @@ getScore = (data, done) ->
   done finalScore
 
 module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs,users)->
+
+  #
+  # LEADER BOARD
+  #
+  getLeaderboards: (type,scale, done) ->
+    self = this
+    if type is "score"
+      if scale == 'global'
+        query = '-globalScore'
+        where = 'globalScore'
+      else
+        query = scale + "Rank"
+        where = query
+      User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
+        mailer.cLog 'Error at '+__filename,err if err
+        done challengers
+
   rankUser: (type, callback) ->
     typeTxt =  if type == 1 then  'yesterday' else if type == 2 then  'the last Week' else 'the last Month'
     hash =  if type == 1 then  '#dailyLadder' else if type == 2 then  '#weeklyLadder' else '#monthlyLadder'

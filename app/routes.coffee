@@ -76,6 +76,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     res.render "setting.ejs",
       currentUser: req.user
 
+
   # CHALLENGES SECTION =========================
   app.get "/request", isLoggedIn, (req, res) ->
     
@@ -343,13 +344,13 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   # leader board
   app.get "/leaderboard", (req, res) ->
     buffer = {}
-    users.getLeaderboards "score",'global', (global) ->
+    ladder.getLeaderboards "score",'global', (global) ->
       buffer.global = global
-      users.getLeaderboards "score", 'monthly', (monthly) ->
+      ladder.getLeaderboards "score", 'monthly', (monthly) ->
         buffer.monthly = monthly
-        users.getLeaderboards "score", 'weekly', (weekly) ->
+        ladder.getLeaderboards "score", 'weekly', (weekly) ->
           buffer.weekly = weekly
-          users.getLeaderboards "score", 'daily', (daily) ->
+          ladder.getLeaderboards "score", 'daily', (daily) ->
             buffer.daily = daily
             res.render "leaderBoard.ejs",
               currentUser: if req.isAuthenticated() then req.user else false
@@ -363,6 +364,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   # =============================================================================
   # AJAX CALLS ==================================================================
   # =============================================================================
+
 
   # Game autocomplete research
   app.get "/search_game", (req, res) ->
@@ -400,7 +402,17 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       console.log result      
       res.send if result == true then true else false
 
-      # a
+  app.post "/changePassword", isLoggedIn, (req, res) ->
+    # check we get the same pwd
+    pwd1 = req.body.password1
+    pwd2 = req.body.password2
+    
+    if(pwd1 == pwd2 && typeof pwd2 != "undefined" && typeof pwd1 != "undefined")
+      users.changePassword req.user, pwd1, (done)->
+        res.send true
+    else
+      res.send false,'Passwords did not match'
+
   app.post "/linkLol_confirm", isLoggedIn, (req, res) ->
 
     users.linkLol_confirm req.user, (result) ->
@@ -433,119 +445,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       console.log result
       res.send true
 
-#TODO
-# idCool of the Ongoing
-
-#A judge give his vote regarding to an open Tribunal's case
-# idCool of the Ongoing
-#Boolean false to deny, true to validate
-
-#Loop and check if all vote have been processed. then close the case.
-
-# Close the case
-
-#If the case is validated
-
-#Ask the challenger and challenged to rate the challenge.
-
-#TODO
-
-# console.log(obj);
-
-#TODO
-
-# a
-
-# console.log(obj);
-
-# console.log(obj);
-
-#TODO
-
-#TODO
-
-# =============================================================================
-# AUTHENTICATE (FIRST fnotif) ==================================================
-# =============================================================================
-
-# locally --------------------------------
-# LOGIN ===============================
-# show the login form
-
-# process the login form
-# redirect to the secure profile section
-# redirect back to the signup page if there is an error
-# allow flash messages
-
-# SIGNUP =================================
-# show the signup form
-
-# process the signup form
-# redirect to the secure profile section
-# redirect back to the signup page if there is an error
-# allow flash messages
-
-# facebook -------------------------------
-
-# send to facebook to do the authentication
-
-# handle the callback after facebook has authenticated the user
-
-# twitter --------------------------------
-
-# send to twitter to do the authentication
-
-# handle the callback after twitter has authenticated the user
-
-# google ---------------------------------
-
-# send to google to do the authentication
-
-# the callback after google has authenticated the user
-
-# =============================================================================
-# AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
-# =============================================================================
-
-# locally --------------------------------
-# redirect to the secure profile section
-# redirect back to the signup page if there is an error
-# allow flash messages
-
-# facebook -------------------------------
-
-# send to facebook to do the authentication
-
-# handle the callback after facebook has authorized the user
-
-# twitter --------------------------------
-
-# send to twitter to do the authentication
-
-# handle the callback after twitter has authorized the user
-
-# google ---------------------------------
-
-# send to google to do the authentication
-
-# the callback after google has authorized the user
-
-# =============================================================================
-# UNLINK ACCOUNTS =============================================================
-# =============================================================================
-# used to unlink accounts. for social accounts, just remove the token
-# for local account, remove email and password
-# user account will stay active in case they want to reconnect in the future
-
-# local -----------------------------------
-
-# facebook -------------------------------
-
-# twitter --------------------------------
-
-# google ---------------------------------
-
-# route middleware to ensure user is logged in
   app.post "/sendTribunal", isLoggedIn, (req, res) ->
     obj =
       idUser: req.user._id
@@ -691,6 +590,17 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       else
         console.log result
 
+  app.get "/lostPassword", (req, res) ->
+    res.render "lostPassword.ejs",
+      currentUser: if req.isAuthenticated() then req.user else false
+      done: false
+
+  app.post "/lostPassword", (req, res) ->
+    users.retrievePassword req.body.email, (done)->
+      res.render "lostPassword.ejs",
+        currentUser: if req.isAuthenticated() then req.user else false
+        done: true
+
   app.get "/login", (req, res) ->
     res.render "login.ejs",
       message: req.flash("loginMessage")
@@ -716,6 +626,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     failureRedirect: "/signup"
     failureFlash: true
   )
+
   app.get "/auth/facebook", passport.authenticate("facebook",
     scope: [
       "email"

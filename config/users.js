@@ -6,7 +6,7 @@
 
   Challenge = require("../app/models/challenge");
 
-  module.exports = function(_, mailer, appKeys, social, relations, notifs, moment) {
+  module.exports = function(_, mailer, appKeys, genUID, social, relations, notifs, moment) {
     return {
       validateEmail: function(hash, done) {
         return User.findOne({
@@ -17,15 +17,49 @@
           }
           if (user) {
             user.verified = true;
-            user.save(function(err) {
+            return user.save(function(err) {
               if (err) {
                 mailer.cLog('Error at ' + __filename, err);
               }
               return done(user);
             });
           } else {
-            done(false);
+            return done(false);
           }
+        });
+      },
+      retrievePassword: function(email, done) {
+        return User.findOne({
+          'local.email': email
+        }, function(err, user) {
+          var password;
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          password = genUID.generate();
+          user.local.password = user.generateHash(password);
+          return user.save(function(err, user) {
+            if (err) {
+              mailer.cLog('Error at ' + __filename, err);
+            }
+            mailer.sendMail(user, '[Cyf]Your password has been reseted', '<h2>New Password</h2> <p>At your request we have generated a new password for your.</p><p> Your news credentials: <ul><li>email:<strong>' + user.local.email + '</strong></li><li>password: <strong> ' + password + '</strong></li></p><p>You can login here: <a href="http://www.cyf-app.co/login" target="_blank" title="Login">http://www.cyf-app.co/login</a></p><p><strong> You are the only person who have this information, if you want a new password, please reset it through the same procedure.</strong></p>', false);
+            return done(true);
+          });
+        });
+      },
+      changePassword: function(user, newPwd, done) {
+        return User.findById(user._id, function(err, user) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          user.local.password = user.generateHash(newPwd);
+          return user.save(function(err, user) {
+            if (err) {
+              mailer.cLog('Error at ' + __filename, err);
+            }
+            mailer.sendMail(user, '[Cyf]Your password has been changed!', '<h2>You have changed your Password</h2> <p>We send you this mail to confirm that your password has been updated successfully.</p><p> Your news credentials: <ul><li>email:<strong> ' + user.local.email + '</strong></li><li>password:<strong> ' + newPwd + '</strong></li></p><p>You can login here: <a href="http://www.cyf-app.co/login" target="_blank" title="Login">http://www.cyf-app.co/login</a></p><p><strong> You are the only person who have this information, if you want a new password, please reset it through the same procedure.</strong></p>', false);
+            return done(true);
+          });
         });
       },
       updateSettings: function(data, done) {
@@ -365,25 +399,6 @@
           }
           return done(data);
         });
-      },
-      getLeaderboards: function(type, scale, done) {
-        var query, self, where;
-        self = this;
-        if (type === "score") {
-          if (scale === 'global') {
-            query = '-globalScore';
-            where = 'globalScore';
-          } else {
-            query = scale + "Rank";
-            where = query;
-          }
-          return User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            return done(challengers);
-          });
-        }
       },
       linkLol: function(data, done) {
         var UID, name, region;

@@ -53,7 +53,7 @@ relations       = require("./config/relations")(mailer)
 games           = require("./config/game")(moment)
 social          = require("./config/social")
 challenge       = require("./config/challenge")(_, mailer, moment, genUID)
-users           = require("./config/users")(_, mailer, appKeys, social, relations, notifs, moment)
+users           = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment)
 ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
 
 require("./config/passport") passport,challenge, social, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration

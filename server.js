@@ -82,7 +82,7 @@
 
   challenge = require("./config/challenge")(_, mailer, moment, genUID);
 
-  users = require("./config/users")(_, mailer, appKeys, social, relations, notifs, moment);
+  users = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment);
 
   ladder = require("./config/ladder")(async, scheduler, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs);
 

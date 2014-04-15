@@ -352,13 +352,13 @@
     app.get("/leaderboard", function(req, res) {
       var buffer;
       buffer = {};
-      return users.getLeaderboards("score", 'global', function(global) {
+      return ladder.getLeaderboards("score", 'global', function(global) {
         buffer.global = global;
-        return users.getLeaderboards("score", 'monthly', function(monthly) {
+        return ladder.getLeaderboards("score", 'monthly', function(monthly) {
           buffer.monthly = monthly;
-          return users.getLeaderboards("score", 'weekly', function(weekly) {
+          return ladder.getLeaderboards("score", 'weekly', function(weekly) {
             buffer.weekly = weekly;
-            return users.getLeaderboards("score", 'daily', function(daily) {
+            return ladder.getLeaderboards("score", 'daily', function(daily) {
               buffer.daily = daily;
               return res.render("leaderBoard.ejs", {
                 currentUser: req.isAuthenticated() ? req.user : false,
@@ -419,6 +419,18 @@
         console.log(result);
         return res.send(result === true ? true : false);
       });
+    });
+    app.post("/changePassword", isLoggedIn, function(req, res) {
+      var pwd1, pwd2;
+      pwd1 = req.body.password1;
+      pwd2 = req.body.password2;
+      if (pwd1 === pwd2 && typeof pwd2 !== "undefined" && typeof pwd1 !== "undefined") {
+        return users.changePassword(req.user, pwd1, function(done) {
+          return res.send(true);
+        });
+      } else {
+        return res.send(false, 'Passwords did not match');
+      }
     });
     app.post("/linkLol_confirm", isLoggedIn, function(req, res) {
       return users.linkLol_confirm(req.user, function(result) {
@@ -626,6 +638,20 @@
         } else {
           return console.log(result);
         }
+      });
+    });
+    app.get("/lostPassword", function(req, res) {
+      return res.render("lostPassword.ejs", {
+        currentUser: req.isAuthenticated() ? req.user : false,
+        done: false
+      });
+    });
+    app.post("/lostPassword", function(req, res) {
+      return users.retrievePassword(req.body.email, function(done) {
+        return res.render("lostPassword.ejs", {
+          currentUser: req.isAuthenticated() ? req.user : false,
+          done: true
+        });
       });
     });
     app.get("/login", function(req, res) {

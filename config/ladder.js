@@ -13,6 +13,25 @@
 
   module.exports = function(async, schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs, users) {
     return {
+      getLeaderboards: function(type, scale, done) {
+        var query, self, where;
+        self = this;
+        if (type === "score") {
+          if (scale === 'global') {
+            query = '-globalScore';
+            where = 'globalScore';
+          } else {
+            query = scale + "Rank";
+            where = query;
+          }
+          return User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
+            if (err) {
+              mailer.cLog('Error at ' + __filename, err);
+            }
+            return done(challengers);
+          });
+        }
+      },
       rankUser: function(type, callback) {
         var hash, sort, sorting, typeTxt;
         typeTxt = type === 1 ? 'yesterday' : type === 2 ? 'the last Week' : 'the last Month';
