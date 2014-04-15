@@ -357,7 +357,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
 
   app.get "/u/:id", (req, res) ->
     users.getUser req.params.id, (returned) ->
-      console.log returned
       res.render "userDetails.ejs",
         currentUser: if req.isAuthenticated() then req.user else false
         user: returned

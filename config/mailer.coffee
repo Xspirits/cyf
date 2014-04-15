@@ -19,8 +19,10 @@ module.exports = (mandrill_client, nMailer, keys, moment) ->
 
     transport.sendMail mailOptions, (err, response)->
       console.log err if err
-      console.log response.message
+      console.log '===================='
       console.log type+' - A mail has been sent to '+cFrom
+      console.log 'Error: '+ message
+      console.log '===================='
 
   accountConfirm: (user, done) ->
     cFrom = keys.support.email

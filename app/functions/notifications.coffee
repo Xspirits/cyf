@@ -1,6 +1,5 @@
 User = require("../models/user")
-_ = require("underscore")
-module.exports =
+module.exports = (_, mailer) ->
   
   ###
   Send a new notification to either one or many people.
@@ -61,10 +60,9 @@ module.exports =
     ,
       multi: true
     , (err, result) ->
-      consol.log err if err
-      result
-
-    return
+      mailer.cLog 'Error at '+__filename,err if err
+      return result
+    
   ###
   Mark a notification as READ:if it's not persistant delete it.
   @param  {[type]}	data [description]
@@ -81,13 +79,12 @@ module.exports =
             notifications:
               _id: thisNotif
         ).exec (err, user) ->
-          throw err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           done true
       else
         done true
     else
       User.findOneAndUpdate({ _id: data.idUser,'notifications._id':thisNotif},{ $set: { 'notifications.$.isSeen': true} }).exec( done );
-    return
 
   gainedXp: (user, amount, bonus, fromAction) ->
     toSelf = [user._id]

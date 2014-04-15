@@ -1,5 +1,4 @@
 User = require("../app/models/user")
-async = require("async")
 
 # @todo this two function could be merged.
 getScore = (data, done) ->
@@ -7,7 +6,7 @@ getScore = (data, done) ->
   finalScore = (data.xp * (1 + data.level)) + (250 * data.shareTW) + (250 * data.shareFB)
   done finalScore
 
-module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs,users)->
+module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs,users)->
   rankUser: (type, callback) ->
     typeTxt =  if type == 1 then  'yesterday' else if type == 2 then  'the last Week' else 'the last Month'
     hash =  if type == 1 then  '#dailyLadder' else if type == 2 then  '#weeklyLadder' else '#monthlyLadder'

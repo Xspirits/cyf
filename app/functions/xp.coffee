@@ -5,8 +5,6 @@ xpFormula = (level^2+level)/2*100-(level*100),
 levelFormula = (sqrt(100(2 xp +25))+50)/100,
 ###
 User = require("../models/user")
-_ = require("underscore")
-notifs = require("./notifications")
 xpRewardvalue =
   "connect.game": 100
   "user.register": 55
@@ -37,7 +35,7 @@ getXp = (level) ->
   process = (((Math.pow(level, 2) + level) / 2) * 100) - (level * 100)
   process
 
-module.exports = (sio) ->
+module.exports = (_, mailer, notifs, sio) ->
   
   ###
   Return the value of an action
@@ -108,24 +106,19 @@ module.exports = (sio) ->
       $set:
         xpNext: levelUp[1]
     ).exec (err, userUpdated) ->
-      console.log err  if err
+      mailer.cLog 'Error at '+__filename,err if err
       text = _.values(_.pick(xpRewardAction, action))[0]
       if levelUp[0]
         notifs.gainedLevel userUpdated, uLvl + 1
         notifs.levelUp userUpdated
         sio.glob "fa fa-angle-double-up", " <a href=\"/u/" + userUpdated.idCool + "\">" + userUpdated.local.pseudo + "</a> is now level " + userUpdated.level + " <i class=\"fa fa-exclamation\"></i>"
       notifs.gainedXp userUpdated, value, bonus, text
-      
-      #endpoint :(
-      "woo"
-
-    return
 
   updateDaily: (done)->
     User.find().exec (err, users) ->
-      console.log err if err
+      mailer.cLog 'Error at '+__filename,err if err
 
-      for user in users then do (user) =>
+      _.each users, (user) =>
         #generate object of the day: freez the xp and level achieved
         garbage=
           xp: user.xp
@@ -135,5 +128,5 @@ module.exports = (sio) ->
           $push:
             xpHistoric: garbage
         ).exec (err, userUpdated) ->
-          console.log err  if err
+          mailer.cLog 'Error at '+__filename,err if err
           return done true

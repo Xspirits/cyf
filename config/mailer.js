@@ -28,8 +28,10 @@
           if (err) {
             console.log(err);
           }
-          console.log(response.message);
-          return console.log(type + ' - A mail has been sent to ' + cFrom);
+          console.log('====================');
+          console.log(type + ' - A mail has been sent to ' + cFrom);
+          console.log('Error: ' + message);
+          return console.log('====================');
         });
       },
       accountConfirm: function(user, done) {

@@ -150,6 +150,7 @@
 									</tbody>
 								</table>
 							</div>
+							<% if (currentUser) { %>
 							<% if (lookupFriends[user._id]) {
 								%>
 
@@ -161,6 +162,7 @@
 								You <i class="fa fa-square sunflower-color"></i>
 								</div>
 							</div>
+								<% } %>
 								<% } %>
 						</div>
 				</div>
@@ -227,6 +229,7 @@
 				}
 				return a;
 			}
+			<% if (currentUser) { %>
 			<% if (lookupFriends[user._id]) { %>
 
 			//================================================
@@ -310,6 +313,7 @@
 			canvasRanks.setAttribute('height', desiredRatio/2.5);
 			//Build charts
 			new Chart(ctxRanks).Line(dataRanks,optRk);
+			<% } %>
 			<% } %>
 		});
 		</script>

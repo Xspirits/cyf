@@ -11,8 +11,7 @@ grvtr = require('grvtr')
 social = require("../config/social")
 
 # load the auth variables
-configAuth = require("./auth") # use this one for testing
-module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
+module.exports = (passport,configAuth, mailer, genUID, xp, notifs,shortUrl) ->
   
   # =========================================================================
   # passport session setup ==================================================

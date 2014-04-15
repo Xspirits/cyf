@@ -371,7 +371,6 @@
     });
     app.get("/u/:id", function(req, res) {
       return users.getUser(req.params.id, function(returned) {
-        console.log(returned);
         return res.render("userDetails.ejs", {
           currentUser: req.isAuthenticated() ? req.user : false,
           user: returned

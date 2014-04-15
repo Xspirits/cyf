@@ -1,20 +1,8 @@
 # load up the user model
-appKeys = require("./auth")
 User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
-notifs = require("../app/functions/notifications")
-relations = require("./relations")
-social = require("./social")
-_ = require("underscore")
-moment          = require("moment")
-moment          = require('moment-timezone')
-mandrill        = require('mandrill-api/mandrill')
-nodemailer      = require("nodemailer")
-moment().tz("Europe/London").format()
-mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
-mailer          = require("./mailer")(mandrill_client, nodemailer, appKeys, moment)
 
-module.exports =
+module.exports =  (_, mailer, appKeys, social, relations, notifs, moment) ->
   validateEmail: (hash, done) ->
     User.findOne {verfiy_hash:hash}, (err, user) ->
       mailer.cLog 'Error at '+__filename,err if err
@@ -140,20 +128,12 @@ module.exports =
         
         # save the doc
         doc.save (err, doc) ->
-          if err
-            throw err
-          else
-            done true
-          return
+          mailer.cLog 'Error at '+__filename,err if err
+          done true
+      else
+        mailer.cLog 'Error at '+__filename,err if err
+        return done 'Error when slicing'
 
-        
-        # stop here, otherwise 404
-        return
-      throw "wrong whilst splicing"
-
-    return
-
-  
   getUsers: (limit, done) ->
     User.find({}).sort("-_id").limit(limit).exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
@@ -276,11 +256,9 @@ module.exports =
         
         # save the doc
         doc.save (err, doc) ->
-          if err
-            throw err
-          else
-            done doc
-          return
+          mailer.cLog 'Error at '+__filename,err if err
+          return done doc
+          
 
         
         # stop here, otherwise 404
@@ -358,7 +336,7 @@ module.exports =
         User.findByIdAndUpdate UID,
           leagueoflegend: lol
         , (err, user) ->
-          throw err if err
+          mailer.cLog 'Error at '+__filename,err if err
           return done true
       else
         return done false, "summoner not found"
@@ -369,7 +347,7 @@ module.exports =
     User.findByIdAndUpdate UID,
       'leagueoflegend.profileIconId_confirm': icon
     , (err, user) ->
-      throw err if err
+      mailer.cLog 'Error at '+__filename,err if err
       return done true
 
   linkLol_confirm: (user, done)->
@@ -383,7 +361,7 @@ module.exports =
         User.findByIdAndUpdate UID,
           'leagueoflegend.confirmed': true
         , (err, user) ->
-          throw err if err
+          mailer.cLog 'Error at '+__filename,err if err
           return done true
       else
         return done "Icons did not match!"

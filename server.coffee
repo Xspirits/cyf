@@ -22,6 +22,7 @@ port            = process.env.PORT or 8080
 mongoose        = require("mongoose")
 passport        = require("passport")
 path            = require("path")
+async           = require("async")
 moment          = require("moment")
 moment          = require('moment-timezone')
 mandrill        = require('mandrill-api/mandrill')
@@ -30,34 +31,33 @@ flash           = require("connect-flash")
 scheduler       = require("node-schedule")
 genUID          = require("shortid")
 _               = require("underscore")
+configDB        = require("./config/database")
 
+# configuration ===============================================================
 moment().tz("Europe/London").format()
-
-# generate a seed to build our UID (idCools)
 genUID.seed 664
 mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
+mongoose.connect configDB.url # connect to our database
+
+# generate a seed to build our UID (idCools)
+mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)
 
 # functions Import
-notifs          = require("./app/functions/notifications")
 sio             = require("./app/functions/sio")(io)
-xp              = require("./app/functions/xp")(sio)
+notifs          = require("./app/functions/notifications")(_, mailer)
+xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
 # Config Import
 google          = require("./config/google")
-configDB        = require("./config/database")
-challenge       = require("./config/challenge")
-users           = require("./config/users")
-relations       = require("./config/relations")
-games           = require("./config/game")
+relations       = require("./config/relations")(mailer)
+games           = require("./config/game")(moment)
 social          = require("./config/social")
-mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)
-ladder          = require("./config/ladder")(scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
+challenge       = require("./config/challenge")(_, mailer, moment, genUID)
+users           = require("./config/users")(_, mailer, appKeys, social, relations, notifs, moment)
+ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
 
 
-
-# configuration ===============================================================
-mongoose.connect configDB.url # connect to our database
-require("./config/passport") passport, mailer, genUID, xp, notifs, google # pass passport for configuration
+require("./config/passport") passport, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration
 
 app.configure ->
   
