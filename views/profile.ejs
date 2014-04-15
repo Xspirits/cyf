@@ -41,7 +41,7 @@
 		
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="<%= ongoings.length > 0 || currentUser.leagueoflegend.lastGames.length > 0 ? 'col-lg-8' : 'col-lg-12' %>">
+				<div id="user_header" class="col-lg-8">
 						<div class="row">
 							<div class="col-lg-2 col-xs-2 animated fadeInDown" href="#">
 									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
@@ -188,6 +188,12 @@
 
 											<div class="media-body text-center">
 												<button type="button" class="btn btn-info gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
+											</div>
+
+										<% } else { %>	
+
+											<div class="media-body text-center">
+												<a href="./settings" class="btn btn-info"> <i class="fa fa-link"></i> Link your Account now!</a>
 											</div>
 
 										<% } %>
