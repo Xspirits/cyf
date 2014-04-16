@@ -397,6 +397,22 @@
         return res.send(result ? result : false);
       });
     });
+    app.post("/invitedFriends", isLoggedIn, function(req, res) {
+      var invitedUsers, obj;
+      invitedUsers = req.body.list;
+      obj = {
+        id: req.user._id,
+        fbInvitedFriends: invitedUsers
+      };
+      return users.fbInvites(obj, function(done) {
+        if (done === true) {
+          xp.xpReward(req.user, "user.inviteFB", invitedUsers.length);
+          return res.send(invitedUsers.length);
+        } else {
+          return res.send(false);
+        }
+      });
+    });
     app.post("/linkLol", isLoggedIn, function(req, res) {
       var obj;
       obj = {

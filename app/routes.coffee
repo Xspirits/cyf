@@ -366,6 +366,8 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   # =============================================================================
 
 
+
+
   # Game autocomplete research
   app.get "/search_game", (req, res) ->
     lookFor = req.query["term"]
@@ -382,6 +384,22 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   app.post "/syncLoLGames", isLoggedIn, (req,res) ->
     users.updateLastGames req.user, (result)->
       res.send if result then result else false
+
+
+  app.post "/invitedFriends", isLoggedIn, (req, res) ->
+
+    invitedUsers = req.body.list
+
+    obj =
+      id: req.user._id
+      fbInvitedFriends: invitedUsers
+
+    users.fbInvites obj, (done) ->
+      if done == true
+        xp.xpReward req.user, "user.inviteFB", invitedUsers.length 
+        res.send invitedUsers.length
+      else
+        res.send false
 
   app.post "/linkLol", isLoggedIn, (req, res) ->
     obj =

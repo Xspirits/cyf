@@ -4,7 +4,7 @@
 
   User = require("../models/user");
 
-  module.exports = function(_, mailer) {
+  module.exports = function(_, appKeys, social, mailer) {
     return {
 
       /*
@@ -155,7 +155,7 @@
       @return {[type]}[description]
        */
       gainedLevel: function(user, newLevel) {
-        var notif, toSelf;
+        var action, notif, toSelf, uTweet;
         toSelf = [user._id];
         notif = {
           idFrom: user._id,
@@ -165,8 +165,23 @@
           link2: "",
           icon: "fa fa-arrow-up",
           title: "You have reached level  " + newLevel + "!",
-          message: "Congratulation! "
+          message: "Congratulation!"
         };
+        if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
+          action = {
+            name: 'reach',
+            link: appKeys.cyf.app_domain + '/u/' + user.idCool,
+            message: "Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! ",
+            level: {
+              title: user.local.pseudo + ' is a Cyf Challenger level ' + newLevel
+            }
+          };
+          social.userAction(user, action, function(cb) {});
+        }
+        if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+          uTweet = 'Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username;
+          social.postTwitter(user.twitter, uTweet, function(cb) {});
+        }
         this.newNotif(toSelf, true, notif);
       },
 

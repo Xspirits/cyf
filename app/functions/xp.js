@@ -16,6 +16,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
     "connect.game": 100,
     "user.register": 55,
     "user.newFriend": 60,
+    "user.inviteFB": 75,
     "challenge.create": 110,
     "challenge.rate": 60,
     "ongoing.accept": 60,
@@ -28,6 +29,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
     "connect.game": "linking a game account",
     "user.register": "creating an account",
     "user.newFriend": "making a new friend",
+    "user.inviteFB": "Inviting friends from Facebook",
     "challenge.create": "creating a new challenge",
     "challenge.rate": "rating a challenge",
     "ongoing.accept": "accepting a challenge",
@@ -78,11 +80,12 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           return [false, nextXpReq];
         }
       },
-      xpReward: function(user, action, bonus) {
-        var inc, levelUp, newXp, uLvl, uXp, userDoubleXp, value, valueNext, valueNext2;
+      xpReward: function(user, action, xtime, bonus) {
+        var inc, levelUp, multiply, newXp, uLvl, uXp, userDoubleXp, value, valueNext, valueNext2;
         userDoubleXp = (user.xpDouble ? true : false);
         bonus = (bonus ? bonus : 0);
-        value = (_.values(_.pick(xpRewardvalue, action))[0] * (userDoubleXp ? 2 : 1)) + bonus;
+        multiply = xtime ? xtime : 1;
+        value = (_.values(_.pick(xpRewardvalue, action))[0] * multiply * (userDoubleXp ? 2 : 1)) + bonus;
         uXp = user.xp;
         uLvl = user.level;
         valueNext = getXp(uLvl + 1);

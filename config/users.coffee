@@ -36,6 +36,18 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
         mailer.sendMail user,'[Cyf]Your password has been changed!','<h2>You have changed your Password</h2> <p>We send you this mail to confirm that your password has been updated successfully.</p><p> Your news credentials: <ul><li>email:<strong> ' + user.local.email + '</strong></li><li>password:<strong> ' + newPwd + '</strong></li></p><p>You can login here: <a href="http://www.cyf-app.co/login" target="_blank" title="Login">http://www.cyf-app.co/login</a></p><p><strong> You are the only person who have this information, if you want a new password, please reset it through the same procedure.</strong></p>',false
         done true
 
+  fbInvites: (data, done) ->
+
+    console.log(data)
+    friends = data.fbInvitedFriends
+    query = $pushAll:
+      fbInvitedFriends: friends
+
+    User.findByIdAndUpdate data.id, query, (err, user) ->
+      mailer.cLog 'Error at '+__filename,err if err
+      console.log user.fbInvitedFriends
+      done true
+
   updateSettings: (data, done) ->
     query = undefined
     if data.target is "facebook" or data.target is "twitter"

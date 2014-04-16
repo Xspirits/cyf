@@ -29,6 +29,7 @@
     <meta name="twitter:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
     <!-- Twitter card end -->
 	<title>This is your profile, <%= currentUser.local.pseudo %> - Challenge your Friends</title>
+	<link rel="stylesheet" href="./css/facebook-import.css">
 	<link rel="stylesheet" href="./css/timeline.css">
 
 </head>
@@ -88,6 +89,18 @@
 									<span class="fa fa-plus"></span>
 									Add
 								</a>
+							</div>
+							<div class="col-lg-12">	
+								<strong>Invite friends: </strong>
+								<% if (currentUser.facebook.token) { %>
+								<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
+								<% } else { %>
+								<a href="./settings" title="Connect Facebook first" class="label label-default">
+									<span class="fa fa-plus"></span>
+									Connect Facebook first
+								</a>
+								<% } %>
+								<small>(xp: 75 per Friends invite)</small>
 							</div>
 							<div class="col-lg-12">
 								<h3>Ladders ranking</h3>	
@@ -311,14 +324,78 @@
 			</div>	
 		</div>
 	</div>
-		
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<span class="glyphicon glyphicon-ok"></span>
+						Good job, invites sent!
+					</h3>
+					</div>
+				<div class="panel-body">
+					<div class="media">
+                        <div class="pull-left">
+                        	<div class="lol-p-icon642"></div>
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">You invited <span id="friendLength"></span>!</h4>
+                          <p>Congratulation, you have successfully invited your friends, and you gained 75xp <strong>per invitation</strong>!</p>
+                        </div>
+                      </div>
+
+				</div>
+			</div>
+		</div>
+	</div>
 	<% include statics/footers %>
-	<script type="text/javascript" src="../js/chart.min.js"></script>
+	<script type="text/javascript" src="./js/chart.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
 
 			//$(".graphsTab input[type=checkbox]").bootstrapSwitch();
 
+		    $(".bt-fs-dialog").fSelector({
+		    	excludeIds: [<%= currentUser.fbInvitedFriends.length >0 ? currentUser.fbInvitedFriends : '' %>],
+			      closeOnSubmit: true,
+			      max: 50,
+			      lang: {
+			        title: "Invite more friends!",
+			        buttonSubmit: "Invite",
+			        buttonCancel: "Cancel",
+			        buttonSelectAll: "Select All",
+			        buttonDeselectAll: "Deselect All",
+			        buttonShowSelected: "Show Selected",
+			        buttonShowAll: "Show All",
+			        summaryBoxResult: "{1} best results for {0}",
+			        summaryBoxNoResult: "No results for {0}",
+			        searchText: "Enter a friend's name",
+			        fbConnectError: "You must connect to Facebook to see this. Please go to your Settings and enable Facebook connection.",
+			        selectedCountResult: "You have choosen {0} potential new challengers, awesome!",
+			        selectedLimitResult: "Limit is {0} people.",
+			        facebookInviteMessage: "I am using Challenge your Friends and it's awesome! This website allows me to send and receive challenges on almost ANY games! It gives me new way to play and I like it. Please join me and let's throw challenges to each others, it's FUN!"
+			      },
+			      facebookInvite: true,
+			      onSubmit: function(response) {
+						var target = {					
+							list: response
+						}
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(target),
+							contentType: 'application/json',
+							url: './invitedFriends',						
+							success: function(data) {
+								console.log(data)
+								$('#friendLength').text(data);
+							}
+						});	
+				},
+				onClose: function(response) {
+					$('#successModal').modal('show');
+				}
+		    });
 
 			function offsetArray (arr,lie,val) {
 				var cL = arr.length;

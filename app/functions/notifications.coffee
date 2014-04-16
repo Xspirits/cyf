@@ -1,5 +1,5 @@
 User = require("../models/user")
-module.exports = (_, mailer) ->
+module.exports = (_, appKeys, social, mailer) ->
   
   ###
   Send a new notification to either one or many people.
@@ -118,8 +118,21 @@ module.exports = (_, mailer) ->
       link2: ""
       icon: "fa fa-arrow-up"
       title: "You have reached level  " + newLevel + "!"
-      message: "Congratulation! "
+      message: "Congratulation! 
+      "
+    if typeof user.facebook.token != 'undefined' and user.share.facebook == true
+      action=
+        name: 'reach'
+        link: appKeys.cyf.app_domain + '/u/' + user.idCool
+        message: "Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! "
+        level:
+          title: user.local.pseudo + ' is a Cyf Challenger level ' + newLevel
+      social.userAction user, action, (cb)->
 
+    if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+      uTweet = 'Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username
+      social.postTwitter user.twitter, uTweet, (cb)->
+          
     @newNotif toSelf, true, notif
     return
 

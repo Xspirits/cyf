@@ -62,6 +62,23 @@
           });
         });
       },
+      fbInvites: function(data, done) {
+        var friends, query;
+        console.log(data);
+        friends = data.fbInvitedFriends;
+        query = {
+          $pushAll: {
+            fbInvitedFriends: friends
+          }
+        };
+        return User.findByIdAndUpdate(data.id, query, function(err, user) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          console.log(user.fbInvitedFriends);
+          return done(true);
+        });
+      },
       updateSettings: function(data, done) {
         var query;
         query = void 0;

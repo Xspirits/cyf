@@ -811,14 +811,14 @@
     if (action.name === 'rank') {
       obj = {
         ladder: {
-          title: action.rankText || 'in the Cyf leaderboard'
+          title: action.rankText || 'Join me on Challenge your Friends!'
         }
       };
     }
     if (action.name === 'reach') {
       obj = {
         level: {
-          title: action.levelText || 'a new level'
+          title: action.levelText || 'Join me on Challenge your Friends!'
         }
       };
     }

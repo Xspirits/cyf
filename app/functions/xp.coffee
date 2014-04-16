@@ -9,6 +9,7 @@ xpRewardvalue =
   "connect.game": 100
   "user.register": 55
   "user.newFriend": 60
+  "user.inviteFB": 75
   "challenge.create": 110
   "challenge.rate": 60
   "ongoing.accept": 60
@@ -20,6 +21,7 @@ xpRewardAction =
   "connect.game": "linking a game account"
   "user.register": "creating an account"
   "user.newFriend": "making a new friend"
+  "user.inviteFB": "Inviting friends from Facebook"
   "challenge.create": "creating a new challenge"
   "challenge.rate": "rating a challenge"
   "ongoing.accept": "accepting a challenge"
@@ -73,10 +75,11 @@ module.exports = (_, mailer, notifs, sio) ->
         nextXpReq
       ]
 
-  xpReward: (user, action, bonus) ->
+  xpReward: (user, action, xtime, bonus) ->
     userDoubleXp = (if user.xpDouble then true else false)
     bonus        = (if bonus then bonus else 0)
-    value        = (_.values(_.pick(xpRewardvalue, action))[0] * ((if userDoubleXp then 2 else 1))) + bonus
+    multiply     = if xtime then xtime else 1
+    value        = (_.values(_.pick(xpRewardvalue, action))[0] * multiply * ((if userDoubleXp then 2 else 1))) + bonus
     uXp          = user.xp
     uLvl         = user.level
     valueNext    = getXp(uLvl + 1)

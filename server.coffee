@@ -34,7 +34,7 @@ _               = require("underscore")
 configDB        = require("./config/database")
 
 # configuration ===============================================================
-moment().tz("Europe/London").format()
+moment().zone("+02:00")
 genUID.seed 664
 mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 mongoose.connect configDB.url # connect to our database
@@ -43,15 +43,14 @@ mongoose.connect configDB.url # connect to our database
 mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)
 
 # functions Import
+google          = require("./config/google")
+social          = require("./config/social")
 sio             = require("./app/functions/sio")(io)
-notifs          = require("./app/functions/notifications")(_, mailer)
+notifs          = require("./app/functions/notifications")(_, appKeys, social, mailer)
 xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
-# Config Import
-google          = require("./config/google")
 relations       = require("./config/relations")(mailer)
 games           = require("./config/game")(moment)
-social          = require("./config/social")
 challenge       = require("./config/challenge")(_, mailer, moment, genUID)
 users           = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment)
 ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)

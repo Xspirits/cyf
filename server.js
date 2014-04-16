@@ -56,7 +56,7 @@
 
   configDB = require("./config/database");
 
-  moment().tz("Europe/London").format();
+  moment().zone("+02:00");
 
   genUID.seed(664);
 
@@ -66,19 +66,19 @@
 
   mailer = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment);
 
+  google = require("./config/google");
+
+  social = require("./config/social");
+
   sio = require("./app/functions/sio")(io);
 
-  notifs = require("./app/functions/notifications")(_, mailer);
+  notifs = require("./app/functions/notifications")(_, appKeys, social, mailer);
 
   xp = require("./app/functions/xp")(_, mailer, notifs, sio);
-
-  google = require("./config/google");
 
   relations = require("./config/relations")(mailer);
 
   games = require("./config/game")(moment);
-
-  social = require("./config/social");
 
   challenge = require("./config/challenge")(_, mailer, moment, genUID);
 

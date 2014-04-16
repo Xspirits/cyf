@@ -387,6 +387,7 @@
         }
       ]
     },
+    fbInvitedFriends: [Number],
     facebook: {
       id: String,
       token: String,
