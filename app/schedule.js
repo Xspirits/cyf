@@ -13,8 +13,8 @@
       });
     });
     dailyRanking = new schedule.RecurrenceRule();
-    dailyRanking.hour = 0;
-    dailyRanking.minute = 1;
+    dailyRanking.hour = 13;
+    dailyRanking.minute = 0;
     dailyRanking.seconds = 0;
     dailyLadder = schedule.scheduleJob(dailyRanking, function() {
       var daily;
@@ -30,8 +30,8 @@
     });
     weeklyRanking = new schedule.RecurrenceRule();
     weeklyRanking.dayOfWeek = 1;
-    weeklyRanking.hour = 0;
-    weeklyRanking.minute = 5;
+    weeklyRanking.hour = 1;
+    weeklyRanking.minute = 1;
     weeklyRanking.seconds = 0;
     weekLadder = schedule.scheduleJob(weeklyRanking, function() {
       var weekly;
@@ -46,7 +46,7 @@
     });
     monthlyRanking = new schedule.RecurrenceRule();
     monthlyRanking.date = 1;
-    monthlyRanking.hour = 0;
+    monthlyRanking.hour = 1;
     monthlyRanking.minute = 10;
     monthlyRanking.seconds = 0;
     return monthlyLadder = schedule.scheduleJob(monthlyRanking, function() {

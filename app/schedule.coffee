@@ -22,8 +22,8 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
   
   # Daily Ladder
   dailyRanking         = new schedule.RecurrenceRule()
-  dailyRanking.hour    = 0
-  dailyRanking.minute  = 1 # Let's avoid taking risks with setting 0h 0m 0s
+  dailyRanking.hour    = 13
+  dailyRanking.minute  = 0 # Let's avoid taking risks with setting 0h 0m 0s
   dailyRanking.seconds = 0
 
   dailyLadder = schedule.scheduleJob dailyRanking, ->
@@ -36,8 +36,8 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
   # Weekly Ladder
   weeklyRanking           = new schedule.RecurrenceRule()
   weeklyRanking.dayOfWeek = 1 #Monday
-  weeklyRanking.hour      = 0
-  weeklyRanking.minute    = 5 # Let's avoid taking risks with setting 0h 0m 0s
+  weeklyRanking.hour      = 1
+  weeklyRanking.minute    = 1 # Let's avoid taking risks with setting 0h 0m 0s
   weeklyRanking.seconds   = 0
 
   weekLadder = schedule.scheduleJob weeklyRanking, ->
@@ -51,7 +51,7 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
   # Monthly Ladder
   monthlyRanking         = new schedule.RecurrenceRule()
   monthlyRanking.date    = 1 # 1st of each month
-  monthlyRanking.hour    = 0 # at 1 AM
+  monthlyRanking.hour    = 1 # at 1 AM
   monthlyRanking.minute  = 10
   monthlyRanking.seconds = 0
 
