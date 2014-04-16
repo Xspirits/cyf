@@ -130,7 +130,7 @@ module.exports = (_, appKeys, social, mailer) ->
       social.userAction user, action, (cb)->
 
     if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-      uTweet = 'Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username
+      uTweet = 'Yes! I reached the level ' + newLevel + ' on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username
       social.postTwitter user.twitter, uTweet, (cb)->
           
     @newNotif toSelf, true, notif

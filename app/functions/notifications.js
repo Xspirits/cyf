@@ -179,7 +179,7 @@
           social.userAction(user, action, function(cb) {});
         }
         if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-          uTweet = 'Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username;
+          uTweet = 'Yes! I reached the level ' + newLevel + ' on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username;
           social.postTwitter(user.twitter, uTweet, function(cb) {});
         }
         this.newNotif(toSelf, true, notif);
