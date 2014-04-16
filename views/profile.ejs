@@ -478,7 +478,7 @@
 			var dataLabels = getAllDays();
 
 			//Load our data
-			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
+			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>');
 			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>');
 			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>');
 			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>');
