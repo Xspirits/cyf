@@ -116,7 +116,7 @@ margin: 2em inherit;
     text-shadow: 0 1px 0 #000;
     text-decoration: underline;
   }
-#slide-2 .bcg {	background: #020101 url('../../img/landing_2.jpg') repeat-x; }
+#slide-2 .bcg {	background: #020101 url('../../img/landing/landing_2.jpg') repeat-x; }
 
 #slide-2 h3 {
 	color: white;
@@ -174,7 +174,7 @@ margin: 2em inherit;
 }
 #slide-3 {
 border-top: 2px solid #31271F;
-background: #051113 url('../../img/landing_3.jpg') repeat; 
+background: #051113 url('../../img/landing/landing_3.jpg') repeat; 
 cursor: default;
 }
 #slide-3 h3 {
@@ -217,16 +217,16 @@ cursor: default;
 	
 }
 @media only screen and (min-width: 900px ) and (max-width: 1220px ) {
-	#slide-1 .bcg {background:url('../../img/landing_1_low.jpg') no-repeat;}
+	#slide-1 .bcg {background:url('../../img/landing/landing_1_low.jpg') no-repeat;}
 }
 @media only screen and (max-width: 900px) {
   .transi-slide{
-    background: url('../../img/px_bg_@2.png') repeat;
+    background: url('../../img/landing/px_bg_@2.png') repeat;
     }
 	section .container {
 		opacity: 1;
 	}
-	#slide-2{background: #020101 url('../../img/landing_2.jpg') repeat-x bottom; height: auto;}
+	#slide-2{background: #020101 url('../../img/landing/landing_2.jpg') repeat-x bottom; height: auto;}
 	#slide-2 .fa-ul, #slide-3 .fa-ul {
 		margin-bottom: 0; 
 		margin-left: 0;
