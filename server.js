@@ -133,4 +133,6 @@
 
   console.log('===========================================================');
 
+  mailer.cLog('Server Started on port ' + port, 'Current Application time : ' + moment().format());
+
 }).call(this);
