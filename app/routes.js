@@ -58,12 +58,10 @@
       notifs.logout(req.user);
       sio.glob("glyphicon glyphicon-log-out", req.user.local.pseudo + " disconnected");
       return users.setOffline(req.user, function(result) {
-        if (result) {
-          req.session.notifLog = false;
-          req.session.isLogged = false;
-          req.logout();
-          return res.redirect("/");
-        }
+        req.session.notifLog = false;
+        req.session.isLogged = false;
+        req.logout();
+        return res.redirect("/");
       });
     });
     app.get("/friends", isLoggedIn, function(req, res) {

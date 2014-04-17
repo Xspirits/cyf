@@ -19,7 +19,7 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
         where = 'globalScore'
       else
         query = scale + "Rank"
-        where = query
+        where = scale + "Score"
       User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
         mailer.cLog 'Error at '+__filename,err if err
         done challengers

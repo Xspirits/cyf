@@ -224,8 +224,6 @@ module.exports = (_, appKeys, social, mailer) ->
       message: ""
 
     @newNotif myFriends, false, notif, false
-    return
-
   
   ###
   User X and Y are now friends,so broadcast the news to their respective friends.

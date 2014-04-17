@@ -273,7 +273,7 @@
           title: user.local.pseudo + " just disconnected.",
           message: ""
         };
-        this.newNotif(myFriends, false, notif, false);
+        return this.newNotif(myFriends, false, notif, false);
       },
 
       /*

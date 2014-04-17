@@ -61,7 +61,7 @@
 							</h2>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="loaderProgress animated fadeInDown">
-											<div class="tinyProgress tinyYellow" style="width: 0%" data-percent="<%= xpPer %>"></div>
+											<div class="tinyProgress tinySimpleBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
 
 											<div class="xp text-center">
 												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
@@ -398,17 +398,20 @@
 		    });
 
 			function offsetArray (arr,lie,val) {
-				var cL = arr.length;
+				var cL = arr.length-1;
 				var val = val?val:0;
-				if (lie) {
+				var lie = lie?lie:cL;
+				if(arr.length <= 1){
+					console.log(arr)
+
+					return arr.length === 1 ? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+				}
+				else {
 					for (var i = cL; i < lie; i++) {
 						arr.push(val)
 					};
-					arr.reverse();
-					// console.log(arr)
 					return arr;
-				} else
-				return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+				}
 			}
 			// return an array composed of a list of the days' number from 1 month ago until today, not included.
 			function getAllDays() {
@@ -492,11 +495,6 @@
 				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>});
 			<%} %>
 
-			rHistDaily = rHistDaily.reverse();
-			rHistWeekly = rHistWeekly.reverse();
-			rHistMonthly = rHistMonthly.reverse();
-			//And now, we reverse
-
 			// position our start at the end of the graph by reversing it.
 			for (var i = 0; i < dataLabels.length; i++) {
 				// Reverse the value of our historic
@@ -523,8 +521,8 @@
 			};
 
 			// We need at LEAST 2 values (it's a graph, yep)
-			dota2 = offsetArray(dota2).reverse();
-			warcraft4 = offsetArray(warcraft4).reverse();
+			dota2 = offsetArray(dota2);
+			warcraft4 = offsetArray(warcraft4);
 
 			whatCanIDoToday = _.max(dailyR)
 			// Put all our ranking graph to the same length

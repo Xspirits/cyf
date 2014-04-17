@@ -22,7 +22,7 @@
             where = 'globalScore';
           } else {
             query = scale + "Rank";
-            where = query;
+            where = scale + "Score";
           }
           return User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
             if (err) {

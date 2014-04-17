@@ -161,13 +161,22 @@ html, body {
     margin: 0;
     padding: 0;
   background: url('../img/px_bg.png') repeat;
-  font-size: .865em;
-  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-weight: normal;
-
+  font-size: .95em;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  -ms-font-smoothing: antialiased;
+  font-smoothing: antialiased;;
+  -webkit-overflow-scrolling: touch;
+  -moz-overflow-scrolling: touch;
+  -o-overflow-scrolling: touch;
+  -ms-overflow-scrolling: touch;
+  overflow-scrolling: touch;
 }
 body.modal-open .canvas{
-  -webkit-filter: blur(7px);
+  -webkit-filter: blur(15px);
   -moz-filter: blur(15px);
   -o-filter: blur(15px);
   -ms-filter: blur(15px);
@@ -850,6 +859,26 @@ h2 > #scorebox .level {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
+.tinySimpleBlue {
+  background: #2CABCE;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#2CABCE), to(#2CABCE));
+  background: -webkit-linear-gradient(#2CABCE, #2CABCE);
+  background: -moz-linear-gradient(#2CABCE, #2CABCE);
+  background: -o-linear-gradient(#2CABCE, #2CABCE);
+  background: linear-gradient(#2CABCE, #2CABCE);
+  -webkit-box-shadow: 0 0 2px #248DA9;
+  -moz-box-shadow: 0 0 2px #248DA9;
+  box-shadow: 0 0 2px #248DA9;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* line 211, ../../sass/style.scss */
+.tinySimpleBlue:after {
+  background: #82D4CB;
+  -webkit-box-shadow: 0 0px 1px #248DA9;
+  -moz-box-shadow: 0 0px 1px #248DA9;
+  box-shadow: 0 0px 1px #248DA9;
+}
 
 /* line 199, ../../sass/style.scss */
 .tinyBlue {
@@ -1201,11 +1230,6 @@ hr {
   }
 
   /* line 311, ../../sass/style.scss */
-  .navbar {
-    right: auto;
-    background: none;
-    border: none;
-  }
 }
 
 /* FORM UPDATE */

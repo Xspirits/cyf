@@ -42,11 +42,10 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     notifs.logout req.user
     sio.glob "glyphicon glyphicon-log-out", req.user.local.pseudo + " disconnected"
     users.setOffline req.user, (result) ->
-      if result
-        req.session.notifLog = false
-        req.session.isLogged = false
-        req.logout()
-        res.redirect "/"
+      req.session.notifLog = false
+      req.session.isLogged = false
+      req.logout()
+      res.redirect "/"
 
   # FRIENDS LIST SECTION ======================
   app.get "/friends", isLoggedIn, (req, res) ->
