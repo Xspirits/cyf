@@ -424,6 +424,21 @@ userSchema = mongoose.Schema(
       type: Boolean
       default: false
   ]
+  games: [
+    idGame:
+      type: mongoose.Schema.Types.ObjectId
+      index: true
+      ref: "Game"
+
+    idCool: String
+    date:
+      type: Date
+      default: Date.now
+
+    favorite: 
+      type: Boolean
+      default: false
+  ]
   friends: [
     idUser:
       type: mongoose.Schema.Types.ObjectId
