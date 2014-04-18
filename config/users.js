@@ -62,9 +62,59 @@
           });
         });
       },
+      removeGames: function(user, id, done) {
+        return User.findByIdAndUpdate(user._id, {
+          $pull: {
+            games: {
+              _id: id
+            }
+          }
+        }).exec(function(err, user) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          if (err) {
+            done(false);
+          }
+          return done(true);
+        });
+      },
+      addPlayedGames: function(user, ng, done) {
+        var buff, dT, dl, query, tei, test;
+        if (ng._id) {
+          dT = user.games;
+          dl = ng._id;
+          tei = [];
+          _.each(user.games, function(game) {
+            return tei.push(game._idGame.toString());
+          });
+          test = tei.indexOf(ng._id.toString(dl));
+          if (test === -1) {
+            buff = {
+              _idGame: ng._id,
+              title: ng.title,
+              type: ng.type
+            };
+            query = {
+              $push: {
+                games: buff
+              }
+            };
+            return User.findByIdAndUpdate(user._id, query, function(err, user) {
+              if (err) {
+                mailer.cLog('Error at ' + __filename, err);
+              }
+              return done(true);
+            });
+          } else {
+            return done(false);
+          }
+        } else {
+          return done(false);
+        }
+      },
       fbInvites: function(data, done) {
         var friends, query;
-        console.log(data);
         friends = data.fbInvitedFriends;
         query = {
           $pushAll: {

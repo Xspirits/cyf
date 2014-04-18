@@ -68,7 +68,6 @@ app.configure ->
     store: sessionStore
     cookie:
       httpOnly: true
-
     key: EXPRESS_SID_KEY
   )
   

@@ -86,6 +86,15 @@
 											<span class="badge alert-warning"><%= users[i].friends.length %> friends</span>		
 											<% } %>	
 										</div>
+										<div class="col-lg-12">	
+											<strong>play: </strong>
+											<% if(users[i].games && users[i].games.length > 0) {
+												 for (var i = users[i].games.length - 1; i >= 0; i--) { 
+												%>
+												<span id="<%= users[i].games[i]._idGame %>" class="label label-info <%= users[i].games[i].type %>"><%= users[i].games[i].title %></span>
+											<% }
+											} %>
+										</div>
 									</div>
 							</li>
 							<% } 

@@ -395,6 +395,21 @@
         return res.send(result ? result : false);
       });
     });
+    app.post("/removePlayedGames", isLoggedIn, function(req, res) {
+      return users.removeGames(req.user, req.body.gameId, function(result) {
+        return res.send(result);
+      });
+    });
+    app.post("/addPlayedGames", isLoggedIn, function(req, res) {
+      ({
+        idGame: req.body.id
+      });
+      return games.getGame(req.body.id, function(game) {
+        return users.addPlayedGames(req.user, game, function(result) {
+          return res.send(result);
+        });
+      });
+    });
     app.post("/invitedFriends", isLoggedIn, function(req, res) {
       var invitedUsers, obj;
       invitedUsers = req.body.list;

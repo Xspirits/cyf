@@ -36,9 +36,42 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
         mailer.sendMail user,'[Cyf]Your password has been changed!','<h2>You have changed your Password</h2> <p>We send you this mail to confirm that your password has been updated successfully.</p><p> Your news credentials: <ul><li>email:<strong> ' + user.local.email + '</strong></li><li>password:<strong> ' + newPwd + '</strong></li></p><p>You can login here: <a href="http://www.cyf-app.co/login" target="_blank" title="Login">http://www.cyf-app.co/login</a></p><p><strong> You are the only person who have this information, if you want a new password, please reset it through the same procedure.</strong></p>',false
         done true
 
-  fbInvites: (data, done) ->
 
-    console.log(data)
+  removeGames: (user, id, done)->
+    User.findByIdAndUpdate(user._id,
+      $pull:
+        games:
+          _id: id
+    ).exec (err, user) ->
+      mailer.cLog 'Error at '+__filename,err if err
+      done false if err
+      done true
+
+  addPlayedGames: (user, ng, done) ->
+    if(ng._id)
+      dT = user.games
+      dl = ng._id
+      tei = []
+      _.each user.games, (game)->
+        tei.push(game._idGame.toString())
+      test = tei.indexOf(ng._id.toString(dl))
+      if test == -1
+        buff=
+          _idGame: ng._id
+          title: ng.title
+          type: ng.type
+        query= 
+          $push:
+            games: buff
+        User.findByIdAndUpdate user._id, query, (err, user) ->
+          mailer.cLog 'Error at '+__filename,err if err
+          done true
+      else
+        done false
+    else
+      done false
+
+  fbInvites: (data, done) ->
     friends = data.fbInvitedFriends
     query = $pushAll:
       fbInvitedFriends: friends

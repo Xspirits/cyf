@@ -112,7 +112,7 @@
 
 							</h2>
 							<div class="col-lg-12">	
-								<strong>Linked accounts: </strong>
+								<h4>Linked accounts: </h4>
 								<% if (user.local.pseudo) { %>
 								<span class="label label-default">CyF</span>
 								<% } %>
@@ -130,6 +130,15 @@
 									<div class="g-plus" data-action="share" data-annotation="bubble"></div>
 									<a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
 								</section>
+							</div>
+							<div class="col-lg-12" id="myGamesList">	
+								<h4>Playing: </h4>
+								<% if(user.games && user.games.length > 0) {
+									 for (var i = user.games.length - 1; i >= 0; i--) { 
+									%>
+									<span id="<%= user.games[i]._idGame %>" class="label label-info <%= user.games[i].type %>"><%= user.games[i].title %></span>
+								<% }
+								} %>
 							</div>
 							<div class="col-lg-12">
 								<h3>Ladders ranking</h3>	

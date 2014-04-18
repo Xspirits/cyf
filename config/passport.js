@@ -28,14 +28,22 @@
       passwordField: "password",
       passReqToCallback: true
     }, function(req, email, password, done) {
-      console.log('bouya');
       return process.nextTick(function() {
+        var opts;
+        opts = [
+          {
+            path: 'friends.idUser'
+          }, {
+            path: 'games._idGame'
+          }
+        ];
         return User.findOne({
           "local.email": email
-        }, function(err, userfound) {
+        }).populate(opts).exec(function(err, userfound) {
           if (err) {
             return done(err);
           }
+          console.log(userfound.games);
           if (!userfound) {
             return done(null, false, req.flash("loginMessage", "No user found."));
           }

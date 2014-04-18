@@ -2,12 +2,12 @@
 (function() {
   module.exports = {
     app_config: {
-      email_confirm: true,
-      twitterPushNews: true,
-      facebookPushNews: true
+      email_confirm: false,
+      twitterPushNews: false,
+      facebookPushNews: false
     },
     cyf: {
-      app_domain: "http://www.cyf-app.co"
+      app_domain: "http://localhost:8080"
     },
     mandrill_key: "w_F27RXK5GmLNtZoePLczA",
     support: {

@@ -17,7 +17,7 @@
 							<ul id="myTab1" class="nav nav-tabs nav-justified">
 								<li class="active"><a href="#sharingSocial" data-toggle="tab">Sharing</a></li>
 								<li><a href="#connectNetworks" data-toggle="tab">Connect accounts</a></li>
-								<li><a href="#linkGames" data-toggle="tab">Games accounts</a></li>
+								<li><a href="#linkGames" data-toggle="tab">Games</a></li>
 								<li><a href="#userData" data-toggle="tab">My Account</a></li>
 
 							</ul>
@@ -105,7 +105,28 @@
 								<div class="tab-pane fade in" id="linkGames">
 									<div class="row">
 										<div class="col-md-12 col-xs-12">
-											<h3><i class="fa fa-link"></i> League of Legend</h3>
+											<h3>Which games do you play?</h3>
+											<p>Let other players know which games you play, this way you will be able to receive dedicated challenges and friend requests</p>
+											<div id="myGamesList">
+											<% 
+												for (var i = currentUser.games.length - 1; i >= 0; i--) {
+											%>
+												<span id="g_<%= currentUser.games[i]._id %>" class="linked label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %>
+													<a href="/settings" class="hidden remove_game" id="<%= currentUser.games[i]._id %>"> <span class="fa fa-times"></span> </a>
+												</span>
+												
+											<%}; %>
+											</div>
+											<div class="form-group col-md-6">
+												<label>Pick a Game</label>
+												<input id="gamePicker" type="text" class="form-control" name="game" autocomplete="off"  >
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12 col-xs-12">
+										<h3>Link a game account</h3>
+											<h4><i class="fa fa-link"></i> League of Legend</h4>
 											<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed === true) { %>
 											<div class="pull-left">
 												<img class="img-responsive" src="./img/assets_lol/icons/<%= currentUser.leagueoflegend.profileIconId %>.jpg" alt="I will select this icon on leagueoflegend and then come back to validate my account.">
@@ -226,10 +247,92 @@
 		</div>
 	</div>
 	<% include statics/footers %>
+		<script src="./js/bloodhound.js"></script>
+		<script src="./js/typeahead.js"></script>
 	<script type="text/javascript">
 
 		$(function() {
+			$('.remove_game').on('click', function(e){
+					e.preventDefault();
+				var id = $(this).attr('id');
+				var obj = {
+					gameId: id
+				}
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(obj),
+					contentType: 'application/json',
+					url: './removePlayedGames',						
+					success: function(data) {
+						console.log(data);
+						if( data === true){
+							$('#g_'+id).addClass('animated fadeOut');
+							$('#g_'+id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+								$('#g_'+id).remove();
+							});
+						}
+						else
+							console.log('something went wrong')
+					}
+				});
 
+			})
+			$("#gamePicker").autocomplete({
+				source: function (request, response) {
+					$.ajax({
+						url: "/search_game",
+						type: "GET",
+					data: request,  // request is the value of search input
+					success: function (data) {
+						// Map response values to fiedl label and value
+						response($.map(data, function (el) {
+							return {
+								label: el.title,
+								id: el._id,
+								type: el.type
+							};
+						}));
+					}});
+				},
+					// The minimum number of characters a user must type before a search is performed.
+					minLength: 3, 					
+					// set an onFocus event to show the result on input field when result is focused
+					focus: function (event, ui) { 
+						this.type = ui.item.label; 
+					// Prevent other event from not being execute
+					event.preventDefault();
+				},
+				select: function (event, ui) {
+					var template = '<span id="'+ui.item.id+'" class="label label-info animated '+ui.item.type+'">'+ui.item.label+'</span>';
+
+					console.log(ui);
+					var newGame = {
+						id:ui.item.id,
+						title:ui.item.label,
+						type:ui.item.type
+					}
+					console.log(newGame);
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(newGame),
+							contentType: 'application/json',
+							url: './addPlayedGames',						
+							success: function(data) {
+								console.log(data);
+								if( data === true){
+									// Set the id to the next input hidden field
+									$('#myGamesList').append(template); 
+									$('#'+ui.item.id).delay(200).addClass('shake')
+
+								}
+								else
+									console.log('something went wrong')
+							}
+						});
+					// Prevent other event from not being execute		
+					event.preventDefault();
+				}
+			});
 			$(".settingsTab input[type=checkbox]").bootstrapSwitch();
 
 			$('.settingsTab input').on('switchChange', function (e, data) {

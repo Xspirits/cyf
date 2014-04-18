@@ -464,6 +464,28 @@
         }
       }
     ],
+    games: [
+      {
+        _idGame: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Game"
+        },
+        title: {
+          type: String
+        },
+        type: {
+          type: String
+        },
+        favorite: {
+          type: Boolean,
+          "default": false
+        },
+        date: {
+          type: Date,
+          "default": Date.now
+        }
+      }
+    ],
     friends: [
       {
         idUser: {

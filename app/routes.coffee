@@ -385,6 +385,16 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       res.send if result then result else false
 
 
+  app.post "/removePlayedGames", isLoggedIn, (req,res) ->
+    users.removeGames req.user, req.body.gameId, (result)->
+      res.send result
+
+  app.post "/addPlayedGames", isLoggedIn, (req,res) ->
+    idGame: req.body.id
+    games.getGame req.body.id, (game)->
+      users.addPlayedGames req.user, game, (result)->
+        res.send result
+
   app.post "/invitedFriends", isLoggedIn, (req, res) ->
 
     invitedUsers = req.body.list
