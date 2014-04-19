@@ -20,7 +20,7 @@
 ::selection { background: #2CABCE; color: #fff; text-shadow: none; }
 
 /* COLORS */
-.bittersweet {
+.bittersweet,.bittersweet.btn {
   background: #FC6E51;
   border-color: #E9573F;
   border: 1px solid #E9573F;
@@ -29,7 +29,7 @@
   -webkit-box-shadow: #E9573F 0 2px 0;
   box-shadow: #E9573F 0 2px 0
 }
-.bittersweet:hover,.bittersweet:active,.bittersweet:visited {
+.bittersweet:hover,.bittersweet:active,.bittersweet:visited,.bittersweet.btn.disabled, .bittersweet.btn[disabled] {
   background: #E9573F;
   border: 1px solid #FC6E51;
 }
@@ -39,7 +39,7 @@
 .bittersweet-color:hover,.bittersweet-color:active,.bittersweet-color:visited {
   color: #E9573F;
 }
-.mediumgrey {
+.mediumgrey,.mediumgrey.btn {
   background: #CCD1D9;
   border-color: #AAB2BD;
   border: 1px solid #AAB2BD;
@@ -48,11 +48,11 @@
   -webkit-box-shadow: #AAB2BD 0 2px 0;
   box-shadow: #AAB2BD 0 2px 0
 }
-.mediumgrey:hover,.mediumgrey:active,.mediumgrey:visited  {
+.mediumgrey:hover,.mediumgrey:active,.mediumgrey:visited, .mediumgrey.btn.disabled, .mediumgrey.btn[disabled]  {
   background: #AAB2BD;
   border: 1px solid #CCD1D9;
 }
-.mint {
+.mint,.mint.btn {
   background: #48CFAD;
   border-color: #37BC9B;
   border: 1px solid #37BC9B;
@@ -61,11 +61,11 @@
   -webkit-box-shadow: #37BC9B 0 2px 0;
   box-shadow: #37BC9B 0 2px 0
 }
-.mint:hover,.mint:active,.mint:visited  {
+.mint:hover,.mint:active,.mint:visited,.mint.btn.disabled, .mint.btn[disabled]  {
   background: #37BC9B;
   border: 1px solid #48CFAD;
 }
-.grass {
+.grass,.grass.btn {
   background: #A0D468;
   border-color: #8CC152;
   border: 1px solid #8CC152;
@@ -74,11 +74,11 @@
   -webkit-box-shadow: #8CC152 0 2px 0;
   box-shadow: #8CC152 0 2px 0
 }
-.grass:hover,.grass:active,.grass:visited  {
+.grass:hover,.grass:active,.grass:visited,.grass.btn.disabled, .grass.btn[disabled]  {
   background: #8CC152;
   border: 1px solid #A0D468;
 }
-.sunflower {
+.sunflower,.sunflower.btn {
   background: #FFCE54;
   border-color: #F6BB42;
   border: 1px solid #F6BB42;
@@ -87,7 +87,7 @@
   -webkit-box-shadow: #F6BB42 0 2px 0;
   box-shadow: #F6BB42 0 2px 0
 }
-.sunflower:hover,.sunflower:active,.sunflower:visited  {
+.sunflower:hover,.sunflower:active,.sunflower:visited,.sunflower.btn.disabled, .sunflower.btn[disabled]  {
   background: #F6BB42;
   border: 1px solid #FFCE54;
 }
@@ -106,7 +106,7 @@
   -webkit-box-shadow: #3BAFDA 0 2px 0;
   box-shadow: #3BAFDA 0 2px 0
 }
-.aqua:hover,.aqua:active,.aqua:visited  {
+.aqua:hover,.aqua:active,.aqua:visited,.aqua.btn.disabled, .aqua.btn[disabled]  {
   background: #3BAFDA;
   border: 1px solid #4FC1E9;
 }
@@ -125,7 +125,7 @@
   -webkit-box-shadow: #D770AD 0 2px 0;
   box-shadow: #D770AD 0 2px 0
 }
-.pinked:hover,.pinked:active,.pinked:visited  {
+.pinked:hover,.pinked:active,.pinked:visited,.pinked.btn.disabled, .pinked.btn[disabled]  {
   background: #D770AD;
   border: 1px solid #EC87C0;
 }
@@ -138,7 +138,7 @@
   -webkit-box-shadow: #DA4453 0 2px 0;
   box-shadow: #DA4453 0 2px 0
 }
-.grapefruit:hover,.grapefruit:active,.grapefruit:visited  {
+.grapefruit:hover,.grapefruit:active,.grapefruit:visited,.grapefruit.btn.disabled, .grapefruit.btn[disabled]  {
   background: #DA4453;
   border: 1px solid #ED5565;
 }
@@ -168,7 +168,7 @@ html, body {
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
   -ms-font-smoothing: antialiased;
-  font-smoothing: antialiased;;
+  font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
   -moz-overflow-scrolling: touch;
   -o-overflow-scrolling: touch;
@@ -370,6 +370,41 @@ ul.userlist >div > li > a > img {
   border-top: 1px solid #248DA9;
   border: 3px;
   color: rgb(65, 65, 65);
+}
+
+span.label,a.label {
+
+  cursor: context-menu;
+  font-weight: 300;
+  font-size: .9em;
+  -webkit-transition: all 220ms ease-in-out;
+  -moz-transition: all 220ms ease-in-out;
+  -ms-transition: all 220ms ease-in-out;
+  -o-transition: all 220ms ease-in-out;
+  transition: all 220ms ease-in-out;
+}
+.gamelist > span {
+  cursor: context-menu;
+  font-weight: 300;
+  font-size: .9em;
+}
+.gamelist > span.MOBA {
+  background: rgb(137,67,41);
+  border-bottom: 1px solid rgb(126, 126, 126);
+  box-shadow: 0 1px 0px rgb(137,67,41);
+}
+.gamelist > span.MOBA:hover {
+  background: rgb(182, 92, 59);
+  box-shadow: 0 1px 0px rgb(182, 92, 59);
+}
+.gamelist > span.Fantasy {
+  background: rgb(28,160,247);
+  border-bottom: 1px solid rgb(126, 126, 126);
+  box-shadow: 0 1px 0px rgb(28,160,247);
+}
+.gamelist > span.Fantasy:hover {
+  background: rgb(87, 185, 250);
+  box-shadow: 0 1px 0px rgb(87, 185, 250);
 }
 .spinning {
     -webkit-animation: rotation 2.5s infinite ease-in-out;

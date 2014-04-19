@@ -18,16 +18,17 @@
         self = this;
         if (type === "score") {
           if (scale === 'global') {
-            query = '-globalScore';
+            query = '-globalScore level';
             where = 'globalScore';
           } else {
-            query = scale + "Rank";
+            query = scale + "Rank level";
             where = scale + "Score";
           }
-          return User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
+          return User.find({}).sort(query).where(where).gte(1).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
+            console.log(challengers);
             return done(challengers);
           });
         }

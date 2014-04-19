@@ -43,7 +43,6 @@
           if (err) {
             return done(err);
           }
-          console.log(userfound.games);
           if (!userfound) {
             return done(null, false, req.flash("loginMessage", "No user found."));
           }

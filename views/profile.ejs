@@ -102,7 +102,7 @@
 								<% } %>
 								<small>(xp: 75 per Friends invite)</small>
 							</div>
-							<div class="col-lg-12" id="myGamesList">	
+							<div class="col-lg-12 gamelist" id="myGamesList">
 								<h4>Playing: </h4>
 							<% if(currentUser.games && currentUser.games.length > 0) {
 								 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
@@ -122,7 +122,7 @@
 								<table class="table table-striped text-center">
 									<thead>
 										<tr>
-											<th class="text-center">Yesterday's</th>
+											<th class="text-center">Last Daily rank</th>
 											<th class="text-center">Last Week</th>
 											<th class="text-center">Last Month</th>
 										</tr>
@@ -156,7 +156,7 @@
 												<canvas id="ranksgraph"></canvas>
 											<div class="text-left">
 												
-											Yesterday's <i class="fa fa-square grapefruit-color "></i>
+											Last daily rank <i class="fa fa-square grapefruit-color "></i>
 											Last Week <i class="fa fa-square sunflower-color"></i>
 											Last Month <i class="fa fa-square aqua-color"></i>
 											</div>
@@ -178,9 +178,11 @@
 							  <div class="panel panel-default">
 							    <div class="panel-heading">
 							      <h4 class="panel-title">
+							      <% if (currentUser.leagueoflegend.confirmed === true)  { %>
 							        <span class="pull-right gameSync">
 											<i class="fa fa-refresh"></i> 
 									</span>
+									<% } %>
 							        <a data-toggle="collapse" data-parent="#lol_games" href="#collapse_lol">
 							          Last 10 League of legend games
 							        </a> 
@@ -191,7 +193,7 @@
 										<div class="row">
 										
 									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
-									<%  var games = currentUser.leagueoflegend.lastGames;
+									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
 										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
 										for (var i = lolilength; i >= 0; i--) { %>
 											<div class="col-lg-12 col-md-6 col-sm-6">	

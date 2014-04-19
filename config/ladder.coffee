@@ -15,13 +15,14 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
     self = this
     if type is "score"
       if scale == 'global'
-        query = '-globalScore'
+        query = '-globalScore level'
         where = 'globalScore'
       else
-        query = scale + "Rank"
+        query = scale + "Rank level"
         where = scale + "Score"
-      User.find({}).sort(query).where(where).gte(0).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
+      User.find({}).sort(query).where(where).gte(1).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
         mailer.cLog 'Error at '+__filename,err if err
+        console.log challengers
         done challengers
 
   rankUser: (type, callback) ->

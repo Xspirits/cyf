@@ -48,7 +48,6 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
       User.findOne({"local.email": email}).populate(opts).exec (err, userfound) ->        
         # if there are any errors, return the error
         return done(err) if err
-        console.log userfound.games
         # if no user is found, return the message
         return done(null, false, req.flash("loginMessage", "No user found."))  unless userfound
         if !userfound.validPassword password
