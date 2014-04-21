@@ -144,8 +144,6 @@
           cStart = data[key].launchDate;
           cEnd = data[key].deadLine;
           if (moment(cEnd).isSame() || moment(cEnd).isBefore()) {
-            console.log(moment(cEnd).isSame() || moment(cEnd).isBefore());
-            console.log(data[key].idCool);
             challenge.crossedDeadline(data[key]._id);
             return endedChall.push(data[key]);
           } else if (data[key].waitingConfirm === true && data[key].progress < 100) {
@@ -221,16 +219,18 @@
             sio.glob("glyphicon glyphicon-tower", ioText);
             notifs.successChall(done);
             if (done._idChallenged.share.twitter === true && done._idChallenged.twitter.token) {
-              twitt = "I just completed a challenge (" + appKeys.cyf.app_domain + "/o/" + done.idCool(+") on Challenge your Friends! Join me now @cyf_app #challenge");
-              social.postTwitter(req.user.twitter, twitt, function(data) {
+              twitt = "I just completed a challenge (" + appKeys.cyf.app_domain + "/o/" + done.idCool + ") on Challenge your Friends! Join me now @cyf_app #challenge";
+              social.postTwitter(done._idChallenged.share.twitter, twitt, function(data) {
                 var text;
-                text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>.";
-                sio.glob("fa fa-twitter", text);
-                return ladder.actionInc(req.user, "twitter");
+                if (data.id_str) {
+                  text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>.";
+                  sio.glob("fa fa-twitter", text);
+                  return ladder.actionInc(req.user, "twitter");
+                }
               });
             }
             if (done._idChallenged.share.facebook === true && done._idChallenged.facebook.token) {
-              message = "I just completed the challenge \"" + done.title + "\"\"  on Challenge Your friends (@cyfapp)! I won " + xp.getValue("ongoing.succeed") + "XP! " + appKeys.cyf.app_domain + "/o/" + done.idCool;
+              message = "I just completed the challenge \"" + done._idChallenge.title + "\"  on Challenge Your friends (@cyfapp)! I won " + xp.getValue("ongoing.succeed") + "XP! " + appKeys.cyf.app_domain + "/o/" + done.idCool;
               social.postFbMessage(done._idChallenged.facebook, message, false, function(data) {
                 var text;
                 text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on facebook.";
@@ -278,7 +278,6 @@
     app.get("/launchChallenge", isLoggedIn, function(req, res) {
       return challenge.getList(function(challenges) {
         return users.getUser(req.user.idCool, function(thisUser) {
-          console.log(thisUser.friends);
           return res.render("launchChallenge.ejs", {
             currentUser: req.user,
             userList: thisUser.friends,
@@ -386,7 +385,6 @@
     });
     app.get("/unlink/game_lol", isLoggedIn, function(req, res) {
       return users.unlinkLol(req.user._id, function(result) {
-        console.log(result);
         return res.redirect("/settings");
       });
     });
@@ -434,7 +432,6 @@
         summonerName: req.body.summonerName
       };
       return users.linkLol(obj, function(result) {
-        console.log(result);
         return res.send(result === true ? true : false);
       });
     });
@@ -445,7 +442,6 @@
         profileIconId_confirm: req.body.iconPicked
       };
       return users.linkLolIconPick(obj, function(result) {
-        console.log(result);
         return res.send(result === true ? true : false);
       });
     });
@@ -463,7 +459,6 @@
     });
     app.post("/linkLol_confirm", isLoggedIn, function(req, res) {
       return users.linkLol_confirm(req.user, function(result) {
-        console.log(result);
         if (result === true) {
           xp.xpReward(req.user, "connect.game");
           notifs.linkedGame(req.user, "League of Legend");
@@ -491,9 +486,7 @@
         del: req.body.del,
         idNotif: req.body.id
       };
-      console.log('markNotifRead');
       return notifs.markRead(obj, function(result) {
-        console.log(result);
         return res.send(true);
       });
     });
@@ -648,9 +641,8 @@
         xp.xpReward(result._idChallenged, "ongoing.accept");
         xp.xpReward(result._idChallenger, "ongoing.accept");
         notifs.acceptChall(result._idChallenger, result._idChallenged);
-        ioText = "<a href=\"/u/" + result._idChallenged.idCool + "\" title=\"" + result._idChallenged.local.pseudo + "\">";
-        ioText += result._idChallenged.local.pseudo + "</a> accepted <a href=\"/c/" + result._idChallenge.idCool + ">the challenge</a> of <a href=\"/u/";
-        ioText += result._idChallenger.idCool + " title=\"" + result._idChallenger.local.pseudo + "\">" + result._idChallenger.local.pseudo + "</a>.";
+        ioText = '<a href="/u/' + result._idChallenged.idCool + '" title=" ' + result._idChallenged.local.pseudo + ' ">';
+        ioText += result._idChallenged.local.pseudo + '</a> accepted <a href="/c/' + result._idChallenge.idCool + '" title="See details">the challenge</a> of <a href="/u/' + result._idChallenger.idCool + '" title="' + result._idChallenger.local.pseudo + '">' + result._idChallenger.local.pseudo + '</a>.';
         sio.glob("fa fa-gamepad", ioText);
         return res.send(true);
       });
@@ -665,7 +657,7 @@
         if (result) {
           return res.send(true);
         } else {
-          return console.log(result);
+          return res.send(result);
         }
       });
     });

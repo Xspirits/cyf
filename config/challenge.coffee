@@ -1,10 +1,8 @@
-
-User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
 Ongoing = require("../app/models/ongoing")
 # load up the user model
 
-module.exports = (_, mailer, moment, genUID) ->
+module.exports = (_, mailer, moment, genUID, users) ->
   
   ###
   Create a new challenge
@@ -253,6 +251,10 @@ module.exports = (_, mailer, moment, genUID) ->
       bonusUpdated = Math.round((averageDifficulty + averageQuick + averagefun) * 1.61803398875)
       console.log "new averages d:" + averageDifficulty + " (" + ponderatedAvgDiff + "/" + diff.count + ") q:" + averageQuick + " (" + ponderatedAvgQuick + "/" + quick.count + ") f:" + averagefun + " (" + ponderatedAvgFun + "/" + fun.count + ") New bonus :" + bonusUpdated
       challenge.value = bonusUpdated
+      # Increment of 1
+      challenge.rateNumber = challenge.rateNumber + 1
+      # Let's put back the value's rating on a scale out of 50
+      challenge.rateValue = Math.round((data.difficulty + data.quickness + data.fun) / 3)
       challenge.save (err, result) ->
         mailer.cLog 'Error at '+__filename,err if err
         obj =
@@ -484,7 +486,7 @@ module.exports = (_, mailer, moment, genUID) ->
       ongoing.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         completedByArr = [ongoing._idChallenged._id]
-        self.completedBy ongoing._idChallenge._id, completedByArr, (done) ->
+        self.completedBy ongoing._idChallenge._id, completedByArr, (result) ->
           done ongoing
   
   # =============================================================================

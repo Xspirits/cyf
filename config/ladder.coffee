@@ -1,6 +1,5 @@
 User = require("../app/models/user")
 
-# @todo this two function could be merged.
 getScore = (data, done) ->
   finalScore = undefined
   finalScore = (data.xp * (1 + data.level)) + (250 * data.shareTW) + (250 * data.shareFB)
@@ -31,7 +30,7 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
     sorting = if type == 1 then 'dailyScore' else if type == 2 then 'weeklyScore' else 'monthlyScore'
 
     sort    = '-' + sorting
-    User.find({}).sort(sort).exec (err, userSorted) ->
+    User.find({}).sort(sort).gte(1).exec (err, userSorted) ->
       mailer.cLog 'Error at '+__filename,err if err
       buffed = []
       leaders = []
@@ -122,7 +121,6 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
           console.log 'Got the new leaders: ' + leaders.length
           callback leaders
         return
-
 
   scoreUpdate: (type, user, done) ->
     typeTxt =  if type == 1 then  'Today' else if type == 2 then  'last Week' else 'last Month'
@@ -316,14 +314,14 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
 
     # setup our tweet & fb Post
     if type == 1
-      tweet = "New daily ranking "+yesterday+" up! GG "+newLeader+" 1st "+newFollower+"!! http://goo.gl/3VjsJd #CyfLadder #CYFDaily."
-      fbWall= "The daily #ranking for yesterday "+yesterday+" is now live! Congratulation to our new leader "+nLFb+" "+nFFB+"! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFDaily"
+      tweet = "New daily ranking "+yesterday+" up! GG "+newLeader+" 1st "+newFollower+"!! http://goo.gl/MofE3n #CyfLadder #CYFDaily."
+      fbWall= "The daily #ranking for yesterday "+yesterday+" is now live! Congratulation to our new leader "+nLFb+" "+nFFB+"! See the leaderboard here: http://goo.gl/MofE3n #CyfLadder #CYFDaily"
     else if type == 2
-      tweet = "Weekly ranking "+lastWeek+" live! GG "+newLeader+" 1st "+newFollower+"! http://goo.gl/3VjsJd #CyfLadder #CYFWeekly"
-      fbWall= "Our weekly #ranking for the week "+lastWeek+" is now live! Congratulation to our new leader "+nLFb+" "+nFFB+"! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFWeekly"
+      tweet = "Weekly ranking "+lastWeek+" live! GG "+newLeader+" 1st "+newFollower+"! http://goo.gl/MofE3n #CyfLadder #CYFWeekly"
+      fbWall= "Our weekly #ranking for the week "+lastWeek+" is now live! Congratulation to our new leader "+nLFb+" "+nFFB+"! See the leaderboard here: http://goo.gl/MofE3n #CyfLadder #CYFWeekly"
     else
-      tweet = "New ranking for "+lastMonth+": 1st "+newLeader+" "+newFollower+" GG! http://goo.gl/3VjsJd #CyfLadder #CYFMonthly"
-      fbWall= "The #ranking for "+lastMonth+" is now available! Our deepest congratulations to the leader of the past month "+nLFb+" "+nFFB+"! You can see the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFMonthly"
+      tweet = "New ranking for "+lastMonth+": 1st "+newLeader+" "+newFollower+" GG! http://goo.gl/MofE3n #CyfLadder #CYFMonthly"
+      fbWall= "The #ranking for "+lastMonth+" is now available! Our deepest congratulations to the leader of the past month "+nLFb+" "+nFFB+"! You can see the leaderboard here: http://goo.gl/MofE3n #CyfLadder #CYFMonthly"
 
     # Lets  spush on our timeline to let players now about the new Leaderboard
     # Tweet

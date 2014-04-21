@@ -321,6 +321,7 @@ ul.userlist >div > li > a > img {
   line-height: 25px;
 }
 /* line 42, ../../sass/style.scss */
+
 .online,
 .offline,
 .away,
@@ -373,7 +374,6 @@ ul.userlist >div > li > a > img {
 }
 
 span.label,a.label {
-
   cursor: context-menu;
   font-weight: 300;
   font-size: .9em;
@@ -383,26 +383,30 @@ span.label,a.label {
   -o-transition: all 220ms ease-in-out;
   transition: all 220ms ease-in-out;
 }
-.gamelist > span {
-  cursor: context-menu;
-  font-weight: 300;
-  font-size: .9em;
+#myGamesList > span {
+  margin: 0 3px;
+
 }
-.gamelist > span.MOBA {
+#myGamesList > span > a {
+  color: #fff;
+}
+.color-MOBA {
+  color: rgb(137,67,41);
+}
+.label.MOBA {
   background: rgb(137,67,41);
-  border-bottom: 1px solid rgb(126, 126, 126);
-  box-shadow: 0 1px 0px rgb(137,67,41);
 }
-.gamelist > span.MOBA:hover {
+.label.MOBA:hover {
   background: rgb(182, 92, 59);
   box-shadow: 0 1px 0px rgb(182, 92, 59);
 }
-.gamelist > span.Fantasy {
-  background: rgb(28,160,247);
-  border-bottom: 1px solid rgb(126, 126, 126);
-  box-shadow: 0 1px 0px rgb(28,160,247);
+.color-Fantasy {
+  color: rgb(28,160,247);
 }
-.gamelist > span.Fantasy:hover {
+.label.Fantasy {
+  background: rgb(28,160,247);
+}
+.label.Fantasy:hover {
   background: rgb(87, 185, 250);
   box-shadow: 0 1px 0px rgb(87, 185, 250);
 }
@@ -595,7 +599,7 @@ margin-top: -8px;
   color: rgb(211, 205, 205);
 }
 .label a,.label a:hover {
-  color: #fff;
+  color: #7E7878;
 }
 .friends .boxy {
   cursor: pointer;
@@ -831,9 +835,6 @@ margin-top: -8px;
   color: #27a2c9;
 }
 
-.xp {
-  font-weight: bold;
-}
 .loaderProgress > .xp {
   position: absolute;
   top: 13px;
@@ -1439,6 +1440,10 @@ input.gStyle:focus {
 }
 
 /* Badge */
+.badge, .label {
+  font-size: 12px;
+  font-weight: normal;
+}
 /* line 765, ../../sass/style.scss */
 .badgeRateVal {
   display: block;

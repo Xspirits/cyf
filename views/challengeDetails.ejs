@@ -76,7 +76,9 @@
 							<div class="col-md-12">		
 								<h4>Creation</h4>
 								<p class="well"> 
+								<% if(challenge.author) { %>
 									by <a href="../u/<%= challenge.author.idCool %>"><%= challenge.author.local.pseudo %></a>,<span class="dateReadability" data-date="<%= challenge.creation %>"></span>
+								<% } %>
 								</p>		
 							</div>
 							<div class="col-md-12" >	

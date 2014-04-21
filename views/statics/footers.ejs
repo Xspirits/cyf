@@ -58,7 +58,6 @@
 
 			socket.on('globalevent', function (data) {
 
-				console.log(data);
 				pushStream(data);
 			});
 			<% } %>
@@ -94,7 +93,7 @@
 					if(notif[i].isSeen == false) { 
 						--limit;
 
-						if(notif[i].type == 'challengeSuccess' && !isMobile){ %>
+						if(notif[i].type == 'challengeSuccess'){ %>
 							var obj_<%= i %> = {
 								title : '<%= notif[i].to %>',
 								link : '<%= notif[i].link2 %>',

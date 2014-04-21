@@ -39,7 +39,7 @@
         hash = type === 1 ? '#dailyLadder' : type === 2 ? '#weeklyLadder' : '#monthlyLadder';
         sorting = type === 1 ? 'dailyScore' : type === 2 ? 'weeklyScore' : 'monthlyScore';
         sort = '-' + sorting;
-        return User.find({}).sort(sort).exec(function(err, userSorted) {
+        return User.find({}).sort(sort).gte(1).exec(function(err, userSorted) {
           var buffed, leaders;
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
@@ -340,14 +340,14 @@
           }
         });
         if (type === 1) {
-          tweet = "New daily ranking " + yesterday + " up! GG " + newLeader + " 1st " + newFollower + "!! http://goo.gl/3VjsJd #CyfLadder #CYFDaily.";
-          fbWall = "The daily #ranking for yesterday " + yesterday + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFDaily";
+          tweet = "New daily ranking " + yesterday + " up! GG " + newLeader + " 1st " + newFollower + "!! http://goo.gl/MofE3n #CyfLadder #CYFDaily.";
+          fbWall = "The daily #ranking for yesterday " + yesterday + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/MofE3n #CyfLadder #CYFDaily";
         } else if (type === 2) {
-          tweet = "Weekly ranking " + lastWeek + " live! GG " + newLeader + " 1st " + newFollower + "! http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
-          fbWall = "Our weekly #ranking for the week " + lastWeek + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFWeekly";
+          tweet = "Weekly ranking " + lastWeek + " live! GG " + newLeader + " 1st " + newFollower + "! http://goo.gl/MofE3n #CyfLadder #CYFWeekly";
+          fbWall = "Our weekly #ranking for the week " + lastWeek + " is now live! Congratulation to our new leader " + nLFb + " " + nFFB + "! See the leaderboard here: http://goo.gl/MofE3n #CyfLadder #CYFWeekly";
         } else {
-          tweet = "New ranking for " + lastMonth + ": 1st " + newLeader + " " + newFollower + " GG! http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
-          fbWall = "The #ranking for " + lastMonth + " is now available! Our deepest congratulations to the leader of the past month " + nLFb + " " + nFFB + "! You can see the leaderboard here: http://goo.gl/3VjsJd #CyfLadder #CYFMonthly";
+          tweet = "New ranking for " + lastMonth + ": 1st " + newLeader + " " + newFollower + " GG! http://goo.gl/MofE3n #CyfLadder #CYFMonthly";
+          fbWall = "The #ranking for " + lastMonth + " is now available! Our deepest congratulations to the leader of the past month " + nLFb + " " + nFFB + "! You can see the leaderboard here: http://goo.gl/MofE3n #CyfLadder #CYFMonthly";
         }
         if (appKeys.app_config.twitterPushNews === true) {
           return social.postTwitter(false, tweet, function(tweetD) {

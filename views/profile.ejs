@@ -13,7 +13,7 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="profile:<%= currentUser.local.idCool %>"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com/u/<%= currentUser.idCool %>">
+    <meta property="og:url" content="http://cyf-app.co/u/<%= currentUser.idCool %>">
     <meta property="og:site_name" content="Challenge your Friends"/>
     <meta property="og:image" content="<%= currentUser.icon %>.png">
     <meta property="og:image:width" content="200">
@@ -94,21 +94,20 @@
 								<h4>Invite friends: </h4>
 								<% if (currentUser.facebook.token) { %>
 								<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
+								<small>(xp: 75 per Friends invite)</small>
 								<% } else { %>
 								<a href="./settings" title="Connect Facebook first" class="label label-default">
 									<span class="fa fa-plus"></span>
 									Connect Facebook first
 								</a>
 								<% } %>
-								<small>(xp: 75 per Friends invite)</small>
 							</div>
 							<div class="col-lg-12 gamelist" id="myGamesList">
 								<h4>Playing: </h4>
-							<% if(currentUser.games && currentUser.games.length > 0) {
+							<% if(currentUser.games.length > 0) {
 								 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
 								%>
 								<span id="<%= currentUser.games[i]._idGame %>" class="label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %></span>
-									
 							<% }
 							} %>
 								<a href="./settings" title="add an game" class="label label-default">
@@ -232,71 +231,83 @@
 							    </div>
 							  </div>
 							</div>
-						</div>
-					</div>
 
+							<div class="panel-group" id="ongoingsChalls">
+							  <div class="panel panel-default">
+							    <div class="panel-heading">
+							      <h4 class="panel-title">
 
-				<% if ( ongoings.length > 0 ) { %>
-					<h4>Challenges in progress</h4>	
-						<div class="row">				
-						<% for (var i = ongoings.length - 1; i >= 0; i--) { %>
-						<div class="col-md-12 ">
-							<div class="panel panel-<%= ((ongoings[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
-								<div class="panel-heading">
-									<div class="panel-title text-right">
-										<span class="pull-left panel-title">
+							        <a data-toggle="collapse" data-parent="#ongoingsChalls" href="#collapse_ongoings">
+							          Challenges in progress (<%= ongoings.length %>)
+							        </a> </h4>
+							    </div>
+							    <div id="collapse_ongoings" class="panel-collapse collapse <%= ongoings && ongoings.length > 0 ? 'in' : '' %>">
+							      <div class="panel-body">
+										<div class="row">
+												<div class="col-md-12 ">
+												<% if ( ongoings.length > 0 ) {
+													for (var i = ongoings.length - 1; i >= 0; i--) { %>
+													<div class="panel panel-<%= ((ongoings[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+														<div class="panel-body">
 
-											<span class="glyphicon glyphicon-star-empty"></span>
-											<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
-												<%= ongoings[i]._idChallenger.local.pseudo  %>
-											</a>
-											<span class="glyphicon glyphicon-flash"></span>
-											<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
-												<%= ongoings[i]._idChallenged.local.pseudo  %>
-											</a>
+															<h5>
+																<a href='/o/<%= ongoings[i].idCool %>'>
+																	<%= ongoings[i]._idChallenge.title %>
+																</a>
+															</h5>
+															<div class="row">
+																<p>
+																	<%= ongoings[i]._idChallenge.description  %>
+																</p>		
 
-										</span>
-										<a href='/o/<%= ongoings[i].idCool %>'>
-											<%= ongoings[i]._idChallenge.title %>
-										</a>
+																<p>
 
-									</div>
-								</div>
-								<div class="panel-body">
-									<div class="row">
-										<p class="lead text-center">
-											<%= ongoings[i]._idChallenge.description  %>
-										</p>									
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<p>
-												<span class="glyphicon glyphicon-calendar"></span>
-												<span class="dateReadability" data-date="<%= ongoings[i].launchDate %>"></span>
-											</p>
-											<p>
-												<span class="glyphicon glyphicon-calendar"></span>
-												<span class="dateReadability" data-date="<%= ongoings[i].deadLine %>"></span>
-											</p>										
-										</div>
-										<div class="col-sm-6 text-right">
-											Value: <%= ongoings[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
-										</div>									
-									</div>								
-								</div>
-								<div class="panel-footer">
-									<% if(ongoings[i].waitingConfirm === true) { %>
-									<%= ((ongoings[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  ongoings[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= ongoings[i].confirmAsk %>"></span>
+																	<span class="glyphicon glyphicon-star-empty"></span>
+																	<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
+																		<%= ongoings[i]._idChallenger.local.pseudo  %>
+																	</a>
+																	<span class="glyphicon glyphicon-flash"></span>
+																	<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
+																		<%= ongoings[i]._idChallenged.local.pseudo  %>
+																	</a>
 
-									<% } else { %>
-									<strong class="convertEnd" data-tEnd="<%= ongoings[i].deadLine %>"></strong>
-									<% } %>
-								</div>
+																</p>							
+															</div>
+															<div class="row">
+																<div class="col-sm-6">
+																	<p>
+																		<span class="glyphicon glyphicon-calendar"></span>
+																		<span class="dateReadability" data-date="<%= ongoings[i].launchDate %>"></span>
+																	</p>
+																	<p>
+																		<span class="glyphicon glyphicon-calendar"></span>
+																		<span class="dateReadability" data-date="<%= ongoings[i].deadLine %>"></span>
+																	</p>										
+																</div>
+																<div class="col-sm-6 text-right">
+																	Value: <%= ongoings[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+																</div>									
+															</div>								
+														</div>
+														<div class="panel-footer">
+															<% if(ongoings[i].waitingConfirm === true) { %>
+															<%= ((ongoings[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  ongoings[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= ongoings[i].confirmAsk %>"></span>
+
+															<% } else { %>
+															<strong class="convertEnd" data-tEnd="<%= ongoings[i].deadLine %>"></strong>
+															<% } %>
+														</div>
+													</div>
+													<% } %>
+													<% } %>
+												</div>
+							      		</div>
+							    	</div>
+							    </div>
+							  </div>
 							</div>
 						</div>
-						</div>
-
-						<% } %>
+					</div>
 					<!-- <h4>My Badges</h4
 					<div class="badggies">
 
@@ -306,7 +317,6 @@
 					</section> 
 					</div>-->
 				</div>
-				<% } %>
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
@@ -494,8 +504,11 @@
 			, warcraft4 = []
 			, dailyR = []
 			, weeklyR = []
-			, monthlyR = [];
-			var dataLabels = getAllDays();
+			, monthlyR = []
+			, rankLabels = []
+			, rankLabelsW = []
+			, rankLabelsM = [];
+			var dataLabels = [];//getAllDays();
 
 			//Load our data
 			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>');
@@ -505,38 +518,42 @@
 
 			// Add the current rank!
 			<% if(currentUser.dailyRank > 0) {%>
-				rHistDaily.push({'rank': <%=currentUser.dailyRank %>});
+				rHistDaily.push({'rank': <%=currentUser.dailyRank %>,'date': moment()});
 			<%} if(currentUser.weeklyRank > 0) {%>
-				rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>});
+				rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>,'date': moment()});
 			<%} if(currentUser.monthlyRank > 0) {%>
-				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>});
+				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>,'date': moment()});
 			<%} %>
 
-			// position our start at the end of the graph by reversing it.
-			for (var i = 0; i < dataLabels.length; i++) {
-				// Reverse the value of our historic
-				thisOne = historic[i] ? historic[i].xp : 0;
-				thatOne = historic[i] ? historic[i].level : 0;
-				thisdaily = rHistDaily[i] ? (rHistDaily[i].rank == 0 ? false:rHistDaily[i].rank) : false;
-				thisWeekly = rHistWeekly[i] ? (rHistWeekly[i].rank == 0 ? false:rHistWeekly[i].rank) : false;
-				thisMonthly = rHistMonthly[i] ? (rHistMonthly[i].rank == 0 ? false:rHistMonthly[i].rank) : false;
+			historic = historic.reverse();
+			rHistDaily = rHistDaily.reverse();
+			rHistWeekly = rHistWeekly.reverse();
+			rHistMonthly = rHistMonthly.reverse();
+			for (var key = 30; key >= 0; key--) {
 
-				if(thisOne > 0)
-					dota2.push(thisOne);
+				if(historic[key]){
+					dota2.push(historic[key].xp);
+					warcraft4.push(historic[key].level);
+					dataLabels.push(moment(historic[key].date).format("MMM Do a"))
+				}
 
-				if(thatOne > 0)		
-					warcraft4.push(thatOne);
+				if(rHistDaily[key]){
+					console.log(rHistDaily[key])
+					rankLabels.push(moment(rHistDaily[key].date).format("MMM Do"))
+					dailyR.push(rHistDaily[key].rank);
+				}
 
-				if(thisdaily)	
-					dailyR.push(thisdaily);
+				if(rHistWeekly[key]) {
+					rankLabelsW.push(moment(rHistWeekly[key].date).format("MMM Do"))
+					dailyR.push(console[key].rank);
+				}
 
-				if(thisWeekly)	
-					weeklyR.push(thisWeekly);
+				if(rHistMonthly[key]) {
+					rankLabelsM.push(moment(rHistMonthly[key].date).format("MMM Do"))
+					dailyR.push(rHistMonthly[key].rank);
+				}
 
-				if(thisMonthly)	
-					monthlyR.push(thisMonthly);
-			};
-
+			}
 			// We need at LEAST 2 values (it's a graph, yep)
 			dota2 = offsetArray(dota2);
 			warcraft4 = offsetArray(warcraft4);
@@ -548,9 +565,7 @@
 				weeklyR = offsetArray(weeklyR,dailyR.length-1,whatCanIDoToday*2);
 			if(monthlyR.length > 0)
 				monthlyR = offsetArray(monthlyR,dailyR.length-1,whatCanIDoToday*2);
-			console.log(dailyR);
-			console.log(weeklyR);
-			console.log(monthlyR);
+
 			// Now take the labels to the same length (slice or take the last X ones)
 			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
 
@@ -563,9 +578,6 @@
 				spec.push(dataLabels[i]+' PM');
 			};
 			var xpLab = dota2.length < spec.length ? spec.slice(spec.length - dota2.length,spec.length) : spec;
-
-			console.log(dota2);
-			console.log(xpLab);
 
 			var dataXp = {
 				labels : xpLab,
@@ -604,8 +616,9 @@
 				datasetFill : false,
 				bezierCurve : false
 			}
+
 			var dataRanks = {
-				labels : rankLab,
+				labels : rankLabels,
 				datasets : [
 					{
 						fillColor : "rgba(237,85,101,0.3)",

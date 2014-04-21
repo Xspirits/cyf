@@ -85,7 +85,7 @@
           multi: true
         }, function(err, result) {
           if (err) {
-            mailer.cLog('Error at ' + __filename, err);
+            mailer.cLog('Error at ' + __filename + ' for: ' + notif.title, err);
           }
           return result;
         });
@@ -113,7 +113,7 @@
               }
             }).exec(function(err, user) {
               if (err) {
-                mailer.cLog('Error at ' + __filename, err);
+                mailer.cLog('Error at ' + __filename + ' for: notifications.isSeen', err);
               }
               return done(true);
             });
@@ -215,30 +215,7 @@
       login: function(user) {
         var myFriends, notif;
         myFriends = _.map(user.friends, function(num) {
-          return num.idUser.toString();
-        });
-        notif = {
-          idFrom: user._id,
-          from: user.local.pseudo,
-          link1: "/u/" + user.idCool,
-          to: "",
-          link2: "",
-          icon: "",
-          title: user.local.pseudo + " just connected.",
-          message: ""
-        };
-        this.newNotif(myFriends, false, notif);
-      },
-
-      /*
-      When the user log in,send a notification to his friends.
-      @param  {[type]} user [description]
-      @return {[type]} [description]
-       */
-      login: function(user) {
-        var myFriends, notif;
-        myFriends = _.map(user.friends, function(num) {
-          return num.idUser.toString();
+          return num.idUser._id.toString();
         });
         notif = {
           idFrom: user._id,

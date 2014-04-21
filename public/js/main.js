@@ -29,7 +29,6 @@ function secondsToTime(secs)
   var readabilityMin = function(){
     $('.minutesReadability').each( function () {
       var date = parseInt($(this).attr('data-date'), 10);
-      console.log(date)
       var o = secondsToTime(date);
       var h = o.h > 0? ' ' + o.h + ' h' : '';
       var m = o.m > 0? ' ' + o.m + ' m' : '';

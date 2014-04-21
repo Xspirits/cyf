@@ -15,7 +15,7 @@
     <meta property="og:type" content="profile:<%= ongoing.idCool %>"> <!-- website/article/profile -->
     <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="<%= ongoing.idCool %> for <%= ongoing._idChallenged.local.pseudo %> details - Challenge your Friends">
     <meta name="twitter:description" content="<%= ongoing._idChallenge.title %> details, <%= ongoing._idChallenged.local.pseudo %> challenged by <%= ongoing._idChallenger.local.pseudo %> ">
@@ -172,6 +172,7 @@
 
 					});
 					function submitFinal(data) {
+						$("#valConfirm").text('Sending the request...');
 						$.ajax({
 							type: 'POST',
 							data: JSON.stringify(data),
@@ -181,6 +182,7 @@
 							success: function(data) {
 								console.log('success');
 
+								$("#valConfirm").text('All done!');
 								$('#processConfirm').modal('hide');
 								$('#processConfirm').on('hidden.bs.modal', function (e) {
 									e.preventDefault();
@@ -233,6 +235,7 @@
 					$("#valConfirm").click( function(e){
 						e.preventDefault();
 
+						$(this).addClass('disabled').text('Submitting, please wait.');
 						var idChallenge = $(this).attr('data-idChallenge');
 						var data = {};
 						data.idChallenge = idChallenge;
@@ -242,9 +245,11 @@
 
 							data.proofLink1 =  imageA.data.link;
 
+							$(this).addClass('disabled').text('Proof 1 uploaded.');
 							if($('#imNowb64_p2').attr('data-b64')) {
 								sendToImgur($('#imNowb64_p2').attr('data-b64'), function( imageB ) {
 
+								$(this).addClass('disabled').text('Proof 2 uploaded.');
 									console.log(imageA);
 									console.log(imageB);
 									data.proofLink2 =  imageB.data.link;
@@ -252,7 +257,7 @@
 								});
 							} else {
 								console.log(imageA);
-								data.proofLink2 =  imageB.data.link;
+								data.proofLink2 =  false;
 								submitFinal(data);
 							}
 						});

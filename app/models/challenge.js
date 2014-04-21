@@ -39,10 +39,6 @@
       type: Number,
       "default": 0
     },
-    rateValue: {
-      type: Number,
-      "default": 0
-    },
     completedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,

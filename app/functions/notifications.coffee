@@ -60,7 +60,7 @@ module.exports = (_, appKeys, social, mailer) ->
     ,
       multi: true
     , (err, result) ->
-      mailer.cLog 'Error at '+__filename,err if err
+      mailer.cLog 'Error at ' + __filename + ' for: ' + notif.title,err if err
       return result
     
   ###
@@ -79,7 +79,7 @@ module.exports = (_, appKeys, social, mailer) ->
             notifications:
               _id: thisNotif
         ).exec (err, user) ->
-          mailer.cLog 'Error at '+__filename,err if err
+          mailer.cLog 'Error at ' + __filename + ' for: notifications.isSeen',err if err
           done true
       else
         done true
@@ -165,9 +165,7 @@ module.exports = (_, appKeys, social, mailer) ->
   @return {[type]} [description]
   ###
   login: (user) ->
-    myFriends = _.map(user.friends, (num) ->
-      num.idUser.toString()
-    )
+    myFriends = _.map user.friends, (num) ->  num.idUser._id.toString()
     notif =
       idFrom: user._id
       from: user.local.pseudo
@@ -180,29 +178,6 @@ module.exports = (_, appKeys, social, mailer) ->
 
     @newNotif myFriends, false, notif
     return
-  
-  ###
-  When the user log in,send a notification to his friends.
-  @param  {[type]} user [description]
-  @return {[type]} [description]
-  ###
-  login: (user) ->
-    myFriends = _.map(user.friends, (num) ->
-      num.idUser.toString()
-    )
-    notif =
-      idFrom: user._id
-      from: user.local.pseudo
-      link1: "/u/" + user.idCool
-      to: ""
-      link2: ""
-      icon: ""
-      title: user.local.pseudo + " just connected."
-      message: ""
-
-    @newNotif myFriends, false, notif
-    return
-
   
   ###
   When user logout,notify his friends

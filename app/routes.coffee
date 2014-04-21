@@ -140,8 +140,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
         # Is the challenge's deadline passed ?
         # If yes, mark it as not completed, failed        
         if moment(cEnd).isSame() or moment(cEnd).isBefore()
-          console.log moment(cEnd).isSame() or moment(cEnd).isBefore()
-          console.log data[key].idCool
           challenge.crossedDeadline data[key]._id
           endedChall.push data[key]
         
@@ -226,15 +224,16 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
           
           #automaticall share on Twitter if allowed
           if done._idChallenged.share.twitter is true and done._idChallenged.twitter.token
-            twitt = "I just completed a challenge ("+ appKeys.cyf.app_domain + "/o/" + done.idCool +") on Challenge your Friends! Join me now @cyf_app #challenge"
-            social.postTwitter req.user.twitter, twitt, (data) ->
-              text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>."
-              sio.glob "fa fa-twitter", text
-              ladder.actionInc req.user, "twitter"
+            twitt = "I just completed a challenge (" + appKeys.cyf.app_domain + "/o/" + done.idCool + ") on Challenge your Friends! Join me now @cyf_app #challenge"
+            social.postTwitter done._idChallenged.share.twitter, twitt, (data) ->
+              if(data.id_str)
+                text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on <a target=\"_blank\" href=\"https://twitter.com/" + data.user.screen_name + "/status/" + data.id_str + "\" title=\"see tweet\">@twitter</a>."
+                sio.glob "fa fa-twitter", text
+                ladder.actionInc req.user, "twitter"
           
           #Automatically share on facebook
           if done._idChallenged.share.facebook is true and done._idChallenged.facebook.token
-            message = "I just completed the challenge \"" + done.title + "\"\"  on Challenge Your friends (@cyfapp)! I won " + xp.getValue("ongoing.succeed") + "XP! " + appKeys.cyf.app_domain + "/o/" + done.idCool
+            message = "I just completed the challenge \"" + done._idChallenge.title + "\"  on Challenge Your friends (@cyfapp)! I won " + xp.getValue("ongoing.succeed") + "XP! " + appKeys.cyf.app_domain + "/o/" + done.idCool
 
             social.postFbMessage done._idChallenged.facebook, message, false, (data) ->
               text = "<a href=\"/u/" + done._idChallenged.idCool + "\" title=\"" + done._idChallenged.local.pseudo + "\">" + done._idChallenged.local.pseudo + "</a> shared his success on facebook."
@@ -283,7 +282,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       
       #Get the users' friend list, because we need one which is up to date
       users.getUser req.user.idCool, (thisUser) ->
-        console.log thisUser.friends
         res.render "launchChallenge.ejs",
           currentUser: req.user
           userList: thisUser.friends
@@ -377,7 +375,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
 
   app.get "/unlink/game_lol", isLoggedIn, (req, res) ->
     users.unlinkLol req.user._id, (result) ->
-      console.log result
       res.redirect "/settings"
 
   app.post "/syncLoLGames", isLoggedIn, (req,res) ->
@@ -417,7 +414,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       summonerName: req.body.summonerName
 
     users.linkLol obj, (result) ->
-      console.log result
       res.send if result == true then true else false
 
   app.post "/linklol_pickicon", isLoggedIn, (req, res) ->
@@ -426,7 +422,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       profileIconId_confirm: req.body.iconPicked
 
     users.linkLolIconPick obj, (result) ->
-      console.log result      
       res.send if result == true then true else false
 
   app.post "/changePassword", isLoggedIn, (req, res) ->
@@ -443,7 +438,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   app.post "/linkLol_confirm", isLoggedIn, (req, res) ->
 
     users.linkLol_confirm req.user, (result) ->
-      console.log result
 
       if result == true
         xp.xpReward req.user, "connect.game"
@@ -466,10 +460,8 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       idUser: req.user._id
       del: req.body.del
       idNotif: req.body.id
-    console.log 'markNotifRead'
 
     notifs.markRead obj, (result) ->
-      console.log result
       res.send true
 
   app.post "/sendTribunal", isLoggedIn, (req, res) ->
@@ -600,9 +592,8 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       xp.xpReward result._idChallenged, "ongoing.accept"
       xp.xpReward result._idChallenger, "ongoing.accept"
       notifs.acceptChall result._idChallenger, result._idChallenged
-      ioText = "<a href=\"/u/" + result._idChallenged.idCool + "\" title=\"" + result._idChallenged.local.pseudo + "\">"
-      ioText += result._idChallenged.local.pseudo + "</a> accepted <a href=\"/c/" + result._idChallenge.idCool + ">the challenge</a> of <a href=\"/u/"
-      ioText += result._idChallenger.idCool + " title=\"" + result._idChallenger.local.pseudo + "\">" + result._idChallenger.local.pseudo + "</a>."
+      ioText = '<a href="/u/' + result._idChallenged.idCool + '" title=" ' + result._idChallenged.local.pseudo + ' ">'
+      ioText += result._idChallenged.local.pseudo + '</a> accepted <a href="/c/' + result._idChallenge.idCool + '" title="See details">the challenge</a> of <a href="/u/' + result._idChallenger.idCool + '" title="' + result._idChallenger.local.pseudo + '">' + result._idChallenger.local.pseudo + '</a>.'
       sio.glob "fa fa-gamepad", ioText
       res.send true
 
@@ -615,7 +606,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       if result
         res.send true
       else
-        console.log result
+        res.send result
 
   app.get "/lostPassword", (req, res) ->
     res.render "lostPassword.ejs",

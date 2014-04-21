@@ -15,7 +15,7 @@
     <meta property="og:type" content="article"> <!-- website/article/profile -->
     <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="List of ongoings challenges for <%= currentUser.local.pseudo %> - Challenge your Friends">
     <meta name="twitter:description" content="List of upcomings, ongoings, completed challenges for <%= currentUser.local.pseudo %>. Manage your challenges and see them happening live. ">
@@ -216,7 +216,7 @@
 			<div class="container">
 				<div class="row">
 					<% if ( toValidate.length > 0 ) { %>
-					<div class="col-lg-6">
+					<div class="col-lg-12">
 						<h4>Challenge validation</h4>
 								<div class="panel panel-default animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
 									<table class="table table-condensed">
@@ -262,7 +262,7 @@
 					</div>	
 					<% } %>
 
-					<div class="col-lg-6">
+					<div class="col-lg-12">
 						<div class="text-center">
 							<h4>Ongoings</h4>
 						</div>
@@ -270,7 +270,7 @@
 						<div class="row">				
 
 						<% for (var i = onChallenges.length - 1; i >= 0; i--) { %>
-						<div class="col-sm-6 col-lg-3 col-xs-12 col-md-4 ">
+						<div class="col-sm-6 col-lg-4 col-xs-12 col-md-4 ">
 							<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
 								<div class="panel-heading">
 									<div class="panel-title text-right">
@@ -294,9 +294,17 @@
 								</div>
 								<div class="panel-body">
 									<div class="row">
-										<p class="lead text-center">
+										<p class="text-center">
 											<%= onChallenges[i]._idChallenge.description  %>
 										</p>									
+									</div>
+									<div class="row">
+										<hr>
+										<p class="text-center">
+											<strong>Game:</strong> <%= onChallenges[i]._idChallenge.game  %>
+
+										</p>
+										<hr>
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
