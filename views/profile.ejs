@@ -173,64 +173,6 @@
 				<div class="col-lg-4">
 					<div class="row">		
 						<div class="col-md-12">	
-							<div class="panel-group" id="lol_games">
-							  <div class="panel panel-default">
-							    <div class="panel-heading">
-							      <h4 class="panel-title">
-							      <% if (currentUser.leagueoflegend.confirmed === true)  { %>
-							        <span class="pull-right gameSync">
-											<i class="fa fa-refresh"></i> 
-									</span>
-									<% } %>
-							        <a data-toggle="collapse" data-parent="#lol_games" href="#collapse_lol">
-							          Last 10 League of legend games
-							        </a> 
-							      </h4>
-							    </div>
-							    <div id="collapse_lol" class="panel-collapse collapse in">
-							      <div class="panel-body">
-										<div class="row">
-										
-									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
-									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
-										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
-										for (var i = lolilength; i >= 0; i--) { %>
-											<div class="col-lg-12 col-md-6 col-sm-6">	
-
-												<div class="media">
-													<div class="pull-left">
-														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">											
-													</div>
-													<div class="media-body">
-														<h6 class="pull-right text-center <%= games[i].stats.win ? 'won': 'lost' %>"><%= games[i].stats.win ? 'won': 'lost' %>
-
-														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
-														</h6>
-														<h4 class="media-heading"><%= games[i].subType %></h4>
-														<p><%= games[i].createDate %></p>
-													</div>
-												</div>
-											</div>
-							
-										<% } %>
-										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
-
-											<div class="media-body text-center">
-												<button type="button" class="btn btn-info gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
-											</div>
-
-										<% } else { %>	
-
-											<div class="media-body text-center">
-												<a href="./settings" class="btn btn-info"> <i class="fa fa-link"></i> Link your Account now!</a>
-											</div>
-
-										<% } %>
-							      		</div>
-							    	</div>
-							    </div>
-							  </div>
-							</div>
 
 							<div class="panel-group" id="ongoingsChalls">
 							  <div class="panel panel-default">
@@ -301,6 +243,65 @@
 													<% } %>
 													<% } %>
 												</div>
+							      		</div>
+							    	</div>
+							    </div>
+							  </div>
+							</div>
+							
+							<div class="panel-group" id="lol_games">
+							  <div class="panel panel-default">
+							    <div class="panel-heading">
+							      <h4 class="panel-title">
+							      <% if (currentUser.leagueoflegend.confirmed === true)  { %>
+							        <span class="pull-right gameSync">
+											<i class="fa fa-refresh"></i> 
+									</span>
+									<% } %>
+							        <a data-toggle="collapse" data-parent="#lol_games" href="#collapse_lol">
+							          Last 10 League of legend games
+							        </a> 
+							      </h4>
+							    </div>
+							    <div id="collapse_lol" class="panel-collapse collapse in">
+							      <div class="panel-body">
+										<div class="row">
+										
+									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
+									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
+										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
+										for (var i = lolilength; i >= 0; i--) { %>
+											<div class="col-lg-12 col-md-6 col-sm-6">	
+
+												<div class="media">
+													<div class="pull-left">
+														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">											
+													</div>
+													<div class="media-body">
+														<h6 class="pull-right text-center <%= games[i].stats.win ? 'won': 'lost' %>"><%= games[i].stats.win ? 'won': 'lost' %>
+
+														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
+														</h6>
+														<h4 class="media-heading"><%= games[i].subType %></h4>
+														<p><%= games[i].createDate %></p>
+													</div>
+												</div>
+											</div>
+							
+										<% } %>
+										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
+
+											<div class="media-body text-center">
+												<button type="button" class="btn btn-info gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
+											</div>
+
+										<% } else { %>	
+
+											<div class="media-body text-center">
+												<a href="./settings" class="btn btn-info"> <i class="fa fa-link"></i> Link your Account now!</a>
+											</div>
+
+										<% } %>
 							      		</div>
 							    	</div>
 							    </div>
