@@ -107,7 +107,14 @@
       maxAge: 2592000000
     }));
     app.use(express.logger("dev"));
-    return app.use(flash());
+    app.use(flash());
+    return app.use(function(req, res, next) {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000, http://m.cyf-app.co');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,X-cyf-AuthToken,content-type');
+      res.setHeader('Access-Control-Allow-Credentials', true);
+      return next();
+    });
   });
 
   require("./app/routes")(app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google);

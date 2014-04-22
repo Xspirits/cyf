@@ -309,12 +309,18 @@
       @param  {[type]} return [description]
       @return {[type]}        [description]
        */
-      getUser: function(id, done) {
-        var checkForHexRegExp, isObj;
+      getUser: function(id, safe, done) {
+        var checkForHexRegExp, isObj, qs;
         checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
         isObj = checkForHexRegExp.test(id);
+        if (safe === true) {
+          qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '';
+        }
         if (isObj) {
-          return User.findById(id).populate("friends.idUser").exec(function(err, data) {
+          return User.findById(id).select(qs).populate('friends.idUser', qs).exec(function(err, data) {
+            console.log(data.friends);
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
@@ -323,10 +329,11 @@
         } else {
           return User.findOne({
             idCool: id
-          }).populate("friends.idUser").exec(function(err, data) {
+          }).select(qs).populate('friends.idUser', qs).exec(function(err, data) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
+            console.log(data.friends);
             return done(data);
           });
         }

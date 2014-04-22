@@ -1,3 +1,6 @@
+
+User = require("../app/models/user")
+
 isLoggedIn = (req, res, next) ->
   return next()  if req.isAuthenticated()
   res.redirect "/"
@@ -281,7 +284,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     challenge.getList (challenges) ->
       
       #Get the users' friend list, because we need one which is up to date
-      users.getUser req.user.idCool, (thisUser) ->
+      users.getUser req.user.idCool, false, (thisUser) ->
         res.render "launchChallenge.ejs",
           currentUser: req.user
           userList: thisUser.friends
@@ -296,7 +299,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       launchDate: req.body.launchDate
     notifs.launchChall data.from, data.idChallenged
     challenge.launch data, (result) ->
-      users.getUser result._idChallenged, (uRet)->
+      users.getUser result._idChallenged, false, (uRet)->
         mailer.sendMail uRet,'[Cyf]Heads up '+uRet.local.pseudo+', you have been challenged by '+req.user.local.pseudo+'!','<h2>A new challenger appears!</h2> <p>The Challenger <strong>'+req.user.local.pseudo+'</strong>(LvL.'+req.user.level+') just challenged you!</p><p>The challenge id is '+result.idCool+',. If you accept, it <strong>will start on</strong><br> '+result.launchDate+'<br> and <strong> must be completed by</strong>:<br>'+result.deadLine+'</p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p><p>The more friends you make the funnier it\'ll be!</p>',true
         res.send true
 
@@ -354,7 +357,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
               ranking: buffer
 
   app.get "/u/:id", (req, res) ->
-    users.getUser req.params.id, (returned) ->
+    users.getUser req.params.id, false, (returned) ->
       res.render "userDetails.ejs",
         currentUser: if req.isAuthenticated() then req.user else false
         user: returned
@@ -362,6 +365,59 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   # AJAX CALLS ==================================================================
   # =============================================================================
 
+
+  # ============
+  # ANGULAR SPECIFICS
+  # ============
+
+
+  app.get "/auth/:email/:pass", (req, res) ->
+
+
+    email=req.params.email
+    password=req.params.pass
+    if(email && password)
+      User.findOne({"local.email": email}).populate({ path: 'friends.idUser'}).exec (err, userfound) ->
+        # if there are any errors, return the error
+        res.send {passed: false, err} if err
+        
+        # if no user is found, return the message
+        res.send [false,'no user found']  unless userfound
+        console.log 'found the user ' + userfound.local.pseudo if userfound
+
+        if !userfound.validPassword password
+          res.send {passed: false, 'Wrong password.'}
+        # all is well, return user
+        else
+          console.log 'Passowrd worked'
+          if appKeys.app_config.email_confirm          
+            unless userfound.verified
+              res.send {passed: false, 'Please confirm your email adress before entering the arena.'}
+          console.log 'logged from API'
+          unless userfound.sessionKey
+            userfound.sessionKey = userfound.generateHash(userfound.local.pseudo + appKeys.express_sid_key) 
+            userfound.save (err) ->
+              mailer.cLog 'Error at '+__filename,err if err
+              notifs.login userfound
+              res.send {passed: true, user: userfound}
+          else
+            res.send {passed: true, user: userfound}
+    else
+      res.send {passed: false, 'Bad credentials'}
+
+  app.get "/app/users", (req, res) ->
+    users.getUserList (returned) ->
+      console.log returned
+      res.send returned
+
+  app.get "/app/users/:id", (req, res) ->
+    users.getUser req.params.id, true, (returned) ->
+      console.log returned
+      res.send returned
+
+  # ============
+  # END ANGULAR SPECIFICS
+  # ============
 
 
 

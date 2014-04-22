@@ -229,6 +229,7 @@ userSchema = mongoose.Schema(
       type: Date
       default: Date.now
 
+  sessionKey: String
   leagueoflegend:
     confirmed: 
       type:Boolean

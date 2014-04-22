@@ -220,16 +220,22 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
   @param  {[type]} return [description]
   @return {[type]}        [description]
   ###
-  getUser: (id, done) ->
+  getUser: (id, safe, done) ->
     checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
-    isObj = checkForHexRegExp.test(id)
+    isObj = checkForHexRegExp.test(id);
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
     if isObj
-      User.findById(id).populate("friends.idUser").exec (err, data) ->
+      User.findById(id).select(qs).populate('friends.idUser',qs).exec (err, data) ->
+        console.log(data.friends)
         mailer.cLog 'Error at '+__filename,err if err
         done data
     else
-      User.findOne(idCool: id).populate("friends.idUser").exec (err, data) ->
+      User.findOne({idCool: id}).select(qs).populate('friends.idUser',qs).exec (err, data) ->
         mailer.cLog 'Error at '+__filename,err if err
+        console.log(data.friends)
         done data  
   ###
   Request a friendship with another user
