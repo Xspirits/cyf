@@ -34,12 +34,11 @@
         }
       },
       rankUser: function(type, callback) {
-        var hash, sort, sorting, typeTxt;
+        var hash, sorting, typeTxt;
         typeTxt = type === 1 ? 'yesterday' : type === 2 ? 'the last Week' : 'the last Month';
         hash = type === 1 ? '#dailyLadder' : type === 2 ? '#weeklyLadder' : '#monthlyLadder';
         sorting = type === 1 ? 'dailyScore' : type === 2 ? 'weeklyScore' : 'monthlyScore';
-        sort = '-' + sorting;
-        return User.find({}).sort(sort).where(sorting).gte(1).exec(function(err, userSorted) {
+        return User.find({}).sort(sorting).where(sorting).gte(1).exec(function(err, userSorted) {
           var buffed, leaders;
           if (err) {
             mailer.cLog('Error at ' + __filename, err);

@@ -393,18 +393,17 @@
             });
           }
           if (!userfound) {
-            res.send([false, 'no user found']);
-          }
-          if (userfound) {
-            console.log('found the user ' + userfound.local.pseudo);
+            res.send({
+              passed: false,
+              err: 'User not found, are you human?'
+            });
           }
           if (!userfound.validPassword(password)) {
             return res.send({
               passed: false,
-              'Wrong password.': 'Wrong password.'
+              err: 'Account existing but...Wrong password.'
             });
           } else {
-            console.log('Passowrd worked');
             if (appKeys.app_config.email_confirm) {
               if (!userfound.verified) {
                 res.send({
@@ -413,7 +412,6 @@
                 });
               }
             }
-            console.log('logged from API');
             if (!userfound.sessionKey) {
               userfound.sessionKey = userfound.generateHash(userfound.local.pseudo + appKeys.express_sid_key);
               return userfound.save(function(err) {
@@ -437,7 +435,7 @@
       } else {
         return res.send({
           passed: false,
-          'Bad credentials': 'Bad credentials'
+          err: 'Bad credentials'
         });
       }
     });

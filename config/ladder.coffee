@@ -29,8 +29,8 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
     hash =  if type == 1 then  '#dailyLadder' else if type == 2 then  '#weeklyLadder' else '#monthlyLadder'
     sorting = if type == 1 then 'dailyScore' else if type == 2 then 'weeklyScore' else 'monthlyScore'
 
-    sort    = '-' + sorting
-    User.find({}).sort(sort).where(sorting).gte(1).exec (err, userSorted) ->
+    # sort    = '-' + sorting
+    User.find({}).sort(sorting).where(sorting).gte(1).exec (err, userSorted) ->
       mailer.cLog 'Error at '+__filename,err if err
       buffed = []
       leaders = []

@@ -379,21 +379,19 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     if(email && password)
       User.findOne({"local.email": email}).populate({ path: 'friends.idUser'}).exec (err, userfound) ->
         # if there are any errors, return the error
-        res.send {passed: false, err} if err
+        res.send {passed: false, err: err} if err
         
         # if no user is found, return the message
-        res.send [false,'no user found']  unless userfound
-        console.log 'found the user ' + userfound.local.pseudo if userfound
-
+        res.send {passed: false, err: 'User not found, are you human?'}  unless userfound
+        
         if !userfound.validPassword password
-          res.send {passed: false, 'Wrong password.'}
+          res.send {passed: false, err: 'Account existing but...Wrong password.'}
         # all is well, return user
         else
-          console.log 'Passowrd worked'
           if appKeys.app_config.email_confirm          
             unless userfound.verified
               res.send {passed: false, 'Please confirm your email adress before entering the arena.'}
-          console.log 'logged from API'
+          
           unless userfound.sessionKey
             userfound.sessionKey = userfound.generateHash(userfound.local.pseudo + appKeys.express_sid_key) 
             userfound.save (err) ->
@@ -403,7 +401,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
           else
             res.send {passed: true, user: userfound}
     else
-      res.send {passed: false, 'Bad credentials'}
+      res.send {passed: false, err: 'Bad credentials'}
 
   app.get "/app/users", (req, res) ->
     users.getUserList (returned) ->
