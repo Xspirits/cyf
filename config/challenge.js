@@ -24,7 +24,7 @@
         durationH = data["durationH"];
         durationD = data["durationD"];
         description = data["description"];
-        game = data["game"];
+        game = data["idGame"];
         uID = genUID.generate().substr(-6);
         newChallenge = new Challenge();
         newChallenge.idCool = uID;
@@ -104,7 +104,7 @@
       @return {Object}        [Object containing all the challenge data]
        */
       getList: function(done) {
-        return Challenge.find({}).sort("-value").exec(function(err, data) {
+        return Challenge.find({}).populate('game completedBy').sort("-value").exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }

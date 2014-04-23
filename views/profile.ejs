@@ -381,11 +381,10 @@
 	<script type="text/javascript" src="./js/chart.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
-
 			//$(".graphsTab input[type=checkbox]").bootstrapSwitch();
 
 		    $(".bt-fs-dialog").fSelector({
-		    	excludeIds: [<%= currentUser.fbInvitedFriends.length >0 ? currentUser.fbInvitedFriends : '' %>],
+		    	// excludeIds: [<%= currentUser.fbInvitedFriends.length >0 ? currentUser.fbInvitedFriends : '' %>],
 			      closeOnSubmit: true,
 			      max: 50,
 			      lang: {

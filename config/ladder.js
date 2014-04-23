@@ -39,7 +39,7 @@
         hash = type === 1 ? '#dailyLadder' : type === 2 ? '#weeklyLadder' : '#monthlyLadder';
         sorting = type === 1 ? 'dailyScore' : type === 2 ? 'weeklyScore' : 'monthlyScore';
         sort = '-' + sorting;
-        return User.find({}).sort(sort).gte(1).exec(function(err, userSorted) {
+        return User.find({}).sort(sort).where(sorting).gte(1).exec(function(err, userSorted) {
           var buffed, leaders;
           if (err) {
             mailer.cLog('Error at ' + __filename, err);

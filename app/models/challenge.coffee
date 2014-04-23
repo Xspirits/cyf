@@ -6,7 +6,6 @@ challengeSchema = mongoose.Schema(
   idCool: String
   title: String
   description: String
-  game: String
   featured:
     type: Boolean
     default: false
@@ -14,7 +13,7 @@ challengeSchema = mongoose.Schema(
   durationH: Number
   durationD: Number
   game:
-    type: String
+    type: mongoose.Schema.Types.ObjectId
     ref: "Game"
 
   creation:
@@ -42,9 +41,6 @@ challengeSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId
       index: true
       ref: "User"
-    }
-    {
-      _id: false
     }
   ]
   rating:

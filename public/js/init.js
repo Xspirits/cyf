@@ -33,6 +33,3 @@
  for (var i = src.length - 1; i >= 0; i--) {
  	document.write('<' + 'script type="text/javascript" src="' + result +'/js/' +  src[i] + '"></sc' + 'ript>');
  }
- // '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js',
- // '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
- // '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',

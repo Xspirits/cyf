@@ -18,7 +18,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
     durationH = data["durationH"]
     durationD = data["durationD"]
     description = data["description"]
-    game = data["game"]
+    game = data["idGame"]
     uID = genUID.generate().substr(-6)
     
     # create the challenge
@@ -94,9 +94,8 @@ module.exports = (_, mailer, moment, genUID, users) ->
   @return {Object}        [Object containing all the challenge data]
   ###
   getList: (done) ->
-    Challenge.find({}).sort("-value").exec (err, data) ->
+    Challenge.find({}).populate('game completedBy').sort("-value").exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
-      
       # console.log(data);
       done data
   

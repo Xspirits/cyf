@@ -59,10 +59,8 @@
 								<a href="./c/<%= challenges[i].idCool %>">
 									
 									<h4><%= challenges[i].title %></h4>
-									<h5><small><%= challenges[i].game %></small></h5>
-									<% for(var z=0; z< challenges[z].completedBy.length; z++) { %>
-									<%= challenges[i].completedBy[z] %>
-									<% } %>
+								</a>
+									<h6 class="color-<%= challenges[i].game.type %>"><%= challenges[i].game.title %></h6>
 									<p><%= challenges[i].description %></p>
 									<hr class="subtle-divider hr-white">
 									<i class="fa fa-clock-o"></i>
@@ -70,13 +68,24 @@
 									<% if (challenges[i].durationD > 0 ) { %> 
 									<strong><%= challenges[i].durationD %></strong> Days
 									<% } %>
-									<span class="pull-right">
-										<span class="valueChall"><span class="label label-info">Value <i class="fa fa-fire"></i><%= challenges[i].value %></span></span>
-									</span>
+									<span class="valueChall pull-right"><span class="label label-info">Value <i class="fa fa-fire"></i><%= challenges[i].value %></span></span>
+									<% if(challenges[i].completedBy.length > 0) { %>
+									<hr>
+									<div class="completedByList">
+										<h6>Completed by <%- challenges[i].completedBy.length %> challengers</h6>
+										<span class="hidden">
+											<% for(var z=0; z< challenges[i].completedBy.length; z++) { %>
+												<a href="/u/<%= challenges[i].completedBy[z].idCool %>">
+													<%= challenges[i].completedBy[z].local.pseudo %>
+												</a>
+											<% } %>
+										</span>
+									</div>
+									<% } %>
 									<hr class="subtle-divider hr-white">
-									<div class="fb-share-button" data-href="http://challenge-friends.herokuapp.com/c/<%= challenges[i].idCool %>" data-type="button_count"></div>
-									<a href="https://twitter.com/share" class="twitter-share-button" data-text="Look at this challenge: <%= challenges[i].title %> with a value of <%= challenges[i].value %>, rated <%= challenges[i].rateValue %> overall by  <%= challenges[i].rateNumber %> #challengers!" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
-								</a>
+
+										<div class="fb-share-button" ata-href="http://challenge-friends.herokuapp.com/c/<%= challenges[i].idCool %>" data-type="button_count"></div>
+										<a href="https://twitter.com/share" class="twitter-share-button" data-text="Look at this challenge: <%= challenges[i].title %> with a value of <%= challenges[i].value %>, rated <%= challenges[i].rateValue %> overall by  <%= challenges[i].rateNumber %> #challengers!" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
 							</div>
 						</div>
 						<% } %>
@@ -93,6 +102,22 @@
 		<script type="text/javascript">
 
 			$(function() {
+
+			    var $sameHeightChildren = $('.challenge-card > div');
+			    var maxHeight = 0;
+
+			    _.each($sameHeightChildren, function(el) {
+			        maxHeight = Math.max(maxHeight, $(el).outerHeight());
+			    });
+			    console.log(maxHeight)
+			    $sameHeightChildren.css({ height: maxHeight + 'px'});
+
+
+				$('.completedByList').hover(function(){
+						$(this).children('span').toggleClass('hidden');
+				},function(){
+						$(this).children('span').toggleClass('hidden');
+				});
 			});
 
 

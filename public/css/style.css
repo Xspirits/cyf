@@ -372,11 +372,11 @@ ul.userlist >div > li > a > img {
   border: 3px;
   color: rgb(65, 65, 65);
 }
-
 span.label,a.label {
   cursor: context-menu;
   font-weight: 300;
   font-size: .9em;
+  display: inline-block;
   -webkit-transition: all 220ms ease-in-out;
   -moz-transition: all 220ms ease-in-out;
   -ms-transition: all 220ms ease-in-out;
@@ -403,10 +403,10 @@ span.label,a.label {
 .color-Fantasy {
   color: rgb(28,160,247);
 }
-.label.Fantasy {
+.label.Fantasy,.badge.Fantasy {
   background: rgb(28,160,247);
 }
-.label.Fantasy:hover {
+.label.Fantasy:hover,.badge.Fantasy:hover {
   background: rgb(87, 185, 250);
   box-shadow: 0 1px 0px rgb(87, 185, 250);
 }
@@ -1547,7 +1547,6 @@ input.gStyle:focus {
 }
 /* Special hover effect */
 .hover-me {
-  cursor: pointer;
   display: inline-block;
   border-width: .5px;
   border-color: rgba(245,245,245,0);

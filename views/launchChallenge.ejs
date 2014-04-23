@@ -139,9 +139,9 @@
 						<div class="row challenge">
 							<% for(var i=0; i< challenges.length; i++) { 
 								%>
-								<div class="col-lg-6 col-xs-6 imInABox animated fadeInDown  challenge-card hover-me" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+								<div class="col-lg-6 col-xs-6 imInABox animated fadeInDown  challenge-card hover-me" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game.title %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
 									<div class="rounded-2 well">
-										<span class="badge"><%= challenges[i].game %></span>
+										<span class="badge <%= challenges[i].game.type %>"><%= challenges[i].game.title %></span>
 
 										<h3 class="hidden-xs"><%= challenges[i].title %></h3>
 										<h5 class="visible-xs"><%= challenges[i].title %></h5>
