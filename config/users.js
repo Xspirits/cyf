@@ -320,7 +320,6 @@
         }
         if (isObj) {
           return User.findById(id).select(qs).populate('friends.idUser', qs).exec(function(err, data) {
-            console.log(data.friends);
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
@@ -333,7 +332,6 @@
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
-            console.log(data.friends);
             return done(data);
           });
         }

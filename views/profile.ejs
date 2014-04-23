@@ -560,11 +560,11 @@
 
 			whatCanIDoToday = _.max(dailyR)
 			// Put all our ranking graph to the same length
-			dailyR = offsetArray(dailyR,dailyR.length-1,whatCanIDoToday*2);
+			dailyR = offsetArray(dailyR,dailyR.length-1,whatCanIDoToday);
 			if(weeklyR.length > 0)
-				weeklyR = offsetArray(weeklyR,dailyR.length-1,whatCanIDoToday*2);
+				weeklyR = offsetArray(weeklyR,dailyR.length-1,whatCanIDoToday);
 			if(monthlyR.length > 0)
-				monthlyR = offsetArray(monthlyR,dailyR.length-1,whatCanIDoToday*2);
+				monthlyR = offsetArray(monthlyR,dailyR.length-1,whatCanIDoToday);
 
 			// Now take the labels to the same length (slice or take the last X ones)
 			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
@@ -572,12 +572,7 @@
 			// =========================
 			//BUILD CHARTS
 			// =========================
-			var spec = []
-			for (var i = 0; i < dataLabels.length - 1; i++) {
-				spec.push(dataLabels[i]+' AM');
-				spec.push(dataLabels[i]+' PM');
-			};
-			var xpLab = dota2.length < spec.length ? spec.slice(spec.length - dota2.length,spec.length) : spec;
+			var xpLab = dota2.length < dataLabels.length ? dataLabels.slice(dataLabels.length - dota2.length,dataLabels.length) : dataLabels;
 
 			var dataXp = {
 				labels : xpLab,
@@ -595,7 +590,7 @@
 			var lvlLab = warcraft4.length < dataLabels.length ? dataLabels.slice(dataLabels.length - warcraft4.length,dataLabels.length) : dataLabels;
 			var optLvl = {
 					scaleOverride : true,
-					scaleSteps : <%- currentUser.level*2 %>,
+					scaleSteps : <%= currentUser.level+1 %>,
 					scaleStepWidth : 1,
 					scaleStartValue : 0
 			}
@@ -613,8 +608,11 @@
 			}
 			//Ranks Graph
 			var optRk = {
-				datasetFill : false,
-				bezierCurve : false
+				bezierCurve : false,
+				scaleOverride : true,
+				scaleSteps : dailyR[dailyR.length-1]+1,
+				scaleStepWidth : 1,
+				scaleStartValue : 0
 			}
 
 			var dataRanks = {
