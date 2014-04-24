@@ -10,8 +10,12 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
   #
   # LEADER BOARD
   #
-  getLeaderboards: (type, scale, done) ->
+  getLeaderboards: (type, scale, safe, done) ->
     self = this
+    if safe == true
+      qs = '-friends -userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = '-notifications -friends -challengeRateHistoric'
     if type == "score"
       if scale == 'global'
         query = '-globalScore level'
@@ -21,7 +25,7 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
         where = scale + "Rank"
       
       console.log query, where
-      User.find({}).where(where).gte(1).sort(query).select("-notifications -friends -challengeRateHistoric").exec (err, challengers) ->
+      User.find({}).where(where).gte(1).sort(query).select(qs).exec (err, challengers) ->
         mailer.cLog 'Error at '+__filename,err if err
         done challengers
 

@@ -13,9 +13,14 @@
 
   module.exports = function(async, schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs, users) {
     return {
-      getLeaderboards: function(type, scale, done) {
-        var query, self, where;
+      getLeaderboards: function(type, scale, safe, done) {
+        var qs, query, self, where;
         self = this;
+        if (safe === true) {
+          qs = '-friends -userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '-notifications -friends -challengeRateHistoric';
+        }
         if (type === "score") {
           if (scale === 'global') {
             query = '-globalScore level';
@@ -25,7 +30,7 @@
             where = scale + "Rank";
           }
           console.log(query, where);
-          return User.find({}).where(where).gte(1).sort(query).select("-notifications -friends -challengeRateHistoric").exec(function(err, challengers) {
+          return User.find({}).where(where).gte(1).sort(query).select(qs).exec(function(err, challengers) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }

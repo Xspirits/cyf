@@ -294,8 +294,14 @@
       @param  {[type]} return [description]
       @return {[type]}        [description]
        */
-      getUserList: function(done) {
-        return User.find({}).sort("-_id").exec(function(err, data) {
+      getUserList: function(safe, done) {
+        var qs;
+        if (safe === true) {
+          qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '';
+        }
+        return User.find({}).select(qs).sort("-_id").exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }

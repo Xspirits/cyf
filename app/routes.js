@@ -351,13 +351,13 @@
     app.get("/leaderboard", function(req, res) {
       var buffer;
       buffer = {};
-      return ladder.getLeaderboards("score", 'global', function(global) {
+      return ladder.getLeaderboards("score", 'global', false, function(global) {
         buffer.global = global;
-        return ladder.getLeaderboards("score", 'monthly', function(monthly) {
+        return ladder.getLeaderboards("score", 'monthly', false, function(monthly) {
           buffer.monthly = monthly;
-          return ladder.getLeaderboards("score", 'weekly', function(weekly) {
+          return ladder.getLeaderboards("score", 'weekly', false, function(weekly) {
             buffer.weekly = weekly;
-            ladder.getLeaderboards("score", 'daily', function(daily) {
+            ladder.getLeaderboards("score", 'daily', false, function(daily) {
               buffer.daily = daily;
               console.log(buffer);
               return res.render("leaderBoard.ejs", {
@@ -441,7 +441,7 @@
       }
     });
     app.get("/app/users", function(req, res) {
-      return users.getUserList(function(returned) {
+      return users.getUserList(true, function(returned) {
         console.log(returned);
         return res.send(returned);
       });
@@ -456,7 +456,7 @@
       var scope, type;
       type = req.params.type;
       scope = req.params.scope;
-      return ladder.getLeaderboards(type, scope, function(result) {
+      return ladder.getLeaderboards(type, scope, true, function(result) {
         console.log(result);
         return res.send(result);
       });

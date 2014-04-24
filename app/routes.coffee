@@ -344,13 +344,13 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   # leader board
   app.get "/leaderboard", (req, res) ->
     buffer = {}
-    ladder.getLeaderboards "score",'global', (global) ->
+    ladder.getLeaderboards "score",'global', false, (global) ->
       buffer.global = global
-      ladder.getLeaderboards "score", 'monthly', (monthly) ->
+      ladder.getLeaderboards "score", 'monthly', false, (monthly) ->
         buffer.monthly = monthly
-        ladder.getLeaderboards "score", 'weekly', (weekly) ->
+        ladder.getLeaderboards "score", 'weekly', false, (weekly) ->
           buffer.weekly = weekly
-          ladder.getLeaderboards "score", 'daily', (daily) ->
+          ladder.getLeaderboards "score", 'daily', false, (daily) ->
             buffer.daily = daily
             console.log buffer
             res.render "leaderBoard.ejs",
@@ -405,7 +405,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
       res.send {passed: false, err: 'Bad credentials'}
 
   app.get "/app/users", (req, res) ->
-    users.getUserList (returned) ->
+    users.getUserList true, (returned) ->
       console.log returned
       res.send returned
 
@@ -417,7 +417,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   app.get "/ladder/:type/:scope", (req, res) ->
     type = req.params.type
     scope = req.params.scope
-    ladder.getLeaderboards type,scope, (result) ->
+    ladder.getLeaderboards type,scope,true, (result) ->
       console.log result
       res.send result
 
