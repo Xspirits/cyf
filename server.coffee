@@ -117,4 +117,3 @@ console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
 console.log 'Current Application time : '+moment().format()
 console.log '==========================================================='
-mailer.cLog 'Server Started on port ' + port,'Current Application time : '+moment().format()

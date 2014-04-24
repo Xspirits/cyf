@@ -452,6 +452,15 @@
         return res.send(returned);
       });
     });
+    app.get("/ladder/:type/:scope", function(req, res) {
+      var scope, type;
+      type = req.params.type;
+      scope = req.params.scope;
+      return ladder.getLeaderboards(type, scope, function(result) {
+        console.log(result);
+        return res.send(result);
+      });
+    });
     app.get("/search_game", function(req, res) {
       var lookFor;
       lookFor = req.query["term"];

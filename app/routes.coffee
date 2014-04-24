@@ -375,8 +375,6 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
 
 
   app.get "/auth/:email/:pass", (req, res) ->
-
-
     email=req.params.email
     password=req.params.pass
     if(email && password)
@@ -415,6 +413,13 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
     users.getUser req.params.id, true, (returned) ->
       console.log returned
       res.send returned
+
+  app.get "/ladder/:type/:scope", (req, res) ->
+    type = req.params.type
+    scope = req.params.scope
+    ladder.getLeaderboards type,scope, (result) ->
+      console.log result
+      res.send result
 
   # ============
   # END ANGULAR SPECIFICS
