@@ -79,6 +79,10 @@ userSchema = mongoose.Schema(
       type: Number
       default: 0
 
+    score:
+      type: Number
+      default: 0
+
     xp:
       type: Number
       default: 0
@@ -145,7 +149,7 @@ userSchema = mongoose.Schema(
       type: Number
       default: 0
 
-    week:
+    date:
       type: Date
       default: Date.now
   ]
@@ -195,7 +199,7 @@ userSchema = mongoose.Schema(
       type: Number
       default: 0
 
-    month:
+    date:
       type: Date
       default: Date.now
   ]

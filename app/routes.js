@@ -357,8 +357,9 @@
           buffer.monthly = monthly;
           return ladder.getLeaderboards("score", 'weekly', function(weekly) {
             buffer.weekly = weekly;
-            return ladder.getLeaderboards("score", 'daily', function(daily) {
+            ladder.getLeaderboards("score", 'daily', function(daily) {
               buffer.daily = daily;
+              console.log(buffer);
               return res.render("leaderBoard.ejs", {
                 currentUser: req.isAuthenticated() ? req.user : false,
                 ranking: buffer

@@ -684,12 +684,13 @@
       oauth: params
     }, function(err, resp, body) {
       if (err) {
-        return console.error("Error occured: ", err);
+        console.error("Error occured: ", err);
       }
       body = JSON.parse(body);
       if (body.error) {
-        return console.error("Error returned from  twitter: ", body.error);
+        console.error("Error returned from  twitter: ", body.error);
       }
+      console.log(body);
       return callback(body);
     });
     form = r.form();

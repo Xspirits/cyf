@@ -414,7 +414,6 @@
 							contentType: 'application/json',
 							url: './invitedFriends',						
 							success: function(data) {
-								console.log(data)
 								$('#friendLength').text(data);
 							}
 						});	
@@ -429,8 +428,6 @@
 				var val = val?val:0;
 				var lie = lie?lie:cL;
 				if(arr.length <= 1){
-					console.log(arr)
-
 					return arr.length === 1 ? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
 				}
 				else {
@@ -513,22 +510,25 @@
 			//Load our data
 			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>');
 			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>');
-			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>');
-			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>');
+			// var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>');
+			// var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>');
 
 			// Add the current rank!
 			<% if(currentUser.dailyRank > 0) {%>
 				rHistDaily.push({'rank': <%=currentUser.dailyRank %>,'date': moment()});
-			<%} if(currentUser.weeklyRank > 0) {%>
-				rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>,'date': moment()});
+			<%} %>
+
+			<% if(currentUser.weeklyRank > 0) {%>
+				// rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>,'date': moment()});
 			<%} if(currentUser.monthlyRank > 0) {%>
-				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>,'date': moment()});
+				// rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>,'date': moment()});
 			<%} %>
 
 			historic = historic.reverse();
 			rHistDaily = rHistDaily.reverse();
-			rHistWeekly = rHistWeekly.reverse();
-			rHistMonthly = rHistMonthly.reverse();
+			// rHistWeekly = rHistWeekly.reverse();
+			// rHistMonthly = rHistMonthly.reverse();
+
 			for (var key = 30; key >= 0; key--) {
 
 				if(historic[key]){
@@ -538,33 +538,34 @@
 				}
 
 				if(rHistDaily[key]){
-					console.log(rHistDaily[key])
-					rankLabels.push(moment(rHistDaily[key].date).format("MMM Do"))
+					rankLabels.push(moment(rHistDaily[key].date).subtract('days', 1).format("MMM Do"))
 					dailyR.push(rHistDaily[key].rank);
 				}
 
-				if(rHistWeekly[key]) {
-					rankLabelsW.push(moment(rHistWeekly[key].date).format("MMM Do"))
-					dailyR.push(console[key].rank);
-				}
+				// if(rHistWeekly[key]) {
+				// 	rankLabelsW.push(moment(rHistWeekly[key].date).subtract('weeks', 1).format("MMM Do"))
+				// 	weeklyR.push(rHistWeekly[key].rank);
+				// }
 
-				if(rHistMonthly[key]) {
-					rankLabelsM.push(moment(rHistMonthly[key].date).format("MMM Do"))
-					dailyR.push(rHistMonthly[key].rank);
-				}
+				// if(rHistMonthly[key]) {
+				// 	rankLabelsM.push(moment(rHistMonthly[key].date).subtract('months', 1).format("MMM Do"))
+				// 	monthlyR.push(rHistMonthly[key].rank);
+				// }
 
 			}
 			// We need at LEAST 2 values (it's a graph, yep)
-			dota2 = offsetArray(dota2);
-			warcraft4 = offsetArray(warcraft4);
+			dota2 = offsetArray(dota2,dota2.length-1);
+			warcraft4 = offsetArray(warcraft4,warcraft4.length-1);
 
 			whatCanIDoToday = _.max(dailyR)
 			// Put all our ranking graph to the same length
+
 			dailyR = offsetArray(dailyR,dailyR.length-1,whatCanIDoToday);
-			if(weeklyR.length > 0)
-				weeklyR = offsetArray(weeklyR,dailyR.length-1,whatCanIDoToday);
-			if(monthlyR.length > 0)
-				monthlyR = offsetArray(monthlyR,dailyR.length-1,whatCanIDoToday);
+			//  TBReactivated
+			// if(weeklyR.length > 0)
+			// 	weeklyR = offsetArray(weeklyR,dailyR.length-1,whatCanIDoToday);
+			// if(monthlyR.length > 0)
+			// 	monthlyR = offsetArray(monthlyR,dailyR.length-1,whatCanIDoToday);
 
 			// Now take the labels to the same length (slice or take the last X ones)
 			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
@@ -608,6 +609,7 @@
 			}
 			//Ranks Graph
 			var optRk = {
+				datasetFill: true,
 				bezierCurve : false,
 				scaleOverride : true,
 				scaleSteps : dailyR[dailyR.length-1]+1,
@@ -624,7 +626,10 @@
 						pointColor : "rgba(237,85,101,0.8)",
 						pointStrokeColor : "#fff",
 						data : dailyR
-					},
+					}
+				]
+			}
+			/*,
 					{
 						fillColor : "rgba(255,206,84,0.3)",
 						strokeColor : "rgba(255,206,84,0.6)",
@@ -638,9 +643,7 @@
 						pointColor : "rgba(79,193,233,0.8)",
 						pointStrokeColor : "#fff",
 						data : monthlyR
-					}
-				]
-			}
+					}*/
 			// Build Canvas
 			var desiredRatio = $("#historygraph").parent().width(); // Used for all graphs
 			var canvasXp = $("#historygraph")[0];

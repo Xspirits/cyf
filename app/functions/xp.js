@@ -111,6 +111,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
             "monthly.xp": value
           };
         }
+        console.log(inc);
         return User.findByIdAndUpdate(user._id, {
           $inc: inc,
           $set: {

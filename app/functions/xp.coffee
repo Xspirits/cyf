@@ -104,6 +104,7 @@ module.exports = (_, mailer, notifs, sio) ->
         "weekly.xp": value
         "monthly.xp": value
 
+    console.log inc
     User.findByIdAndUpdate(user._id,
       $inc: inc
       $set:

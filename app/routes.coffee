@@ -352,9 +352,12 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
           buffer.weekly = weekly
           ladder.getLeaderboards "score", 'daily', (daily) ->
             buffer.daily = daily
+            console.log buffer
             res.render "leaderBoard.ejs",
               currentUser: if req.isAuthenticated() then req.user else false
               ranking: buffer
+          return
+
 
   app.get "/u/:id", (req, res) ->
     users.getUser req.params.id, false, (returned) ->
