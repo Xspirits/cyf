@@ -376,7 +376,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
       pseudo: req.params.username
       password: req.params.pass
       email: req.params.email
-    api.register signup, (done) ->
+    eApi.register signup, (done) ->
       res.send done
 
 
@@ -386,7 +386,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
       password: req.params.pass
 
     if(creds.email && creds.password)
-      api.login creds, (done) ->
+      eApi.login creds, (done) ->
         res.send done
     else
       res.send {passed: false, err: 'Bad credentials'}

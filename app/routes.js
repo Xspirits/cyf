@@ -383,7 +383,7 @@
         password: req.params.pass,
         email: req.params.email
       };
-      return api.register(signup, function(done) {
+      return eApi.register(signup, function(done) {
         return res.send(done);
       });
     });
@@ -394,7 +394,7 @@
         password: req.params.pass
       };
       if (creds.email && creds.password) {
-        return api.login(creds, function(done) {
+        return eApi.login(creds, function(done) {
           return res.send(done);
         });
       } else {
