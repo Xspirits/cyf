@@ -404,13 +404,13 @@
         });
       }
     });
-    app.get("/api/app/users", function(req, res) {
+    app.get("/api/users", function(req, res) {
       return users.getUserList(true, function(returned) {
         console.log(returned);
         return res.send(returned);
       });
     });
-    app.get("/api/app/users/:id", function(req, res) {
+    app.get("/api/users/:id", function(req, res) {
       return users.getUser(req.params.id, true, function(returned) {
         console.log(returned);
         return res.send(returned);

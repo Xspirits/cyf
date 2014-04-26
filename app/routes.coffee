@@ -391,12 +391,12 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
     else
       res.send {passed: false, err: 'Bad credentials'}
 
-  app.get "/api/app/users", (req, res) ->
+  app.get "/api/users", (req, res) ->
     users.getUserList true, (returned) ->
       console.log returned
       res.send returned
 
-  app.get "/api/app/users/:id", (req, res) ->
+  app.get "/api/users/:id", (req, res) ->
     users.getUser req.params.id, true, (returned) ->
       console.log returned
       res.send returned
