@@ -18,24 +18,24 @@
 				<li class="animated fadeInX"><a href="/users">Who's here ?</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
+				<li class="dropdown"> 
 					<a href="#" class="dropdown-toggle animated fadeInX" data-toggle="dropdown">Challenges <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li>
 							<a href="/launchChallenge"><i class="fa fa-crosshairs hidden-xs hidden-sm"></i> <strong>Launch</strong></a>
 						</li>
-						<li class="divider"></li>
+						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
 							<a href="/challenges"><i class="fa fa-book hidden-xs hidden-sm"></i> All challenges</a>
 						</li>
 						<li>
 							<a href="/ongoing"><i class="glyphicon glyphicon-flash hidden-xs hidden-sm"></i>My challenges</a>
 						</li>
-						<!-- <li><a href="/newChallenge">Create</a></li> -->
+						<li><a href="/newChallenge"><i class="fa fa-pencil hidden-xs hidden-sm"></i> Create</a></li>
 						<li><a href="/myChallenges"><i class="fa fa-list-ul hidden-xs hidden-sm"></i> Challenges created</a></li>
-						<li class="divider"></li>
+						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
-							<a href="/rateChallenges"><i class="fa fa-pencil hidden-xs hidden-sm"></i> Rate challenges
+							<a href="/rateChallenges"><i class="fa fa-bar-chart-o hidden-xs hidden-sm"></i> Rate challenges
 								<% if(currentUser.challengeRate.length > 0 ) { %>
 								<span class="badge alert-info"><%= currentUser.challengeRate.length %></span>
 								<% } %>
@@ -56,10 +56,10 @@
 					<div id="user-xpbar" class="hidden-xs hidden-sm"></div>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="/profile">Profile</a>
+							<a href="/profile"><i class="fa fa-user hidden-xs hidden-sm"></i>  Profile</a>
 						</li>
 						<li>
-							<a href="/request">Requests
+							<a href="/request"><i class="fa fa-inbox hidden-xs hidden-sm"></i>  Requests
 								<% if(currentUser.pendingRequests.length > 0 ) { %>
 								<span class="badge alert-info"><%= currentUser.pendingRequests.length %></span>
 								<% } %>
@@ -70,11 +70,11 @@
 							<a href="/settings" class="hidden-md hidden-lg">Settings</a>
 						</li>
 						<li>
-							<a href="/friends">Friends</a>
+							<a href="/friends"><i class="fa fa-users hidden-xs hidden-sm"></i>  Friends</a>
 						</li>
 						<li class="divider hidden-md hidden-lg"></li>
 						<li>
-							<a href="/logout">Log out</a>
+							<a href="/logout"><i class="fa fa-sign-out hidden-xs hidden-sm"></i>  Log out</a>
 						</li>
 					</ul>
 				</li>

@@ -22,6 +22,7 @@ port            = process.env.PORT or 8080
 mongoose        = require("mongoose")
 passport        = require("passport")
 path            = require("path")
+grvtr           = require("grvtr")
 async           = require("async")
 moment          = require("moment")
 moment          = require('moment-timezone')
@@ -54,6 +55,9 @@ games           = require("./config/game")(moment)
 users           = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment)
 challenge       = require("./config/challenge")(_, mailer, moment, genUID, users)
 ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
+
+# Api
+eApi      = require('./config/api') app,appKeys, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 require("./config/passport") passport,challenge, social, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration
 
@@ -99,7 +103,7 @@ app.configure ->
       next();
 
 # routes ======================================================================
-require("./app/routes") app,appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
+require("./app/routes") app,appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
 require("./app/schedule") scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs

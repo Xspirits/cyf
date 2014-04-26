@@ -227,7 +227,6 @@
           title: user.local.pseudo + " just connected.",
           message: ""
         };
-        this.newNotif(myFriends, false, notif);
       },
 
       /*

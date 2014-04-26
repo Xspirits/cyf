@@ -415,11 +415,11 @@
 							url: './invitedFriends',						
 							success: function(data) {
 								$('#friendLength').text(data);
+								$('#successModal').modal('show');
 							}
 						});	
 				},
 				onClose: function(response) {
-					$('#successModal').modal('show');
 				}
 		    });
 

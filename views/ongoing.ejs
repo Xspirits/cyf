@@ -403,7 +403,7 @@
 											<% } else { %>
 												<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === true) ) ? 'ok' : 'remove' %>"></span>
 											<% }  %>
-												<%= endChallenges[i]._idChallenge.title %>
+												<%= endChallenges[i]._idChallenge? endChallenges[i]._idChallenge.title : '' %>
 											</a>
 										</div>
 									</div>
@@ -422,7 +422,7 @@
 									</div>
 										<div class="row">
 											<p class="text-center col-md-12">
-												<%= endChallenges[i]._idChallenge.description  %>
+												<%= endChallenges[i]._idChallenge? endChallenges[i]._idChallenge.description : ''  %>
 											</p>									
 										</div>
 										<div class="row">
@@ -436,7 +436,7 @@
 													<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
 												</p>	
 												<p>
-													<i class="fa fa-fire text-danger"></i> <%= endChallenges[i]._idChallenge.value %>
+													<i class="fa fa-fire text-danger"></i> <%= endChallenges[i]._idChallenge? endChallenges[i]._idChallenge.value : '' %>
 												</p>									
 											</div>								
 										</div>								

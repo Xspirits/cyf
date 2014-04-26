@@ -1,4 +1,3 @@
-
 User = require("../app/models/user")
 
 isLoggedIn = (req, res, next) ->
@@ -6,7 +5,7 @@ isLoggedIn = (req, res, next) ->
   res.redirect "/"
   return
   
-module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
+module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
     res.render "about.ejs",
@@ -336,7 +335,7 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
 
   # User list
   app.get "/users", (req, res) ->
-    users.getUserList (returned) ->
+    users.getUserList false, (returned) ->
       res.render "userList.ejs",
         currentUser: if req.isAuthenticated() then req.user else false
         users: returned
@@ -370,37 +369,26 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
 
 
   # ============
-  # ANGULAR SPECIFICS
+  # ANGULAR SPECIFICS & API CALLS
   # ============
+
+  app.post "/api/register/:username/:email/:pass", (req,res) ->
+    signup =
+      pseudo: req.params.username
+      password: req.params.pass
+      email: req.params.email
+    api.register signup, (done) ->
+      res.send done
 
 
   app.get "/auth/:email/:pass", (req, res) ->
-    email=req.params.email
-    password=req.params.pass
-    if(email && password)
-      User.findOne({"local.email": email}).populate({ path: 'friends.idUser'}).exec (err, userfound) ->
-        # if there are any errors, return the error
-        res.send {passed: false, err: err} if err
-        
-        # if no user is found, return the message
-        res.send {passed: false, err: 'User not found, are you human?'}  unless userfound
-        
-        if !userfound.validPassword password
-          res.send {passed: false, err: 'Account existing but...Wrong password.'}
-        # all is well, return user
-        else
-          if appKeys.app_config.email_confirm          
-            unless userfound.verified
-              res.send {passed: false, 'Please confirm your email adress before entering the arena.'}
-          
-          unless userfound.sessionKey
-            userfound.sessionKey = userfound.generateHash(userfound.local.pseudo + appKeys.express_sid_key) 
-            userfound.save (err) ->
-              mailer.cLog 'Error at '+__filename,err if err
-              notifs.login userfound
-              res.send {passed: true, user: userfound}
-          else
-            res.send {passed: true, user: userfound}
+    creds=
+      email: req.params.email
+      password: req.params.pass
+
+    if(creds.email && creds.password)
+      api.login creds, (done) ->
+        res.send done
     else
       res.send {passed: false, err: 'Bad credentials'}
 
@@ -417,14 +405,12 @@ module.exports = (app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, mo
   app.get "/ladder/:type/:scope", (req, res) ->
     type = req.params.type
     scope = req.params.scope
-    ladder.getLeaderboards type,scope,true, (result) ->
-      console.log result
+    ladder.getLeaderboards type, scope, true, (result) ->
       res.send result
 
   # ============
   # END ANGULAR SPECIFICS
   # ============
-
 
 
   # Game autocomplete research

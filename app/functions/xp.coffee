@@ -133,4 +133,5 @@ module.exports = (_, mailer, notifs, sio) ->
             xpHistoric: garbage
         ).exec (err, userUpdated) ->
           mailer.cLog 'Error at '+__filename,err if err
-          return done true
+      # all procceded, pass the callback
+      return done true

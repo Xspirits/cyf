@@ -116,13 +116,11 @@
                   }
                   xp.xpReward(user, "user.register");
                   if (appKeys.app_config.email_confirm === false) {
-                    console.log("pass false wtf");
                     req.session.user = user;
                     req.session.isLogged = true;
                     req.session.newUser = true;
                     return done(null, newUser);
                   } else {
-                    console.log("pass correctement");
                     return mailer.accountConfirm(user, function(returned) {
                       return done(null, newUser);
                     });

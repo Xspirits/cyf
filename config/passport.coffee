@@ -30,7 +30,6 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
       return
 
     return
-
   
   # =========================================================================
   # LOCAL LOGIN =============================================================
@@ -69,8 +68,9 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
   )
   
   # =========================================================================
-  # LOCAL SIGNUP ============================================================
+  # LOCAL SIGNUP = ===========================================================
   # =========================================================================
+
   passport.use "local-signup", new LocalStrategy(
     
     # by default, local strategy uses username and password, we will override with email
@@ -127,13 +127,11 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
 
                 # send an email confirmation link
                 if appKeys.app_config.email_confirm == false
-                  console.log "pass false wtf"
                   req.session.user = user
                   req.session.isLogged = true
                   req.session.newUser = true
                   done null, newUser
                 else
-                  console.log "pass correctement"
                   mailer.accountConfirm user, (returned) ->
                     done null, newUser
       else

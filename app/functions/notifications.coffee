@@ -176,7 +176,8 @@ module.exports = (_, appKeys, social, mailer) ->
       title: user.local.pseudo + " just connected."
       message: ""
 
-    @newNotif myFriends, false, notif
+    #  Disable for a while, because well, Online mode need some work.
+    # @newNotif myFriends, false, notif
     return
   
   ###

@@ -11,7 +11,7 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, appKeys, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
+  module.exports = function(app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false
@@ -341,7 +341,7 @@
       });
     });
     app.get("/users", function(req, res) {
-      return users.getUserList(function(returned) {
+      return users.getUserList(false, function(returned) {
         return res.render("userList.ejs", {
           currentUser: req.isAuthenticated() ? req.user : false,
           users: returned
@@ -377,61 +377,26 @@
         });
       });
     });
+    app.post("/api/register/:username/:email/:pass", function(req, res) {
+      var signup;
+      signup = {
+        pseudo: req.params.username,
+        password: req.params.pass,
+        email: req.params.email
+      };
+      return api.register(signup, function(done) {
+        return res.send(done);
+      });
+    });
     app.get("/auth/:email/:pass", function(req, res) {
-      var email, password;
-      email = req.params.email;
-      password = req.params.pass;
-      if (email && password) {
-        return User.findOne({
-          "local.email": email
-        }).populate({
-          path: 'friends.idUser'
-        }).exec(function(err, userfound) {
-          if (err) {
-            res.send({
-              passed: false,
-              err: err
-            });
-          }
-          if (!userfound) {
-            res.send({
-              passed: false,
-              err: 'User not found, are you human?'
-            });
-          }
-          if (!userfound.validPassword(password)) {
-            return res.send({
-              passed: false,
-              err: 'Account existing but...Wrong password.'
-            });
-          } else {
-            if (appKeys.app_config.email_confirm) {
-              if (!userfound.verified) {
-                res.send({
-                  passed: false,
-                  'Please confirm your email adress before entering the arena.': 'Please confirm your email adress before entering the arena.'
-                });
-              }
-            }
-            if (!userfound.sessionKey) {
-              userfound.sessionKey = userfound.generateHash(userfound.local.pseudo + appKeys.express_sid_key);
-              return userfound.save(function(err) {
-                if (err) {
-                  mailer.cLog('Error at ' + __filename, err);
-                }
-                notifs.login(userfound);
-                return res.send({
-                  passed: true,
-                  user: userfound
-                });
-              });
-            } else {
-              return res.send({
-                passed: true,
-                user: userfound
-              });
-            }
-          }
+      var creds;
+      creds = {
+        email: req.params.email,
+        password: req.params.pass
+      };
+      if (creds.email && creds.password) {
+        return api.login(creds, function(done) {
+          return res.send(done);
         });
       } else {
         return res.send({
@@ -457,7 +422,6 @@
       type = req.params.type;
       scope = req.params.scope;
       return ladder.getLeaderboards(type, scope, true, function(result) {
-        console.log(result);
         return res.send(result);
       });
     });

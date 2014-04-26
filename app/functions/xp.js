@@ -136,7 +136,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          return _.each(users, (function(_this) {
+          _.each(users, (function(_this) {
             return function(user) {
               var garbage;
               garbage = {
@@ -149,12 +149,12 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
                 }
               }).exec(function(err, userUpdated) {
                 if (err) {
-                  mailer.cLog('Error at ' + __filename, err);
+                  return mailer.cLog('Error at ' + __filename, err);
                 }
-                return done(true);
               });
             };
           })(this));
+          return done(true);
         });
       }
     };
