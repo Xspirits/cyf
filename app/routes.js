@@ -387,7 +387,7 @@
         return res.send(done);
       });
     });
-    app.get("/auth/:email/:pass", function(req, res) {
+    app.get("/api/auth/:email/:pass", function(req, res) {
       var creds;
       creds = {
         email: req.params.email,
@@ -404,19 +404,19 @@
         });
       }
     });
-    app.get("/app/users", function(req, res) {
+    app.get("/api/app/users", function(req, res) {
       return users.getUserList(true, function(returned) {
         console.log(returned);
         return res.send(returned);
       });
     });
-    app.get("/app/users/:id", function(req, res) {
+    app.get("/api/app/users/:id", function(req, res) {
       return users.getUser(req.params.id, true, function(returned) {
         console.log(returned);
         return res.send(returned);
       });
     });
-    app.get("/ladder/:type/:scope", function(req, res) {
+    app.get("/api/ladder/:type/:scope", function(req, res) {
       var scope, type;
       type = req.params.type;
       scope = req.params.scope;

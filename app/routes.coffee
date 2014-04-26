@@ -380,7 +380,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
       res.send done
 
 
-  app.get "/auth/:email/:pass", (req, res) ->
+  app.get "/api/auth/:email/:pass", (req, res) ->
     creds=
       email: req.params.email
       password: req.params.pass
@@ -391,17 +391,17 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
     else
       res.send {passed: false, err: 'Bad credentials'}
 
-  app.get "/app/users", (req, res) ->
+  app.get "/api/app/users", (req, res) ->
     users.getUserList true, (returned) ->
       console.log returned
       res.send returned
 
-  app.get "/app/users/:id", (req, res) ->
+  app.get "/api/app/users/:id", (req, res) ->
     users.getUser req.params.id, true, (returned) ->
       console.log returned
       res.send returned
 
-  app.get "/ladder/:type/:scope", (req, res) ->
+  app.get "/api/ladder/:type/:scope", (req, res) ->
     type = req.params.type
     scope = req.params.scope
     ladder.getLeaderboards type, scope, true, (result) ->
