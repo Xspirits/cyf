@@ -24,123 +24,55 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
         query = scale + "Rank level"
         where = scale + "Rank"
       
-      console.log query, where
       User.find({}).where(where).gte(1).sort(query).select(qs).exec (err, challengers) ->
         mailer.cLog 'Error at '+__filename,err if err
         done challengers
 
   rankUser: (type, callback) ->
-    typeTxt =  if type == 1 then  'yesterday' else if type == 2 then  'the last Week' else 'the last Month'
+    typeTxt =  if type == 1 then  'today' else if type == 2 then  'the last Week' else 'the last Month'
     hash =  if type == 1 then  '#dailyLadder' else if type == 2 then  '#weeklyLadder' else '#monthlyLadder'
     sorting = if type == 1 then 'dailyScore' else if type == 2 then 'weeklyScore' else 'monthlyScore'
-
-    sort    = sorting + ' level'
-    User.find({}).sort(sort).where(sorting).gt(0).exec (err, userSorted) ->
+    qs = ' -local.email -sessionKey -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    
+    sort    = '-' + sorting + ' -level'
+    User.find({}).select(qs).sort(sort).where(sorting).gte(1).exec (err, userSorted) ->
       mailer.cLog 'Error at '+__filename,err if err
       buffed = []
       leaders = []
+      index = 0
+      if userSorted.length > 0
+        async.eachSeries userSorted, ((user, next) ->
+          ranked = ++index
 
-      _.each userSorted, (user, index)->
-        buffed.push
-          id: index
-          u: user
-          tt:typeTxt
-          h:hash
-          s:sorting
-      async.eachSeries buffed, ((dataU, cb) ->
+          console.log '[' + typeTxt + '] Updating ' + user.local.pseudo + ' who will now be ranked ' + ranked + ' ' + sorting + ' : ' + user.dailyScore
 
-        user = dataU.u
-        ranked = dataU.id + 1
-        typeTxt= dataU.tt
-        hash=  dataU.h
-        console.log '[' + typeTxt + '] Updating ' + user.local.pseudo + ' who will now be ranked ' + ranked
-        _self = @
-        User.findById(user._id).exec (err, user) ->
-          mailer.cLog 'Error at '+__filename,err if err
-          archives = if type == 1 then user.dailyArchives[user.dailyArchives.length-1] else if type == 2 then user.weeklyArchives[user.weeklyArchives.length-1] else user.monthlyArchives[user.monthlyArchives.length-1]
-
-          if type == 1
-            user.dailyRank = ranked
-          else if type == 2
-            user.weeklyRank = ranked
-          else
-            user.monthlyRank = ranked  
-          user.save (err) ->
-            console.log user.local.pseudo + ' who was ' + archives.rank + ' is now #' + user.dailyRank
+          User.findById(user._id).exec (err, user) ->
             mailer.cLog 'Error at '+__filename,err if err
-            leaders.push user if (ranked < 4) 
+
+            archives = if type == 1 then user.dailyArchives[user.dailyArchives.length-1] else if type == 2 then user.weeklyArchives[user.weeklyArchives.length-1] else user.monthlyArchives[user.monthlyArchives.length-1]
 
             if type == 1
-              uTweet = 'Yea! I am now ranked ' + ranked + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash 
-              if typeof user.facebook.token != 'undefined' and user.share.facebook == true
-                action=
-                  name: 'rank'
-                  link: appKeys.cyf.app_domain + '/u/' + user.idCool
-                  message: "This is #awesome! I am now ranked #" + ranked + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash
-                  ladder:
-                    title: ranked
-                social.userAction user, action, ()->
-                  mailer.sendMail user,user.local.pseudo + ' Congratulation, you are now ranked #' + ranked + ' on Cyf','<p>Wow, you were able to reach the <strong>' + ranked + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>',true,'ladder_' + ranked 
-                  _self.actionInc user, "facebook"
-                  if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-                    social.postTwitter user.twitter, uTweet, ()->
-                      _self.actionInc user, "twitter"
-                      cb() # show that no errors happened 
-              else if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-               social.postTwitter user.twitter, uTweet, ()->
-                  _self.actionInc user, "twitter"
-                  cb() # show that no errors happened                  
-              else
-                cb() # show that no errors happened   
+              user.dailyRank = ranked
             else if type == 2
-              uTweet = 'Yea! I am now ranked ' + ranked + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash 
-              if typeof user.facebook.token != 'undefined'  and user.share.facebook == true
-                action=
-                  name: 'rank'
-                  link: appKeys.cyf.app_domain + '/u/' + user.idCool
-                  message: "This is #awesome! I am now ranked #" + ranked + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash
-                  ladder:
-                    title: ranked
-                social.userAction user, action, ()->
-                  mailer.sendMail user,user.local.pseudo + ' Congratulation, you are now ranked #' + ranked + ' on Cyf','<p>Wow, you were able to reach the <strong>' + ranked + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>',true,'ladder_' + ranked 
-                  _self.actionInc user, "facebook"
-                  if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-                    social.postTwitter user.twitter, uTweet, ()-> 
-                      _self.actionInc user, "twitter"
-                      cb() # show that no errors happened
-              if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-                social.postTwitter user.twitter, uTweet, ()-> 
-                  _self.actionInc user, "twitter"
-                  cb() # show that no errors happened                 
-              else
-                cb() # show that no errors happened   
-            else  
-              uTweet = 'Yea! I am now ranked ' + ranked + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash 
-              if typeof user.facebook.token != 'undefined'  and user.share.facebook == true
-                action=
-                  name: 'rank'
-                  link: appKeys.cyf.app_domain + '/u/' + user.idCool
-                  message: "This is #awesome! I am now ranked #" + ranked + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash
-                  ladder:
-                    title: ranked
-                social.userAction user, action, ()->
-                  mailer.sendMail user,user.local.pseudo + ' Congratulation, you are now ranked #' + ranked + ' on Cyf','<p>Wow, you were able to reach the <strong>' + ranked + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>',true,'ladder_' + ranked 
-                  _self.actionInc user, "facebook"
-                  if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-                    social.postTwitter user.twitter, uTweet, ()->       
-                      _self.actionInc user, "twitter"
-                      cb() # show that no errors happened  
-              if typeof user.twitter.token != 'undefined' and user.share.twitter == true
-                social.postTwitter user.twitter, uTweet, ()->
-                  _self.actionInc user, "twitter"       
-                  cb() # show that no errors happened   
-              else
-                cb() # show that no errors happened   
-        return
-      ), (err) ->
-        mailer.cLog 'Error at '+__filename,err if err
+              user.weeklyRank = ranked
+            else
+              user.monthlyRank = ranked  
+
+            # update user' ranking
+            user.save (err) ->
+              mailer.cLog 'Error at '+__filename,err if err
+
+              console.log user.local.pseudo + ' who was ' + archives.rank + ' is now #' + user.dailyRank
+              leaders.push user if (ranked < 4) 
+              next()
+
+          return
+        ), (err) ->
+          callback leaders
+          return
+      else
+        console.log 'no new leader for yesterday!'
         callback leaders
-        return
 
   scoreUpdate: (type, user, done) ->
     typeTxt =  if type == 1 then  'Today' else if type == 2 then  'last Week' else 'last Month'
@@ -249,11 +181,15 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
     User.find({}).sort("-_id").exec (err, usersList) ->
       mailer.cLog 'Error at '+__filename,err if err
 
-      _.each usersList, (user) ->
+      async.eachSeries usersList, ((user, next) ->
         self.scoreUpdate type, user, (done) ->
           currScore = if type == 1 then 'D-' + done.dailyScore else if type == 2 then 'W-' + done.weeklyScore else 'M-' + done.monthlyScore
           console.log "[" + typeTxt + "] User " + done.local.pseudo + " has been updated " + currScore + " g " + done.globalScore
-      callback()
+          next()
+        return
+      ), (err) ->
+        callback()
+        return
 
   actionInc: (user, action) ->
     query = undefined
@@ -277,7 +213,130 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
       ).exec (err, userUpdated) ->
         mailer.cLog 'Error at '+__filename,err if err
 
+  userSocialPush: (user, type, typeTxt, hash, index, done)->
+    _self = @
+    #Daily ladder
+    if type == 1
+      uTweet = 'Yea! I am now ranked ' + user.dailyRank + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash 
+      
+      if typeof user.facebook.token != 'undefined' and user.share.facebook == true
 
+        action=
+          name: 'rank'
+          link: appKeys.cyf.app_domain + '/u/' + user.idCool
+          message: "This is #awesome! I am now ranked #" + user.dailyRank + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash
+          ladder:
+            title: ranked
+
+        social.userAction user, action, ()->   
+          mailer.sendMail user,user.local.pseudo + ' Congratulation, you are now ranked #' + user.dailyRank + ' on Cyf','<p>Wow, you were able to reach the <strong>' + user.dailyRank + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>',true,'ladder_' + ranked 
+          
+          _self.actionInc user, "facebook"
+
+          if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+            social.postTwitter user.twitter, uTweet, ()->
+              _self.actionInc user, "twitter"
+              done() # show that no errors happened 
+          else
+            done()
+      
+      else if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+      
+       social.postTwitter user.twitter, uTweet, ()->
+          _self.actionInc user, "twitter"  
+          done()              
+      else
+        done()
+    #WeeklyLadder
+    else if type == 2
+
+      uTweet = 'Yea! I am now ranked ' + user.weeklyRank + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash 
+      
+      if typeof user.facebook.token != 'undefined'  and user.share.facebook == true
+        
+        action=
+          name: 'rank'
+          link: appKeys.cyf.app_domain + '/u/' + user.idCool
+          message: "This is #awesome! I am now ranked #" + user.weeklyRank + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash
+          ladder:
+            title: ranked
+        
+        social.userAction user, action, ()->
+          
+          mailer.sendMail user,user.local.pseudo + ' Congratulation, you are now ranked #' + user.weeklyRank + ' on Cyf','<p>Wow, you were able to reach the <strong>' + user.weeklyRank + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>',true,'ladder_' + ranked 
+          
+          _self.actionInc user, "facebook"
+          
+          if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+            social.postTwitter user.twitter, uTweet, ()-> 
+              _self.actionInc user, "twitter"
+              done() # show that no errors happened
+          else
+            done()
+      
+      else if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+        
+        social.postTwitter user.twitter, uTweet, ()-> 
+          _self.actionInc user, "twitter"
+          done() # show that no errors happened                 
+      else
+        done() # show that no errors happened   
+
+    #Monthly ladder
+    else  
+      
+      uTweet = 'Yea! I am now ranked ' + user.monthlyRank + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash 
+      
+      if typeof user.facebook.token != 'undefined'  and user.share.facebook == true
+        
+        action=
+          name: 'rank'
+          link: appKeys.cyf.app_domain + '/u/' + user.idCool
+          message: "This is #awesome! I am now ranked #" + user.monthlyRank + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash
+          ladder:
+            title: ranked
+        
+        social.userAction user, action, ()->
+          
+          mailer.sendMail user,user.local.pseudo + ' Congratulation, you are now ranked #' + user.monthlyRank + ' on Cyf','<p>Wow, you were able to reach the <strong>' + user.monthlyRank + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>',true,'ladder_' + ranked 
+          
+          _self.actionInc user, "facebook"
+          
+          if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+            social.postTwitter user.twitter, uTweet, ()->       
+              _self.actionInc user, "twitter"
+              done() # show that no errors happened  
+          else
+            done()
+      else if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+        
+        social.postTwitter user.twitter, uTweet, ()->
+          _self.actionInc user, "twitter"       
+          done() # show that no errors happened   
+      else
+        done() # show that no errors happened   
+
+  # Push on social networks
+  spreadUsersSocial: (type, cb) ->
+    _self = @
+    typeTxt = if type == 1 then  'Today' else if type == 2 then  'last Week' else 'last Month'
+    hash =  if type == 1 then  '#dailyLadder' else if type == 2 then  '#weeklyLadder' else '#monthlyLadder'
+    sorting = if type == 1 then 'dailyScore' else if type == 2 then 'weeklyScore' else 'monthlyScore'
+    qs = ' -local.email -sessionKey -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric -dailyArchives -weeklyArchives -monthlyArchives'
+    
+    User.find({}).select(qs).sort('-_id').where(sorting).gte(1).exec (err, userSorted) ->
+      index = 0
+      async.eachSeries userSorted, ((user, next) ->
+        ++index
+        _self.userSocialPush user, type, typeTxt, hash, index, (done) ->
+          next()
+        return
+      ), (err) ->
+        cb()
+        return
+
+
+       
   # Send all the notifications for the daily update
   spreadLadder: (top3, type, done)->
     if type == 1
@@ -303,7 +362,6 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
       if type == 2
         archives = user.weeklyArchives || []
         ranked = user.weeklyRank
-
       if type == 3
         archives = user.monthlyArchives || []
         ranked = user.monthlyRank

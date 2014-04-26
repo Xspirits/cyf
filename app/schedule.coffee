@@ -22,8 +22,8 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
   
   # Daily Ladder
   dailyRanking         = new schedule.RecurrenceRule()
-  dailyRanking.hour    = 13
-  dailyRanking.minute  = 0 # Let's avoid taking risks with setting 0h 0m 0s
+  dailyRanking.hour    = 12
+  dailyRanking.minute  = 0
   dailyRanking.seconds = 0
 
   dailyLadder = schedule.scheduleJob dailyRanking, ->
@@ -31,8 +31,10 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
     daily = 1
     ladder.generateLadder daily, ->
       ladder.rankUser daily, (top3)-> 
-        ladder.spreadLadder top3, daily, (done)->
-          mailer.cLog '[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"),done
+        ladder.spreadUsersSocial daily, ->
+          ladder.spreadLadder top3, daily, (done)->
+            mailer.cLog '[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"),done
+
   # Weekly Ladder
   weeklyRanking           = new schedule.RecurrenceRule()
   weeklyRanking.dayOfWeek = 1 #Monday
@@ -45,8 +47,9 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
     weekly = 2
     ladder.generateLadder weekly, ->
       ladder.rankUser weekly, (top3)-> 
-        ladder.spreadLadder top3, weekly, (done)->
-          mailer.cLog '[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"),done
+        ladder.spreadUsersSocial weekly, ->
+          ladder.spreadLadder top3, weekly, (done)->
+            mailer.cLog '[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"),done
 
   # Monthly Ladder
   monthlyRanking         = new schedule.RecurrenceRule()
@@ -60,5 +63,6 @@ module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp,
     monthly = 3
     ladder.generateLadder monthly, ->
       ladder.rankUser monthly, (top3)-> 
-        ladder.spreadLadder top3, monthly, (done)->
-          mailer.cLog '[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"),done
+        ladder.spreadUsersSocial monthly, ->
+          ladder.spreadLadder top3, monthly, (done)->
+            mailer.cLog '[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"),done

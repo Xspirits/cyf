@@ -13,7 +13,7 @@
       });
     });
     dailyRanking = new schedule.RecurrenceRule();
-    dailyRanking.hour = 13;
+    dailyRanking.hour = 12;
     dailyRanking.minute = 0;
     dailyRanking.seconds = 0;
     dailyLadder = schedule.scheduleJob(dailyRanking, function() {
@@ -22,8 +22,10 @@
       daily = 1;
       return ladder.generateLadder(daily, function() {
         return ladder.rankUser(daily, function(top3) {
-          return ladder.spreadLadder(top3, daily, function(done) {
-            return mailer.cLog('[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"), done);
+          return ladder.spreadUsersSocial(daily, function() {
+            return ladder.spreadLadder(top3, daily, function(done) {
+              return mailer.cLog('[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"), done);
+            });
           });
         });
       });
@@ -38,8 +40,10 @@
       weekly = 2;
       return ladder.generateLadder(weekly, function() {
         return ladder.rankUser(weekly, function(top3) {
-          return ladder.spreadLadder(top3, weekly, function(done) {
-            return mailer.cLog('[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"), done);
+          return ladder.spreadUsersSocial(weekly, function() {
+            return ladder.spreadLadder(top3, weekly, function(done) {
+              return mailer.cLog('[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"), done);
+            });
           });
         });
       });
@@ -54,8 +58,10 @@
       monthly = 3;
       return ladder.generateLadder(monthly, function() {
         return ladder.rankUser(monthly, function(top3) {
-          return ladder.spreadLadder(top3, monthly, function(done) {
-            return mailer.cLog('[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"), done);
+          return ladder.spreadUsersSocial(monthly, function() {
+            return ladder.spreadLadder(top3, monthly, function(done) {
+              return mailer.cLog('[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"), done);
+            });
           });
         });
       });

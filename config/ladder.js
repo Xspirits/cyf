@@ -29,7 +29,6 @@
             query = scale + "Rank level";
             where = scale + "Rank";
           }
-          console.log(query, where);
           return User.find({}).where(where).gte(1).sort(query).select(qs).exec(function(err, challengers) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
@@ -39,155 +38,56 @@
         }
       },
       rankUser: function(type, callback) {
-        var hash, sort, sorting, typeTxt;
-        typeTxt = type === 1 ? 'yesterday' : type === 2 ? 'the last Week' : 'the last Month';
+        var hash, qs, sort, sorting, typeTxt;
+        typeTxt = type === 1 ? 'today' : type === 2 ? 'the last Week' : 'the last Month';
         hash = type === 1 ? '#dailyLadder' : type === 2 ? '#weeklyLadder' : '#monthlyLadder';
         sorting = type === 1 ? 'dailyScore' : type === 2 ? 'weeklyScore' : 'monthlyScore';
-        sort = sorting + ' level';
-        return User.find({}).sort(sort).where(sorting).gt(0).exec(function(err, userSorted) {
-          var buffed, leaders;
+        qs = ' -local.email -sessionKey -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        sort = '-' + sorting + ' -level';
+        return User.find({}).select(qs).sort(sort).where(sorting).gte(1).exec(function(err, userSorted) {
+          var buffed, index, leaders;
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
           buffed = [];
           leaders = [];
-          _.each(userSorted, function(user, index) {
-            return buffed.push({
-              id: index,
-              u: user,
-              tt: typeTxt,
-              h: hash,
-              s: sorting
-            });
-          });
-          return async.eachSeries(buffed, (function(dataU, cb) {
-            var ranked, user, _self;
-            user = dataU.u;
-            ranked = dataU.id + 1;
-            typeTxt = dataU.tt;
-            hash = dataU.h;
-            console.log('[' + typeTxt + '] Updating ' + user.local.pseudo + ' who will now be ranked ' + ranked);
-            _self = this;
-            User.findById(user._id).exec(function(err, user) {
-              var archives;
-              if (err) {
-                mailer.cLog('Error at ' + __filename, err);
-              }
-              archives = type === 1 ? user.dailyArchives[user.dailyArchives.length - 1] : type === 2 ? user.weeklyArchives[user.weeklyArchives.length - 1] : user.monthlyArchives[user.monthlyArchives.length - 1];
-              if (type === 1) {
-                user.dailyRank = ranked;
-              } else if (type === 2) {
-                user.weeklyRank = ranked;
-              } else {
-                user.monthlyRank = ranked;
-              }
-              return user.save(function(err) {
-                var action, uTweet;
-                console.log(user.local.pseudo + ' who was ' + archives.rank + ' is now #' + user.dailyRank);
+          index = 0;
+          if (userSorted.length > 0) {
+            return async.eachSeries(userSorted, (function(user, next) {
+              var ranked;
+              ranked = ++index;
+              console.log('[' + typeTxt + '] Updating ' + user.local.pseudo + ' who will now be ranked ' + ranked + ' ' + sorting + ' : ' + user.dailyScore);
+              User.findById(user._id).exec(function(err, user) {
+                var archives;
                 if (err) {
                   mailer.cLog('Error at ' + __filename, err);
                 }
-                if (ranked < 4) {
-                  leaders.push(user);
-                }
+                archives = type === 1 ? user.dailyArchives[user.dailyArchives.length - 1] : type === 2 ? user.weeklyArchives[user.weeklyArchives.length - 1] : user.monthlyArchives[user.monthlyArchives.length - 1];
                 if (type === 1) {
-                  uTweet = 'Yea! I am now ranked ' + ranked + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash;
-                  if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
-                    action = {
-                      name: 'rank',
-                      link: appKeys.cyf.app_domain + '/u/' + user.idCool,
-                      message: "This is #awesome! I am now ranked #" + ranked + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash,
-                      ladder: {
-                        title: ranked
-                      }
-                    };
-                    return social.userAction(user, action, function() {
-                      mailer.sendMail(user, user.local.pseudo + ' Congratulation, you are now ranked #' + ranked + ' on Cyf', '<p>Wow, you were able to reach the <strong>' + ranked + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>', true, 'ladder_' + ranked);
-                      _self.actionInc(user, "facebook");
-                      if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-                        return social.postTwitter(user.twitter, uTweet, function() {
-                          _self.actionInc(user, "twitter");
-                          return cb();
-                        });
-                      }
-                    });
-                  } else if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-                    return social.postTwitter(user.twitter, uTweet, function() {
-                      _self.actionInc(user, "twitter");
-                      return cb();
-                    });
-                  } else {
-                    return cb();
-                  }
+                  user.dailyRank = ranked;
                 } else if (type === 2) {
-                  uTweet = 'Yea! I am now ranked ' + ranked + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash;
-                  if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
-                    action = {
-                      name: 'rank',
-                      link: appKeys.cyf.app_domain + '/u/' + user.idCool,
-                      message: "This is #awesome! I am now ranked #" + ranked + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash,
-                      ladder: {
-                        title: ranked
-                      }
-                    };
-                    social.userAction(user, action, function() {
-                      mailer.sendMail(user, user.local.pseudo + ' Congratulation, you are now ranked #' + ranked + ' on Cyf', '<p>Wow, you were able to reach the <strong>' + ranked + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>', true, 'ladder_' + ranked);
-                      _self.actionInc(user, "facebook");
-                      if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-                        return social.postTwitter(user.twitter, uTweet, function() {
-                          _self.actionInc(user, "twitter");
-                          return cb();
-                        });
-                      }
-                    });
-                  }
-                  if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-                    return social.postTwitter(user.twitter, uTweet, function() {
-                      _self.actionInc(user, "twitter");
-                      return cb();
-                    });
-                  } else {
-                    return cb();
-                  }
+                  user.weeklyRank = ranked;
                 } else {
-                  uTweet = 'Yea! I am now ranked ' + ranked + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash;
-                  if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
-                    action = {
-                      name: 'rank',
-                      link: appKeys.cyf.app_domain + '/u/' + user.idCool,
-                      message: "This is #awesome! I am now ranked #" + ranked + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash,
-                      ladder: {
-                        title: ranked
-                      }
-                    };
-                    social.userAction(user, action, function() {
-                      mailer.sendMail(user, user.local.pseudo + ' Congratulation, you are now ranked #' + ranked + ' on Cyf', '<p>Wow, you were able to reach the <strong>' + ranked + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>', true, 'ladder_' + ranked);
-                      _self.actionInc(user, "facebook");
-                      if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-                        return social.postTwitter(user.twitter, uTweet, function() {
-                          _self.actionInc(user, "twitter");
-                          return cb();
-                        });
-                      }
-                    });
-                  }
-                  if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
-                    return social.postTwitter(user.twitter, uTweet, function() {
-                      _self.actionInc(user, "twitter");
-                      return cb();
-                    });
-                  } else {
-                    return cb();
-                  }
+                  user.monthlyRank = ranked;
                 }
+                return user.save(function(err) {
+                  if (err) {
+                    mailer.cLog('Error at ' + __filename, err);
+                  }
+                  console.log(user.local.pseudo + ' who was ' + archives.rank + ' is now #' + user.dailyRank);
+                  if (ranked < 4) {
+                    leaders.push(user);
+                  }
+                  return next();
+                });
               });
+            }), function(err) {
+              callback(leaders);
             });
-          }), function(err) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            callback(leaders);
-          });
+          } else {
+            console.log('no new leader for yesterday!');
+            return callback(leaders);
+          }
         });
       },
       scoreUpdate: function(type, user, done) {
@@ -272,14 +172,16 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          _.each(usersList, function(user) {
-            return self.scoreUpdate(type, user, function(done) {
+          return async.eachSeries(usersList, (function(user, next) {
+            self.scoreUpdate(type, user, function(done) {
               var currScore;
               currScore = type === 1 ? 'D-' + done.dailyScore : type === 2 ? 'W-' + done.weeklyScore : 'M-' + done.monthlyScore;
-              return console.log("[" + typeTxt + "] User " + done.local.pseudo + " has been updated " + currScore + " g " + done.globalScore);
+              console.log("[" + typeTxt + "] User " + done.local.pseudo + " has been updated " + currScore + " g " + done.globalScore);
+              return next();
             });
+          }), function(err) {
+            callback();
           });
-          return callback();
         });
       },
       actionInc: function(user, action) {
@@ -311,6 +213,124 @@
             }
           });
         }
+      },
+      userSocialPush: function(user, type, typeTxt, hash, index, done) {
+        var action, uTweet, _self;
+        _self = this;
+        if (type === 1) {
+          uTweet = 'Yea! I am now ranked ' + user.dailyRank + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash;
+          if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
+            action = {
+              name: 'rank',
+              link: appKeys.cyf.app_domain + '/u/' + user.idCool,
+              message: "This is #awesome! I am now ranked #" + user.dailyRank + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash,
+              ladder: {
+                title: ranked
+              }
+            };
+            return social.userAction(user, action, function() {
+              mailer.sendMail(user, user.local.pseudo + ' Congratulation, you are now ranked #' + user.dailyRank + ' on Cyf', '<p>Wow, you were able to reach the <strong>' + user.dailyRank + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>', true, 'ladder_' + ranked);
+              _self.actionInc(user, "facebook");
+              if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+                return social.postTwitter(user.twitter, uTweet, function() {
+                  _self.actionInc(user, "twitter");
+                  return done();
+                });
+              } else {
+                return done();
+              }
+            });
+          } else if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+            return social.postTwitter(user.twitter, uTweet, function() {
+              _self.actionInc(user, "twitter");
+              return done();
+            });
+          } else {
+            return done();
+          }
+        } else if (type === 2) {
+          uTweet = 'Yea! I am now ranked ' + user.weeklyRank + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash;
+          if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
+            action = {
+              name: 'rank',
+              link: appKeys.cyf.app_domain + '/u/' + user.idCool,
+              message: "This is #awesome! I am now ranked #" + user.weeklyRank + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash,
+              ladder: {
+                title: ranked
+              }
+            };
+            return social.userAction(user, action, function() {
+              mailer.sendMail(user, user.local.pseudo + ' Congratulation, you are now ranked #' + user.weeklyRank + ' on Cyf', '<p>Wow, you were able to reach the <strong>' + user.weeklyRank + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>', true, 'ladder_' + ranked);
+              _self.actionInc(user, "facebook");
+              if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+                return social.postTwitter(user.twitter, uTweet, function() {
+                  _self.actionInc(user, "twitter");
+                  return done();
+                });
+              } else {
+                return done();
+              }
+            });
+          } else if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+            return social.postTwitter(user.twitter, uTweet, function() {
+              _self.actionInc(user, "twitter");
+              return done();
+            });
+          } else {
+            return done();
+          }
+        } else {
+          uTweet = 'Yea! I am now ranked ' + user.monthlyRank + ' on the #CyfLadder of ' + typeTxt + ', that\'s great! @' + appKeys.twitterCyf.username + ' ' + hash;
+          if (typeof user.facebook.token !== 'undefined' && user.share.facebook === true) {
+            action = {
+              name: 'rank',
+              link: appKeys.cyf.app_domain + '/u/' + user.idCool,
+              message: "This is #awesome! I am now ranked #" + user.monthlyRank + " on Challenge your friends! Who could dare challenging me on any game now haha?! The competition is here http://goo.gl/MofE3n! " + hash,
+              ladder: {
+                title: ranked
+              }
+            };
+            return social.userAction(user, action, function() {
+              mailer.sendMail(user, user.local.pseudo + ' Congratulation, you are now ranked #' + user.monthlyRank + ' on Cyf', '<p>Wow, you were able to reach the <strong>' + user.monthlyRank + ' place</strong> on the ladder for ' + typeTxt + '. Amazing!</p><p>Stay strong, share and don\'t forget to have FUN on Challenge your Friends(Cyf)</p> <p><a href="http://goo.gl/MofE3n" target="_blank" title="See the leaderboard" > See Live </a></p>', true, 'ladder_' + ranked);
+              _self.actionInc(user, "facebook");
+              if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+                return social.postTwitter(user.twitter, uTweet, function() {
+                  _self.actionInc(user, "twitter");
+                  return done();
+                });
+              } else {
+                return done();
+              }
+            });
+          } else if (typeof user.twitter.token !== 'undefined' && user.share.twitter === true) {
+            return social.postTwitter(user.twitter, uTweet, function() {
+              _self.actionInc(user, "twitter");
+              return done();
+            });
+          } else {
+            return done();
+          }
+        }
+      },
+      spreadUsersSocial: function(type, cb) {
+        var hash, qs, sorting, typeTxt, _self;
+        _self = this;
+        typeTxt = type === 1 ? 'Today' : type === 2 ? 'last Week' : 'last Month';
+        hash = type === 1 ? '#dailyLadder' : type === 2 ? '#weeklyLadder' : '#monthlyLadder';
+        sorting = type === 1 ? 'dailyScore' : type === 2 ? 'weeklyScore' : 'monthlyScore';
+        qs = ' -local.email -sessionKey -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric -dailyArchives -weeklyArchives -monthlyArchives';
+        return User.find({}).select(qs).sort('-_id').where(sorting).gte(1).exec(function(err, userSorted) {
+          var index;
+          index = 0;
+          return async.eachSeries(userSorted, (function(user, next) {
+            ++index;
+            _self.userSocialPush(user, type, typeTxt, hash, index, function(done) {
+              return next();
+            });
+          }), function(err) {
+            cb();
+          });
+        });
       },
       spreadLadder: function(top3, type, done) {
         var fbWall, lastMonth, lastWeek, nFFB, nLFb, newFollower, newLeader, notifText, tweet, typeoff, yesterday;
