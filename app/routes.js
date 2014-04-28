@@ -306,38 +306,17 @@
       });
     });
     app.post("/validationRequest", isLoggedIn, function(req, res) {
-      return shortUrl.googleUrl(req.body.proofLink1, function(imgUrl1) {
-        var data;
-        console.log("\nuploaded %s to %s", req.body.proofLink1, imgUrl1);
-        if (req.body.proofLink2) {
-          return shortUrl.googleUrl(req.body.proofLink2, function(imgUrl2) {
-            var data;
-            console.log("\nuploaded %s to %s", req.body.proofLink2, imgUrl2);
-            data = {
-              idUser: req.user._id,
-              idChallenge: req.body.idChallenge,
-              proofLink1: imgUrl1,
-              proofLink2: imgUrl2,
-              confirmComment: req.body.confirmComment
-            };
-            return challenge.requestValidation(data, function(result) {
-              mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
-              return res.send(result);
-            });
-          });
-        } else {
-          data = {
-            idUser: req.user._id,
-            idChallenge: req.body.idChallenge,
-            proofLink1: imgUrl1,
-            proofLink2: '',
-            confirmComment: req.body.confirmComment
-          };
-          return challenge.requestValidation(data, function(result) {
-            mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
-            return res.send(result);
-          });
-        }
+      var data;
+      data = {
+        idUser: req.user._id,
+        idChallenge: req.body.idChallenge,
+        proofLink1: req.body.proofLink1,
+        proofLink2: req.body.proofLink2,
+        confirmComment: req.body.confirmComment
+      };
+      return challenge.requestValidation(data, function(result) {
+        mailer.sendMail(result._idChallenged, '[Cyf]Challenge ' + result._idChallenge.idCool + ' validation request from ' + result._idChallenged.local.pseudo, '<h2>' + result._idChallenger.local.pseudo + ' as completed your challenge!</h2> <p>Your friend <strong>' + result._idChallenger.local.pseudo + '</strong>(LvL.' + result._idChallenger.level + ') is asking your approval over the challenge ' + result._idChallenge.idCool + '!</p><p>Here is one of his/her response: <img src="' + result._idChallenge.confirmLink1 + '" alt="" style="max-width:300px; height:auto; display:inline-block;margin:1em auto"></p><p>You can give your answer on <a href="http://cyf-app.co/request" title="go to Cyf request page now" target="_blank">your request page</a>.</p>', true);
+        return res.send(result);
       });
     });
     app.get("/users", function(req, res) {

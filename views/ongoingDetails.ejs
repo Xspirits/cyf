@@ -196,32 +196,32 @@
 							}
 						});
 					}
-					function sendToImgur(imgB64 , cb){
-						$.ajax({
-							url: 'https://api.imgur.com/3/image',
-							type: 'post',
-							headers: {
-								Authorization: 'Client-ID a10cc023eeaf638'
-							},
-							data: {
-								image: imgB64,
-								type :'base64'
-							},
-							dataType: 'json',
-							success: function(json) {
-								cb(json)
-							},
-							error: function(json) {
-								cb(json)
-							}
-						});
-					}
+					// function sendToImgur(imgB64 , cb){
+					// 	$.ajax({
+					// 		url: 'https://api.imgur.com/3/image',
+					// 		type: 'post',
+					// 		headers: {
+					// 			Authorization: 'Client-ID a10cc023eeaf638'
+					// 		},
+					// 		data: {
+					// 			image: imgB64,
+					// 			type :'base64'
+					// 		},
+					// 		dataType: 'json',
+					// 		success: function(json) {
+					// 			cb(json)
+					// 		},
+					// 		error: function(json) {
+					// 			cb(json)
+					// 		}
+					// 	});
+					// }
 					function getx64(input, type) {
 						if ( input.files && input.files[0] ) {
 							var FR= new FileReader();
 							FR.onload = function(e) {
 								$('#imgp'+type).width(50).height(50).attr( "src", e.target.result );
-								$('#imNowb64_p'+type).attr('data-b64', (e.target.result).replace(/^data:image\/(png|jpg|JPG|jpeg|gif);base64,/, "") );
+								$('#imNowb64_p'+type).attr('data-b64', (e.target.result));
 							};     
 							FR.readAsDataURL( input.files[0] );
 						}
@@ -241,26 +241,25 @@
 						data.idChallenge = idChallenge;
 						data.confirmComment = $('#additionnalComment').val();
 
-						sendToImgur($('#imNowb64_p1').attr('data-b64'), function( imageA ) {
+						// sendToImgur($('#imNowb64_p1').attr('data-b64'), function( imageA ) {
 
-							data.proofLink1 =  imageA.data.link;
+							data.proofLink1 =  $('#imNowb64_p1').attr('data-b64');
 
 							$(this).addClass('disabled').text('Proof 1 uploaded.');
 							if($('#imNowb64_p2').attr('data-b64')) {
-								sendToImgur($('#imNowb64_p2').attr('data-b64'), function( imageB ) {
+								// sendToImgur($('#imNowb64_p2').attr('data-b64'), function( imageB ) {
 
 								$(this).addClass('disabled').text('Proof 2 uploaded.');
-									console.log(imageA);
-									console.log(imageB);
-									data.proofLink2 =  imageB.data.link;
-									submitFinal(data);
-								});
+								data.proofLink2 =  $('#imNowb64_p2').attr('data-b64');//imageB.data.link;
+								console.log(data);
+								submitFinal(data);
+								// });
 							} else {
-								console.log(imageA);
 								data.proofLink2 =  false;
+								console.log(data);
 								submitFinal(data);
 							}
-						});
+						// });
 						// console.log(imgData)
 
 					});

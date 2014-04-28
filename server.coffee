@@ -20,6 +20,7 @@ io.set "log level", 1
 redis           = require("redis")
 port            = process.env.PORT or 8080
 mongoose        = require("mongoose")
+# Grid            = require('gridfs-stream')
 passport        = require("passport")
 path            = require("path")
 grvtr           = require("grvtr")
@@ -39,6 +40,8 @@ moment().zone("+02:00")
 genUID.seed 664
 mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 mongoose.connect configDB.url # connect to our database
+# Grid.mongo  = mongoose.mongo
+# Grid configDB.url
 
 # generate a seed to build our UID (idCools)
 mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)

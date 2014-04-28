@@ -8,7 +8,7 @@
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
     <meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
-    <meta name="title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta name="title" content="Profile - Challenge your Friends">
     <meta name="description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s).<%= currentUser.twitter.username ? 'twitter @'+currentUser.twitter.username :'' %> ">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
@@ -17,7 +17,7 @@
     <meta property="og:site_name" content="Challenge your Friends"/>
     <meta property="og:image" content="<%= currentUser.icon %>.png">
     <meta property="og:image:width" content="200">
-    <meta property="og:title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta property="og:title" content="Profile - Challenge your Friends">
     <meta property="og:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
@@ -25,7 +25,7 @@
     <meta name="twitter:site" content="@cyf_app">
     <meta name="twitter:image" content="<%= currentUser.icon %>.png">
     <meta name="twitter:image:width" content="200">
-    <meta name="twitter:title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta name="twitter:title" content="Profile - Challenge your Friends">
     <meta name="twitter:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
     <!-- Twitter card end -->
 	<title>This is your profile, <%= currentUser.local.pseudo %> - Challenge your Friends</title>
@@ -198,22 +198,24 @@
 																</a>
 															</h5>
 															<div class="row">
-																<p>
-																	<%= ongoings[i]._idChallenge.description  %>
-																</p>		
+																<div class="col-sm-12">
+																	<p>
+																		<%= ongoings[i]._idChallenge.description  %>
+																	</p>		
 
-																<p>
+																	<p>
 
-																	<span class="glyphicon glyphicon-star-empty"></span>
-																	<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
-																		<%= ongoings[i]._idChallenger.local.pseudo  %>
-																	</a>
-																	<span class="glyphicon glyphicon-flash"></span>
-																	<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
-																		<%= ongoings[i]._idChallenged.local.pseudo  %>
-																	</a>
+																		<span class="glyphicon glyphicon-star-empty"></span>
+																		<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
+																			<%= ongoings[i]._idChallenger.local.pseudo  %>
+																		</a>
+																		<span class="glyphicon glyphicon-flash"></span>
+																		<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
+																			<%= ongoings[i]._idChallenged.local.pseudo  %>
+																		</a>
 
-																</p>							
+																	</p>	
+																</div>						
 															</div>
 															<div class="row">
 																<div class="col-sm-6">

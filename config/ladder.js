@@ -26,8 +26,8 @@
             query = '-globalScore level';
             where = 'globalScore';
           } else {
-            query = scale + "Rank level";
-            where = scale + "Rank";
+            query = scale + "Rank " + scale + "Score level";
+            where = scale + "Score";
           }
           return User.find({}).where(where).gte(1).sort(query).select(qs).exec(function(err, challengers) {
             if (err) {

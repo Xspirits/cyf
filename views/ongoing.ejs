@@ -72,11 +72,12 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<h4>Proof 1</h4>
-								<a id="vP1" href=""  target="_blank"></a>
+
+								<a id="vP1" href=""  target="_blank"><img id="imgp1" src="" class="img-responsive"></a>
 							</div>
 							<div class="col-lg-12">
 								<h4>Proof 2</h4>
-								<a id="vP2" href=""  target="_blank"></a>
+								<a id="vP2" href=""  target="_blank"><img id="imgp2" src="" class="img-responsive"></a>
 							</div>
 							<div class="col-lg-12">	
 								<h4>Comment</h4>
@@ -716,8 +717,8 @@ var populateValidation = function( id, cb ) {
 	console.log(sRate + '%');
 
 	$('#vId').text(id);
-	$('#vP1').attr("href",vP1).text(vP1);
-	$('#vP2').attr("href",vP2).text(vP2);
+	$('#vP1').attr("href",vP1).children('img').attr('src',vP1);
+	$('#vP2').attr("href",vP2).children('img').attr('src',vP2);
 	$('#vPc').text(vPc);
 	$('#vDs').text(_vDs);
 	$('#vDe').text(_vDe);

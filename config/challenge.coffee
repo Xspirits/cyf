@@ -1,5 +1,6 @@
 Challenge = require("../app/models/challenge")
 Ongoing = require("../app/models/ongoing")
+mangoose = require('mongoose')
 # load up the user model
 
 module.exports = (_, mailer, moment, genUID, users) ->
@@ -13,7 +14,8 @@ module.exports = (_, mailer, moment, genUID, users) ->
   create: (req, done) ->
     data = req.body
     user = req.user
-    _this = this
+
+    console.log data["idGame"]
     title = data["title"]
     durationH = data["durationH"]
     durationD = data["durationD"]
@@ -21,6 +23,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
     game = data["idGame"]
     uID = genUID.generate().substr(-6)
     
+    console.log game
     # create the challenge
     newChallenge = new Challenge()
     newChallenge.idCool = uID
@@ -34,6 +37,8 @@ module.exports = (_, mailer, moment, genUID, users) ->
     # console.log(newChallenge);
     newChallenge.save (err) ->
       mailer.cLog 'Error at '+__filename,err if err
+      # console.log err if err
+      # console.log newChallenge
       done newChallenge
   
   ###
@@ -94,8 +99,9 @@ module.exports = (_, mailer, moment, genUID, users) ->
   @return {Object}        [Object containing all the challenge data]
   ###
   getList: (done) ->
-    Challenge.find({}).populate('game completedBy').sort("-value").exec (err, data) ->
+    Challenge.find({}).populate('game completedBy author').sort("-value -rateNumber").exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
+      # console.log err if err
       # console.log(data);
       done data
   
