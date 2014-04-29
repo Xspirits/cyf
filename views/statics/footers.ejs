@@ -47,7 +47,7 @@
 		//Socket 
 		//http://localhost:8080/leaderboard
 		socket = io.connect(resultURL);
-		// socket = io.connect('http://challenge-friends.herokuapp.com');
+		// socket = io.connect('http://www.cyf-app.co');
 
 		socket.on('alive', function (data) {
 			console.log('Challenger alive: '+data.date);
