@@ -353,10 +353,16 @@
       @param  {Function} done [callback]
       @return {Object}        [List of challenges]
        */
-      ongoingDetails: function(id, done) {
+      ongoingDetails: function(id, safe, done) {
+        var qs;
+        if (safe === true) {
+          qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '';
+        }
         return Ongoing.findOne({
           idCool: id
-        }).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
+        }).populate("_idChallenge _idChallenger _idChallenged", qs).exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }

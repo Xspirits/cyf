@@ -119,7 +119,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   # ONGOING DETAILS SECTION =========================
   app.get "/o/:id", (req, res) ->
     id = req.params.id
-    challenge.ongoingDetails id, (data) ->
+    challenge.ongoingDetails id, false, (data) ->
       
       # console.log(data);
       res.render "ongoingDetails.ejs",
@@ -138,11 +138,13 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
       _.each data, (value, key) ->
         cStart = data[key].launchDate
         cEnd = data[key].deadLine
-        
         # Is the challenge's deadline passed ?
         # If yes, mark it as not completed, failed        
         if moment(cEnd).isSame() or moment(cEnd).isBefore()
           challenge.crossedDeadline data[key]._id
+          endedChall.push data[key]
+
+        else if data[key].valiated == true and data[key].progress == 100
           endedChall.push data[key]
         
         # Challenge is awaiting validation
@@ -157,6 +159,9 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
         # Start has been reached but not end
         else if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
           ongoingChall.push data[key]
+
+        else
+          endedChall.push data[key]
 
       res.render "ongoing.ejs",
         currentUser: req.user
@@ -394,7 +399,13 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
       console.log data
       res.send data
 
-  app.get "/api/challenge/", (req, res) ->
+  app.get "/api/ongoingDetails/:idCool", (req, res) ->
+
+    challenge.ongoingDetails req.params.idCool, true, (data) ->
+      console.log data
+      res.send data
+
+  app.get "/api/challenge", (req, res) ->
     challenge.getList true, (returned) ->
       console.log returned
       res.send returned

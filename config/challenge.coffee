@@ -322,8 +322,13 @@ module.exports = (_, mailer, moment, genUID, users) ->
   @param  {Function} done [callback]
   @return {Object}        [List of challenges]
   ###
-  ongoingDetails: (id, done) ->
-    Ongoing.findOne(idCool: id).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
+  ongoingDetails: (id, safe, done) ->
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+
+    Ongoing.findOne({idCool: id}).populate("_idChallenge _idChallenger _idChallenged",qs).exec (err, data) ->
       
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
@@ -503,7 +508,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
   ###
   validateOngoing: (data, done) ->
     self = this
-    Ongoing.findOne(idCool: data.oId).populate("_idChallenged _idChallenger _idChallenge").exec (err, ongoing) ->
+    Ongoing.findOne({idCool: data.oId}).populate("_idChallenged _idChallenger _idChallenge").exec (err, ongoing) ->
       
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err

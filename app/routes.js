@@ -127,7 +127,7 @@
     app.get("/o/:id", function(req, res) {
       var id;
       id = req.params.id;
-      return challenge.ongoingDetails(id, function(data) {
+      return challenge.ongoingDetails(id, false, function(data) {
         return res.render("ongoingDetails.ejs", {
           currentUser: req.isAuthenticated() ? req.user : false,
           ongoing: data
@@ -148,12 +148,16 @@
           if (moment(cEnd).isSame() || moment(cEnd).isBefore()) {
             challenge.crossedDeadline(data[key]._id);
             return endedChall.push(data[key]);
+          } else if (data[key].valiated === true && data[key].progress === 100) {
+            return endedChall.push(data[key]);
           } else if (data[key].waitingConfirm === true && data[key].progress < 100) {
             return reqValidation.push(data[key]);
           } else if (!moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
             return upcomingChall.push(data[key]);
           } else if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
             return ongoingChall.push(data[key]);
+          } else {
+            return endedChall.push(data[key]);
           }
         });
         return res.render("ongoing.ejs", {
@@ -401,7 +405,13 @@
         return res.send(data);
       });
     });
-    app.get("/api/challenge/", function(req, res) {
+    app.get("/api/ongoingDetails/:idCool", function(req, res) {
+      return challenge.ongoingDetails(req.params.idCool, true, function(data) {
+        console.log(data);
+        return res.send(data);
+      });
+    });
+    app.get("/api/challenge", function(req, res) {
       return challenge.getList(true, function(returned) {
         console.log(returned);
         return res.send(returned);
