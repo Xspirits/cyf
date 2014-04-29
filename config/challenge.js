@@ -386,7 +386,7 @@
               _idChallenged: id
             }
           ]
-        }).populate('_idChallenge _idChallenger _idChallenged').exec(function(err, data) {
+        }).populate('_idChallenge _idChallenger _idChallenged _idChallenge.game', qs).exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
@@ -536,7 +536,7 @@
             mailer.cLog('Error at ' + __filename, err);
           }
           ongoing.waitingConfirm = true;
-          ongoing.confirmAsk = new Date;
+          ongoing.confirmAsk = moment();
           ongoing.confirmLink1 = data.proofLink1;
           ongoing.confirmLink2 = (data.proofLink2 ? data.proofLink2 : "");
           ongoing.confirmComment = (data.confirmComment ? data.confirmComment : "");
@@ -689,7 +689,7 @@
           $set: {
             "tribunalVote.$.answer": data.answer,
             "tribunalVote.$.hasVoted": true,
-            "tribunalVote.$.voteDate": new Date
+            "tribunalVote.$.voteDate": moment()
           }
         }).exec(function(err, cases) {
           var userData;
@@ -732,7 +732,7 @@
           console.log(("case: " + cases.idCool + " === [" + validate + "]+1 [" + deny + "]-1 Result: " + (validate > deny) ? "validated" : "denied"));
           cases.tribunalAnswered = (validate > deny ? true : false);
           cases.caseClosed = true;
-          cases.caseClosedDate = new Date;
+          cases.caseClosedDate = moment();
           return cases.save(function(err) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);

@@ -1,8 +1,7 @@
-moment = require("moment")
-module.exports = (io) ->
+module.exports = (io, moment) ->
   alive: ()->
     io.sockets.emit "alive",
-      date: new Date
+      date: moment()
 
   glob: (icon, text, desc) ->
     io.sockets.emit "globalevent",

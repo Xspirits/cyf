@@ -58,7 +58,7 @@
 
   configDB = require("./config/database");
 
-  moment().zone("+02:00");
+  moment().tz("Europe/Paris").format();
 
   genUID.seed(664);
 
@@ -72,7 +72,7 @@
 
   social = require("./config/social");
 
-  sio = require("./app/functions/sio")(io);
+  sio = require("./app/functions/sio")(io, moment);
 
   notifs = require("./app/functions/notifications")(_, appKeys, social, mailer);
 

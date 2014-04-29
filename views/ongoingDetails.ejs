@@ -107,7 +107,7 @@
 					<h1>
 						<span class="<%= ongoing._idChallenge.icon %>"></span> 
 						<%= ongoing._idChallenge.title %> 
-						<small> <%= ongoing._idChallenge.game %></small>
+						<small> <%= ongoing._idChallenge.game.title %></small>
 					</h1>
 					<hr>
 
@@ -151,7 +151,7 @@
 						<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
 							<div class="well">
 								<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
-								<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
+								<button type="button" id="cantdothis" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
 							</div>
 						</div>
 

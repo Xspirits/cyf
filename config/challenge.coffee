@@ -353,7 +353,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
           _idChallenged: id
         }
       ]
-    ).populate('_idChallenge _idChallenger _idChallenged').exec (err, data) ->
+    ).populate('_idChallenge _idChallenger _idChallenged _idChallenge.game', qs).exec (err, data) ->
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
       console.log data
@@ -472,7 +472,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
       ongoing.waitingConfirm = true
-      ongoing.confirmAsk = new Date
+      ongoing.confirmAsk = moment()
       ongoing.confirmLink1 = data.proofLink1
       ongoing.confirmLink2 = (if (data.proofLink2) then data.proofLink2 else "")
       ongoing.confirmComment = (if (data.confirmComment) then data.confirmComment else "")
@@ -607,7 +607,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       $set:
         "tribunalVote.$.answer": data.answer
         "tribunalVote.$.hasVoted": true
-        "tribunalVote.$.voteDate": new Date
+        "tribunalVote.$.voteDate": moment()
     ).exec (err, cases) ->
       mailer.cLog 'Error at '+__filename,err if err
       userData =
@@ -643,7 +643,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       console.log (if "case: " + cases.idCool + " === [" + validate + "]+1 [" + deny + "]-1 Result: " + (validate > deny) then "validated" else "denied")
       cases.tribunalAnswered = (if (validate > deny) then true else false)
       cases.caseClosed = true
-      cases.caseClosedDate = new Date
+      cases.caseClosedDate = moment()
       cases.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         done cases

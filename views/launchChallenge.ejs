@@ -202,7 +202,6 @@
 
 					$(function() {
 						var cStartDate, cEndDate;
-
 						$('#DTPKStart')
 						.datetimepicker({
 							format: "MM dd yyyy, hh:ii",
@@ -257,6 +256,8 @@
 							, challengedPseudo      = uBox.attr('data-pseudo')
 							, launchAt = $('#DTPKStart_formated').val();
 
+							console.log(moment(launchAt));
+							console.log(moment());
 							if(moment(launchAt).isAfter()) {
 
 								var target = {};
