@@ -325,7 +325,10 @@
           qs = '';
         }
         if (isObj) {
-          return User.findById(id).select(qs).populate('friends.idUser', qs).exec(function(err, data) {
+          return User.findById(id).select(qs).populate({
+            path: 'friends.idUser',
+            select: qs
+          }).exec(function(err, data) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
@@ -334,7 +337,10 @@
         } else {
           return User.findOne({
             idCool: id
-          }).select(qs).populate('friends.idUser', qs).exec(function(err, data) {
+          }).select(qs).populate({
+            path: 'friends.idUser',
+            select: qs
+          }).exec(function(err, data) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }

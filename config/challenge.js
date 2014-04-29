@@ -106,8 +106,14 @@
       @param  {Function} done [callback]
       @return {Object}        [Object containing all the challenge data]
        */
-      getList: function(done) {
-        return Challenge.find({}).populate('game completedBy author').sort("-value -rateNumber").exec(function(err, data) {
+      getList: function(safe, done) {
+        var qs;
+        if (safe === true) {
+          qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '';
+        }
+        return Challenge.find({}).populate('game completedBy author', qs).sort("-value -rateNumber").exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
@@ -121,15 +127,32 @@
       @param  {Function} done [callback]
       @return {Object}        [Object containing all the challenge data]
        */
-      getChallenge: function(id, done) {
-        return Challenge.findOne({
-          idCool: id
-        }).populate("author").exec(function(err, data) {
-          if (err) {
-            mailer.cLog('Error at ' + __filename, err);
-          }
-          return done(data);
-        });
+      getChallenge: function(id, safe, done) {
+        var checkForHexRegExp, isObj, qs;
+        checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+        isObj = checkForHexRegExp.test(id);
+        if (safe === true) {
+          qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '';
+        }
+        if (isObj) {
+          return Challenge.findById(id).select(qs).populate('author', qs).exec(function(err, data) {
+            if (err) {
+              mailer.cLog('Error at ' + __filename, err);
+            }
+            return done(data);
+          });
+        } else {
+          return Challenge.findOne({
+            idCool: id
+          }).select(qs).populate('author', qs).exec(function(err, data) {
+            if (err) {
+              mailer.cLog('Error at ' + __filename, err);
+            }
+            return done(data);
+          });
+        }
       },
       completedBy: function(id, userArray, done) {
         return Challenge.findOneAndUpdate(id, {
@@ -347,7 +370,13 @@
       @param  {Function} done [callback]
       @return {Object}        [List of challenges]
        */
-      userAcceptedChallenge: function(id, done) {
+      userAcceptedChallenge: function(id, safe, callback) {
+        var qs;
+        if (safe === true) {
+          qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric';
+        } else {
+          qs = '';
+        }
         return Ongoing.find({
           accepted: true,
           $or: [
@@ -357,11 +386,12 @@
               _idChallenged: id
             }
           ]
-        }).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
+        }).populate('_idChallenge _idChallenger _idChallenged').exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          return done(data);
+          console.log(data);
+          return callback(data);
         });
       },
 

@@ -59,7 +59,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   # PROFILE SECTION ===========================
   app.get "/profile", isLoggedIn, (req, res) ->
 
-    challenge.userAcceptedChallenge req.user._id, (data) ->
+    challenge.userAcceptedChallenge req.user._id, false, (data) ->
       ongoingChall = []
       _.each data, (value, key) ->
         cStart = data[key].launchDate
@@ -130,7 +130,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   app.get "/ongoing", isLoggedIn, (req, res) ->
     
     #get Ongoing challenges for the current user
-    challenge.userAcceptedChallenge req.user._id, (data) ->
+    challenge.userAcceptedChallenge req.user._id, false, (data) ->
       upcomingChall = []
       ongoingChall = []
       endedChall = []
@@ -171,7 +171,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
 
   # CHALLENGE LIST SECTION =========================
   app.get "/challenges", (req, res) ->
-    challenge.getList (list) ->
+    challenge.getList false, (list) ->
       res.render "challenges.ejs",
         currentUser: if req.isAuthenticated() then req.user else false
         challenges: list
@@ -179,7 +179,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   # CHALLENGE DETAILS SECTION =========================
   app.get "/c/:id", (req, res) ->
     cId = req.params.id
-    challenge.getChallenge cId, (data) ->
+    challenge.getChallenge cId, false, (data) ->
       res.render "challengeDetails.ejs",
         currentUser: if req.isAuthenticated() then req.user else false
         challenge: data
@@ -280,7 +280,7 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   app.get "/launchChallenge", isLoggedIn, (req, res) ->
     
     #Get the challenge list
-    challenge.getList (challenges) ->
+    challenge.getList false, (challenges) ->
       
       #Get the users' friend list, because we need one which is up to date
       users.getUser req.user.idCool, false, (thisUser) ->
@@ -384,6 +384,23 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
 
   app.get "/api/users/:id", (req, res) ->
     users.getUser req.params.id, true, (returned) ->
+      console.log returned
+      res.send returned
+
+  # userId MUST BE the user._id
+  app.get "/api/ongoings/:userId", (req, res) ->
+
+    challenge.userAcceptedChallenge req.params.userId, true, (data) ->
+      console.log data
+      res.send data
+
+  app.get "/api/challenge/", (req, res) ->
+    challenge.getList true, (returned) ->
+      console.log returned
+      res.send returned
+
+  app.get "/api/challenge/:idCool", (req, res) ->
+    challenge.getChallenge req.params.idCool, true, (returned) ->
       console.log returned
       res.send returned
 

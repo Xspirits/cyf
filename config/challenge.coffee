@@ -98,8 +98,12 @@ module.exports = (_, mailer, moment, genUID, users) ->
   @param  {Function} done [callback]
   @return {Object}        [Object containing all the challenge data]
   ###
-  getList: (done) ->
-    Challenge.find({}).populate('game completedBy author').sort("-value -rateNumber").exec (err, data) ->
+  getList: (safe, done) ->
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+    Challenge.find({}).populate('game completedBy author', qs).sort("-value -rateNumber").exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
       # console.log err if err
       # console.log(data);
@@ -111,14 +115,28 @@ module.exports = (_, mailer, moment, genUID, users) ->
   @param  {Function} done [callback]
   @return {Object}        [Object containing all the challenge data]
   ###
-  getChallenge: (id, done) ->
-    Challenge.findOne(idCool: id).populate("author").exec (err, data) ->
-      
-      # if there are any errors, return the error
-      mailer.cLog 'Error at '+__filename,err if err
-      
-      # else we return the data
-      done data
+  getChallenge: (id, safe, done) ->
+
+    checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+    isObj = checkForHexRegExp.test(id);
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+    if isObj
+      Challenge.findById(id).select(qs).populate('author', qs).exec (err, data) ->
+        # if there are any errors, return the error
+        mailer.cLog 'Error at '+__filename,err if err      
+        # else we return the data
+        done data
+    else
+      Challenge.findOne({idCool: id}).select(qs).populate('author', qs).exec (err, data) ->
+        # if there are any errors, return the error
+        mailer.cLog 'Error at '+__filename,err if err      
+        # else we return the data
+        done data
+
+
 
   completedBy: (id, userArray, done) ->
     Challenge.findOneAndUpdate(id,
@@ -319,7 +337,12 @@ module.exports = (_, mailer, moment, genUID, users) ->
   @param  {Function} done [callback]
   @return {Object}        [List of challenges]
   ###
-  userAcceptedChallenge: (id, done) ->
+  userAcceptedChallenge: (id, safe, callback) ->
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+
     Ongoing.find(
       accepted: true
       $or: [
@@ -330,13 +353,12 @@ module.exports = (_, mailer, moment, genUID, users) ->
           _idChallenged: id
         }
       ]
-    ).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
-      
+    ).populate('_idChallenge _idChallenger _idChallenged').exec (err, data) ->
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
-      
+      console.log data
       # else we return the data
-      done data
+      callback(data)
   
   ###
   Return all the challenges (request and received) for a given user

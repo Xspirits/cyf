@@ -75,7 +75,7 @@
       });
     });
     app.get("/profile", isLoggedIn, function(req, res) {
-      return challenge.userAcceptedChallenge(req.user._id, function(data) {
+      return challenge.userAcceptedChallenge(req.user._id, false, function(data) {
         var ongoingChall;
         ongoingChall = [];
         _.each(data, function(value, key) {
@@ -135,7 +135,7 @@
       });
     });
     app.get("/ongoing", isLoggedIn, function(req, res) {
-      return challenge.userAcceptedChallenge(req.user._id, function(data) {
+      return challenge.userAcceptedChallenge(req.user._id, false, function(data) {
         var endedChall, ongoingChall, reqValidation, upcomingChall;
         upcomingChall = [];
         ongoingChall = [];
@@ -166,7 +166,7 @@
       });
     });
     app.get("/challenges", function(req, res) {
-      return challenge.getList(function(list) {
+      return challenge.getList(false, function(list) {
         return res.render("challenges.ejs", {
           currentUser: req.isAuthenticated() ? req.user : false,
           challenges: list
@@ -176,7 +176,7 @@
     app.get("/c/:id", function(req, res) {
       var cId;
       cId = req.params.id;
-      return challenge.getChallenge(cId, function(data) {
+      return challenge.getChallenge(cId, false, function(data) {
         return res.render("challengeDetails.ejs", {
           currentUser: req.isAuthenticated() ? req.user : false,
           challenge: data
@@ -278,7 +278,7 @@
       });
     });
     app.get("/launchChallenge", isLoggedIn, function(req, res) {
-      return challenge.getList(function(challenges) {
+      return challenge.getList(false, function(challenges) {
         return users.getUser(req.user.idCool, false, function(thisUser) {
           return res.render("launchChallenge.ejs", {
             currentUser: req.user,
@@ -391,6 +391,24 @@
     });
     app.get("/api/users/:id", function(req, res) {
       return users.getUser(req.params.id, true, function(returned) {
+        console.log(returned);
+        return res.send(returned);
+      });
+    });
+    app.get("/api/ongoings/:userId", function(req, res) {
+      return challenge.userAcceptedChallenge(req.params.userId, true, function(data) {
+        console.log(data);
+        return res.send(data);
+      });
+    });
+    app.get("/api/challenge/", function(req, res) {
+      return challenge.getList(true, function(returned) {
+        console.log(returned);
+        return res.send(returned);
+      });
+    });
+    app.get("/api/challenge/:idCool", function(req, res) {
+      return challenge.getChallenge(req.params.idCool, true, function(returned) {
         console.log(returned);
         return res.send(returned);
       });

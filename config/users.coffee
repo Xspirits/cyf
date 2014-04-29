@@ -232,11 +232,11 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
     else
       qs = ''
     if isObj
-      User.findById(id).select(qs).populate('friends.idUser',qs).exec (err, data) ->
+      User.findById(id).select(qs).populate({path: 'friends.idUser',select: qs}).exec (err, data) ->
         mailer.cLog 'Error at '+__filename,err if err
         done data
     else
-      User.findOne({idCool: id}).select(qs).populate('friends.idUser',qs).exec (err, data) ->
+      User.findOne({idCool: id}).select(qs).populate({path: 'friends.idUser',select: qs}).exec (err, data) ->
         mailer.cLog 'Error at '+__filename,err if err
         done data  
   ###

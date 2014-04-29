@@ -16,6 +16,9 @@ module.exports =
     name: "CyF validator"
   express_sid_key: "chachompcha.sid"
   cookie_secret: "oneDoesNotSimplychompi"
+  aws:
+    key: 'AKIAIYPYHIXS2GGY2FDQ'
+    secret: '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'
   steam:
     key: "02130312F2CCF046E4710C189E8481BA"
     domain: "challenge-friends.herokuapp.com"
