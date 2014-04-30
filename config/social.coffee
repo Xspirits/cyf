@@ -1,7 +1,7 @@
 https   = require("https")
 request = require("request")
 auth    = require("./auth")
-auth    = require("./mailer")
+mailer  = require("./mailer")
 RiotApi = require('irelia')
 _       = require("underscore")
 riotApi  = new RiotApi({host: 'prod.api.pvp.net',path: '/api/lol/',key: auth.leagueoflegend.key,debug: true});
