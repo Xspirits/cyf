@@ -412,15 +412,16 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
     name = user.leagueoflegend.name
     UID = user._id
     social.findSummonerLol region, name, (summoner)->
-      console.log ( summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm)
-      mailer.cLog 'linkLol attempt for  '+user.local.pseudo,  summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm
-      if summoner.profileIconId == user.leagueoflegend.profileIconId_confirm
+      console.log ( summoner.profileIconId.toString() + ' === ' + user.leagueoflegend.profileIconId_confirm.toString())
+      if summoner.profileIconId.toString() == user.leagueoflegend.profileIconId_confirm.toString()
+        mailer.cLog 'linkLol attempt passed for  '+user.local.pseudo,  summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm
         User.findByIdAndUpdate UID,
           'leagueoflegend.confirmed': true
         , (err, user) ->
           mailer.cLog 'Error at '+__filename,err if err
           return done true
       else
+        mailer.cLog 'linkLol attempt failed for  '+user.local.pseudo,  summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm
         return done "Icons did not match!"
   ###
   Unlink a league of legend account

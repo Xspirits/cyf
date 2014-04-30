@@ -8,6 +8,8 @@
 
   auth = require("./auth");
 
+  auth = require("./mailer");
+
   RiotApi = require('irelia');
 
   _ = require("underscore");
@@ -622,7 +624,7 @@
     console.log(name);
     return riotApi.getSummonerByName(region, name, function(err, summoner) {
       if (err) {
-        throw err;
+        mailer.cLog('Error at ' + __filename, err);
       }
       summoner = _.values(summoner)[0];
       return callback(summoner);
@@ -632,7 +634,7 @@
   exports.getLastGames = function(region, summonerId, callback) {
     return riotApi.getRecentGamesBySummonerId(region, summonerId, function(err, object) {
       if (err) {
-        throw err;
+        mailer.cLog('Error at ' + __filename, err);
       }
       return callback(object.games);
     });
@@ -656,6 +658,7 @@
       });
     });
     request.on("error", function(e) {
+      mailer.cLog('Error at ' + __filename, "error from facebook.getFbData: " + e.message);
       return console.log("error from facebook.getFbData: " + e.message);
     });
     return request.end();
@@ -720,7 +723,7 @@
       qs: params
     }, function(err, resp, body) {
       if (err) {
-        return console.error("Error occured: ", err);
+        return mailer.cLog('Error at ' + __filename, err);
       }
       body = JSON.parse(body);
       if (body.error) {
@@ -753,7 +756,7 @@
       qs: params
     }, function(err, resp, body) {
       if (err) {
-        return console.error("Error occured: ", err);
+        return mailer.cLog('Error at ' + __filename, err);
       }
       body = JSON.parse(body);
       if (body.errors) {
@@ -786,7 +789,7 @@
       qs: params
     }, function(err, resp, body) {
       if (err) {
-        return console.error("Error occured: ", err);
+        return mailer.cLog('Error at ' + __filename, err);
       }
       body = JSON.parse(body);
       if (body.error) {
@@ -829,7 +832,7 @@
       qs: params
     }, function(err, resp, body) {
       if (err) {
-        return console.error("Error occured: ", err);
+        return mailer.cLog('Error at ' + __filename, err);
       }
       body = JSON.parse(body);
       if (body.error) {

@@ -533,9 +533,9 @@
         name = user.leagueoflegend.name;
         UID = user._id;
         return social.findSummonerLol(region, name, function(summoner) {
-          console.log(summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
-          mailer.cLog('linkLol attempt for  ' + user.local.pseudo, summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
-          if (summoner.profileIconId === user.leagueoflegend.profileIconId_confirm) {
+          console.log(summoner.profileIconId.toString() + ' === ' + user.leagueoflegend.profileIconId_confirm.toString());
+          if (summoner.profileIconId.toString() === user.leagueoflegend.profileIconId_confirm.toString()) {
+            mailer.cLog('linkLol attempt passed for  ' + user.local.pseudo, summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
             return User.findByIdAndUpdate(UID, {
               'leagueoflegend.confirmed': true
             }, function(err, user) {
@@ -545,6 +545,7 @@
               return done(true);
             });
           } else {
+            mailer.cLog('linkLol attempt failed for  ' + user.local.pseudo, summoner.profileIconId + ' == ' + user.leagueoflegend.profileIconId_confirm);
             return done("Icons did not match!");
           }
         });

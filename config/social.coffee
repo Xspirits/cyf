@@ -1,6 +1,7 @@
 https   = require("https")
 request = require("request")
 auth    = require("./auth")
+auth    = require("./mailer")
 RiotApi = require('irelia')
 _       = require("underscore")
 riotApi  = new RiotApi({host: 'prod.api.pvp.net',path: '/api/lol/',key: auth.leagueoflegend.key,debug: true});
@@ -12,13 +13,13 @@ exports.findSummonerLol = (region, name, callback) ->
   console.log region
   console.log name
   riotApi.getSummonerByName region,name, (err, summoner) ->
-    throw err if err
+    mailer.cLog 'Error at '+__filename,err if err
     summoner = _.values(summoner)[0]
     callback summoner
 
 exports.getLastGames = (region, summonerId, callback)->
   riotApi.getRecentGamesBySummonerId region,summonerId, (err, object) ->
-    throw err if err
+    mailer.cLog 'Error at '+__filename,err if err
     callback object.games
 
 exports.getFbData = (accessToken, apiPath, callback) ->
@@ -38,6 +39,7 @@ exports.getFbData = (accessToken, apiPath, callback) ->
       callback buffer
   )
   request.on "error", (e) ->
+    mailer.cLog 'Error at '+__filename,"error from facebook.getFbData: " + e.message
     console.log "error from facebook.getFbData: " + e.message
   request.end()
 
@@ -92,7 +94,7 @@ exports.postFbMessage = (userFB, message, link, callback) ->
     url: url
     qs: params
   , (err, resp, body) ->
-    return console.error("Error occured: ", err)  if err
+    return mailer.cLog 'Error at '+__filename,err  if err
     body = JSON.parse(body)
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
@@ -145,7 +147,7 @@ exports.updateWall = (message,link, callback) ->
     url: url
     qs: params
   , (err, resp, body) ->
-    return console.error("Error occured: ", err)  if err
+    return mailer.cLog 'Error at '+__filename,err if err
     body = JSON.parse(body)
     return console.error("Error returned from facebook: ", body.errors)  if body.errors
     callback JSON.stringify(body, null, "\t")
@@ -176,7 +178,7 @@ exports.userActionWallPost =  (user, object, callback) ->
     url: url
     qs: params
   , (err, resp, body) ->
-    return console.error("Error occured: ", err)  if err
+    return mailer.cLog 'Error at '+__filename,err if err
     body = JSON.parse(body)
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
@@ -218,7 +220,7 @@ exports.userAction =  (user, action, callback) ->
     url: url
     qs: params
   , (err, resp, body) ->
-    return console.error("Error occured: ", err)  if err
+    return mailer.cLog 'Error at '+__filename,err if err
     body = JSON.parse(body)
     return console.error("Error returned from facebook: ", body.error)  if body.error
     callback JSON.stringify(body, null, "\t")
