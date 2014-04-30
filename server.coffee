@@ -31,6 +31,7 @@ mandrill        = require('mandrill-api/mandrill')
 nodemailer      = require("nodemailer")
 flash           = require("connect-flash")
 scheduler       = require("node-schedule")
+CronJob         = require('cron').CronJob
 genUID          = require("shortid")
 _               = require("underscore")
 configDB        = require("./config/database")
@@ -110,7 +111,7 @@ app.configure ->
 require("./app/routes") app,appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
-require("./app/schedule") scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs
+require("./app/schedule") CronJob,scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs
 
 # launch ======================================================================
 server.listen port

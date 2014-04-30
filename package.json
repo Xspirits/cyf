@@ -32,7 +32,7 @@
     "moment-timezone": "0.0.3",
     "nodemailer": "^0.6.2",
     "async": "^0.7.0",
-    "gridfs-stream": "^0.4.1"
+    "cron": "^1.0.4"
   },
   "devDependencies": {}
 }

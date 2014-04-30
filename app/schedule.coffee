@@ -1,68 +1,95 @@
-module.exports = (schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs) ->
-  
+module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, appKeys, xp, notifs) ->
+
   # =============================================================================
   # XP&LEVEL HISTORY   ==========================================================
   # =============================================================================
 
   # Level and Xp update
-  xpLevelUpdate         = new schedule.RecurrenceRule()
-  xpLevelUpdate.hour    = [13,23]
-  xpLevelUpdate.minute  = 30
-  xpLevelUpdate.seconds = 0
 
-  xpLevel = schedule.scheduleJob xpLevelUpdate, ->
-    console.log 'xpLevel update start'
+  # 6AM
+  dailyXpAM = new CronJob(
+    cronTime: "00 00 06 * * *"
+    # cronTime: "0 15 12 * * *"
+    onComplete: ->
+      console.log 'job completed dailyXp' + new Date()
+    onTick: ->
+      xp.updateDaily (result)-> 
+        mailer.cLog '[Cyf-auto] Daily xp update done',result
+    start: true
+  )
+  # 6PM
+  dailyXpPM = new CronJob(
+    cronTime: "00 00 18 * * *"
+    # cronTime: "0 15 12 * * *"
+    onComplete: ->
+      console.log 'job completed dailyXp' + new Date()
+    onTick: ->
+      xp.updateDaily (result)-> 
+        mailer.cLog '[Cyf-auto] Daily xp update done',result
+    start: true
+  )
 
-    xp.updateDaily (result)-> 
-      mailer.cLog '[Cyf-auto] Daily xp update done',result
+
 
   # =============================================================================
   # LADDERS    ==================================================================
   # =============================================================================
   
   # Daily Ladder
-  dailyRanking         = new schedule.RecurrenceRule()
-  dailyRanking.hour    = 12
-  dailyRanking.minute  = 0
-  dailyRanking.seconds = 0
+  dailyLadder = new CronJob(
+    cronTime: "00 30 12 * * 0-6"
+    # cronTime: "0 15 12 * * *"
+    onComplete: ->
+      console.log 'job completed Daily Ladder ' + new Date()
+    onTick: ->
+      daily = 1
+      ladder.generateLadder daily, ->
+        ladder.rankUser daily, (top3)-> 
+          ladder.spreadUsersSocial daily, ->
+            ladder.spreadLadder top3, daily, (done)->
+              mailer.cLog '[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"),done
+              console.log done
+    start: true
+  )
 
-  dailyLadder = schedule.scheduleJob dailyRanking, ->
-    console.log 'dailyLadder'
-    daily = 1
-    ladder.generateLadder daily, ->
-      ladder.rankUser daily, (top3)-> 
-        ladder.spreadUsersSocial daily, ->
-          ladder.spreadLadder top3, daily, (done)->
-            mailer.cLog '[Cyf-auto] Daily Ladder for ' + moment().subtract('d', 1).format("ddd Do MMM"),done
 
   # Weekly Ladder
-  weeklyRanking           = new schedule.RecurrenceRule()
-  weeklyRanking.dayOfWeek = 1 #Monday
-  weeklyRanking.hour      = 1
-  weeklyRanking.minute    = 1 # Let's avoid taking risks with setting 0h 0m 0s
-  weeklyRanking.seconds   = 0
 
-  weekLadder = schedule.scheduleJob weeklyRanking, ->
+  weekLadder = new CronJob(
+    cronTime: "00 10 6 * * 0"
+    # cronTime: "0 15 12 * * *"
+    onComplete: ->
+      console.log 'job completed Weekly Ladder ' + new Date()
+    onTick: ->
+      weekly = 2
+      ladder.generateLadder weekly, ->
+        ladder.rankUser weekly, (top3)-> 
+          ladder.spreadUsersSocial weekly, ->
+            ladder.spreadLadder top3, weekly, (done)->
+              mailer.cLog '[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"),done
+    
+    start: true
+  )
 
-    weekly = 2
-    ladder.generateLadder weekly, ->
-      ladder.rankUser weekly, (top3)-> 
-        ladder.spreadUsersSocial weekly, ->
-          ladder.spreadLadder top3, weekly, (done)->
-            mailer.cLog '[Cyf-auto] Weekly Ladder for ' + moment().subtract('w', 1).format("w"),done
+
 
   # Monthly Ladder
-  monthlyRanking         = new schedule.RecurrenceRule()
-  monthlyRanking.date    = 1 # 1st of each month
-  monthlyRanking.hour    = 1 # at 1 AM
-  monthlyRanking.minute  = 10
-  monthlyRanking.seconds = 0
+  monthlyLadder = new CronJob(
+    cronTime: "00 10 08 1 * *"
+    onComplete: ->
+      console.log 'job completed Monthly Ladder ' + new Date()
+    onTick: ->
+      monthly = 3
+      ladder.generateLadder monthly, ->
+        ladder.rankUser monthly, (top3)-> 
+          ladder.spreadUsersSocial monthly, ->
+            ladder.spreadLadder top3, monthly, (done)->
+              mailer.cLog '[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"),done
+    start: true
+  )
 
-  monthlyLadder = schedule.scheduleJob monthlyRanking, ->
+  # dailyXp.start()
+  # dailyLadder.start()
+  # weekLadder.start()
+  # monthlyLadder.start()
 
-    monthly = 3
-    ladder.generateLadder monthly, ->
-      ladder.rankUser monthly, (top3)-> 
-        ladder.spreadUsersSocial monthly, ->
-          ladder.spreadLadder top3, monthly, (done)->
-            mailer.cLog '[Cyf-auto] Monthly Ladder for ' + moment().subtract('m', 1).format("MMMM GGGG"),done
