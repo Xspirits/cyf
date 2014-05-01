@@ -28,7 +28,6 @@
         description = data["description"];
         game = data["idGame"];
         uID = genUID.generate().substr(-6);
-        console.log(game);
         newChallenge = new Challenge();
         newChallenge.idCool = uID;
         newChallenge.title = title;
@@ -396,7 +395,6 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          console.log(data);
           return callback(data);
         });
       },

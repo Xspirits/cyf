@@ -23,7 +23,6 @@ module.exports = (_, mailer, moment, genUID, users) ->
     game = data["idGame"]
     uID = genUID.generate().substr(-6)
     
-    console.log game
     # create the challenge
     newChallenge = new Challenge()
     newChallenge.idCool = uID
@@ -361,7 +360,6 @@ module.exports = (_, mailer, moment, genUID, users) ->
     ).populate('_idChallenge _idChallenger _idChallenged _idChallenge.game', qs).exec (err, data) ->
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
-      console.log data
       # else we return the data
       callback(data)
   

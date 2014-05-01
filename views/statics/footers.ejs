@@ -188,21 +188,20 @@
 				readability();
 				updateUp();
 				updateEnd();
-				tribunalRequest();
 			},1000);
 		});
 var readability = function(){
 	$('.dateReadability').each( function () {
 		var date = $(this).attr('data-date');
-		var converted = moment(date).format('dddd DD MMMM HH[h]mm');
+		var converted = moment(date).utc().format('dddd DD MMMM HH[h]mm');
 		$(this).text(converted);
 	})
 }
 var updateUp = function(){
 	$('.convertUp').each( function () {
 		var start = $(this).attr('data-tStart');
-		var converted = moment(start).countdown().toString();
-		if(moment(start).isBefore())
+		var converted = moment(start).utc().countdown().toString();
+		if(moment(start).utc().isBefore(moment().utc()))
 			$(this).text('Started!');			
 		else
 			$(this).text('Start in ' +converted);
@@ -212,7 +211,7 @@ var updateEnd = function(){
 	$('.convertEnd').each( function () {
 		var end = $(this).attr('data-tEnd');
 		var converted = moment(end).countdown().toString();
-		if(moment(end).isBefore())
+		if(moment(end).utc().isBefore(moment().utc()))
 			$(this).text('Ended!');			
 		else
 			$(this).text('End in ' +converted);
@@ -239,7 +238,7 @@ var sendNotif= function(msg, idNotif, del) {
 var timeFromUp = function(){
 	$('.timeFromUp').each( function () {
 		var start = $(this).attr('data-date');
-		var converted = moment(start).countdown().toString();
+		var converted = moment(start).utc().countdown().toString();
 		$(this).text(converted);
 	})
 }

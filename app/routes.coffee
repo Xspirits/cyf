@@ -135,11 +135,18 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
       ongoingChall = []
       endedChall = []
       reqValidation = []
+      # console.log moment().format()
       _.each data, (value, key) ->
         cStart = data[key].launchDate
         cEnd = data[key].deadLine
         # Is the challenge's deadline passed ?
         # If yes, mark it as not completed, failed        
+
+        # console.log data[key].idCool, data[key].progress, data[key].waitingConfirm
+        # console.log moment(cStart).format()
+        # console.log moment(cEnd).format()
+        # console.log moment(cEnd).isBefore()
+
         if moment(cEnd).isSame() or moment(cEnd).isBefore()
           challenge.crossedDeadline data[key]._id
           endedChall.push data[key]
