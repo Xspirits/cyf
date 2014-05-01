@@ -134,6 +134,42 @@
 										</tr>
 									</tbody>
 								</table>
+								<table class="table table-striped text-center">
+									<thead>
+										<tr>
+											<th class="text-center"></th>
+											<th class="text-center">Daily</th>
+											<th class="text-center">Weekly</th>
+											<th class="text-center">Monthly</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>XP</th>
+											<td><%= currentUser.daily.xp %></td>
+											<td><%= currentUser.weekly.xp %></td>
+											<td><%= currentUser.monthly.xp %></td>
+										</tr>
+										<tr>
+											<th>level</th>
+											<td><%= currentUser.daily.level %></td>
+											<td><%= currentUser.weekly.level %></td>
+											<td><%= currentUser.monthly.level %></td>
+										</tr>
+										<tr>
+											<th>Facebook share</th>
+											<td><%= currentUser.daily.shareFB %></td>
+											<td><%= currentUser.weekly.shareFB %></td>
+											<td><%= currentUser.monthly.shareFB %></td>
+										</tr>
+										<tr>
+											<th>Facebook share</th>
+											<td><%= currentUser.daily.shareTW %></td>
+											<td><%= currentUser.weekly.shareTW %></td>
+											<td><%= currentUser.monthly.shareTW %></td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 
 							<div class="col-md-12 col-lg-12 col-xs-1O col-sm-1O">
