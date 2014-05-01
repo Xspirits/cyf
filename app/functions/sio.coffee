@@ -1,7 +1,7 @@
 module.exports = (io, moment) ->
   alive: ()->
     io.sockets.emit "alive",
-      date: moment()
+      date: moment().utc()
 
   glob: (icon, text, desc) ->
     io.sockets.emit "globalevent",

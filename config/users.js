@@ -612,7 +612,7 @@
                   aGame = {
                     championId: g.championId,
                     championInfos: champ,
-                    createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm'),
+                    createDate: moment(g.createDate).utc().format('dddd DD MMMM HH[h]mm'),
                     fellowPlayers: [game.fellowPlayers],
                     gameId: g.gameId,
                     gameMode: g.gameMode,

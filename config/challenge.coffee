@@ -477,7 +477,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
       ongoing.waitingConfirm = true
-      ongoing.confirmAsk = moment()
+      ongoing.confirmAsk = moment().utc()
       ongoing.confirmLink1 = data.proofLink1
       ongoing.confirmLink2 = (if (data.proofLink2) then data.proofLink2 else "")
       ongoing.confirmComment = (if (data.confirmComment) then data.confirmComment else "")
@@ -612,7 +612,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       $set:
         "tribunalVote.$.answer": data.answer
         "tribunalVote.$.hasVoted": true
-        "tribunalVote.$.voteDate": moment()
+        "tribunalVote.$.voteDate": moment().utc()
     ).exec (err, cases) ->
       mailer.cLog 'Error at '+__filename,err if err
       userData =
@@ -648,7 +648,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       console.log (if "case: " + cases.idCool + " === [" + validate + "]+1 [" + deny + "]-1 Result: " + (validate > deny) then "validated" else "denied")
       cases.tribunalAnswered = (if (validate > deny) then true else false)
       cases.caseClosed = true
-      cases.caseClosedDate = moment()
+      cases.caseClosedDate = moment().utc()
       cases.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         done cases

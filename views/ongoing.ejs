@@ -492,9 +492,6 @@
 					originalHTML ='<button type="button" class="btn btn-danger btn-punch denying"><span class="glyphicon glyphicon-remove"></span>Deny</button><button type="button" class="btn btn-success btn-punch validating"><span class="glyphicon glyphicon-ok"></span>validate</button>';
 
 					tribunalRequest();
-					updateUp();
-					updateEnd();
-					readability();
 
 					$('#validation').on('hidden.bs.modal', function (e) {
 						e.preventDefault();
@@ -621,8 +618,6 @@
 					});
 
 					setInterval(function(){
-						updateUp();
-						updateEnd();
 						tribunalRequest();
 					},2200);
 
@@ -760,27 +755,7 @@ var tribunalRequest = function () {
 		}
 	})
 }
-var readability = function(){
-	$('.dateReadability').each( function () {
-		var date = $(this).attr('data-date');
-		var converted = moment(date).format('dddd DD MMMM HH[h]mm');
-		$(this).text(converted);
-	})
-}
-var updateUp = function(){
-	$('.convertUp').each( function () {
-		var start = $(this).attr('data-tStart');
-		var converted = moment(start).countdown().toString();
-		$(this).text('Start in ' +converted);
-	})
-}
-var updateEnd = function(){
-	$('.convertEnd').each( function () {
-		var end = $(this).attr('data-tEnd');
-		var converted = moment(end).countdown().toString();
-		$(this).text('End in ' +converted);
-	})
-}
+
 </script>
 </body>
 </html>

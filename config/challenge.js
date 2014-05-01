@@ -542,7 +542,7 @@
             mailer.cLog('Error at ' + __filename, err);
           }
           ongoing.waitingConfirm = true;
-          ongoing.confirmAsk = moment();
+          ongoing.confirmAsk = moment().utc();
           ongoing.confirmLink1 = data.proofLink1;
           ongoing.confirmLink2 = (data.proofLink2 ? data.proofLink2 : "");
           ongoing.confirmComment = (data.confirmComment ? data.confirmComment : "");
@@ -695,7 +695,7 @@
           $set: {
             "tribunalVote.$.answer": data.answer,
             "tribunalVote.$.hasVoted": true,
-            "tribunalVote.$.voteDate": moment()
+            "tribunalVote.$.voteDate": moment().utc()
           }
         }).exec(function(err, cases) {
           var userData;
@@ -738,7 +738,7 @@
           console.log(("case: " + cases.idCool + " === [" + validate + "]+1 [" + deny + "]-1 Result: " + (validate > deny) ? "validated" : "denied"));
           cases.tribunalAnswered = (validate > deny ? true : false);
           cases.caseClosed = true;
-          cases.caseClosedDate = moment();
+          cases.caseClosedDate = moment().utc();
           return cases.save(function(err) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);

@@ -4,7 +4,7 @@
     return {
       alive: function() {
         return io.sockets.emit("alive", {
-          date: moment()
+          date: moment().utc()
         });
       },
       glob: function(icon, text, desc) {

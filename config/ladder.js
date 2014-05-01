@@ -335,15 +335,15 @@
       spreadLadder: function(top3, type, done) {
         var fbWall, lastMonth, lastWeek, nFFB, nLFb, newFollower, newLeader, notifText, tweet, typeoff, yesterday;
         if (type === 1) {
-          yesterday = moment().subtract('d', 1).format("ddd Do MMM");
+          yesterday = moment().utc().subtract('d', 1).format("ddd Do MMM");
           typeoff = 'daily';
         }
         if (type === 2) {
-          lastWeek = moment().subtract('w', 1).format("w");
+          lastWeek = moment().utc().subtract('w', 1).format("w");
           typeoff = 'weekly';
         }
         if (type === 3) {
-          lastMonth = moment().subtract('m', 1).format("MMMM GGGG");
+          lastMonth = moment().utc().subtract('m', 1).format("MMMM GGGG");
           typeoff = 'monthly';
         }
         newLeader = '';

@@ -340,13 +340,13 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
   # Send all the notifications for the daily update
   spreadLadder: (top3, type, done)->
     if type == 1
-      yesterday = moment().subtract('d', 1).format("ddd Do MMM")
+      yesterday = moment().utc().subtract('d', 1).format("ddd Do MMM")
       typeoff = 'daily'
     if type == 2
-      lastWeek = moment().subtract('w', 1).format("w")
+      lastWeek = moment().utc().subtract('w', 1).format("w")
       typeoff = 'weekly'
     if type == 3
-      lastMonth = moment().subtract('m', 1).format("MMMM GGGG")
+      lastMonth = moment().utc().subtract('m', 1).format("MMMM GGGG")
       typeoff = 'monthly'
     # Initiate the newLeader variable here, else we'll get an undefined when we post on twitter.
     newLeader   = ''

@@ -60,7 +60,7 @@
 
   configDB = require("./config/database");
 
-  moment().tz("Europe/Paris").format();
+  moment.utc().format();
 
   genUID.seed(664);
 
@@ -142,8 +142,10 @@
 
   console.log("I challenge you to watch on port " + port);
 
-  console.log('Current Application time : ' + moment().format());
+  console.log('Current Application time : ' + moment().utc().format());
 
   console.log('===========================================================');
+
+  mailer.cLog('[Cyf-Start] Current Application time : ' + moment().utc().format(), '');
 
 }).call(this);

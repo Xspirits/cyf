@@ -16,6 +16,8 @@
  'datePicker.js',
  'moment-cd.js',
  'countdown.min.js',
+ 'moment.data.js',
+ 'moment-timezone.min.js',
  'moment.min.js',
  'ladda.min.js',
  'spin.min.js',

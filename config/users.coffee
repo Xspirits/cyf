@@ -474,7 +474,7 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
               aGame=
                 championId: g.championId   #int Champion ID associated with game.
                 championInfos: champ   
-                createDate: moment(g.createDate).format('dddd DD MMMM HH[h]mm')    #long  Date that end game data was recorded, specified as epoch milliseconds.
+                createDate: moment(g.createDate).utc().format('dddd DD MMMM HH[h]mm')    #long  Date that end game data was recorded, specified as epoch milliseconds.
                 fellowPlayers: [game.fellowPlayers]    #[PlayerDto] Other players associated with the game.
                 gameId: g.gameId    #long  Game ID.
                 gameMode: g.gameMode    #string  Game mode. (legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, FIRSTBLOOD)
