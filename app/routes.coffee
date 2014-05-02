@@ -341,13 +341,13 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   # leader board
   app.get "/leaderboard", (req, res) ->
     buffer = {}
-    ladder.getLeaderboards "score",'global', false, (global) ->
+    ladder.getLeaderboards "score",'global', true, (global) ->
       buffer.global = global
-      ladder.getLeaderboards "score", 'monthly', false, (monthly) ->
+      ladder.getLeaderboards "score", 'monthly', true, (monthly) ->
         buffer.monthly = monthly
-        ladder.getLeaderboards "score", 'weekly', false, (weekly) ->
+        ladder.getLeaderboards "score", 'weekly', true, (weekly) ->
           buffer.weekly = weekly
-          ladder.getLeaderboards "score", 'daily', false, (daily) ->
+          ladder.getLeaderboards "score", 'daily', true, (daily) ->
             buffer.daily = daily
             res.render "leaderBoard.ejs",
               currentUser: if req.isAuthenticated() then req.user else false

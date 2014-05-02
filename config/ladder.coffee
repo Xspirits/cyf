@@ -213,7 +213,7 @@ module.exports = (async, schedule, mailer, _, sio, ladder, moment, social, appKe
       ).exec (err, userUpdated) ->
         mailer.cLog 'Error at '+__filename,err if err
 
-  userSocialPush: (user, type, typeTxt, hash, index, done)->
+  userSocialPush: (user, type, typeTxt, hash, ranked, done)->
     _self = @
     #Daily ladder
     if type == 1

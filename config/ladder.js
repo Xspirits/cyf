@@ -214,7 +214,7 @@
           });
         }
       },
-      userSocialPush: function(user, type, typeTxt, hash, index, done) {
+      userSocialPush: function(user, type, typeTxt, hash, ranked, done) {
         var action, uTweet, _self;
         _self = this;
         if (type === 1) {

@@ -11,6 +11,7 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
     cronTime: "00 00 06 * * *"
     # cronTime: "0 15 12 * * *"
     onComplete: ->
+      mailer.cLog '[Cyf-auto] job completed dailyXp AM',''
       console.log 'job completed dailyXp' + new Date()
     onTick: ->
       xp.updateDaily (result)-> 
@@ -22,6 +23,7 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
     cronTime: "00 00 18 * * *"
     # cronTime: "0 15 12 * * *"
     onComplete: ->
+      mailer.cLog '[Cyf-auto] job completed dailyXp PM',''
       console.log 'job completed dailyXp' + new Date()
     onTick: ->
       xp.updateDaily (result)-> 
@@ -40,6 +42,7 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
     cronTime: "00 30 12 * * 0-6"
     # cronTime: "0 15 12 * * *"
     onComplete: ->
+      mailer.cLog '[Cyf-auto] job completed Daily Ladder ' + new Date(),''
       console.log 'job completed Daily Ladder ' + new Date()
     onTick: ->
       daily = 1
@@ -59,6 +62,7 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
     cronTime: "00 10 6 * * 0"
     # cronTime: "0 15 12 * * *"
     onComplete: ->
+      mailer.cLog '[Cyf-auto] job completed Weekly Ladder ' + new Date(),''
       console.log 'job completed Weekly Ladder ' + new Date()
     onTick: ->
       weekly = 2
@@ -77,6 +81,7 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
   monthlyLadder = new CronJob(
     cronTime: "00 10 08 1 * *"
     onComplete: ->
+      mailer.cLog '[Cyf-auto] job completed Monthly Ladder ' + new Date(),''
       console.log 'job completed Monthly Ladder ' + new Date()
     onTick: ->
       monthly = 3
@@ -92,4 +97,3 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
   # dailyLadder.start()
   # weekLadder.start()
   # monthlyLadder.start()
-

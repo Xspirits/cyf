@@ -9,7 +9,7 @@
     <meta name="rating" content="General">
     <meta name="keywords" content="leaderboard, ranking, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
     <meta name="title" content="Leaderboards of challenge your friends">
-    <meta name="description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <meta name="description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo : 'none' %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo : 'none' %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo : 'none' %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo : 'none' %>">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="article"> <!-- website/article/profile -->
@@ -20,7 +20,7 @@
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
     <meta property="og:title" content="Leaderboards of challenge your friends">
-    <meta property="og:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <meta property="og:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo : 'none' %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo : 'none' %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo : 'none' %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo : 'none' %>">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
@@ -28,10 +28,10 @@
     <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Leaderboards of challenge your friends">
-    <meta name="twitter:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <meta name="twitter:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo : 'none' %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo : 'none' %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo : 'none' %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo : 'none' %>">
     <!-- Twitter card end -->
 
-	<title>Leaderboards, <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> #1</title>
+	<title>Leaderboards, <%= (ranking.daily.length > 0) ? ranking.daily[0].local.pseudo + ' #1' : '' %></title>
 </head>
 <body>
 
@@ -62,7 +62,7 @@
 								</thead>
 								<tbody> 
 
-									<% if(ranking.daily.length > 0 ) { %>
+								<% if(ranking.daily.length > 0 ) { %>
 									<% for(var i=0; i< ranking.daily.length; i++) { %>
 									<tr class="animated flipInX">
 										<td class="daily"><%= i+1 %></td>
@@ -71,12 +71,12 @@
 										<td><%= ranking.daily[i].dailyScore %></td>
 									</tr>
 									<% }%>
-									<% }%>
+								<% }%>
 									
 								</tbody>
 							</table>
 							<div class="text-right">
-								<small id="updateDaily"></small><i class="fa fa-clock-o"></i>
+								<small id="updateDaily" class="convertEnd"></small><i class="fa fa-clock-o"></i>
 							</div>	
 						</div>
 						<!-- weekly Leaderboard -->
@@ -91,7 +91,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<% if(ranking.weekly.length > 0 ) { %>
+								<% if(ranking.weekly.length > 0 ) { %>
 									<% for(var i=0; i< ranking.weekly.length; i++) { %>
 									<tr class="animated flipInX">
 										<td class="weekly"><%= i+1 %></td>
@@ -100,7 +100,7 @@
 										<td><%= ranking.weekly[i].weeklyScore %></td>
 									</tr>
 									<% }%>
-									<% }%>
+								<% }%>
 								</tbody>
 							</table>
 							<div class="text-right">
@@ -175,42 +175,42 @@
 
 		</div>
 		<% include statics/footers %>
-
 		<script type="text/javascript">
 			$(function() {
-				setInterval(function(){
-					day();
-					week();
-					month();
 
-				},1000);
+				var cron = '00 00 06 * * *';
+				var s = later.parse.cron(cron);
+				var next =   later.schedule(s).next(10);
+				console.log(next);
+
+
 			});
-			var day = function (){				
-				var d = new Date();
-				d.setHours(24,1,0,0)
-				var converted = moment(d).countdown().toString();
-				$('#updateDaily').text(converted);
-			}
-			var week = function (){				
-				var d = new Date();
+			// var day = function (){				
+			// 	var d = new Date();
+			// 	d.setHours(24,1,0,0)
+			// 	var converted = moment(d).countdown().toString();
+			// 	$('#updateDaily').text(converted);
+			// }
+			// var week = function (){				
+			// 	var d = new Date();
 
-				var day = d.getDay()
-				, diff = d.getDate() - day + (day == 0 ? -6:1); 
-				var w = new Date(d.setDate(diff))
+			// 	var day = d.getDay()
+			// 	, diff = d.getDate() - day + (day == 0 ? -6:1); 
+			// 	var w = new Date(d.setDate(diff))
 				
-				var converted = moment(w).countdown().toString();
-				$('#updateWeekly').text(converted);
-			}
-			var month = function (){		
-				var now = new Date();
-				if (now.getMonth() == 11) 
-					var current = new Date(now.getFullYear() + 1, 0, 1);
-				else 
-					var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+			// 	var converted = moment(w).countdown().toString();
+			// 	$('#updateWeekly').text(converted);
+			// }
+			// var month = function (){		
+			// 	var now = new Date();
+			// 	if (now.getMonth() == 11) 
+			// 		var current = new Date(now.getFullYear() + 1, 0, 1);
+			// 	else 
+			// 		var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-				var converted = moment(current).countdown().toString();
-				$('#updateMonthly').text(converted);
-			}
+			// 	var converted = moment(current).countdown().toString();
+			// 	$('#updateMonthly').text(converted);
+			// }
 		</script>
 	</body>
 	</html>

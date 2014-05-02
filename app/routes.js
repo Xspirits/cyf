@@ -334,13 +334,13 @@
     app.get("/leaderboard", function(req, res) {
       var buffer;
       buffer = {};
-      return ladder.getLeaderboards("score", 'global', false, function(global) {
+      return ladder.getLeaderboards("score", 'global', true, function(global) {
         buffer.global = global;
-        return ladder.getLeaderboards("score", 'monthly', false, function(monthly) {
+        return ladder.getLeaderboards("score", 'monthly', true, function(monthly) {
           buffer.monthly = monthly;
-          return ladder.getLeaderboards("score", 'weekly', false, function(weekly) {
+          return ladder.getLeaderboards("score", 'weekly', true, function(weekly) {
             buffer.weekly = weekly;
-            ladder.getLeaderboards("score", 'daily', false, function(daily) {
+            ladder.getLeaderboards("score", 'daily', true, function(daily) {
               buffer.daily = daily;
               return res.render("leaderBoard.ejs", {
                 currentUser: req.isAuthenticated() ? req.user : false,

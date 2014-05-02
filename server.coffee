@@ -126,4 +126,4 @@ console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
 console.log 'Current Application time : '+moment().utc().format()
 console.log '==========================================================='
-mailer.cLog '[Cyf-Start] Current Application time : '+moment().utc().format(),''
+# mailer.cLog '[Cyf-Start] Current Application time : '+moment().utc().format(),''

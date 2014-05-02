@@ -5,6 +5,7 @@
     dailyXpAM = new CronJob({
       cronTime: "00 00 06 * * *",
       onComplete: function() {
+        mailer.cLog('[Cyf-auto] job completed dailyXp AM', '');
         return console.log('job completed dailyXp' + new Date());
       },
       onTick: function() {
@@ -17,6 +18,7 @@
     dailyXpPM = new CronJob({
       cronTime: "00 00 18 * * *",
       onComplete: function() {
+        mailer.cLog('[Cyf-auto] job completed dailyXp PM', '');
         return console.log('job completed dailyXp' + new Date());
       },
       onTick: function() {
@@ -29,6 +31,7 @@
     dailyLadder = new CronJob({
       cronTime: "00 30 12 * * 0-6",
       onComplete: function() {
+        mailer.cLog('[Cyf-auto] job completed Daily Ladder ' + new Date(), '');
         return console.log('job completed Daily Ladder ' + new Date());
       },
       onTick: function() {
@@ -50,6 +53,7 @@
     weekLadder = new CronJob({
       cronTime: "00 10 6 * * 0",
       onComplete: function() {
+        mailer.cLog('[Cyf-auto] job completed Weekly Ladder ' + new Date(), '');
         return console.log('job completed Weekly Ladder ' + new Date());
       },
       onTick: function() {
@@ -70,6 +74,7 @@
     return monthlyLadder = new CronJob({
       cronTime: "00 10 08 1 * *",
       onComplete: function() {
+        mailer.cLog('[Cyf-auto] job completed Monthly Ladder ' + new Date(), '');
         return console.log('job completed Monthly Ladder ' + new Date());
       },
       onTick: function() {

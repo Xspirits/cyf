@@ -146,6 +146,4 @@
 
   console.log('===========================================================');
 
-  mailer.cLog('[Cyf-Start] Current Application time : ' + moment().utc().format(), '');
-
 }).call(this);
