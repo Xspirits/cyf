@@ -59,7 +59,7 @@ module.exports = (CronJob, schedule, mailer, _, sio, ladder, moment, social, app
   # Weekly Ladder
 
   weekLadder = new CronJob(
-    cronTime: "00 10 6 * * 0"
+    cronTime: "00 10 6 * * 1"
     # cronTime: "0 15 12 * * *"
     onComplete: ->
       mailer.cLog '[Cyf-auto] job completed Weekly Ladder ' + new Date(),''

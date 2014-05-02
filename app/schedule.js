@@ -51,7 +51,7 @@
       start: true
     });
     weekLadder = new CronJob({
-      cronTime: "00 10 6 * * 0",
+      cronTime: "00 10 6 * * 1",
       onComplete: function() {
         mailer.cLog('[Cyf-auto] job completed Weekly Ladder ' + new Date(), '');
         return console.log('job completed Weekly Ladder ' + new Date());
