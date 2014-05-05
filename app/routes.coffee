@@ -11,6 +11,10 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
     res.render "about.ejs",
       currentUser: if req.isAuthenticated() then req.user else false
 
+  app.get "/contact", (req,res) ->
+    res.render "contact.ejs",
+      currentUser: if req.isAuthenticated() then req.user else false
+
   # show the home page (will also have our login links)
   app.get "/", (req, res) ->
     if req.isAuthenticated()

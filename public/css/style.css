@@ -1028,12 +1028,6 @@ h2 > #scorebox .level {
   border-color: transparent;
 }
 
-@media (max-width: 1024px) {
-
-  #headNav {
-    background: #2CABCE url('../img/head_bg.jpg');
-  }
-}
 .dropdown-menu {
   background: #2CABCE;
 }
@@ -1099,6 +1093,9 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 .lefty {
   float: left;
   margin-left: 15px;
+  margin-top: -3.2em;
+  color: white;
+  cursor: pointer;
 }
 .righty {
   float: right;
@@ -1126,6 +1123,54 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
   background-color: rgb(37,141,170);
 }
 /* line 288, ../../sass/style.scss */
+.liveChat {
+  z-index: 5;
+  background: white; 
+  position: relative;
+  float: left;
+  padding-top: 40px;
+  height: 100%;
+  transition: all 420ms ease;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateX(-216px);
+   transform: translateX(0);
+}
+  .liveChat.sticked, .liveChat.active {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+  #chat-message,#chat-message:hover {
+    top: 0;
+    position: absolute;
+    width: 100%;
+    border: 0;
+    height: 39px;
+    padding: 0 0 0 9px;
+    border-bottom: 1px solid rgb(179, 179, 179);
+  }
+  #chat-message:focus{
+    border: 0;
+    border-bottom: 1px solid #7E7878;    
+  }
+  .chat-date {
+    font-size: 10px;
+    margin: 0 2px 0 1px;
+    color: rgb(170, 170, 170);
+    margin-left: -45px;
+    transition: margin 220ms ease-in-out;
+  }
+  #chat > li:hover>.chat-date {
+    margin-left: 0;
+  }
+  .chat-log-event,.chat-log-event a {
+    color: rgb(167, 167, 167);
+    font-style: italic;
+    font-size: smaller;
+    margin: 3px 5px;
+  }
+  .chat-log-event.important,.chat-log-event.important a {
+    color: rgb(226, 53, 136);
+  }
 .liveFeed {
   z-index: 5;
   padding-top: 65px;

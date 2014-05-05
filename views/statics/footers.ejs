@@ -11,7 +11,8 @@
             | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
 
             <span class="pull-right">
-              | <a href="./about" title="Like us on Facebook!">About</a> 
+              | <a href="./contact" title="Contact">Contact</a> 
+              | <a href="./about" title="About Cyf">About</a> 
             </span>              
           </section>
         </div>        
@@ -76,12 +77,35 @@
 
 		//Socket 
 		socket = io.connect(resultURL);
+		chat = io.connect(resultURL + '/chat');
 		// socket = io.connect('http://www.cyf-app.co');
 
 		socket.on('alive', function (data) {
 			console.log('Challenger alive: '+data.date);
 		});
+		chat.on('newUser', function (data) {
+			pushChat(data, 'chat-log-event');
+		});
+		chat.on('message', function (message) {
+			pushChat(message);
+		})
+		// CHAT FUNCTIONS
 
+		$('#chat-message').bind("enterKey",function(e){
+			e.preventDefault();
+			console.log('sending: ' + $(this).val())
+		  	chat.emit('message', $(this).val());
+		  	$(this).val('');
+		});
+
+		$('#chat-message').keyup(function(e){
+		    if(e.keyCode == 13)
+		    {
+		        $(this).trigger("enterKey");
+		    }
+		});
+
+		// NOTIFICATIONS
 
 		<% if (currentUser) { %>
 			// Only if logged in
@@ -135,7 +159,19 @@
 		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
 		// NProgress.set( myLevel );
 
-		$('.righty').hover(function(){
+		$('.show-chat').hover(function(){
+			console.log("show-chat")
+			if(!$('.liveChat').hasClass('sticked'))
+				$('.liveChat').addClass('active');
+			},function(){
+			if(!$('.liveChat').hasClass('sticked'))
+				$('.liveChat').removeClass('active');
+		});
+
+		$('.show-chat').on('click', function(){
+			$('.liveChat').toggleClass('sticked');
+		});
+		$('.show-logs').hover(function(){
 			if(!$('.liveFeed').hasClass('sticked'))
 				$('.liveFeed').addClass('active');
 			},function(){
@@ -143,7 +179,7 @@
 				$('.liveFeed').removeClass('active');
 		});
 
-		$('.righty').on('click', function(){
+		$('.show-logs').on('click', function(){
 			$('.liveFeed').toggleClass('sticked');
 		});
 
@@ -186,6 +222,13 @@
 		function pushStream(data) {
 			var target = $('#streams')
 			, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
+
+			target.prepend(template);
+		}
+		function pushChat(data,claass) {
+			var date = moment(data.date).format('hh:mm:ss');
+			var target = $('#chat')
+			, template = '<li class="mepUp animated rubberBand '+(claass?claass:'')+'"><span class="chat-date">'+date+'  | </span><small>' + (data.icon ? '<i class="'+data.icon + '"></i> ': '') + '<a href="/u/'+data.user.idCool+'" title="see profile">'+data.user.pseudo+'</a>:</small> '+data.message+'</li>';
 
 			target.prepend(template);
 		}

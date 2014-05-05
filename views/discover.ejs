@@ -37,25 +37,7 @@
 <body>
   <div id="skrollr-body">
 
-  <div class="navbar navbar-default navbar-top" id="headNav" role="navigation">
-        <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <i class="fa fa-ellipsis-v"></i>
-          </button>
-            <a class="navbar-brand animated flipInX" href="./">
-                    <img src="./img/logo.png" alt="go home">
-            </a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-            <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-        </div>
-    </div>
+  <% include statics/navTop %>
     <section id="slide-3" class="skrollable" 
               data-top-bottom="background-position: 30% 100%;opacity: 0" 
               data-top="opacity: 1;background-position: 60% 100%;"
@@ -214,22 +196,7 @@
   </div>
     
     <!--  FOOTER -->
-    <footer id="footer">
-      <div class="container">
-        <div class="row">
-          <section class="col-md-12">
-            <a href="https://plus.google.com/109925245483936264439" title="Follow us on Goolg+!" target="_blank" rel="publisher">Google+</a>
-            | <a href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a>
-            | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
-
-            <span class="pull-right">
-              <a href="./lostPassword"  title="Like us on Facebook!">Password Lost?</a>   
-              | <a href="./about" title="Like us on Facebook!">About</a> 
-            </span>          
-          </section>
-        </div>        
-      </div>
-    </footer>
+    <% include statics/footers %>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/skrollr.min.js"></script>

@@ -16,6 +16,14 @@
 			<ul class="nav navbar-nav">
 				<li class="animated fadeInDown"><a href="/leaderboard">LeaderBoard</a></li>
 				<li class="animated fadeInDown"><a href="/users">Challengers</a></li>
+				<li class="animated fadeInDown visible-sm visible-md visible-xs show-chat">
+				 <a href="javascript:void(0);"><span class="fa fa-comments-o"></span></a>					
+				</li>
+				<li class="animated fadeInDown visible-sm visible-md visible-xs show-logs">
+				 <a href="javascript:void(0);"><span class="fa fa-bullhorn"></span></a>					
+				</li>
+
+
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"> 
@@ -82,7 +90,6 @@
 					<a href="/settings" class="hidden-sm hidden-xs"><i class="fa fa-cogs"></i></a>
 				</li>
 				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
-				<div class="navbar-text visible-sm visible-md righty"><span class="fa fa-th fa-2x"></span></div>
 			</ul>
 			<% } else { %>
 			<ul class="nav navbar-nav">
@@ -97,11 +104,17 @@
 	</div>
 
 	<% if (currentUser) { %>
-	<div class="righty visible-lg"><span class="fa fa-th fa-2x"></span></div>
+	<div class="righty visible-lg show-logs"><span class="fa fa-bullhorn"></span></div>
+	<div class="lefty visible-lg show-chat"><span class="fa fa-comments-o"></span></div>
 	<% } %>
 </div>
 
-<div class="liveFeed navmenu navmenu-fixed-right visible-lg visible-md visible-sm">
+<div class="liveFeed navmenu navmenu-fixed-right">
 	<ul class="list-group list-unstyled" id="streams">
 	</ul>
+</div>
+
+<div class="liveChat navmenu navmenu-fixed-left">
+	<input type="text" id="chat-message" placeholder="say sometihng..." >
+	<ul class="list-unstyled" id="chat"></ul>
 </div>

@@ -17,6 +17,11 @@
         currentUser: req.isAuthenticated() ? req.user : false
       });
     });
+    app.get("/contact", function(req, res) {
+      return res.render("contact.ejs", {
+        currentUser: req.isAuthenticated() ? req.user : false
+      });
+    });
     app.get("/", function(req, res) {
       if (req.isAuthenticated()) {
         return res.redirect("/profile");

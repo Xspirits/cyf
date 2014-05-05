@@ -36,6 +36,8 @@ genUID          = require("shortid")
 _               = require("underscore")
 configDB        = require("./config/database")
 
+# Databases  ==================================================================
+db_chat         = require("./app/models/chat")
 # configuration ===============================================================
 moment.utc().format()
 
@@ -51,7 +53,7 @@ mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKey
 # functions Import
 google          = require("./config/google")
 social          = require("./config/social")
-sio             = require("./app/functions/sio")(io, moment)
+sio             = require("./app/functions/sio")(io,db_chat, moment)
 notifs          = require("./app/functions/notifications")(_, appKeys, social, mailer)
 xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
@@ -121,7 +123,7 @@ ping = ->
 ping()
 
 # sockets awesomization
-require("./app/io") io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
+require("./app/io") io, db_chat,  _, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
 console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
 console.log 'Current Application time : '+moment().utc().format()
