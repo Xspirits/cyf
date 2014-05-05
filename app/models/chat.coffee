@@ -16,7 +16,7 @@ chatSchema = mongoose.Schema(
   dateSent:
     type: Date
     default: Date.now
-    expires: 1800 # 30 min
+    expires: 86400 # 24h
 )
 
 # create the model for users and expose it to our app

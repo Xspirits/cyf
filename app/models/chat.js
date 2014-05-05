@@ -20,7 +20,7 @@
     dateSent: {
       type: Date,
       "default": Date.now,
-      expires: 1800
+      expires: 86400
     }
   });
 
