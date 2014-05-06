@@ -1125,37 +1125,62 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 /* line 288, ../../sass/style.scss */
 .liveChat {
   z-index: 5;
-  background: white; 
-  position: relative;
-  float: left;
-  padding-top: 40px;
-  height: 100%;
-  transition: all 420ms ease;
+  background: #2CAACC;
+  color: #fff;
+  padding-top: 55px;
   -webkit-backface-visibility: hidden;
-  -webkit-transform: translateX(-216px);
-   transform: translateX(0);
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  -webkit-transition: all 420ms ease; 
+  -moz-transition: all 420ms ease;
+  -ms-transition: all 420ms ease;
+  -o-transition: all 420ms ease;
+  transition: all 420ms ease;
 }
   .liveChat.sticked, .liveChat.active {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
+
+  #chat-message::-webkit-input-placeholder {
+    color:    #fff;
+  }
+  #chat-message:-moz-placeholder {
+      color:    #fff;
+  }
+  #chat-message::-moz-placeholder {
+      color:    #fff;
+  }
+  #chat-message:-ms-input-placeholder {
+      color:    #fff;
+  }
   #chat-message,#chat-message:hover {
-    top: 0;
-    position: absolute;
+    color: #fff;
+    background: #2C8EA8;
+    outline: 0;
     width: 100%;
     border: 0;
-    height: 39px;
+    height: 25px;
     padding: 0 0 0 9px;
-    border-bottom: 1px solid rgb(179, 179, 179);
+    border-bottom: 1px solid #FAFAFA;
+    transition: all 420ms ease;
   }
   #chat-message:focus{
+    height: 40px;
     border: 0;
-    border-bottom: 1px solid #7E7878;    
+    border-bottom: 1px solid #FAFAFA;    
+  }
+  .liveChat a {
+    color: white;
+    font-size: 14px;
+  }
+  .liveChat a:hover,.liveChat a:active{
+    color: #FFF500;
   }
   .chat-date {
     font-size: 10px;
     margin: 0 2px 0 1px;
-    color: rgb(170, 170, 170);
+    color: rgb(233, 233, 233);
     margin-left: -45px;
     transition: margin 220ms ease-in-out;
   }
@@ -1174,16 +1199,18 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 .liveFeed {
   z-index: 5;
   padding-top: 65px;
-  margin-right: -206px;
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
   background: url('../img/px_bg.png') repeat;
-  -webkit-transition: margin .22s ease-in; 
-  -moz-transition: margin .22s ease-in;
-  -ms-transition: margin .22s ease-in;
-  -o-transition: margin .22s ease-in;
-  transition: margin .22s ease-in;
+  -webkit-transition: all 420ms ease; 
+  -moz-transition: all 420ms ease;
+  -ms-transition: all 420ms ease;
+  -o-transition: all 420ms ease;
+  transition: all 420ms ease;
 }
   .liveFeed.sticked, .liveFeed.active {
-    margin-right: 0 !important;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
 .navbar-brand {
   padding: 5px;
@@ -1261,8 +1288,9 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
   }
   .navbar-default .navbar-collapse, .navbar-default .navbar-form {
     border: none;
-    border-color: transparent;
     background: #2CABCE;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.52);
+    box-shadow: 0 3px 7px rgba(87, 87, 87, 0.21);
   }
 
   #headNav #userdropdown:after {

@@ -8,7 +8,7 @@
 
   mangoose = require('mongoose');
 
-  module.exports = function(_, mailer, moment, genUID, users) {
+  module.exports = function(_, mailer, social, moment, genUID, users) {
     return {
 
       /*

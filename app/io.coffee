@@ -45,6 +45,8 @@ module.exports = (io, db_chat, _, mailer, cookieParser, sessionStore, EXPRESS_SI
       dailyRank: user.dailyRank
 
     unless hs.session.notifLog
+      ++currentlyOnline
+      sio.onlineNumber currentlyOnline
       if hs.session.newUser
         sio.glob "fa fa-user", " <a href=\"/u/" + sUser.idCool + "\">" + sUser.pseudo + "</a> joined the community!"
       else
@@ -64,14 +66,10 @@ module.exports = (io, db_chat, _, mailer, cookieParser, sessionStore, EXPRESS_SI
 
   io.of('/chat').on "connection", (chat) ->
     chat.get "nickname", (err, user) ->
-      ++currentlyOnline
 
       #populate last messages
-      db_chat.find({}).limit(30).sort('-dateSent').exec (err, list)->
-        _.each list, (message)->
-          sio.pushMessage message
-
-      sio.onlineNumber currentlyOnline
+      db_chat.find({}).limit(100).sort('-dateSent').exec (err, messages)->
+        sio.pushChat messages
       
       #Handling events from users
       chat.on "message", (data) ->

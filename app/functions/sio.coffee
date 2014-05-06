@@ -31,7 +31,11 @@ module.exports = (io, Chat, moment) ->
       user: message.user_from
       message: message.message
       date: message.dateSent
+
+  pushChat: (messages) ->
+    io.of('/chat').emit "chatLogs",
+      messages: messages
       
   onlineNumber: (nb) ->
-    io.of('/chat').emit "onlineUsers",
+    io.sockets.emit "onlineUsers",
       number: nb

@@ -3,7 +3,7 @@ Ongoing = require("../app/models/ongoing")
 mangoose = require('mongoose')
 # load up the user model
 
-module.exports = (_, mailer, moment, genUID, users) ->
+module.exports = (_, mailer, social, moment, genUID, users) ->
   
   ###
   Create a new challenge
@@ -38,7 +38,7 @@ module.exports = (_, mailer, moment, genUID, users) ->
       mailer.cLog 'Error at '+__filename,err if err
       # console.log err if err
       # console.log newChallenge
-      done newChallenge
+      done newChallenge      
   
   ###
   Edit an existing challenge.

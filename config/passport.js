@@ -37,6 +37,7 @@
             path: 'games._idGame'
           }
         ];
+        email = email.toLowerCase();
         return User.findOne({
           "local.email": email
         }).populate(opts).exec(function(err, userfound) {
@@ -80,6 +81,7 @@
       return process.nextTick(function() {
         var user;
         if (!req.user) {
+          email = email.toLowerCase();
           return User.findOne({
             "local.email": email
           }, function(err, user) {

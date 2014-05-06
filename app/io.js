@@ -40,6 +40,8 @@
         dailyRank: user.dailyRank
       };
       if (!hs.session.notifLog) {
+        ++currentlyOnline;
+        sio.onlineNumber(currentlyOnline);
         if (hs.session.newUser) {
           sio.glob("fa fa-user", " <a href=\"/u/" + sUser.idCool + "\">" + sUser.pseudo + "</a> joined the community!");
         } else {
@@ -52,13 +54,9 @@
     });
     io.of('/chat').on("connection", function(chat) {
       return chat.get("nickname", function(err, user) {
-        ++currentlyOnline;
-        db_chat.find({}).limit(30).sort('-dateSent').exec(function(err, list) {
-          return _.each(list, function(message) {
-            return sio.pushMessage(message);
-          });
+        db_chat.find({}).limit(100).sort('-dateSent').exec(function(err, messages) {
+          return sio.pushChat(messages);
         });
-        sio.onlineNumber(currentlyOnline);
         chat.on("message", function(data) {
           return sio.discuss(user, data);
         });

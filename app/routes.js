@@ -203,9 +203,43 @@
         notifs.createdChallenge(req.user, done.idCool);
         xp.xpReward(req.user, "challenge.create");
         sio.glob("fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>.");
-        return res.render("newChallenge.ejs", {
-          currentUser: req.user,
-          challenge: done
+        return games.getGame(done.game, function(game) {
+          var fbAcc, tweet;
+          if (appKeys.app_config.twitterPushNews === true) {
+            if (typeof req.user.twitter.token !== 'undefined' && req.user.share.twitter === true) {
+              fbAcc = '@' + req.user.twitter.username;
+            } else {
+              fbAcc = req.user.local.pseudo;
+            }
+            tweet = 'New Challenge: ' + done.title + ' for #' + game.title.replace(/\s+/g, '') + ' by ' + fbAcc + ' http://www.cyf-app.co/c/' + done.idCool;
+            return social.postTwitter(false, tweet, function() {
+              if (appKeys.app_config.facebookPushNews === true) {
+                return social.updateWall(tweet, false, function(dataFB) {
+                  return res.render("newChallenge.ejs", {
+                    currentUser: req.user,
+                    challenge: done
+                  });
+                });
+              } else {
+                return res.render("newChallenge.ejs", {
+                  currentUser: req.user,
+                  challenge: done
+                });
+              }
+            });
+          } else if (appKeys.app_config.facebookPushNews === true) {
+            return social.updateWall(tweet, false, function(dataFB) {
+              return res.render("newChallenge.ejs", {
+                currentUser: req.user,
+                challenge: done
+              });
+            });
+          } else {
+            return res.render("newChallenge.ejs", {
+              currentUser: req.user,
+              challenge: done
+            });
+          }
         });
       });
     });

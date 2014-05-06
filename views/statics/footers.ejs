@@ -83,6 +83,27 @@
 		socket.on('alive', function (data) {
 			console.log('Challenger alive: '+data.date);
 		});
+		socket.on('onlineUsers', function (data) {
+			console.log(data);
+			$('#onlineCounter').html(data.number);
+		});
+
+
+		chat.on('chatLogs', function (data) {
+			// Clean the  chat
+			$('#chat').html();
+			var mess=data.messages
+			, messbuff;
+
+			for (var i = 0; i < mess.length; i++) {
+        		messbuff = {       			
+			      user: mess[i].user_from,
+			      message: mess[i].message,
+			      date: mess[i].dateSent
+        		}
+				pushChat(messbuff);
+			};
+		});
 		chat.on('newUser', function (data) {
 			pushChat(data, 'chat-log-event');
 		});
@@ -160,7 +181,6 @@
 		// NProgress.set( myLevel );
 
 		$('.show-chat').hover(function(){
-			console.log("show-chat")
 			if(!$('.liveChat').hasClass('sticked'))
 				$('.liveChat').addClass('active');
 			},function(){

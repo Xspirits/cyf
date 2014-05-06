@@ -44,6 +44,7 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
     # asynchronous
     process.nextTick ->
       opts = [{ path: 'friends.idUser'},{ path: 'games._idGame'}]
+      email = email.toLowerCase()
       User.findOne({"local.email": email}).populate(opts).exec (err, userfound) ->        
         # if there are any errors, return the error
         return done(err) if err
@@ -86,6 +87,7 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
       
       # check if the user is already logged ina
       unless req.user
+        email = email.toLowerCase()
 
         User.findOne
           "local.email": email

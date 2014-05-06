@@ -16,11 +16,20 @@
 			<ul class="nav navbar-nav">
 				<li class="animated fadeInDown"><a href="/leaderboard">LeaderBoard</a></li>
 				<li class="animated fadeInDown"><a href="/users">Challengers</a></li>
-				<li class="animated fadeInDown visible-sm visible-md visible-xs show-chat">
-				 <a href="javascript:void(0);"><span class="fa fa-comments-o"></span></a>					
+				<li class="animated fadeInDown show-chat">
+				 <a href="javascript:void(0);">
+				 	<span id="onlineCounter" class="odometer pull-right" data-number="0">0</span>
+				 	<span class="fa fa-comments-o hidden-xs"></span>
+				 	<span class="visible-xs">Challengers chat</span>
+
+					
+				 </a>					
 				</li>
-				<li class="animated fadeInDown visible-sm visible-md visible-xs show-logs">
-				 <a href="javascript:void(0);"><span class="fa fa-bullhorn"></span></a>					
+				<li class="animated fadeInDown show-logs">
+				 <a href="javascript:void(0);">
+				 	<span class="fa fa-bullhorn  hidden-xs"></span>
+				 	<span class="visible-xs">Activity Log</span>
+				 </a>					
 				</li>
 
 
@@ -103,10 +112,6 @@
 		</div><!--/.nav-collapse -->
 	</div>
 
-	<% if (currentUser) { %>
-	<div class="righty visible-lg show-logs"><span class="fa fa-bullhorn"></span></div>
-	<div class="lefty visible-lg show-chat"><span class="fa fa-comments-o"></span></div>
-	<% } %>
 </div>
 
 <div class="liveFeed navmenu navmenu-fixed-right">
@@ -115,6 +120,6 @@
 </div>
 
 <div class="liveChat navmenu navmenu-fixed-left">
-	<input type="text" id="chat-message" placeholder="say sometihng..." >
+	<input type="text" id="chat-message" placeholder="Say something..." >
 	<ul class="list-unstyled" id="chat"></ul>
 </div>

@@ -41,8 +41,13 @@
           date: message.dateSent
         });
       },
+      pushChat: function(messages) {
+        return io.of('/chat').emit("chatLogs", {
+          messages: messages
+        });
+      },
       onlineNumber: function(nb) {
-        return io.of('/chat').emit("onlineUsers", {
+        return io.sockets.emit("onlineUsers", {
           number: nb
         });
       }

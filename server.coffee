@@ -60,7 +60,7 @@ xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 relations       = require("./config/relations")(mailer)
 games           = require("./config/game")(moment)
 users           = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment)
-challenge       = require("./config/challenge")(_, mailer, moment, genUID, users)
+challenge       = require("./config/challenge")(_, mailer, social, moment, genUID, users)
 ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
 
 # Api

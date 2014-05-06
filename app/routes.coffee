@@ -210,11 +210,41 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   app.post "/newChallenge", isLoggedIn, (req, res) ->
     challenge.create req, (done) ->
       notifs.createdChallenge req.user, done.idCool
+
       xp.xpReward req.user, "challenge.create"
+
       sio.glob "fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>."
-      res.render "newChallenge.ejs",
-        currentUser: req.user
-        challenge: done
+
+      games.getGame done.game, (game)->
+
+        if appKeys.app_config.twitterPushNews == true
+
+          # push on twitter
+          if typeof req.user.twitter.token != 'undefined' and req.user.share.twitter == true
+            fbAcc = '@' + req.user.twitter.username
+          else
+            fbAcc = req.user.local.pseudo
+
+          tweet = 'New Challenge: ' + done.title + ' for #' + game.title.replace(/\s+/g, '') + ' by ' + fbAcc + ' http://www.cyf-app.co/c/' + done.idCool
+          social.postTwitter false, tweet, ()->
+            if appKeys.app_config.facebookPushNews == true
+              social.updateWall tweet, false, (dataFB) ->
+                res.render "newChallenge.ejs",
+                  currentUser: req.user
+                  challenge: done
+            else
+              res.render "newChallenge.ejs",
+                currentUser: req.user
+                challenge: done
+        else if appKeys.app_config.facebookPushNews == true
+          social.updateWall tweet, false, (dataFB) ->
+            res.render "newChallenge.ejs",
+              currentUser: req.user
+              challenge: done
+        else
+          res.render "newChallenge.ejs",
+            currentUser: req.user
+            challenge: done
 
   app.post "/validateChallenge", isLoggedIn, (req, res) ->
     data =
