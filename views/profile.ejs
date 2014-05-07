@@ -38,8 +38,16 @@
 	<% include statics/navTop %>
 	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
 
+		<% if(!currentUser.games  || (currentUser.games.length == 0)) { %>
+		<div class="container">
+			<div class="row">
+			<div class="bittersweet-color col-lg-12 no-games-alert">
+	            <strong>Hey Listen!</strong> You haven't specified which games you are playing, let other challengers now on which game they can challenge you by <a href="./settings" title="add an game" ><strong>adding some now</strong></a>!
+	        </div>
+	        </div>
+	        </div>
+		<% } %>
 	<div class="canvas">
-		
 		<div class="container">
 			<div class="row">
 				<div id="user_header" class="col-lg-8">

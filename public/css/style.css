@@ -794,7 +794,9 @@ margin-top: -8px;
 /**
  * Profile
  */
-
+.no-games-alert {
+  margin: 1em auto;
+}
  #user_header {
  }
  .badggies img {
@@ -1052,8 +1054,8 @@ h2 > #scorebox .level {
   content: '';
   position: absolute;
   width: 80%;
-  background: rgba(180,180,180,.25);
-  height: 6px;
+  background: rgba(91, 133, 146, 0.79);
+  height: 5px;
   left: 10%;
   border: 0;
   bottom: 5px;
