@@ -8,18 +8,15 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
  */
 
 (function() {
-  var User, getLevel, getXp, notifs, xpRewardAction, xpRewardvalue, _;
+  var User, getLevel, getXp, xpRewardAction, xpRewardvalue;
 
   User = require("../models/user");
-
-  _ = require("underscore");
-
-  notifs = require("./notifications");
 
   xpRewardvalue = {
     "connect.game": 100,
     "user.register": 55,
     "user.newFriend": 60,
+    "user.inviteFB": 75,
     "challenge.create": 110,
     "challenge.rate": 60,
     "ongoing.accept": 60,
@@ -32,6 +29,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
     "connect.game": "linking a game account",
     "user.register": "creating an account",
     "user.newFriend": "making a new friend",
+    "user.inviteFB": "Inviting friends from Facebook",
     "challenge.create": "creating a new challenge",
     "challenge.rate": "rating a challenge",
     "ongoing.accept": "accepting a challenge",
@@ -52,7 +50,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
     return process;
   };
 
-  module.exports = function(sio) {
+  module.exports = function(_, mailer, notifs, sio) {
     return {
 
       /*
@@ -82,11 +80,12 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
           return [false, nextXpReq];
         }
       },
-      xpReward: function(user, action, bonus) {
-        var inc, levelUp, newXp, uLvl, uXp, userDoubleXp, value, valueNext, valueNext2;
+      xpReward: function(user, action, xtime, bonus) {
+        var inc, levelUp, multiply, newXp, uLvl, uXp, userDoubleXp, value, valueNext, valueNext2;
         userDoubleXp = (user.xpDouble ? true : false);
         bonus = (bonus ? bonus : 0);
-        value = (_.values(_.pick(xpRewardvalue, action))[0] * (userDoubleXp ? 2 : 1)) + bonus;
+        multiply = xtime ? xtime : 1;
+        value = (_.values(_.pick(xpRewardvalue, action))[0] * multiply * (userDoubleXp ? 2 : 1)) + bonus;
         uXp = user.xp;
         uLvl = user.level;
         valueNext = getXp(uLvl + 1);
@@ -112,7 +111,8 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
             "monthly.xp": value
           };
         }
-        User.findByIdAndUpdate(user._id, {
+        console.log(inc);
+        return User.findByIdAndUpdate(user._id, {
           $inc: inc,
           $set: {
             xpNext: levelUp[1]
@@ -120,7 +120,7 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
         }).exec(function(err, userUpdated) {
           var text;
           if (err) {
-            console.log(err);
+            mailer.cLog('Error at ' + __filename, err);
           }
           text = _.values(_.pick(xpRewardAction, action))[0];
           if (levelUp[0]) {
@@ -128,40 +128,33 @@ levelFormula = (sqrt(100(2 xp +25))+50)/100,
             notifs.levelUp(userUpdated);
             sio.glob("fa fa-angle-double-up", " <a href=\"/u/" + userUpdated.idCool + "\">" + userUpdated.local.pseudo + "</a> is now level " + userUpdated.level + " <i class=\"fa fa-exclamation\"></i>");
           }
-          notifs.gainedXp(userUpdated, value, bonus, text);
-          return "woo";
+          return notifs.gainedXp(userUpdated, value, bonus, text);
         });
       },
       updateDaily: function(done) {
         return User.find().exec(function(err, users) {
-          var user, _i, _len, _results;
           if (err) {
-            console.log(err);
+            mailer.cLog('Error at ' + __filename, err);
           }
-          _results = [];
-          for (_i = 0, _len = users.length; _i < _len; _i++) {
-            user = users[_i];
-            _results.push((function(_this) {
-              return function(user) {
-                var garbage;
-                garbage = {
-                  xp: user.xp,
-                  level: user.level
-                };
-                return User.findByIdAndUpdate(user._id, {
-                  $push: {
-                    xpHistoric: garbage
-                  }
-                }).exec(function(err, userUpdated) {
-                  if (err) {
-                    console.log(err);
-                  }
-                  return done(true);
-                });
+          _.each(users, (function(_this) {
+            return function(user) {
+              var garbage;
+              garbage = {
+                xp: user.xp,
+                level: user.level
               };
-            })(this)(user));
-          }
-          return _results;
+              return User.findByIdAndUpdate(user._id, {
+                $push: {
+                  xpHistoric: garbage
+                }
+              }).exec(function(err, userUpdated) {
+                if (err) {
+                  return mailer.cLog('Error at ' + __filename, err);
+                }
+              });
+            };
+          })(this));
+          return done(true);
         });
       }
     };

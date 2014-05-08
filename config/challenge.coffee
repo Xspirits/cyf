@@ -1,13 +1,9 @@
-
-# load up the user model
-moment = require("moment")
-User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
 Ongoing = require("../app/models/ongoing")
-users = require("./users")
-genUID = require("shortid")
-genUID.seed 664
-module.exports =
+mangoose = require('mongoose')
+# load up the user model
+
+module.exports = (_, mailer, social, moment, genUID, users) ->
   
   ###
   Create a new challenge
@@ -18,12 +14,13 @@ module.exports =
   create: (req, done) ->
     data = req.body
     user = req.user
-    _this = this
+
+    console.log data["idGame"]
     title = data["title"]
     durationH = data["durationH"]
     durationD = data["durationD"]
     description = data["description"]
-    game = data["game"]
+    game = data["idGame"]
     uID = genUID.generate().substr(-6)
     
     # create the challenge
@@ -39,10 +36,9 @@ module.exports =
     # console.log(newChallenge);
     newChallenge.save (err) ->
       mailer.cLog 'Error at '+__filename,err if err
-      done newChallenge
-
-    return
-
+      # console.log err if err
+      # console.log newChallenge
+      done newChallenge      
   
   ###
   Edit an existing challenge.
@@ -94,9 +90,6 @@ module.exports =
         chall.remove done
       else
         done false, "you are not the owner of this challenge"
-
-    return
-
   
   ###
   Return all the details for a given challenge
@@ -104,15 +97,16 @@ module.exports =
   @param  {Function} done [callback]
   @return {Object}        [Object containing all the challenge data]
   ###
-  getList: (done) ->
-    Challenge.find({}).sort("-value").exec (err, data) ->
+  getList: (safe, done) ->
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+    Challenge.find({}).populate('game completedBy author', qs).sort("-value -rateNumber").exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
-      
+      # console.log err if err
       # console.log(data);
       done data
-
-    return
-
   
   ###
   Return all the details for a given challenge
@@ -120,25 +114,36 @@ module.exports =
   @param  {Function} done [callback]
   @return {Object}        [Object containing all the challenge data]
   ###
-  getChallenge: (id, done) ->
-    Challenge.findOne(idCool: id).populate("author").exec (err, data) ->
-      
-      # if there are any errors, return the error
-      mailer.cLog 'Error at '+__filename,err if err
-      
-      # else we return the data
-      done data
+  getChallenge: (id, safe, done) ->
 
-    return
+    checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+    isObj = checkForHexRegExp.test(id);
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+    if isObj
+      Challenge.findById(id).select(qs).populate('author', qs).exec (err, data) ->
+        # if there are any errors, return the error
+        mailer.cLog 'Error at '+__filename,err if err      
+        # else we return the data
+        done data
+    else
+      Challenge.findOne({idCool: id}).select(qs).populate('author', qs).exec (err, data) ->
+        # if there are any errors, return the error
+        mailer.cLog 'Error at '+__filename,err if err      
+        # else we return the data
+        done data
+
+
 
   completedBy: (id, userArray, done) ->
     Challenge.findOneAndUpdate(id,
       $addToSet:
         completedBy: userArray
     ).exec (err, challenge) ->
-
-    return
-
+      mailer.cLog 'Error at '+__filename,err if err
+      done true
   
   ###
   [rateChallenge description]
@@ -190,6 +195,7 @@ module.exports =
         when 5
           diff.distribution.five = ((if (diff.distribution.five) then diff.distribution.five else 0)) + 1
         else
+          mailer.cLog 'Error at '+__filename,'error with switch for ' + diffiFive
           console.log "error with switch for " + diffiFive
       
       # #QUICKNESS
@@ -212,6 +218,7 @@ module.exports =
         when 5
           quick.distribution.five = ((if (quick.distribution.five) then quick.distribution.five else 0)) + 1
         else
+          mailer.cLog 'Error at '+__filename,'error with switch for ' + quickFive
           console.log "error with switch for " + quickFive
       
       # #FUN
@@ -234,6 +241,7 @@ module.exports =
         when 5
           fun.distribution.five = ((if (fun.distribution.five) then fun.distribution.five else 0)) + 1
         else
+          mailer.cLog 'Error at '+__filename, 'error with switch for ' + funRate
           console.log "error with switch for " + funRate
       difficultyCoeffs = [
         1.00
@@ -265,6 +273,10 @@ module.exports =
       bonusUpdated = Math.round((averageDifficulty + averageQuick + averagefun) * 1.61803398875)
       console.log "new averages d:" + averageDifficulty + " (" + ponderatedAvgDiff + "/" + diff.count + ") q:" + averageQuick + " (" + ponderatedAvgQuick + "/" + quick.count + ") f:" + averagefun + " (" + ponderatedAvgFun + "/" + fun.count + ") New bonus :" + bonusUpdated
       challenge.value = bonusUpdated
+      # Increment of 1
+      challenge.rateNumber = challenge.rateNumber + 1
+      # Let's put back the value's rating on a scale out of 50
+      challenge.rateValue = Math.round((data.difficulty + data.quickness + data.fun) / 3)
       challenge.save (err, result) ->
         mailer.cLog 'Error at '+__filename,err if err
         obj =
@@ -282,16 +294,8 @@ module.exports =
             challenge: theChallenge
             note: theNote
             user: result
-
           done toNotify
 
-        return
-
-      return
-
-    return
-
-  
   ###
   Return all the challenges created byt a given user
   @param  {String}   email  [email of the creator]
@@ -306,9 +310,6 @@ module.exports =
       
       # else we return the data
       done data
-
-    return
-
   
   # =============================================================================
   # ONGOING CHALLENGES ==========================================================
@@ -320,17 +321,19 @@ module.exports =
   @param  {Function} done [callback]
   @return {Object}        [List of challenges]
   ###
-  ongoingDetails: (id, done) ->
-    Ongoing.findOne(idCool: id).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
+  ongoingDetails: (id, safe, done) ->
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+
+    Ongoing.findOne({idCool: id}).populate("_idChallenge _idChallenger _idChallenged",qs).exec (err, data) ->
       
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
       
       # else we return the data
       done data
-
-    return
-
   
   ###
   Return the challenges accepted by a given user
@@ -338,7 +341,12 @@ module.exports =
   @param  {Function} done [callback]
   @return {Object}        [List of challenges]
   ###
-  userAcceptedChallenge: (id, done) ->
+  userAcceptedChallenge: (id, safe, callback) ->
+    if safe == true
+      qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
+    else
+      qs = ''
+
     Ongoing.find(
       accepted: true
       $or: [
@@ -349,16 +357,11 @@ module.exports =
           _idChallenged: id
         }
       ]
-    ).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
-      
+    ).populate('_idChallenge _idChallenger _idChallenged _idChallenge.game', qs).exec (err, data) ->
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
-      
       # else we return the data
-      done data
-
-    return
-
+      callback(data)
   
   ###
   Return all the challenges (request and received) for a given user
@@ -374,9 +377,6 @@ module.exports =
       
       # else we return the data
       done data
-
-    return
-
   
   ###
   Return all the challenges (request and received) for a given user
@@ -392,9 +392,6 @@ module.exports =
       
       # else we return the data
       done data
-
-    return
-
   
   ###
   Challenge another user !
@@ -419,10 +416,6 @@ module.exports =
     oCha.save (err) ->
       mailer.cLog 'Error at '+__filename,err if err
       done oCha
-
-    return
-
-  
   ###
   accept an ongoing challenge's request, setting "accepted" to true
   @param  {Object}   data [id challenge and id of user]
@@ -449,14 +442,9 @@ module.exports =
         chall.save (err) ->
           mailer.cLog 'Error at '+__filename,err if err
           done passing
-
       else
         done false, "you are not the person challenged on this challenge"
-      return
 
-    return
-
-  
   ###
   Deny an ongoing challenge's request by deleting it.
   @param  {Object}   data [id challenge and id of user]
@@ -477,9 +465,6 @@ module.exports =
         done true
       else
         done false, "you are not the person challenged on this challenge"
-      return
-
-    return
 
   requestValidation: (data, done) ->
     Ongoing.findOne(
@@ -490,18 +475,13 @@ module.exports =
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
       ongoing.waitingConfirm = true
-      ongoing.confirmAsk = new Date
+      ongoing.confirmAsk = moment().utc()
       ongoing.confirmLink1 = data.proofLink1
       ongoing.confirmLink2 = (if (data.proofLink2) then data.proofLink2 else "")
       ongoing.confirmComment = (if (data.confirmComment) then data.confirmComment else "")
       ongoing.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         done ongoing
-
-      return
-
-    return
-
   
   ###
   A challenge has reached or crossed its deadline, invalidate it.
@@ -516,10 +496,7 @@ module.exports =
       crossedDeadline: true
     ).exec (err, done) ->
       console.log err  if err
-      true
-
-    return
-
+      return true
   
   ###
   [validateOngoing description]
@@ -529,7 +506,7 @@ module.exports =
   ###
   validateOngoing: (data, done) ->
     self = this
-    Ongoing.findOne(idCool: data.oId).populate("_idChallenged _idChallenger _idChallenge").exec (err, ongoing) ->
+    Ongoing.findOne({idCool: data.oId}).populate("_idChallenged _idChallenger _idChallenge").exec (err, ongoing) ->
       
       # if there are any errors, return the error
       mailer.cLog 'Error at '+__filename,err if err
@@ -539,15 +516,8 @@ module.exports =
       ongoing.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         completedByArr = [ongoing._idChallenged._id]
-        self.completedBy ongoing._idChallenge._id, completedByArr, (done) ->
+        self.completedBy ongoing._idChallenge._id, completedByArr, (result) ->
           done ongoing
-
-        return
-
-      return
-
-    return
-
   
   # =============================================================================
   # TRIBUNAL CASES     ==========================================================
@@ -566,13 +536,9 @@ module.exports =
     Ongoing.find(_id:
       $in: loadCases
     ).populate("_idChallenge _idChallenger _idChallenged").exec (err, cases) ->
-      
+      mailer.cLog 'Error at '+__filename,err if err
       # console.log(cases);
       done cases
-      return
-
-    return
-
   
   ###
   Send an Ongoing event (actually closed) to the tribunal
@@ -624,19 +590,11 @@ module.exports =
                   done ongoing
 
               else
-                throw "something went wrong here"
-              return
-
-            return
-
+                mailer.cLog 'Error at '+__filename, "something went wrong here"
         else
           done false, "Case already taken in account"
       else
         done false, "not the challenged"
-      return
-
-    return
-
   
   ###
   Register a vote on a tribunal case given by an user
@@ -652,7 +610,7 @@ module.exports =
       $set:
         "tribunalVote.$.answer": data.answer
         "tribunalVote.$.hasVoted": true
-        "tribunalVote.$.voteDate": new Date
+        "tribunalVote.$.voteDate": moment().utc()
     ).exec (err, cases) ->
       mailer.cLog 'Error at '+__filename,err if err
       userData =
@@ -665,10 +623,6 @@ module.exports =
         
         #return the case
         done cases
-
-      return
-
-    return
 
   completeCase: (idCase, done) ->
     Ongoing.findOne(idCool: idCase).populate("_idChallenged _idChallenger _idChallenge").exec (err, cases) ->
@@ -692,14 +646,10 @@ module.exports =
       console.log (if "case: " + cases.idCool + " === [" + validate + "]+1 [" + deny + "]-1 Result: " + (validate > deny) then "validated" else "denied")
       cases.tribunalAnswered = (if (validate > deny) then true else false)
       cases.caseClosed = true
-      cases.caseClosedDate = new Date
+      cases.caseClosedDate = moment().utc()
       cases.save (err) ->
         mailer.cLog 'Error at '+__filename,err if err
         done cases
-
-      return
-
-    return
 
   remainingCaseVotes: (idCase, done) ->
     Ongoing.findOne(idCool: idCase).exec (err, req) ->
@@ -712,6 +662,3 @@ module.exports =
         counter++  if judges[i].hasVoted is false
         i--
       done counter
-      return
-
-    return

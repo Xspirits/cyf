@@ -3,7 +3,7 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
@@ -13,9 +13,9 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="profile:<%= ongoing.idCool %>"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="<%= ongoing.idCool %> for <%= ongoing._idChallenged.local.pseudo %> details - Challenge your Friends">
     <meta name="twitter:description" content="<%= ongoing._idChallenge.title %> details, <%= ongoing._idChallenged.local.pseudo %> challenged by <%= ongoing._idChallenger.local.pseudo %> ">
@@ -68,6 +68,10 @@
 							<textarea class="form-control" id="additionnalComment" rows="6"></textarea>
 						</div>
 					</div>
+					<img id="nopino_1" class="hidden" />
+					<img id="nopino_2" class="hidden" />
+
+					<h4 id="status"></h4>
 				</div>
 
 				<div class="modal-footer">
@@ -103,7 +107,7 @@
 					<h1>
 						<span class="<%= ongoing._idChallenge.icon %>"></span> 
 						<%= ongoing._idChallenge.title %> 
-						<small> <%= ongoing._idChallenge.game %></small>
+						<small> <%= ongoing._idChallenge.game.title %></small>
 					</h1>
 					<hr>
 
@@ -143,11 +147,11 @@
 							</p>
 						</div>
 
-						<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() && !ongoing.waitingConfirm ) { %>
+						<% if( currentUser && ongoing._idChallenged._id.toString() === currentUser._id.toString() && !ongoing.waitingConfirm && !ongoing.crossedDeadline ) { %>
 						<div class="col-lg-4" id="mayIask" data-launchDate="<%= ongoing.launchDate %>">
 							<div class="well">
 								<button type="button" id="IDidIt" class="btn btn-punch btn-success btn-lg btn-block">I completed it!</button>
-								<button type="button" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
+								<button type="button" id="cantdothis" class="btn btn-danger btn-punch btn-lg btn-block">I give up.</button>
 							</div>
 						</div>
 
@@ -156,22 +160,13 @@
 					</div>
 				</div>
 			</div>
-
 			<% include statics/footers %>
-
+			<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc.14.min.js"></script>
+			<script src="/js/s3.js"></script>
 			<script type="text/javascript">
-				$(function() {
-					$('.file-inputs').bootstrapFileInput();
 
-
-					openedCompletion();
-
-					$("#IDidIt").click( function(e){
-						e.preventDefault();
-						$('#processConfirm').modal('show');
-
-					});
 					function submitFinal(data) {
+						$("#valConfirm").text('Sending the request...');
 						$.ajax({
 							type: 'POST',
 							data: JSON.stringify(data),
@@ -181,6 +176,7 @@
 							success: function(data) {
 								console.log('success');
 
+								$("#valConfirm").text('All done!');
 								$('#processConfirm').modal('hide');
 								$('#processConfirm').on('hidden.bs.modal', function (e) {
 									e.preventDefault();
@@ -194,69 +190,148 @@
 							}
 						});
 					}
-					function sendToImgur(imgB64 , cb){
-						$.ajax({
-							url: 'https://api.imgur.com/3/image',
-							type: 'post',
-							headers: {
-								Authorization: 'Client-ID a10cc023eeaf638'
-							},
-							data: {
-								image: imgB64,
-								type :'base64'
-							},
-							dataType: 'json',
-							success: function(json) {
-								cb(json)
-							},
-							error: function(json) {
-								cb(json)
-							}
-						});
+					// function sendToImgur(imgB64 , cb){
+					// 	$.ajax({
+					// 		url: 'https://api.imgur.com/3/image',
+					// 		type: 'post',
+					// 		headers: {
+					// 			Authorization: 'Client-ID a10cc023eeaf638'
+					// 		},
+					// 		data: {
+					// 			image: imgB64,
+					// 			type :'base64'
+					// 		},
+					// 		dataType: 'json',
+					// 		success: function(json) {
+					// 			cb(json)
+					// 		},
+					// 		error: function(json) {
+					// 			cb(json)
+					// 		}
+					// 	});
+					// }
+
+					function resizeBase64Img(base64,type, width, height) {
+						console.log(base64);
+
+						// var base64 = base64.replace('/data:.+\/(.+);base64,/','');
+						// var regex = /^data:.+\/(.+);base64,(.*)$/;
+
+						var base64 = base64.split(',');
+					    var canvas = document.createElement("canvas");
+					    canvas.width = width;
+					    canvas.height = height;
+					    var context = canvas.getContext("2d");
+					    var deferred = $.Deferred();
+					    $("#nopino_" + type).attr("src", "data:image/gif;base64," + base64[1]).load(function() {
+					        context.scale(width/this.width,  height/this.height);
+					        context.drawImage(this, 0, 0); 
+					        deferred.resolve($("#nopino_"+ type).attr("src", canvas.toDataURL()));               
+					    });
+					    return deferred.promise();    
 					}
+
 					function getx64(input, type) {
 						if ( input.files && input.files[0] ) {
 							var FR= new FileReader();
 							FR.onload = function(e) {
-								$('#imgp'+type).width(50).height(50).attr( "src", e.target.result );
-								$('#imNowb64_p'+type).attr('data-b64', (e.target.result).replace(/^data:image\/(png|jpg|JPG|jpeg|gif);base64,/, "") );
+								var oldBase64 = e.target.result;
+								resizeBase64Img(oldBase64,type, 500, 500).then(function(newImg){
+									$('#imgp'+type).width(50).height(50).attr( "src", newImg[0].src );
+									//compress:
+									$('#imNowb64_p'+type).attr('data-b64', newImg[0].src);
+								});
 							};     
 							FR.readAsDataURL( input.files[0] );
 						}
 					}
+				function convertToSlug(vara)
+				{
+				    return vara
+				        .toLowerCase()
+				        .replace(/[^\w ]+/g,'')
+				        .replace(/ +/g,'-')
+				        ;
+				}
+				function pushS3 (file, callback) {
+  				var bucket = new AWS.S3({params: {Bucket: 'cyf/proves'}})
+					, name = moment().unix() + '_'
+					, tempN = convertToSlug('<%= currentUser.local.pseudo %>');
+
+					name = tempN + '_<%= ongoing._idChallenge.idCool %>_' + name.toString();
+					var params = {Key: name, ContentType: file.type, Body: file,ACL:'public-read'};
+
+					var send = bucket.putObject(params);
+					send.
+						on('success', function(response) {
+						    console.log("Success!");
+							console.log(response);
+						}).
+						on('error', function(response) {
+						    console.log("Error!");
+							console.log(response);
+						}).
+						on('complete', function() {
+						  	var url ='https://s3-eu-west-1.amazonaws.com/cyf/proves/'+name;
+						  	callback(url);
+						}).
+						send();
+				}
+				$(function() {
+					AWS.config.credentials = new AWS.WebIdentityCredentials({
+					  RoleArn: 'arn:aws:iam::985882672499:user/uploador',
+					  ProviderId: 'www.amazon.com'
+					});
+					AWS.config.region = 'eu-west-1';
+					AWS.config.update({accessKeyId: 'AKIAJJVIXNGNJ5S2TKVA', secretAccessKey: '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'});
+
+					$('.file-inputs').bootstrapFileInput();
+
+
+					openedCompletion();
+
+					$("#IDidIt").click( function(e){
+						e.preventDefault();
+						$('#processConfirm').modal('show');
+
+					});
 					$("#proofLink1, #proofLink2").change(function(){
 						getx64($('#proofLink1').get(0), 1 );
 						getx64($('#proofLink2').get(0), 2 );
-
 					});
 					// Bind normal buttons
 					$("#valConfirm").click( function(e){
 						e.preventDefault();
-
+						_self = $(this);
+						_self.addClass('disabled').text('Submitting, please wait.');
 						var idChallenge = $(this).attr('data-idChallenge');
+
 						var data = {};
 						data.idChallenge = idChallenge;
 						data.confirmComment = $('#additionnalComment').val();
 
-						sendToImgur($('#imNowb64_p1').attr('data-b64'), function( imageA ) {
+						var file = $('#proofLink1')[0].files[0];
 
-							data.proofLink1 =  imageA.data.link;
+						pushS3(file, function(url){
+							_self.addClass('disabled').text('Proof 1 uploaded !');
+							data.proofLink1 =  url;
 
 							if($('#imNowb64_p2').attr('data-b64')) {
-								sendToImgur($('#imNowb64_p2').attr('data-b64'), function( imageB ) {
+								var file = $('#proofLink2')[0].files[0];
 
-									console.log(imageA);
-									console.log(imageB);
-									data.proofLink2 =  imageB.data.link;
+								pushS3(file, function(url2){
+									_self.addClass('disabled').text('Proof 2 uploaded !');
+									data.proofLink2 =  url2;
+									console.log(data);
 									submitFinal(data);
 								});
+
 							} else {
-								console.log(imageA);
-								data.proofLink2 =  imageB.data.link;
+								data.proofLink2 =  false;
+								console.log(data);
 								submitFinal(data);
 							}
 						});
-						// console.log(imgData)
 
 					});
 					Ladda.bind( '.ladda-button.btn-block', {

@@ -4,7 +4,7 @@
     <% include statics/headers %>
 
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
@@ -14,9 +14,9 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="website"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://www.cyf-app.co/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -26,66 +26,49 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://www.cyf-app.co/icon_big.png">
     <meta name="twitter:title" content="Challenge or be challenged by your friends and gamers">
     <meta name="twitter:description" content="Tired of playing the same game every day, but still loving it? Join Challenge your Friends today and start accepting and launching in-game challenges right away! Works with ANY game.">
     <meta name="twitter:image:width" content="750">
     <!-- Twitter card end -->
-
-    <link rel="stylesheet" type="text/css" href="./css/landing.css">
+  
+    <link rel="stylesheet" type="text/css" href="./css/landing/main.css">
+    <link rel="stylesheet" type="text/css" href="./css/landing/landing.css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
     <title>Challenge your Friends</title>
 </head>
 <body>
-  <div class="navbar navbar-default navbar-static-top" id="headNav" role="navigation">
-        <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <i class="fa fa-ellipsis-v"></i>
-          </button>
-            <a class="navbar-brand animated flipInX" href="./">
-                    <img src="./img/logo.png" alt="go home">
-            </a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-            <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-        </div>
-    </div>
+  <% include statics/navTop %>
 
     <section id="slide-1" class="homeSlide">
       <div class="container">
           <div class="row animated fadeIn">
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                <!-- <ol class="carousel-indicators">
-                  <li data-target="#truechampion" data-slide-to="0" class="active"></li>
-                  <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                  <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                </ol> -->
-
+            <div id="carousel-main" class="carousel slide" data-ride="carousel">
+              <ol class="carousel-indicators">
+                <li data-target="#carousel-main" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-main" data-slide-to="1"></li>
+                <li data-target="#carousel-main" data-slide-to="2"></li>
+              </ol>
                 <div class="carousel-inner">
                   <div class="item active">
-                    <img src="./img/landing_1.jpg" alt="ahahah">
+                    <img src="./img/landing/landing_1.jpg" alt="ahahah">
                     <div class="carousel-caption"></div>
                   </div>
                   <div class="item">
-                    <img src="./img/landing_1_2.jpg" alt="ahahah">
+                    <img src="./img/landing/landing_1_2.jpg" alt="ahahah">
                     <div class="carousel-caption"></div>
                   </div>
                   <div class="item">
-                    <img src="./img/landing_1_3.jpg" alt="ahahah">
+                    <img src="./img/landing/landing_1_3.jpg" alt="ahahah">
                     <div class="carousel-caption"></div>
                   </div>
                 </div>
 
                 <!-- Controls -->
-                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                <a class="left carousel-control" href="#carousel-main" data-slide="prev">
                   <span class="fa fa-angle-left chevron-left"></span>
                 </a>
-                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                <a class="right carousel-control" href="#carousel-main" data-slide="next">
                   <span class="fa fa-angle-right chevron-right"></span>
                 </a>
               </div>
@@ -95,40 +78,143 @@
 
     <section class="transi-slide">
       <div class="container">
-        <div class="row">
-          <div class="col-md-8 col-md-offset-2 text-center">
+        <div class="row mt centered">
+          <div class="col-lg-12 text-center">
             <a href="./signup" class="btn btn-primary btn-lg btn-block youSeeMeRollin"><span class="animated">BECOME A CHALLENGER NOW</span></a>
             <a href="./discover#slide-3">Read more</a>
           </div>
         </div>
-        <div class="row">
+        <div class="row mt centered">
           <div class="col-md-12">
-          <h3>Challenge your friends on any game</h3>
+          <h3>Challenge your friends: on any game</h3>
           <p>
-            Challenge your Friends allows you to throw challenges to any of your friends in the community. <strong>Whatch they succeed...or fall.</strong>
+            Challenge your Friends (Cyf) allows you to launch challenges to any of your friends in the community. <u>Whatch them succeed...or fall!</u>
             </p>
-            <p>Find a <strong>new way to enjoy playing</strong> your favorites games, immediately and <strong>for free</strong>!<br>
-             <strong>Discover</strong> new competitive game through new challenges, explore new opportunties and become a <strong>true challenger</strong>.
+            <p>Find a <u>new way to enjoy gaming on</u> your favorites games immediately and <u>for free</u>!<br>
+             <u>Discover</u> new competitive games through new challenges, explore new opportunties to become a <u>true challenger</u>.
           </p>
+          <p><a href="./discover#slide-3" >Read more</a></p>
           </div>
         </div>
       </div>
     </section>
-    
-    <!--  FOOTER -->
-    <footer id="footer">
+  
+    <section class="w-slide opening">
       <div class="container">
-        <div class="row">
-          <section class="col-md-12">
-            <a href="https://plus.google.com/109925245483936264439" title="Follow us on Goolg+!" target="_blank" rel="publisher">Google+</a>
-            | <a href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a>
-            | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
+        <div class="row mt centered">
+          <div class="col-lg-12 text-center">
+            <h1>Launch and receive challenges</h1>
+            <h3>Cyf makes challenging people over many games a breeze.</h3>
+          </div>
+        </div><!-- /row -->
+        
+        <div class="row mt centered">
+          <div class="col-lg-4">
+            <img src="./img/landing/make_friends.svg" width="180" alt="">
+            <h4>1 - Make some Friends</h4>
+            <p>Find people on <u>Cyf</u> who play the same games as you, or invite your facebook/twitter's friends to join you.</p>
+            <p><u>Cyf</u> is fun when you have many friends, so we encourage you sending friend requests!</p>
+            <p><a href="./discover#slide-3" >Read more</a></p>
+          </div><!--/col-lg-4 -->
 
-            <a href="./about" class="pull-right" title="Like us on Facebook!">About</a>            
-          </section>
-        </div>        
-      </div>
-    </footer>
+          <div class="col-lg-4">
+            <img src="./img/landing/launch_challenge.svg" width="180" alt="">
+            <h4>2 - Launch or Receive Challenges</h4>
+            <p>For any challenge thrown at you, you'll receive a mail and a notification on <u>Cyf</u>. You can either accept or deny any invitation. Careful: can you handle many challenges at a time?</p>
+            <p>Launching a challenge is really <u>easy</u>: select a challenge, pick a friend and choose when do it have to start...That's it!</p>
+            <p><a href="./discover#slide-3" >Read more</a></p>
+          </div><!--/col-lg-4 -->
+
+          <div class="col-lg-4">
+            <img src="./img/landing/review.svg" width="180" alt="">
+            <h4>3 - Validate</h4>
+            <p>When you complete a challenge, take a <u>screenshot</u> as a proof and just come back to send the validation request, done!</p>
+            <p>Once a challenger has completed a challenge, he will send a validation request and you will have to review if he/she did successfuly passed your challenge.</p>
+            <p><a href="./discover#slide-3" >Read more</a></p>
+          </div><!--/col-lg-4 -->
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+  
+    <section class="w-slide closure">
+      <div class="container">
+        <hr>
+        <div class="row centered">
+          <div class="col-lg-12 text-center">
+            <a href="./signup" class="btn btn-warning btn-lg btn-block youSeeMeRollin"><span class="animated">BECOME A CHALLENGER NOW</span></a>  
+            <a href="./discover#slide-3" >Read more</a>
+          </div>
+          <div class="col-lg-3"></div>
+        </div><!-- /row -->
+        <hr>
+      </div><!-- /container -->
+    </section>
+    <section class="transi-slide opening">
+     <div class="container">
+          <div class="row mt centered">
+            <div class="col-lg-12 text-center">
+              <h1>Cyf is for everyone</h1>
+              <h3>Enjoy daily challenges reglardless of where you play, on what you play and so on!</h3>
+            </div>
+          </div><!-- /row -->
+          
+          <div class="row mt centered">
+
+            <div class="col-lg-6">
+              <img src="./img/landing/skill.png" width="240" alt="Cyf is for everyone">
+              <h4>Any "skill"</h4>
+              <h5>Enjoy cyf regardless to your skills level.</h5>
+              <p>Are you a competitive player? Yes? So <strong>you will enjoy</strong> the hardest challenges.
+              </p>
+              <p>More into peaceful gaming? <strong>You will enjoy</strong> challenges with easy or calm requirements.</p>
+              <p>Best news is you can select the challenges you accept thus you don't have to be the best at any game to <strong>enjoy Cyf</strong></p>
+              <p><a href="./discover#slide-3" >Read more</a></p>
+            </div><!--/col-lg-6 -->
+            <div class="col-lg-6">
+              <img src="./img/landing/hcg.png" width="240" alt="Cyf as good for a casual as for a hardcorde gamer">
+              <h4>Casual or HCG</h4>
+              <h5>Play together, with different aims.</h5>
+              <p>Cyf strives to offer to anyone the same experience, we want you to have <strong>fun</strong>.</p>
+              <p>Accept challenges on a daily basis, many at the same time or one by one: <strong>it's up to you</strong>!</p>
+              <p>To do that, we offer you <strong>many awesome features</strong> to <strong>play the way you want</strong>: levels, experience, rankings (daily, weekly, monthly and overall), achievements <small>(comming soon)</small> and trohpee to unlock<small>(comming soon)</small>!</p>
+              <p><a href="./discover#slide-3" >Read more</a></p>
+            </div><!--/col-lg-6 -->
+
+            <div class="col-lg-6">
+              <img src="./img/landing/games.png" width="240" alt="">
+              <h4>Any game</h4>
+              <h5>As long as it's an existing game.</h5>
+              <p>The only requirement for a game is that one should be able to launch and receive challenges on it.</p>
+              <p>Want to create a challenge on Pokemon? On Super Mario Bros? On League of Legend? On Warcraft? Well, it's just totally possible!</p>
+              <p><a href="./discover#slide-3" >Read more</a></p>
+            </div><!--/col-lg-6 -->
+            <div class="col-lg-6">
+              <img src="./img/landing/plateforms.png" width="240" alt="">
+              <h4>Any plateform</h4>
+              <h5>Enjoy Cyf where you like to play.</h5>
+              <p>Works well for Pc, Mac, Console, Portable console, mobile devices and space-shuttle command' screen.</p>
+              <p>Just keep in mind that you will need a proof to validate your challenge, but whichever means to take a screenshot is fine!</p>
+              <p><a href="./discover#slide-3" >Read more</a></p>
+            </div><!--/col-lg-6 -->
+          </div><!-- /row -->
+        </div><!-- /container -->
+    </section>
+  
+    <section class="transi-slide">
+      <div class="container">
+        <hr>
+        <div class="row centered">
+          <div class="col-lg-12 text-center">
+            <a href="./signup" class="btn btn-success btn-lg btn-block youSeeMeRollin"><span class="animated">BECOME A CHALLENGER NOW</span></a>  
+            <a href="./discover#slide-3" >Read more</a>
+          </div>
+          <div class="col-lg-3"></div>
+        </div><!-- /row -->
+        <hr>
+      </div><!-- /container -->
+    </section>
+    <!--  FOOTER -->
+    <% include statics/footers %>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 

@@ -3,7 +3,7 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
@@ -13,9 +13,9 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="article"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="List of ongoings challenges for <%= currentUser.local.pseudo %> - Challenge your Friends">
     <meta name="twitter:description" content="List of upcomings, ongoings, completed challenges for <%= currentUser.local.pseudo %>. Manage your challenges and see them happening live. ">
@@ -72,11 +72,12 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<h4>Proof 1</h4>
-								<a id="vP1" href=""  target="_blank"></a>
+
+								<a id="vP1" href=""  target="_blank"><img id="imgp1" src="" class="img-responsive"></a>
 							</div>
 							<div class="col-lg-12">
 								<h4>Proof 2</h4>
-								<a id="vP2" href=""  target="_blank"></a>
+								<a id="vP2" href=""  target="_blank"><img id="imgp2" src="" class="img-responsive"></a>
 							</div>
 							<div class="col-lg-12">	
 								<h4>Comment</h4>
@@ -216,10 +217,8 @@
 			<div class="container">
 				<div class="row">
 					<% if ( toValidate.length > 0 ) { %>
-					<div class="col-lg-6">
+					<div class="col-lg-12">
 						<h4>Challenge validation</h4>
-						<div class="row">
-							<div class="col-lg-10">
 								<div class="panel panel-default animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
 									<table class="table table-condensed">
 										<thead>
@@ -260,122 +259,132 @@
 											<% } %>	
 										</tbody>
 									</table>						
-								</div>						
-							</div>							
-						</div>
+								</div>		
 					</div>	
 					<% } %>
 
-					<div class="col-lg-6">
+					<div class="col-lg-12">
 						<div class="text-center">
 							<h4>Ongoings</h4>
 						</div>
-						<% if ( onChallenges.length > 0 ) { %>					
+						<% if ( onChallenges.length > 0 ) { %>	
+						<div class="row">				
 
 						<% for (var i = onChallenges.length - 1; i >= 0; i--) { %>
-						<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
-							<div class="panel-heading">
-								<div class="panel-title text-right">
-									<span class="pull-left panel-title">
+						<div class="col-sm-6 col-lg-4 col-xs-12 col-md-4 ">
+							<div class="panel panel-<%= ((onChallenges[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+								<div class="panel-heading">
+									<div class="panel-title text-right">
+										<span class="pull-left panel-title">
 
-										<span class="glyphicon glyphicon-star-empty"></span>
-										<a href='/u/<%= onChallenges[i]._idChallenger.idCool %>'>
-											<%= onChallenges[i]._idChallenger.local.pseudo  %>
+											<span class="glyphicon glyphicon-star-empty"></span>
+											<a href='/u/<%= onChallenges[i]._idChallenger.idCool %>'>
+												<%= onChallenges[i]._idChallenger.local.pseudo  %>
+											</a>
+											<span class="glyphicon glyphicon-flash"></span>
+											<a href='/u/<%= onChallenges[i]._idChallenged.idCool %>'>
+												<%= onChallenges[i]._idChallenged.local.pseudo  %>
+											</a>
+
+										</span>
+										<a href='/o/<%= onChallenges[i].idCool %>'>
+											<%= onChallenges[i]._idChallenge.title %>
 										</a>
-										<span class="glyphicon glyphicon-flash"></span>
-										<a href='/u/<%= onChallenges[i]._idChallenged.idCool %>'>
-											<%= onChallenges[i]._idChallenged.local.pseudo  %>
-										</a>
 
-									</span>
-									<a href='/o/<%= onChallenges[i].idCool %>'>
-										<%= onChallenges[i]._idChallenge.title %>
-									</a>
-
-								</div>
-							</div>
-							<div class="panel-body">
-								<div class="row">
-									<p class="lead text-center">
-										<%= onChallenges[i]._idChallenge.description  %>
-									</p>									
-								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<p>
-											<span class="glyphicon glyphicon-calendar"></span>
-											<span class="dateReadability" data-date="<%= onChallenges[i].launchDate %>"></span>
-										</p>
-										<p>
-											<span class="glyphicon glyphicon-calendar"></span>
-											<span class="dateReadability" data-date="<%= onChallenges[i].deadLine %>"></span>
-										</p>										
 									</div>
-									<div class="col-sm-6 text-right">
-										Value: <%= onChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
-									</div>									
-								</div>								
-							</div>
-							<div class="panel-footer">
-								<% if(onChallenges[i].waitingConfirm === true) { %>
-								<%= ((onChallenges[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  onChallenges[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= onChallenges[i].confirmAsk %>"></span>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<p class="text-center">
+											<%= onChallenges[i]._idChallenge.description  %>
+										</p>									
+									</div>
+									<div class="row">
+										<hr>
+										<p class="text-center">
+											<strong>Game:</strong> <%= onChallenges[i]._idChallenge.game.title  %>
 
-								<% } else { %>
-								<strong class="convertEnd" data-tEnd="<%= onChallenges[i].deadLine %>"></strong>
-								<% } %>
+										</p>
+										<hr>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= onChallenges[i].launchDate %>"></span>
+											</p>
+											<p>
+												<span class="glyphicon glyphicon-calendar"></span>
+												<span class="dateReadability" data-date="<%= onChallenges[i].deadLine %>"></span>
+											</p>										
+										</div>
+										<div class="col-sm-6 text-right">
+											Value: <%= onChallenges[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+										</div>									
+									</div>								
+								</div>
+								<div class="panel-footer">
+									<% if(onChallenges[i].waitingConfirm === true) { %>
+									<%= ((onChallenges[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  onChallenges[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= onChallenges[i].confirmAsk %>"></span>
+
+									<% } else { %>
+									<strong class="convertEnd" data-tEnd="<%= onChallenges[i].deadLine %>"></strong>
+									<% } %>
+								</div>
 							</div>
 						</div>
 						<% } %>
+						</div>
 
 						<% } %>
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col-lg-6">
+					<div class="col-lg-12">
 						<div class="text-center">
 							<h4>Upcomings</h4>
 						</div>
 						<% if ( upChallenges.length > 0 ) { %>
+						<div class="row">
+							<% for (var i = upChallenges.length - 1; i >= 0; i--) { %>
+							<div class="col-sm-6 col-lg-3 col-xs-12 col-md-4 ">
+								<div class="panel panel-default animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
 
-						<% for (var i = upChallenges.length - 1; i >= 0; i--) { %>
-						<div class="panel panel-default animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
-
-							<div class="panel-heading">
-
-
-								<h3 class="panel-title">
-									<a href='/o/<%= upChallenges[i].idCool %>'>
-										<span class="<%= upChallenges[i]._idChallenge.icon %>"></span> <%= upChallenges[i]._idChallenge.title %>
-									</a>
-								</h3>
-							</div>
-							<div class="panel-body">
-								<div class="row">
-									<span class="col-sm-5"><strong>Challenger</strong></span>
-									<span class="col-sm-2">&nbsp;</span>
-									<span class="col-sm-5"><strong>Challenged</strong></span>
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										<a href='/o/<%= upChallenges[i].idCool %>'>
+											<span class="<%= upChallenges[i]._idChallenge.icon %>"></span> <%= upChallenges[i]._idChallenge.title %>
+										</a>
+									</h3>
 								</div>
+								<div class="panel-body">
+									<div class="row">
+										<span class="col-sm-5"><strong>Challenger</strong></span>
+										<span class="col-sm-2">&nbsp;</span>
+										<span class="col-sm-5"><strong>Challenged</strong></span>
+									</div>
 
-								<div class="row">
-									<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenger.idCool %>'>
-										<%= upChallenges[i]._idChallenger.local.pseudo  %>
-									</a></span>
-									<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
-									<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenged.idCool %>'>
-										<%= upChallenges[i]._idChallenged.local.pseudo  %>
-									</a></span>
+									<div class="row">
+										<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenger.idCool %>'>
+											<%= upChallenges[i]._idChallenger.local.pseudo  %>
+										</a></span>
+										<span class="col-sm-2"><span class="glyphicon glyphicon-flash"></span></span>
+										<span class="col-sm-5"><a href='/u/<%= upChallenges[i]._idChallenged.idCool %>'>
+											<%= upChallenges[i]._idChallenged.local.pseudo  %>
+										</a></span>
+									</div>
 								</div>
-							</div>
-							<div class="panel-footer">
-								<strong class="convertUp" data-tStart="<%= upChallenges[i].launchDate %>"></strong>
+								<div class="panel-footer">
+									<strong class="convertUp" data-tStart="<%= upChallenges[i].launchDate %>"></strong>
+								</div>
 							</div>
 						</div>
 						<% } %>
-
-						<% } %>
 					</div>
-					<div class="col-lg-6">
+					<% } %>
+					</div>
+					<div class="col-lg-12">
 						<div class="text-center">
 							<h4>Passed</h4>
 						</div>
@@ -383,86 +392,87 @@
 						<div class="row">
 							
 							<% for (var i = 0; i < endChallenges.length; i++) { %>
-
-							<div id="ended_<%= endChallenges[i]._id %>" class="col-sm-5 col-sm-offset-1 panel  animated <%- i % 2 ? ' fadeInLeft' : 'fadeInRight' %> panel-<%= (endChallenges[i].validated === true || endChallenges[i].tribunalAnswered === true) ? 'success' : ((endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false)? 'warning' : 'danger') %>" style="padding:0;">
-								<div class="panel-heading">
-									<div class="panel-title text-right">
-										<span class="pull-left panel-title">
-
-											<% if(endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false) { %>
+							<div class="col-sm-6 col-lg-3 col-xs-12 col-md-4 ">
+								<div id="ended_<%= endChallenges[i]._id %>" class="panel animated <%- i % 2 ? ' fadeInLeft' : 'fadeInRight' %> panel-<%= (endChallenges[i].validated === true || endChallenges[i].tribunalAnswered === true) ? 'success' : ((endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false)? 'warning' : 'danger') %>" style="padding:0;">
+									<div class="panel-heading">
+										<div class="panel-title">
+											<a href='/o/<%= endChallenges[i].idCool %>'>
+												<% if(endChallenges[i].tribunal === true && endChallenges[i].caseClosed === false) { %>
 											<i class="fa fa-gavel"></i>
 											<strong>Case Under Review</strong> 
 
 											<% } else { %>
-											<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === true) ) ? 'ok' : 'remove' %>"></span>
+												<span class="glyphicon glyphicon-<%= (endChallenges[i].validated === true || (endChallenges[i].tribunalAnswered === true && endChallenges[i].caseClosed === true) ) ? 'ok' : 'remove' %>"></span>
 											<% }  %>
-											<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
-												<%= endChallenges[i]._idChallenger.local.pseudo  %>
+												<%= endChallenges[i]._idChallenge? endChallenges[i]._idChallenge.title : '' %>
 											</a>
-											<span class="glyphicon glyphicon-flash"></span>
-											<a href='/u/<%= endChallenges[i]._idChallenged.idCool %>'>
-												<%= endChallenges[i]._idChallenged.local.pseudo  %>
-											</a>
-
-										</span>
-										<a href='/o/<%= endChallenges[i].idCool %>'>
-											<%= endChallenges[i]._idChallenge.title %>
-										</a>
-
+										</div>
 									</div>
-								</div>
-								<div class="panel-body">
+									<div class="panel-body">
 									<div class="row">
-										<p class="lead text-center">
-											<%= endChallenges[i]._idChallenge.description  %>
-										</p>									
+										<p class="col-md-12">
+											
+												<a href='/u/<%= endChallenges[i]._idChallenger.idCool %>'>
+													<%= endChallenges[i]._idChallenger.local.pseudo  %>
+												</a>
+												<span class="glyphicon glyphicon-flash"></span>
+												<a href='/u/<%= endChallenges[i]._idChallenged.idCool %>'>
+													<%= endChallenges[i]._idChallenged.local.pseudo  %>
+												</a>
+										</p>
 									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<p>
-												<i class="fa fa-calendar"></i>
-												<span class="dateReadability" data-date="<%= endChallenges[i].launchDate %>"></span>
-											</p>
-											<p>
-												<i class="fa fa-clock-o"></i>
-												<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
-											</p>	
-											<p>
-												<i class="fa fa-fire text-danger"></i> <%= endChallenges[i]._idChallenge.value %>
+										<div class="row">
+											<p class="text-center col-md-12">
+												<%= endChallenges[i]._idChallenge? endChallenges[i]._idChallenge.description : ''  %>
 											</p>									
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<p>
+													<i class="fa fa-calendar"></i>
+													<span class="dateReadability" data-date="<%= endChallenges[i].launchDate %>"></span>
+												</p>
+												<p>
+													<i class="fa fa-clock-o"></i>
+													<span class="dateReadability" data-date="<%= endChallenges[i].deadLine %>"></span>
+												</p>	
+												<p>
+													<i class="fa fa-fire text-danger"></i> <%= endChallenges[i]._idChallenge? endChallenges[i]._idChallenge.value : '' %>
+												</p>									
+											</div>								
 										</div>								
-									</div>								
+									</div>
+									<% if(endChallenges[i].caseClosed === true && endChallenges[i].crossedDeadline === false) { %> 
+									<div class="panel-footer">	
+										<h3 class="fa fa-gavel pull-left"></h3>						
+										<p class="text-justify">
+											<small>
+												This case has been reviewed by the tribunal. Others players voted this case as 
+												<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
+											</small>
+										</p>
+									</div>
+									<% } %>
+									<% if(endChallenges[i].crossedDeadline === true) { %> 
+									<div class="panel-footer">						
+										<p class="text-justify">
+											<small>
+												Unfortunately the deadline has been crossed.
+											</small>
+										</p>
+									</div>
+									<% } %>
+									<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal  && !endChallenges[i].crossedDeadline) { %>
+									<div class="panel-footer">
+										<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>					
+										<p class="text-justify">
+											<small>
+												<strong class="tribunalRequestDate" data-date="<%= endChallenges[i].deadLine %>"></strong> left to make a reclaim
+											</small>
+										</p>
+									</div>
+									<% } %>
 								</div>
-								<% if(endChallenges[i].caseClosed === true && endChallenges[i].crossedDeadline === false) { %> 
-								<div class="panel-footer">	
-									<h3 class="fa fa-gavel pull-left"></h3>						
-									<p class="text-justify">
-										<small>
-											This case has been reviewed by the tribunal. Others players voted this case as 
-											<strong><%=( (endChallenges[i].tribunalAnswered === true) ? 'completed' : 'not completed') %></strong> on <span class="dateReadability" data-date="<%= endChallenges[i].caseClosedDate %>"></span>.
-										</small>
-									</p>
-								</div>
-								<% } %>
-								<% if(endChallenges[i].crossedDeadline === true) { %> 
-								<div class="panel-footer">						
-									<p class="text-justify">
-										<small>
-											Unfortunately you weren't able to complete this challenge before the deadline.
-										</small>
-									</p>
-								</div>
-								<% } %>
-								<% if(endChallenges[i].validated === false && endChallenges[i].progress === 100 && endChallenges[i]._idChallenged._id.toString() === currentUser._id.toString() && !endChallenges[i].tribunal  && !endChallenges[i].crossedDeadline) { %>
-								<div class="panel-footer">
-									<button class="btn btn-block btn-push btn-warning ladda-button sendTribunal" data-style="expand-right" data-oId="<%= endChallenges[i]._id %>" >Send to the tribunal</button>					
-									<p class="text-justify">
-										<small>
-											<strong class="tribunalRequestDate" data-date="<%= endChallenges[i].deadLine %>"></strong> left to make a reclaim
-										</small>
-									</p>
-								</div>
-								<% } %>
 							</div>
 							<% } %>
 						</div>
@@ -482,9 +492,6 @@
 					originalHTML ='<button type="button" class="btn btn-danger btn-punch denying"><span class="glyphicon glyphicon-remove"></span>Deny</button><button type="button" class="btn btn-success btn-punch validating"><span class="glyphicon glyphicon-ok"></span>validate</button>';
 
 					tribunalRequest();
-					updateUp();
-					updateEnd();
-					readability();
 
 					$('#validation').on('hidden.bs.modal', function (e) {
 						e.preventDefault();
@@ -609,9 +616,8 @@
 							}, 35 );
 						}
 					});
+
 					setInterval(function(){
-						updateUp();
-						updateEnd();
 						tribunalRequest();
 					},2200);
 
@@ -707,8 +713,8 @@ var populateValidation = function( id, cb ) {
 	console.log(sRate + '%');
 
 	$('#vId').text(id);
-	$('#vP1').attr("href",vP1).text(vP1);
-	$('#vP2').attr("href",vP2).text(vP2);
+	$('#vP1').attr("href",vP1).children('img').attr('src',vP1);
+	$('#vP2').attr("href",vP2).children('img').attr('src',vP2);
 	$('#vPc').text(vPc);
 	$('#vDs').text(_vDs);
 	$('#vDe').text(_vDe);
@@ -749,27 +755,7 @@ var tribunalRequest = function () {
 		}
 	})
 }
-var readability = function(){
-	$('.dateReadability').each( function () {
-		var date = $(this).attr('data-date');
-		var converted = moment(date).format('dddd DD MMMM HH[h]mm');
-		$(this).text(converted);
-	})
-}
-var updateUp = function(){
-	$('.convertUp').each( function () {
-		var start = $(this).attr('data-tStart');
-		var converted = moment(start).countdown().toString();
-		$(this).text('Start in ' +converted);
-	})
-}
-var updateEnd = function(){
-	$('.convertEnd').each( function () {
-		var end = $(this).attr('data-tEnd');
-		var converted = moment(end).countdown().toString();
-		$(this).text('End in ' +converted);
-	})
-}
+
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
@@ -13,9 +13,9 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="article"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Submit a new challenge - Challenge your Friends">
     <meta name="twitter:description" content="Add challenges to Challenge your Friends and throw them to your friends!">
@@ -47,7 +47,14 @@
 			<div class="row">
 
 				<% if (challenge.title) { %>
-				<div class="alert alert-success">challenge Created successfully!</div>
+				<div class="col-md-12">
+				<div class="alert alert-success">
+				<h2>
+				challenge Created successfully!
+					
+				</h2>
+				<p>Challengers will no be able to throw your challenge to eachothers, awesome !</p>
+				</div>
 				<dl class="dl-horizontal">
 					<dt>Title</dt>
 					<dd><%= challenge.title %></dd>
@@ -56,9 +63,45 @@
 					<dt>Duration</dt>
 					<dd><%= challenge.durationD %> day(s) and <%= challenge.durationH %> hours max</dd>
 				</dl>
+					
+				</div>
 				<% } else { %>
 				<div class="row">
 
+					<div class="col-md-8 col-md-offset-2">
+						<div class="alert alert-warning">
+							<h3>Important guidelines</h3>
+							<p>
+								Please note that challenges will be posted live in order to allows challengers to enjoy it immediatly. Nonetheless please be aware that new challenges will be reviewed and if they do not meet the guidelines they will be removed. Finally, challengers who abuse the system will be permanently banned, without warning.
+							</p>
+						</div>
+						<div class="alert alert-info">
+								
+							<dl class="dl-horizontal">
+								<dt>The title</dt>
+								<dd>Be sure to put a clear title which allows challengers to identify immediatly what your challenge is about (ie: Killing spree of 5 with X). Keep it <strong>short</strong>.</dd>
+								<dt>The description</dt>
+								<dd>Enter a complete description, don't forget to include: <strong>how to proove the challenger succeed</strong> (screenshot? answer?), <strong>any important details</strong> (such as "use this character, don't do this while doing this challenge). <br> <strong>tips:</strong>: many games offer a chat where you can activate/desactivate the times of messages which are posted. This is a good way to proove the start and end of a challenge.</dd>
+								<dt>Duration</dt>
+								<dd>Remember, we are here to take up challenges! But, be realistic, ain't nobody to kill the last boss of a game like skyrim or Zelda in 5min.</dd>
+								<dt>Keep it simple</dt>
+								<dd> Don't forget: you can create multiples challenges so keep them as simple as possible to make people enjoy them! Tip: create challenges you would like to do yourself :)</dd>
+							</dl>
+							
+						</div>
+						<div class="alert alert-danger">
+							<h3>Do and don't do</h3>
+							<ul class="list-unstyled">
+								<li><i class="fa fa-check"></i> <strong>Do:</strong> Use a clean and clear language</li>
+								<li><i class="fa fa-check"></i> <strong>Do:</strong> Be realistic for the allowed timeframe</li>
+
+								<li><i class="fa fa-ban"></i> <strong>Don't:</strong> Duplicate a challenge if you don't bring something new.</li>
+								<li><i class="fa fa-ban"></i> <strong>Don't:</strong> Put anything which may enfrain any law</li>
+
+							</ul>
+						</div>
+						
+					</div>
 					<div class="form-group col-md-8 col-md-offset-2">
 						<form action="/newChallenge" method="post">
 							<div class="form-group col-md-6">
@@ -67,7 +110,8 @@
 							</div>
 							<div class="form-group col-md-6">
 								<label>Pick a Game</label>
-								<input id="gamePicker" type="text" class="form-control" name="game" autocomplete="off"  >
+								<input id="gamePicked" type="text" class="form-control" name="game" autocomplete="off"  >
+								<input id="idGame" type="hidden" name="idGame"  value="">
 							</div>
 							<div class="form-group col-md-6">
 								<label>Description</label>
@@ -110,7 +154,7 @@
 
 			$(function(){
 
-				$("#gamePicker").autocomplete({
+				$("#gamePicked").autocomplete({
 					source: function (request, response) {
 						$.ajax({
 							url: "/search_game",
@@ -121,6 +165,7 @@
 						response($.map(data, function (el) {
 							return {
 								label: el.title,
+								idGame: el._id,
 								value: el.type
 							};
 						}));
@@ -131,6 +176,7 @@
 					minLength: 3, 					
 					// set an onFocus event to show the result on input field when result is focused
 					focus: function (event, ui) { 
+
 						this.value = ui.item.label; 
 					// Prevent other event from not being execute
 					event.preventDefault();
@@ -139,11 +185,10 @@
 					// Prevent value from being put in the input:
 					this.value = ui.item.label;
 					// Set the id to the next input hidden field
-					$(this).next("input").val(ui.item.value); 
+					// $('#gamePicked').val(ui.item.label); 
+					$('#idGame').val(ui.item.idGame); 
 					// Prevent other event from not being execute		
 					event.preventDefault();
-					// optionnal: submit the form after field has been filled up
-					$('#quicksearch').submit();
 				}
 			});
 $("#durationH").TouchSpin({

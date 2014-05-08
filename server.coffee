@@ -20,43 +20,53 @@ io.set "log level", 1
 redis           = require("redis")
 port            = process.env.PORT or 8080
 mongoose        = require("mongoose")
+# Grid            = require('gridfs-stream')
 passport        = require("passport")
 path            = require("path")
+grvtr           = require("grvtr")
+async           = require("async")
 moment          = require("moment")
 moment          = require('moment-timezone')
 mandrill        = require('mandrill-api/mandrill')
 nodemailer      = require("nodemailer")
 flash           = require("connect-flash")
 scheduler       = require("node-schedule")
+CronJob         = require('cron').CronJob
 genUID          = require("shortid")
 _               = require("underscore")
+configDB        = require("./config/database")
 
-moment().tz("Europe/London").format()
+# Databases  ==================================================================
+db_chat         = require("./app/models/chat")
+# configuration ===============================================================
+moment.utc().format()
 
-# generate a seed to build our UID (idCools)
 genUID.seed 664
 mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
+mongoose.connect configDB.url # connect to our database
+# Grid.mongo  = mongoose.mongo
+# Grid configDB.url
 
-# Config Import
-configDB        = require("./config/database")
-challenge       = require("./config/challenge")
-users           = require("./config/users")
-relations       = require("./config/relations")
-games           = require("./config/game")
-social          = require("./config/social")
-ladder          = require("./config/ladder")
+# generate a seed to build our UID (idCools)
 mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKeys, moment)
-google          = require("./config/google")
 
 # functions Import
-notifs          = require("./app/functions/notifications")
-sio             = require("./app/functions/sio")(io)
-xp              = require("./app/functions/xp")(sio)
+google          = require("./config/google")
+social          = require("./config/social")
+sio             = require("./app/functions/sio")(io,db_chat, moment)
+notifs          = require("./app/functions/notifications")(_, appKeys, social, mailer)
+xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
+relations       = require("./config/relations")(mailer)
+games           = require("./config/game")(moment)
+users           = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment)
+challenge       = require("./config/challenge")(_, mailer, social, moment, genUID, users)
+ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs)
 
-# configuration ===============================================================
-mongoose.connect configDB.url # connect to our database
-require("./config/passport") passport, mailer, genUID, xp, notifs, google # pass passport for configuration
+# Api
+eApi      = require('./config/api') app,appKeys, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
+
+require("./config/passport") passport,challenge, social, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration
 
 app.configure ->
   
@@ -69,7 +79,6 @@ app.configure ->
     store: sessionStore
     cookie:
       httpOnly: true
-
     key: EXPRESS_SID_KEY
   )
   
@@ -82,13 +91,29 @@ app.configure ->
   )
   app.use express.logger("dev") # log every request to the console
   app.use flash() # use connect-flash for flash messages stored in session
+  app.use (req, res, next)->
 
+      # Website you wish to allow to connect
+      res.setHeader('Access-Control-Allow-Origin', '*');
+
+      # Request methods you wish to allow
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+
+      # Request headers you wish to allow
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,X-cyf-AuthToken,content-type');
+
+      # Set to true if you need the website to include cookies in the requests sent
+      # to the API (e.g. in case you use sessions)
+      res.setHeader('Access-Control-Allow-Credentials', true);
+
+      # Pass to next layer of middleware
+      next();
 
 # routes ======================================================================
-require("./app/routes") app, mailer, _, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
+require("./app/routes") app,appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
-require("./app/schedule") scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs
+require("./app/schedule") CronJob,scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs
 
 # launch ======================================================================
 server.listen port
@@ -98,8 +123,9 @@ ping = ->
 ping()
 
 # sockets awesomization
-require("./app/io") io, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
+require("./app/io") io, db_chat,  _, mailer, cookieParser, sessionStore, EXPRESS_SID_KEY, COOKIE_SECRET, sio
 console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
-console.log 'Current Application time : '+moment().format()
+console.log 'Current Application time : '+moment().utc().format()
 console.log '==========================================================='
+# mailer.cLog '[Cyf-Start] Current Application time : '+moment().utc().format(),''

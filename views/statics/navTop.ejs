@@ -14,31 +14,45 @@
 		<div class="navbar-collapse collapse">
 			<% if (currentUser) { %>
 			<ul class="nav navbar-nav">
-				<li class="animated fadeInX"><a href="/leaderboard">LeaderBoard</a></li>
-				<li class="animated fadeInX"><a href="/users">Who's here ?</a></li>
-					<% if (currentUser) { %>
-					<li class="hidden-lg hidden-md"><a href="javascript:void(0)" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">Stream</a></li>
-					<% } %>
+				<li class="animated fadeInDown"><a href="/leaderboard">LeaderBoard</a></li>
+				<li class="animated fadeInDown"><a href="/users">Challengers</a></li>
+				<li class="animated fadeInDown show-chat">
+				 <a href="javascript:void(0);">
+				 	<span id="onlineCounter" class="odometer pull-right" data-number="0">0</span>
+				 	<span class="fa fa-comments-o hidden-xs"></span>
+				 	<span class="visible-xs">Challengers chat</span>
+
+					
+				 </a>					
+				</li>
+				<li class="animated fadeInDown show-logs">
+				 <a href="javascript:void(0);">
+				 	<span class="fa fa-bullhorn  hidden-xs"></span>
+				 	<span class="visible-xs">Activity Log</span>
+				 </a>					
+				</li>
+
+
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle animated fadeInX" data-toggle="dropdown">Challenges <b class="caret"></b></a>
+				<li class="dropdown"> 
+					<a href="#" class="dropdown-toggle animated fadeInDown" data-toggle="dropdown">Challenges <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li>
 							<a href="/launchChallenge"><i class="fa fa-crosshairs hidden-xs hidden-sm"></i> <strong>Launch</strong></a>
 						</li>
-						<li class="divider"></li>
+						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
 							<a href="/challenges"><i class="fa fa-book hidden-xs hidden-sm"></i> All challenges</a>
 						</li>
 						<li>
 							<a href="/ongoing"><i class="glyphicon glyphicon-flash hidden-xs hidden-sm"></i>My challenges</a>
 						</li>
-						<!-- <li><a href="/newChallenge">Create</a></li> -->
+						<li><a href="/newChallenge"><i class="fa fa-pencil hidden-xs hidden-sm"></i> Create</a></li>
 						<li><a href="/myChallenges"><i class="fa fa-list-ul hidden-xs hidden-sm"></i> Challenges created</a></li>
-						<li class="divider"></li>
+						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
-							<a href="/rateChallenges"><i class="fa fa-pencil hidden-xs hidden-sm"></i> Rate challenges
+							<a href="/rateChallenges"><i class="fa fa-bar-chart-o hidden-xs hidden-sm"></i> Rate challenges
 								<% if(currentUser.challengeRate.length > 0 ) { %>
 								<span class="badge alert-info"><%= currentUser.challengeRate.length %></span>
 								<% } %>
@@ -55,14 +69,14 @@
 					</ul>
 				</li>
 				<li class="dropdown">
-					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInX" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
+					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInDown" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <b class="caret"></b></a>
 					<div id="user-xpbar" class="hidden-xs hidden-sm"></div>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="/profile">Profile</a>
+							<a href="/profile"><i class="fa fa-user hidden-xs hidden-sm"></i>  Profile</a>
 						</li>
 						<li>
-							<a href="/request">Requests
+							<a href="/request"><i class="fa fa-inbox hidden-xs hidden-sm"></i>  Requests
 								<% if(currentUser.pendingRequests.length > 0 ) { %>
 								<span class="badge alert-info"><%= currentUser.pendingRequests.length %></span>
 								<% } %>
@@ -73,11 +87,11 @@
 							<a href="/settings" class="hidden-md hidden-lg">Settings</a>
 						</li>
 						<li>
-							<a href="/friends">Friends</a>
+							<a href="/friends"><i class="fa fa-users hidden-xs hidden-sm"></i>  Friends</a>
 						</li>
 						<li class="divider hidden-md hidden-lg"></li>
 						<li>
-							<a href="/logout">Log out</a>
+							<a href="/logout"><i class="fa fa-sign-out hidden-xs hidden-sm"></i>  Log out</a>
 						</li>
 					</ul>
 				</li>
@@ -85,26 +99,27 @@
 					<a href="/settings" class="hidden-sm hidden-xs"><i class="fa fa-cogs"></i></a>
 				</li>
 				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
-				<div class="navbar-text visible-sm visible-md righty"><span class="fa fa-th fa-2x"></span></div>
 			</ul>
 			<% } else { %>
 			<ul class="nav navbar-nav">
-				<li class="animated fadeInX"><a href="/leaderboard">LeaderBoard</a></li>
+				<li class="animated fadeInDown"><a href="/leaderboard">LeaderBoard</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-				<li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
+				<li class="animated fadeInDown"><a href="/signup">Become a challenger</a></li>
+				<li class="animated fadeInDown"><a href="/login">Challenger entrance</a></li>
 			</ul>
 			<% } %>
 		</div><!--/.nav-collapse -->
 	</div>
 
-	<% if (currentUser) { %>
-	<div class="righty visible-lg"><span class="fa fa-th fa-2x"></span></div>
-	<% } %>
 </div>
 
-<div class="liveFeed navmenu navmenu-fixed-right visible-lg visible-md visible-sm">
-	<ul class="list-group" id="streams">
+<div class="liveFeed navmenu navmenu-fixed-right">
+	<ul class="list-group list-unstyled" id="streams">
 	</ul>
+</div>
+
+<div class="liveChat navmenu navmenu-fixed-left">
+	<input type="text" id="chat-message" placeholder="Say something..." >
+	<ul class="list-unstyled" id="chat"></ul>
 </div>

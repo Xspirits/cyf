@@ -79,6 +79,10 @@ userSchema = mongoose.Schema(
       type: Number
       default: 0
 
+    score:
+      type: Number
+      default: 0
+
     xp:
       type: Number
       default: 0
@@ -145,7 +149,7 @@ userSchema = mongoose.Schema(
       type: Number
       default: 0
 
-    week:
+    date:
       type: Date
       default: Date.now
   ]
@@ -195,7 +199,7 @@ userSchema = mongoose.Schema(
       type: Number
       default: 0
 
-    month:
+    date:
       type: Date
       default: Date.now
   ]
@@ -229,6 +233,7 @@ userSchema = mongoose.Schema(
       type: Date
       default: Date.now
 
+  sessionKey: String
   leagueoflegend:
     confirmed: 
       type:Boolean
@@ -248,7 +253,109 @@ userSchema = mongoose.Schema(
     linkedOnce:
       type: Boolean
       default: true
-
+    lastGames:[
+      championId: Number   #int Champion ID associated with game.
+      createDate: String    #long  Date that end game data was recorded, specified as epoch milliseconds.
+      championInfos:
+        id:Number,
+        title:String
+        name:String
+        key:String
+      fellowPlayers: [
+        championId: Number
+        summonerId: Number
+        teamId: Number
+      ]    #[PlayerDto] Other players associated with the game.
+      gameId: Number    #long  Game ID.
+      gameMode: String    #string  Game mode. (legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, FIRSTBLOOD)
+      gameType: String    #string  Game type. (legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME)
+      invalid: Boolean     # Invalid flag.
+      ipEarned: Number    #int IP Earned.
+      level: Number     # Level.
+      mapId: Number     # Map ID.
+      spell1: Number    #int ID of first summoner spell.
+      spell2: Number    #int ID of second summoner spell.
+      stats: # Statistics associated with the game for this summoner.
+        assists: Number     #int 
+        barracksKilled: Number      # int num of enemy inhibitors killed.
+        championsKilled: Number     #int 
+        combatPlayerScore: Number     #int 
+        consumablesPurchased: Number      # int 
+        damageDealtPlayer: Number     #int 
+        doubleKills: Number     #int 
+        firstBlood: Number      # int 
+        gold: Number      # int 
+        goldEarned: Number      # int 
+        goldSpent: Number     #int 
+        item0: Number     #int 
+        item1: Number     #int 
+        item2: Number     #int 
+        item3: Number     #int 
+        item4: Number     #int 
+        item5: Number     #int 
+        item6: Number     #int 
+        itemsPurchased: Number      # int 
+        killingSprees: Number     #int 
+        largestCriticalStrike: Number     #int 
+        largestKillingSpree: Number     #int 
+        largestMultiKill: Number      # int 
+        legendaryItemsCreated: Number     #int num of tier 3 items built.
+        level: Number     #int 
+        magicDamageDealtPlayer: Number      # int 
+        magicDamageDealtToChampions: Number     #int 
+        magicDamageTaken: Number      # int 
+        minionsDenied: Number     #int 
+        minionsKilled: Number     #int 
+        neutralMinionsKilled: Number      # int 
+        neutralMinionsKilledEnemyJungle: Number     #int 
+        neutralMinionsKilledYourJungle: Number      # int 
+        nexusKilled: Number     #boolean Flag specifying if the summoner got the killing blow on the nexus.
+        nodeCapture: Number     #int 
+        nodeCaptureAssist: Number     #int 
+        nodeNeutralize: Number      # int 
+        nodeNeutralizeAssist: Number      # int 
+        numDeaths: Number     #int 
+        numItemsBought: Number      # int 
+        objectivePlayerScore: Number      # int 
+        pentaKills: Number      # int 
+        physicalDamageDealtPlayer: Number     #int 
+        physicalDamageDealtToChampions: Number      # int 
+        physicalDamageTaken: Number     #int 
+        quadraKills: Number     #int 
+        sightWardsBought: Number      # int 
+        spell1Cast: Number      # int Number of times first champion spell was cast.
+        spell2Cast: Number      # int Number of times second champion spell was cast.
+        spell3Cast: Number      # int Number of times third champion spell was cast.
+        spell4Cast: Number      # int Number of times fourth champion spell was cast.
+        summonSpell1Cast: Number      # int 
+        summonSpell2Cast: Number      # int 
+        superMonsterKilled: Number      # int 
+        team: Number      # int 
+        teamObjective: Number     #int 
+        timePlayed: Number      # int 
+        totalDamageDealt: Number      # int 
+        totalDamageDealtToChampions: Number     #int 
+        totalDamageTaken: Number      # int 
+        totalHeal: Number     #int 
+        totalPlayerScore: Number      # int 
+        totalScoreRank: Number      # int 
+        totalTimeCrowdControlDealt: Number      # int 
+        totalUnitsHealed: Number      # int 
+        tripleKills: Number     #int 
+        trueDamageDealtPlayer: Number     #int 
+        trueDamageDealtToChampions: Number      # int 
+        trueDamageTaken: Number     #int 
+        turretsKilled: Number     #int 
+        unrealKills: Number     #int 
+        victoryPointTotal: Number     #int 
+        visionWardsBought: Number     #int 
+        wardKilled: Number      # int 
+        wardPlaced: Number      # int 
+        win: Boolean     #boolean Flag specifying whether or not this game was won.
+      subType: String     #  Game sub-type. (legal values: NONE, NORMAL, BOT, RANKED_SOLO_5x5, RANKED_PREMADE_3x3, RANKED_PREMADE_5x5, ODIN_UNRANKED, RANKED_TEAM_3x3, RANKED_TEAM_5x5, NORMAL_3x3, BOT_3x3, CAP_5x5, ARAM_UNRANKED_5x5, ONEFORALL_5x5, FIRSTBLOOD_1x1, FIRSTBLOOD_2x2, SR_6x6, URF, URF_BOT)
+      teamId: Number    #int Team ID associated with game. Team ID 100 is blue team. Team ID 200 is purple team.
+    ]
+  fbInvitedFriends:[Number]
   facebook:
     id: String
     token: String
@@ -321,6 +428,21 @@ userSchema = mongoose.Schema(
     isSeen:
       type: Boolean
       default: false
+  ]
+  games: [
+    _idGame:
+      type: mongoose.Schema.Types.ObjectId
+      ref: "Game"
+    title:
+      type: String
+    type: 
+      type: String
+    favorite: 
+      type: Boolean
+      default: false
+    date:
+      type: Date
+      default: Date.now
   ]
   friends: [
     idUser:
