@@ -20,7 +20,8 @@ io.set "log level", 1
 redis           = require("redis")
 port            = process.env.PORT or 8080
 mongoose        = require("mongoose")
-# Grid            = require('gridfs-stream')
+ent             = require('ent')
+
 passport        = require("passport")
 path            = require("path")
 grvtr           = require("grvtr")
@@ -53,7 +54,7 @@ mailer          = require("./config/mailer")(mandrill_client, nodemailer, appKey
 # functions Import
 google          = require("./config/google")
 social          = require("./config/social")
-sio             = require("./app/functions/sio")(io,db_chat, moment)
+sio             = require("./app/functions/sio")(io, db_chat, ent, moment)
 notifs          = require("./app/functions/notifications")(_, appKeys, social, mailer)
 xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
@@ -110,7 +111,7 @@ app.configure ->
       next();
 
 # routes ======================================================================
-require("./app/routes") app,appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
+require("./app/routes") app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
 require("./app/schedule") CronJob,scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs

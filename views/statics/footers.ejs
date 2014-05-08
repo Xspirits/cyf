@@ -87,23 +87,27 @@
 			console.log(data);
 			$('#onlineCounter').html(data.number);
 		});
+		$.ajax({
+			type: 'GET',
+			contentType: 'application/json',
+			url: './chat_historic',						
+			success: function(messages) {
+				console.log(messages);
+				// Clean the  chat
+				$('#chat').html();
+				var messbuff;
 
+				for (var i = 0; i < messages.length; i++) {
+	        		messbuff = {       			
+				      user: messages[i].user_from,
+				      message: messages[i].message,
+				      date: messages[i].dateSent
+	        		}
+					pushChat(messbuff);
+				};
+			} 
+		});	
 
-		chat.on('chatLogs', function (data) {
-			// Clean the  chat
-			$('#chat').html();
-			var mess=data.messages
-			, messbuff;
-
-			for (var i = 0; i < mess.length; i++) {
-        		messbuff = {       			
-			      user: mess[i].user_from,
-			      message: mess[i].message,
-			      date: mess[i].dateSent
-        		}
-				pushChat(messbuff);
-			};
-		});
 		chat.on('newUser', function (data) {
 			pushChat(data, 'chat-log-event');
 		});
@@ -242,14 +246,14 @@
 		//  FUNCTIONS
 		function pushStream(data) {
 			var target = $('#streams')
-			, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
+			, template = '<li class="mepUp animated fadeInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
 
 			target.prepend(template);
 		}
 		function pushChat(data,claass) {
-			var date = moment(data.date).format('hh:mm:ss');
+			var date = moment(data.date).format('hh:mm');
 			var target = $('#chat')
-			, template = '<li class="mepUp animated rubberBand '+(claass?claass:'')+'"><span class="chat-date">'+date+'  | </span><small>' + (data.icon ? '<i class="'+data.icon + '"></i> ': '') + '<a href="/u/'+data.user.idCool+'" title="see profile">'+data.user.pseudo+'</a>:</small> '+data.message+'</li>';
+			, template = '<li class="mepUp animated fadeInRight '+(claass?claass:'')+'"><span class="bar-hr"></span><span class="bar-hii"><span class="chat-date">'+date+'</span> ' + (data.icon ? '<i class="'+data.icon + '"></i> ': '') + '<a href="/u/'+data.user.idCool+'" title="see profile">'+data.user.pseudo+'</a></span><p>'+data.message+'</p></li>';
 
 			target.prepend(template);
 		}

@@ -1,4 +1,4 @@
-module.exports = (io, Chat, moment) ->
+module.exports = (io, Chat, ent, moment) ->
   #global
   alive: ()->
     io.sockets.emit "alive",
@@ -21,7 +21,7 @@ module.exports = (io, Chat, moment) ->
     _t = @
     chat = new Chat()
     chat.user_from = user
-    chat.message = message
+    chat.message = ent.encode(message)
     chat.save (err, chat) ->
       console.log err if err
       _t.pushMessage chat
@@ -32,9 +32,9 @@ module.exports = (io, Chat, moment) ->
       message: message.message
       date: message.dateSent
 
-  pushChat: (messages) ->
-    io.of('/chat').emit "chatLogs",
-      messages: messages
+  # pushChat: (messages) ->
+  #   io.of('/chat').emit "chatLogs",
+  #     messages: messages
       
   onlineNumber: (nb) ->
     io.sockets.emit "onlineUsers",

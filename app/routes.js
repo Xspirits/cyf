@@ -11,7 +11,7 @@
     res.redirect("/");
   };
 
-  module.exports = function(app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
+  module.exports = function(app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) {
     app.get("/about", function(req, res) {
       return res.render("about.ejs", {
         currentUser: req.isAuthenticated() ? req.user : false
@@ -468,6 +468,11 @@
       scope = req.params.scope;
       return ladder.getLeaderboards(type, scope, true, function(result) {
         return res.send(result);
+      });
+    });
+    app.get("/chat_historic", function(req, res) {
+      return db_chat.find({}).limit(100).sort('dateSent').exec(function(err, messages) {
+        return res.send(messages);
       });
     });
     app.get("/search_game", function(req, res) {

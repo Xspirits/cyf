@@ -54,9 +54,6 @@
     });
     io.of('/chat').on("connection", function(chat) {
       return chat.get("nickname", function(err, user) {
-        db_chat.find({}).limit(100).sort('-dateSent').exec(function(err, messages) {
-          return sio.pushChat(messages);
-        });
         chat.on("message", function(data) {
           return sio.discuss(user, data);
         });

@@ -65,12 +65,7 @@ module.exports = (io, db_chat, _, mailer, cookieParser, sessionStore, EXPRESS_SI
   # CHAT
 
   io.of('/chat').on "connection", (chat) ->
-    chat.get "nickname", (err, user) ->
-
-      #populate last messages
-      db_chat.find({}).limit(100).sort('-dateSent').exec (err, messages)->
-        sio.pushChat messages
-      
+    chat.get "nickname", (err, user) ->      
       #Handling events from users
       chat.on "message", (data) ->
         sio.discuss user, data

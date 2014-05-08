@@ -1127,8 +1127,8 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 /* line 288, ../../sass/style.scss */
 .liveChat {
   z-index: 5;
-  background: #2CAACC;
-  color: #fff;
+  width: 230px;
+  background: #EDEFF4;
   padding-top: 55px;
   -webkit-backface-visibility: hidden;
   -webkit-transform: translateX(-100%);
@@ -1144,21 +1144,8 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
     transform: translateX(0);
   }
 
-  #chat-message::-webkit-input-placeholder {
-    color:    #fff;
-  }
-  #chat-message:-moz-placeholder {
-      color:    #fff;
-  }
-  #chat-message::-moz-placeholder {
-      color:    #fff;
-  }
-  #chat-message:-ms-input-placeholder {
-      color:    #fff;
-  }
   #chat-message,#chat-message:hover {
-    color: #fff;
-    background: #2C8EA8;
+    background: #fff;
     outline: 0;
     width: 100%;
     border: 0;
@@ -1172,22 +1159,34 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
     border: 0;
     border-bottom: 1px solid #FAFAFA;    
   }
-  .liveChat a {
-    color: white;
-    font-size: 14px;
+  #chat > li {
+    position: relative;
+    margin: .4em 0 0 .2em;
+    transition: all 220ms ease-in-out;
   }
-  .liveChat a:hover,.liveChat a:active{
-    color: #FFF500;
-  }
-  .chat-date {
+  #chat > li > .bar-hii > .chat-date {
     font-size: 10px;
     margin: 0 2px 0 1px;
-    color: rgb(233, 233, 233);
-    margin-left: -45px;
-    transition: margin 220ms ease-in-out;
+    color: ##3bafda;
   }
-  #chat > li:hover>.chat-date {
-    margin-left: 0;
+  #chat > li > .bar-hii {
+    background: #EDEFF4;
+    position: absolute;
+
+  }
+  #chat > li > .bar-hr {
+    height: 1px;
+    z-index: 0;
+    position: absolute;
+    width: 100%;
+    top: 11px;
+    box-shadow: 0 1px rgba(255, 255, 255, 0.58);
+    background: rgba(187, 187, 187, 0.25);
+  }
+  #chat > li > p {
+    padding-top: 1.5em;
+    padding-left: .5em;
+    padding-right: .5em;
   }
   .chat-log-event,.chat-log-event a {
     color: rgb(167, 167, 167);

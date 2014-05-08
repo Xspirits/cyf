@@ -5,7 +5,7 @@ isLoggedIn = (req, res, next) ->
   res.redirect "/"
   return
   
-module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
+module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
   app.get "/about", (req,res) ->
     res.render "about.ejs",
@@ -466,6 +466,10 @@ module.exports = (app, appKeys, eApi, mailer, _, grvtr, sio, passport, genUID, x
   # END ANGULAR SPECIFICS
   # ============
 
+  app.get "/chat_historic", (req, res) ->
+    #populate last messages
+    db_chat.find({}).limit(100).sort('dateSent').exec (err, messages)->
+      res.send messages
 
   # Game autocomplete research
   app.get "/search_game", (req, res) ->
