@@ -6,13 +6,10 @@ GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
 
 # load up the user model & challenge
 User = require("../app/models/user")
-challenge = require("../config/challenge")
 grvtr = require('grvtr')
-social = require("../config/social")
 
 # load the auth variables
-configAuth = require("./auth") # use this one for testing
-module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
+module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notifs,shortUrl) ->
   
   # =========================================================================
   # passport session setup ==================================================
@@ -33,7 +30,6 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
       return
 
     return
-
   
   # =========================================================================
   # LOCAL LOGIN =============================================================
@@ -45,16 +41,13 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
     passwordField: "password"
     passReqToCallback: true # allows us to pass in the req from our route (lets us check if a user is logged in or not)
   , (req, email, password, done) ->
-    console.log 'bouya'
     # asynchronous
     process.nextTick ->
-      User.findOne
-        "local.email": email
-      , (err, userfound) ->
-        
+      opts = [{ path: 'friends.idUser'},{ path: 'games._idGame'}]
+      email = email.toLowerCase()
+      User.findOne({"local.email": email}).populate(opts).exec (err, userfound) ->        
         # if there are any errors, return the error
         return done(err) if err
-        
         # if no user is found, return the message
         return done(null, false, req.flash("loginMessage", "No user found."))  unless userfound
         if !userfound.validPassword password
@@ -62,7 +55,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
 
         # all is well, return user
         else
-          if configAuth.app_config.email_confirm          
+          if appKeys.app_config.email_confirm          
             unless userfound.verified
               return done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
           console.log 'logged'
@@ -76,8 +69,9 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
   )
   
   # =========================================================================
-  # LOCAL SIGNUP ============================================================
+  # LOCAL SIGNUP = ===========================================================
   # =========================================================================
+
   passport.use "local-signup", new LocalStrategy(
     
     # by default, local strategy uses username and password, we will override with email
@@ -93,6 +87,8 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
       
       # check if the user is already logged ina
       unless req.user
+        email = email.toLowerCase()
+
         User.findOne
           "local.email": email
         , (err, user) ->
@@ -104,7 +100,6 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
           if user
             done null, false, req.flash("signupMessage", "That email is already taken.")
           else
-            
             # create the user
             newUser = new User()
             newUser.idCool = uID
@@ -113,7 +108,7 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
               0
             ]
             newUser.verfiy_hash = uIDHash
-            newUser.verified = true unless configAuth.app_config.email_confirm
+            newUser.verified = true if appKeys.app_config.email_confirm == false
             newUser.local.email = email
             newUser.local.password = newUser.generateHash(password)
             newUser.local.friends = []
@@ -121,25 +116,25 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
             newUser.local.sentRequests = []
             newUser.local.pendingRequests = []
             newUser.local.followers = []
+
             grvtr.create email,
               size: 150 # 1 - 2048px
               defaultImage: "identicon" # 'identicon', 'monsterid', 'wavatar', 'retro', 'blank'
               rating: "g" # 'pg', 'r', 'x'
             , (gravatarUrl) ->
-              console.log gravatarUrl
               newUser.icon = gravatarUrl
               newUser.save (err, user) ->
                 mailer.cLog 'Error at '+__filename,err if err
+                xp.xpReward user, "user.register"
+
                 # send an email confirmation link
-                if configAuth.app_config.email_confirm == false
+                if appKeys.app_config.email_confirm == false
                   req.session.user = user
                   req.session.isLogged = true
                   req.session.newUser = true
-                  xp.xpReward user, "user.register"
                   done null, newUser
                 else
                   mailer.accountConfirm user, (returned) ->
-                    xp.xpReward user, "user.register"
                     done null, newUser
       else
         user = req.user
@@ -149,19 +144,15 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
         user.save (err) ->
           mailer.cLog 'Error at '+__filename,err if err
           done null, user
-
-      return
-
-    return
   )
   
   # =========================================================================
   # FACEBOOK ================================================================
   # =========================================================================
   passport.use new FacebookStrategy(
-    clientID: configAuth.facebookAuth.clientID
-    clientSecret: configAuth.facebookAuth.clientSecret
-    callbackURL: configAuth.facebookAuth.callbackURL
+    clientID: appKeys.facebookAuth.clientID
+    clientSecret: appKeys.facebookAuth.clientSecret
+    callbackURL: appKeys.facebookAuth.callbackURL
     passReqToCallback: true # allows us to pass in the req from our route (lets us check if a user is logged in or not)
   , (req, token, refreshToken, profile, done) ->
     
@@ -219,9 +210,9 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
   # TWITTER =================================================================
   # =========================================================================
   passport.use new TwitterStrategy(
-    consumerKey: configAuth.twitterAuth.consumerKey
-    consumerSecret: configAuth.twitterAuth.consumerSecret
-    callbackURL: configAuth.twitterAuth.callbackURL
+    consumerKey: appKeys.twitterAuth.consumerKey
+    consumerSecret: appKeys.twitterAuth.consumerSecret
+    callbackURL: appKeys.twitterAuth.callbackURL
     passReqToCallback: true # allows us to pass in the req from our route (lets us check if a user is logged in or not)
   , (req, token, tokenSecret, profile, done) ->
     
@@ -243,10 +234,10 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
             user.twitter.displayName = profile.displayName
             user.save (err) ->
               throw err if err
-              profileUrl = configAuth.cyf.app_domain + '/'+ user.idCool
+              profileUrl = appKeys.cyf.app_domain + '/'+ user.idCool
               shortUrl.googleUrl profileUrl, (shortened) ->
                 console.log "New twitter linked %s to %s", profileUrl, shortened
-                if configAuth.app_config.twitterPushNews
+                if appKeys.app_config.twitterPushNews
                   # Lets push on our timeline to let players now about the new member!             
                   twitt = "Welcome @"+user.twitter.username+" ("+shortened+") on Challenge your Friends! You are "+user.level+", a journey awaits you! @cyf_app #challenge"
                   social.postTwitter false, twitt, (data) ->
@@ -291,9 +282,9 @@ module.exports = (passport, mailer, genUID, xp, notifs,shortUrl) ->
   # GOOGLE ==================================================================
   # =========================================================================
   passport.use new GoogleStrategy(
-    clientID: configAuth.googleAuth.clientID
-    clientSecret: configAuth.googleAuth.clientSecret
-    callbackURL: configAuth.googleAuth.callbackURL
+    clientID: appKeys.googleAuth.clientID
+    clientSecret: appKeys.googleAuth.clientSecret
+    callbackURL: appKeys.googleAuth.callbackURL
     passReqToCallback: true # allows us to pass in the req from our route (lets us check if a user is logged in or not)
   , (req, token, refreshToken, profile, done) ->
     

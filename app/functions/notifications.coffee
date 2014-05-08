@@ -1,6 +1,5 @@
 User = require("../models/user")
-_ = require("underscore")
-module.exports =
+module.exports = (_, appKeys, social, mailer) ->
   
   ###
   Send a new notification to either one or many people.
@@ -61,10 +60,9 @@ module.exports =
     ,
       multi: true
     , (err, result) ->
-      consol.log err if err
-      result
-
-    return
+      mailer.cLog 'Error at ' + __filename + ' for: ' + notif.title,err if err
+      return result
+    
   ###
   Mark a notification as READ:if it's not persistant delete it.
   @param  {[type]}	data [description]
@@ -81,13 +79,12 @@ module.exports =
             notifications:
               _id: thisNotif
         ).exec (err, user) ->
-          throw err  if err
+          mailer.cLog 'Error at ' + __filename + ' for: notifications.isSeen',err if err
           done true
       else
         done true
     else
       User.findOneAndUpdate({ _id: data.idUser,'notifications._id':thisNotif},{ $set: { 'notifications.$.isSeen': true} }).exec( done );
-    return
 
   gainedXp: (user, amount, bonus, fromAction) ->
     toSelf = [user._id]
@@ -121,8 +118,21 @@ module.exports =
       link2: ""
       icon: "fa fa-arrow-up"
       title: "You have reached level  " + newLevel + "!"
-      message: "Congratulation! "
+      message: "Congratulation! 
+      "
+    if typeof user.facebook.token != 'undefined' and user.share.facebook == true
+      action=
+        name: 'reach'
+        link: appKeys.cyf.app_domain + '/u/' + user.idCool
+        message: "Yes! I reached the level " + newLevel + " on #CyF, awesome :D ! http://goo.gl/MofE3n! "
+        level:
+          title: user.local.pseudo + ' is a Cyf Challenger level ' + newLevel
+      social.userAction user, action, (cb)->
 
+    if typeof user.twitter.token != 'undefined' and user.share.twitter == true
+      uTweet = 'Yes! I reached the level ' + newLevel + ' on #CyF, awesome :D ! http://goo.gl/MofE3n! @' + appKeys.twitterCyf.username
+      social.postTwitter user.twitter, uTweet, (cb)->
+          
     @newNotif toSelf, true, notif
     return
 
@@ -155,9 +165,7 @@ module.exports =
   @return {[type]} [description]
   ###
   login: (user) ->
-    myFriends = _.map(user.friends, (num) ->
-      num.idUser.toString()
-    )
+    myFriends = _.map user.friends, (num) ->  num.idUser._id.toString()
     notif =
       idFrom: user._id
       from: user.local.pseudo
@@ -168,31 +176,9 @@ module.exports =
       title: user.local.pseudo + " just connected."
       message: ""
 
-    @newNotif myFriends, false, notif
+    #  Disable for a while, because well, Online mode need some work.
+    # @newNotif myFriends, false, notif
     return
-  
-  ###
-  When the user log in,send a notification to his friends.
-  @param  {[type]} user [description]
-  @return {[type]} [description]
-  ###
-  login: (user) ->
-    myFriends = _.map(user.friends, (num) ->
-      num.idUser.toString()
-    )
-    notif =
-      idFrom: user._id
-      from: user.local.pseudo
-      link1: "/u/" + user.idCool
-      to: ""
-      link2: ""
-      icon: ""
-      title: user.local.pseudo + " just connected."
-      message: ""
-
-    @newNotif myFriends, false, notif
-    return
-
   
   ###
   When user logout,notify his friends
@@ -214,8 +200,6 @@ module.exports =
       message: ""
 
     @newNotif myFriends, false, notif, false
-    return
-
   
   ###
   User X and Y are now friends,so broadcast the news to their respective friends.
@@ -510,7 +494,6 @@ module.exports =
     
     # The case was a success,let the friends of the challenged knows about it.
     @successChall caseClosed  if caseClosed.tribunalAnswered is true
-    return
 
   linkedGame: (user, gameName) ->
     friends = _.map(user.friends, (num) ->
@@ -521,10 +504,9 @@ module.exports =
       from: user.local.pseudo
       icon: "fa-link"
       link1: "/u/" + user.idCool
-      title: user.local.pseudo + " linked his " + gameName + " account!"
+      title: user.local.pseudo + " linked a " + gameName + " account!"
       link2: ""
       to: ""
       message: ""
 
     @newNotif friends, true, notif
-    return

@@ -2,7 +2,7 @@
 # load up the user model
 User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
-module.exports =
+module.exports = (mailer)->
   
   ###
   Return the current pending requests for a given user
@@ -17,9 +17,6 @@ module.exports =
       
       #return an array of objects
       done data.pendingRequests
-
-    return
-
   
   ###
   Create or update a relation with either a sending invite or pending one
@@ -61,7 +58,6 @@ module.exports =
       ]
     ).exec (err, relation) ->
       mailer.cLog 'Error at '+__filename,err if err
-      console.log relation
       unless relation
         console.log "Lets update"
         User.findByIdAndUpdate(from.id, query).exec (err, updated) ->
@@ -69,10 +65,6 @@ module.exports =
           return
       else
         done false, "already asked"
-      return
-
-    return
-
   
   ###
   Accept a relation: add a new row and delete the pending ones
@@ -113,10 +105,6 @@ module.exports =
         ]
         done newRelation
 
-      return
-
-    return
-
   cancelRelation: (from, to, done) ->
     User.findByIdAndUpdate from.id,
       $pull:
@@ -131,10 +119,6 @@ module.exports =
       , (err, relation) ->
         mailer.cLog 'Error at '+__filename,err if err
         done true
-
-      return
-
-    return
 
   
   ###
@@ -152,5 +136,3 @@ module.exports =
     , (err, relation) ->
       mailer.cLog 'Error at '+__filename,err if err
       done true
-
-    return

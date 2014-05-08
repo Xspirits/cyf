@@ -3,34 +3,35 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
     <meta name="keywords" content="leaderboard, ranking, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
     <meta name="title" content="Leaderboards of challenge your friends">
-    <meta name="description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <meta name="description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo : 'none' %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo : 'none' %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo : 'none' %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo : 'none' %>">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="article"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
     <meta property="og:title" content="Leaderboards of challenge your friends">
-    <meta property="og:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <meta property="og:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo : 'none' %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo : 'none' %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo : 'none' %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo : 'none' %>">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Leaderboards of challenge your friends">
-    <meta name="twitter:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo :"none" %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo :"none" %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo :"none" %>">
+    <meta name="twitter:description" content="Daily, weekly, monthly and global leaders board! Heroes of the day <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo : 'none' %> | Week <%= ranking.weekly.length > 0 ? ranking.weekly[0].local.pseudo : 'none' %> | Month <%= ranking.monthly.length > 0 ? ranking.monthly[0].local.pseudo : 'none' %>. General: <%= ranking.global.length > 0 ? ranking.global[0].local.pseudo : 'none' %>">
     <!-- Twitter card end -->
-	<title>Leaderboards, <%= ranking.daily.length > 0 ? ranking.daily[0].local.pseudo :"none" %> #1</title>
+
+	<title>Leaderboards, <%= (ranking.daily.length > 0) ? ranking.daily[0].local.pseudo + ' #1' : '' %></title>
 </head>
 <body>
 
@@ -41,10 +42,18 @@
 			<div class="row">
 				<div class="tabbable tabs-left col-lg-12 clearfix">
 					<ul id="leadTab" class="nav nav-tabs nav-justified">
-						<li class="active"><a href="#daily" data-toggle="tab"><img src="./img/ladder_a.png" class="img-responsive">daily</a></li>
-						<li><a href="#weekly" data-toggle="tab"><img src="./img/ladder_b.png" class="img-responsive">weekly</a></li>
-						<li><a href="#monthly" data-toggle="tab"><img src="./img/ladder_c.png" class="img-responsive">monthly</a></li>
-						<li><a href="#global" data-toggle="tab"><img src="./img/ladder_g.png" class="img-responsive">global</a></li>
+						<li class="active">
+							<a href="#daily" data-toggle="tab"><img src="./img/ladder_a.png" class="img-responsive">daily</a>
+						</li>
+						<li>
+							<a href="#weekly" data-toggle="tab"><img src="./img/ladder_b.png" class="img-responsive">weekly</a>
+						</li>
+						<li>
+							<a href="#monthly" data-toggle="tab"><img src="./img/ladder_c.png" class="img-responsive">monthly</a>
+						</li>
+						<li>
+							<a href="#general" data-toggle="tab"><img src="./img/ladder_g.png" class="img-responsive">global</a>
+						</li>
 
 					</ul>
 					<div id="leaderboardcontainer" class="tab-content">
@@ -57,28 +66,31 @@
 										<th>Challenger</th>
 										<th>Level</th>
 										<th>Score</th>
-									</tr>
+									</tr> 
 								</thead>
 								<tbody> 
-									<% if(ranking.daily.length > 0 ) { %>
+
+								<% if(ranking.daily && ranking.daily.length > 0 ) { %>
 									<% for(var i=0; i< ranking.daily.length; i++) { %>
+									<% if (ranking.daily[i] && ranking.daily[i].local)  { %>
 									<tr class="animated flipInX">
 										<td class="daily"><%= i+1 %></td>
-										<td><%= ranking.daily[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.daily[i].idCool %>" title="See <%= ranking.daily[i].local.pseudo %>'s profile"><%= ranking.daily[i].local.pseudo %></a></td>
 										<td><%= ranking.daily[i].level %></td>
 										<td><%= ranking.daily[i].dailyScore %></td>
 									</tr>
 									<% }%>
 									<% }%>
+								<% }%>
 									
 								</tbody>
 							</table>
 							<div class="text-right">
-								<small id="updateDaily"></small><i class="fa fa-clock-o"></i>
+								<small id="updateDaily" class="convertEnd"></small><i class="fa fa-clock-o"></i>
 							</div>	
 						</div>
 						<!-- weekly Leaderboard -->
-						<div class="tab-pane fade in " id="weekly">	
+						<div class="tab-pane fade in" id="weekly">	
 							<table class="table">
 								<thead>
 									<tr>
@@ -89,24 +101,26 @@
 									</tr>
 								</thead>
 								<tbody>
-									<% if(ranking.weekly.length > 0 ) { %>
-									<% for(var i=0; i< ranking.weekly.length; i++) { %>
-									<tr class="animated flipInX">
-										<td class="weekly"><%= i+1 %></td>
-										<td><%= ranking.weekly[i].local.pseudo %></td>
-										<td><%= ranking.weekly[i].level %></td>
-										<td><%= ranking.weekly[i].weeklyScore %></td>
-									</tr>
+								<% if(ranking.weekly && ranking.weekly.length > 0 ) { %>
+								<% for(var i=0; i< ranking.weekly.length; i++) { %>
+									<% if (ranking.weekly[i] && ranking.weekly[i].local)  { %>
+								<tr class="animated flipInX">
+									<td class="weekly"><%= i+1 %></td>
+									<td><a href="/u/<%= ranking.weekly[i].idCool %>" title="See <%= ranking.weekly[i].local.pseudo %>'s profile"><%= ranking.weekly[i].local.pseudo %></a></td>
+									<td><%= ranking.weekly[i].level %></td>
+									<td><%= ranking.weekly[i].weeklyScore %></td>
+								</tr>
 									<% }%>
-									<% }%>
+								<% }%>
+								<% }%>
 								</tbody>
 							</table>
 							<div class="text-right">
-								<small id="updateWeekly"></small><i class="fa fa-clock-o"></i>
+								<small id="updateWeekly" class="convertEnd"></small><i class="fa fa-clock-o"></i>
 							</div>	
 						</div>
 						<!-- Monthly Leaderboard -->
-						<div class="tab-pane fade in " id="monthly">		
+						<div class="tab-pane fade in" id="monthly">		
 							<table class="table">
 								<thead>
 									<tr>
@@ -117,24 +131,26 @@
 									</tr>
 								</thead>
 								<tbody>
-									<% if(ranking.monthly.length > 0 ) { %>
+									<% if(ranking.monthly && ranking.monthly.length > 0 ) { %>
 									<% for(var i=0; i< ranking.monthly.length; i++) { %>
+									<% if (ranking.monthly[i] && ranking.monthly[i].local)  { %>
 									<tr class="animated flipInX">
 										<td class="monthly"><%= i+1 %></td>
-										<td><%= ranking.monthly[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.monthly[i].idCool %>" title="See <%= ranking.monthly[i].local.pseudo %>'s profile"><%= ranking.monthly[i].local.pseudo %></a></td>
 										<td><%= ranking.monthly[i].level %></td>
 										<td><%= ranking.monthly[i].monthlyScore %></td>
 									</tr>
 									<% }%>
 									<% }%>
+									<% }%>
 								</tbody>
 							</table>
 							<div class="text-right">
-								<small id="updateMonthly"></small><i class="fa fa-clock-o"></i>
+								<small id="updateMonthly" class="convertEnd"></small><i class="fa fa-clock-o"></i>
 							</div>	
 						</div>
 						<!-- General Leaderboard -->
-						<div class="tab-pane fade in " id="global">		
+						<div class="tab-pane fade in" id="general">		
 							<table class="table">
 								<thead>
 									<tr>
@@ -146,14 +162,16 @@
 								</thead>
 								<tbody>
 
-									<% if(ranking.global.length > 0 ) { %>
+									<% if(ranking.global && ranking.global.length > 0 ) { %>
 									<% for(var i=0; i< ranking.global.length; i++) { %>
+									<% if (ranking.global[i] && ranking.global[i].local)  { %>
 									<tr class="animated flipInX">
 										<td class="global"><%= i+1 %></td>
-										<td><%= ranking.global[i].local.pseudo %></td>
+										<td><a href="/u/<%= ranking.global[i].idCool %>" title="See <%= ranking.global[i].local.pseudo %>'s profile"><%= ranking.global[i].local.pseudo %></a></td>
 										<td><%= ranking.global[i].level %></td>
 										<td><%= ranking.global[i].globalScore %></td>
 									</tr>
+									<% }%>
 									<% }%>
 									<% }%>
 								</tbody>
@@ -173,42 +191,37 @@
 
 		</div>
 		<% include statics/footers %>
-
 		<script type="text/javascript">
 			$(function() {
 
-				setInterval(function(){
-					day();
-					week();
-					month();
+				var dayCron = '30 12 * * 0-6';
+				var d = later.parse.cron(dayCron);
+				var nextD =   later.schedule(d).next(2);
+				day(nextD[0]);
 
-				},1000);
+				var weekCron = '10 6 * * 1';
+				var w = later.parse.cron(weekCron);
+				var nextW =   later.schedule(w).next(2);
+				week(nextW[0]);
+
+
+				var monthCron = '10 08 1 * *';
+				var m = later.parse.cron(monthCron);
+				var nextM =   later.schedule(m).next(2);
+				month(nextM[0]);
+
 			});
-			var day = function (){				
-				var d = new Date();
-				d.setHours(24,1,0,0)
-				var converted = moment(d).countdown().toString();
-				$('#updateDaily').text(converted);
+			var day = function(mat) {			
+				var converted = moment(mat).countdown().toString();
+				$('#updateDaily').attr('data-tEnd',mat).text(converted);
 			}
-			var week = function (){				
-				var d = new Date();
-
-				var day = d.getDay()
-				, diff = d.getDate() - day + (day == 0 ? -6:1); 
-				var w = new Date(d.setDate(diff))
-				
-				var converted = moment(w).countdown().toString();
-				$('#updateWeekly').text(converted);
+			var week = function(mat) {
+				var converted = moment(mat).countdown().toString();
+				$('#updateWeekly').attr('data-tEnd',mat).text(converted);
 			}
-			var month = function (){		
-				var now = new Date();
-				if (now.getMonth() == 11) 
-					var current = new Date(now.getFullYear() + 1, 0, 1);
-				else 
-					var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
-				var converted = moment(current).countdown().toString();
-				$('#updateMonthly').text(converted);
+			var month = function(mat) {		
+				var converted = moment(mat).countdown().toString();
+				$('#updateMonthly').attr('data-tEnd',mat).text(converted);
 			}
 		</script>
 	</body>

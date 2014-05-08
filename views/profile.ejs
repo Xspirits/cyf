@@ -3,21 +3,21 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
     <meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
-    <meta name="title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta name="title" content="Profile - Challenge your Friends">
     <meta name="description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s).<%= currentUser.twitter.username ? 'twitter @'+currentUser.twitter.username :'' %> ">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="profile:<%= currentUser.local.idCool %>"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com/u/<%= currentUser.idCool %>">
+    <meta property="og:url" content="http://cyf-app.co/u/<%= currentUser.idCool %>">
     <meta property="og:site_name" content="Challenge your Friends"/>
     <meta property="og:image" content="<%= currentUser.icon %>.png">
     <meta property="og:image:width" content="200">
-    <meta property="og:title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta property="og:title" content="Profile - Challenge your Friends">
     <meta property="og:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
@@ -25,10 +25,11 @@
     <meta name="twitter:site" content="@cyf_app">
     <meta name="twitter:image" content="<%= currentUser.icon %>.png">
     <meta name="twitter:image:width" content="200">
-    <meta name="twitter:title" content="<%= currentUser.local.pseudo %>'s profile - Challenge your Friends">
+    <meta name="twitter:title" content="Profile - Challenge your Friends">
     <meta name="twitter:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
     <!-- Twitter card end -->
 	<title>This is your profile, <%= currentUser.local.pseudo %> - Challenge your Friends</title>
+	<link rel="stylesheet" href="./css/facebook-import.css">
 	<link rel="stylesheet" href="./css/timeline.css">
 
 </head>
@@ -37,8 +38,16 @@
 	<% include statics/navTop %>
 	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
 
-	<div class="canvas c-center-x">
-		
+		<% if(!currentUser.games  || (currentUser.games.length == 0)) { %>
+		<div class="container">
+			<div class="row">
+			<div class="bittersweet-color col-lg-12 no-games-alert">
+	            <strong>Hey Listen!</strong> You haven't specified which games you are playing, let other challengers now on which game they can challenge you by <a href="./settings" title="add an game" ><strong>adding some now</strong></a>!
+	        </div>
+	        </div>
+	        </div>
+		<% } %>
+	<div class="canvas">
 		<div class="container">
 			<div class="row">
 				<div id="user_header" class="col-lg-8">
@@ -60,7 +69,7 @@
 							</h2>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="loaderProgress animated fadeInDown">
-											<div class="tinyProgress tinyBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
+											<div class="tinyProgress tinySimpleBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
 
 											<div class="xp text-center">
 												<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
@@ -68,12 +77,12 @@
 										</div>
 							</div>
 							<div class="col-lg-12">	
-								<strong>Linked accounts: </strong>
+								<h4>Linked accounts: </h4>
 								<% if (currentUser.local.pseudo) { %>
 								<span class="label label-default">CyF</span>
 								<% } %>
 								<% if (currentUser.facebook.token) { %>
-								<span class="label label-primary">Facebook</span>
+								<a href="https://www.facebook.com/profile.php?id=/<%= currentUser.facebook.id %>" title="see <%= currentUser.facebook.name %> on Facebook" target="_blank" class="label label-primary">Facebook</a>
 								<% } %>
 								<% if (currentUser.google.token) { %>
 								<span class="label label-danger">Google</span>
@@ -89,21 +98,83 @@
 									Add
 								</a>
 							</div>
+							<div class="col-lg-12">	
+								<h4>Invite friends: </h4>
+								<% if (currentUser.facebook.token) { %>
+								<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
+								<small>(xp: 75 per Friends invite)</small>
+								<% } else { %>
+								<a href="./settings" title="Connect Facebook first" class="label label-default">
+									<span class="fa fa-plus"></span>
+									Connect Facebook first
+								</a>
+								<% } %>
+							</div>
+							<div class="col-lg-12 gamelist" id="myGamesList">
+								<h4>Playing: </h4>
+							<% if(currentUser.games.length > 0) {
+								 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
+								%>
+								<span id="<%= currentUser.games[i]._idGame %>" class="label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %></span>
+							<% }
+							} %>
+								<a href="./settings" title="add an game" class="label label-default">
+									<span class="fa fa-plus"></span>
+									Add Games
+								</a>
+							</div>
+
 							<div class="col-lg-12">
 								<h3>Ladders ranking</h3>	
 								<table class="table table-striped text-center">
 									<thead>
 										<tr>
-											<th class="text-center">Yesterday's</th>
+											<th class="text-center">Last Daily rank</th>
 											<th class="text-center">Last Week</th>
 											<th class="text-center">Last Month</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											<td><%= currentUser.dailyRank === 0 ? 'not ranked' : currentUser.dailyRank %></td>
-											<td><%= currentUser.weeklyRank === 0 ? 'not ranked' : currentUser.weeklyRank %></td>
-											<td><%= currentUser.monthlyRank === 0 ? 'not ranked' : currentUser.monthlyRank %></td>
+											<td><%= currentUser.dailyRank === 0 ? 'not ranked yet!' : currentUser.dailyRank %></td>
+											<td><%= currentUser.weeklyRank === 0 ? 'not ranked yet!' : currentUser.weeklyRank %></td>
+											<td><%= currentUser.monthlyRank === 0 ? 'not ranked yet!' : currentUser.monthlyRank %></td>
+										</tr>
+									</tbody>
+								</table>
+								<table class="table table-striped text-center">
+									<thead>
+										<tr>
+											<th class="text-center"></th>
+											<th class="text-center">Daily</th>
+											<th class="text-center">Weekly</th>
+											<th class="text-center">Monthly</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>XP</th>
+											<td><%= currentUser.daily.xp %></td>
+											<td><%= currentUser.weekly.xp %></td>
+											<td><%= currentUser.monthly.xp %></td>
+										</tr>
+										<tr>
+											<th>level</th>
+											<td><%= currentUser.daily.level %></td>
+											<td><%= currentUser.weekly.level %></td>
+											<td><%= currentUser.monthly.level %></td>
+										</tr>
+										<tr>
+											<th>Facebook share</th>
+											<td><%= currentUser.daily.shareFB %></td>
+											<td><%= currentUser.weekly.shareFB %></td>
+											<td><%= currentUser.monthly.shareFB %></td>
+										</tr>
+										<tr>
+											<th>Facebook share</th>
+											<td><%= currentUser.daily.shareTW %></td>
+											<td><%= currentUser.weekly.shareTW %></td>
+											<td><%= currentUser.monthly.shareTW %></td>
 										</tr>
 									</tbody>
 								</table>
@@ -128,7 +199,7 @@
 												<canvas id="ranksgraph"></canvas>
 											<div class="text-left">
 												
-											Yesterday's <i class="fa fa-square grapefruit-color "></i>
+											Last daily rank <i class="fa fa-square grapefruit-color "></i>
 											Last Week <i class="fa fa-square sunflower-color"></i>
 											Last Month <i class="fa fa-square aqua-color"></i>
 											</div>
@@ -143,75 +214,280 @@
 						</div>
 						</div>
 				</div>
-				<div class="col-lg-4 badggies">
-					<h4>My Badges</h4>
+				<div class="col-lg-4">
+					<div class="row">		
+						<div class="col-md-12">	
+
+							<div class="panel-group" id="ongoingsChalls">
+							  <div class="panel panel-default">
+							    <div class="panel-heading">
+							      <h4 class="panel-title">
+
+							        <a data-toggle="collapse" data-parent="#ongoingsChalls" href="#collapse_ongoings">
+							          Challenges in progress (<%= ongoings.length %>)
+							        </a> </h4>
+							    </div>
+							    <div id="collapse_ongoings" class="panel-collapse collapse <%= ongoings && ongoings.length > 0 ? 'in' : '' %>">
+							      <div class="panel-body">
+										<div class="row">
+												<div class="col-md-12 ">
+												<% if ( ongoings.length > 0 ) {
+													for (var i = ongoings.length - 1; i >= 0; i--) { %>
+													<div class="panel panel-<%= ((ongoings[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+														<div class="panel-body">
+
+															<h5>
+																<a href='/o/<%= ongoings[i].idCool %>'>
+																	<%= ongoings[i]._idChallenge.title %>
+																</a>
+															</h5>
+															<div class="row">
+																<div class="col-sm-12">
+																	<p>
+																		<%= ongoings[i]._idChallenge.description  %>
+																	</p>		
+
+																	<p>
+
+																		<span class="glyphicon glyphicon-star-empty"></span>
+																		<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
+																			<%= ongoings[i]._idChallenger.local.pseudo  %>
+																		</a>
+																		<span class="glyphicon glyphicon-flash"></span>
+																		<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
+																			<%= ongoings[i]._idChallenged.local.pseudo  %>
+																		</a>
+
+																	</p>	
+																</div>						
+															</div>
+															<div class="row">
+																<div class="col-sm-6">
+																	<p>
+																		<span class="glyphicon glyphicon-calendar"></span>
+																		<span class="dateReadability" data-date="<%= ongoings[i].launchDate %>"></span>
+																	</p>
+																	<p>
+																		<span class="glyphicon glyphicon-calendar"></span>
+																		<span class="dateReadability" data-date="<%= ongoings[i].deadLine %>"></span>
+																	</p>										
+																</div>
+																<div class="col-sm-6 text-right">
+																	Value: <%= ongoings[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+																</div>									
+															</div>								
+														</div>
+														<div class="panel-footer">
+															<% if(ongoings[i].waitingConfirm === true) { %>
+															<%= ((ongoings[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  ongoings[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= ongoings[i].confirmAsk %>"></span>
+
+															<% } else { %>
+															<strong class="convertEnd" data-tEnd="<%= ongoings[i].deadLine %>"></strong>
+															<% } %>
+														</div>
+													</div>
+													<% } %>
+													<% } %>
+												</div>
+							      		</div>
+							    	</div>
+							    </div>
+							  </div>
+							</div>
+							
+							<div class="panel-group" id="lol_games">
+							  <div class="panel panel-default">
+							    <div class="panel-heading">
+							      <h4 class="panel-title">
+							      <% if (currentUser.leagueoflegend.confirmed === true)  { %>
+							        <span class="pull-right gameSync">
+											<i class="fa fa-refresh"></i> 
+									</span>
+									<% } %>
+							        <a data-toggle="collapse" data-parent="#lol_games" href="#collapse_lol">
+							          Last 10 League of legend games
+							        </a> 
+							      </h4>
+							    </div>
+							    <div id="collapse_lol" class="panel-collapse collapse in">
+							      <div class="panel-body">
+										<div class="row">
+										
+									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
+									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
+										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
+										for (var i = lolilength; i >= 0; i--) { %>
+											<div class="col-lg-12 col-md-6 col-sm-6">	
+
+												<div class="media">
+													<div class="pull-left">
+														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">											
+													</div>
+													<div class="media-body">
+														<h6 class="pull-right text-center <%= games[i].stats.win ? 'won': 'lost' %>"><%= games[i].stats.win ? 'won': 'lost' %>
+
+														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
+														</h6>
+														<h4 class="media-heading"><%= games[i].subType %></h4>
+														<p><%= games[i].createDate %></p>
+													</div>
+												</div>
+											</div>
+							
+										<% } %>
+										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
+
+											<div class="media-body text-center">
+												<button type="button" class="btn btn-info gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
+											</div>
+
+										<% } else { %>	
+
+											<div class="media-body text-center">
+												<a href="./settings" class="btn btn-info"> <i class="fa fa-link"></i> Link your Account now!</a>
+											</div>
+
+										<% } %>
+							      		</div>
+							    	</div>
+							    </div>
+							  </div>
+							</div>
+						</div>
+					</div>
+					<!-- <h4>My Badges</h4
+					<div class="badggies">
+
 					<section class="badgeList">
-						
-						<img src="./img/badges/daily_ranked_1.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/daily_ranked_2.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/daily_ranked_3.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/friends_10.png" class="img-responsive hover-me x2 " data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/friends_20.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-						<img src="./img/badges/friends_30.png" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					</section>
+						BADGES ARE COMMING SOON
+						<img src="TBD" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
+					</section> 
+					</div>-->
 				</div>
 			</div>
 			<div class="row">
-				<ul class="timeline col-lg-12">
-					<% var notif = currentUser.notifications;
-					for (var i = notif.length - 1; i >= 0; i--) {
-						if(notif[i].persist === true) { 
-							var isOdd =  (i % 2) ? '' : 'timeline-inverted'
-							, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
-							%>
-							<li class="<%= isOdd %> ">
-								<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
-								<div class="timeline-panel glow-shad ">
-									<div class="timeline-heading">
-										<h4 class="timeline-title"><%= notif[i].title %></h4>
-										<p>
-											<small class="text-muted">
-												<i class="glyphicon glyphicon-time"></i>
-												<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
-											</small>
-										</p>
+				<div class="col-lg-12">
+					<ul class="timeline">
+						<% var notif = currentUser.notifications;
+						for (var i = notif.length - 1; i >= 0; i--) {
+							if(notif[i].persist === true) { 
+								var isOdd =  (i % 2) ? '' : 'timeline-inverted'
+								, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
+								%>
+								<li class="<%= isOdd %> ">
+									<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
+									<div class="timeline-panel glow-shad ">
+										<div class="timeline-heading">
+											<h4 class="timeline-title"><%= notif[i].title %></h4>
+											<p>
+												<small class="text-muted">
+													<i class="glyphicon glyphicon-time"></i>
+													<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
+												</small>
+											</p>
+										</div>
+										<div class="timeline-body">
+											<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
+										</div>
 									</div>
-									<div class="timeline-body">
-										<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
-									</div>
-								</div>
-							</li>
-							<% } 
-					} %>
-				</ul>			
+								</li>
+								<% } 
+						} %>
+					</ul>	
+				</div>		
+			</div>	
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="successModal" aria-labelledby="successModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<span class="glyphicon glyphicon-ok"></span>
+						Good job, invites sent!
+					</h3>
+					</div>
+				<div class="panel-body">
+					<div class="media">
+                        <div class="pull-left">
+                        	<div class="lol-p-icon642"></div>
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">You invited <span id="friendLength"></span>!</h4>
+                          <p>Congratulation, you have successfully invited your friends, and you gained 75xp <strong>per invitation</strong>!</p>
+                        </div>
+                      </div>
+
+				</div>
 			</div>
 		</div>
 	</div>
-		
 	<% include statics/footers %>
-	<script type="text/javascript" src="../js/chart.min.js"></script>
+	<script type="text/javascript" src="./js/chart.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
-
 			//$(".graphsTab input[type=checkbox]").bootstrapSwitch();
 
+		    $(".bt-fs-dialog").fSelector({
+		    	// excludeIds: [<%= currentUser.fbInvitedFriends.length >0 ? currentUser.fbInvitedFriends : '' %>],
+			      closeOnSubmit: true,
+			      max: 50,
+			      lang: {
+			        title: "Invite more friends!",
+			        buttonSubmit: "Invite",
+			        buttonCancel: "Cancel",
+			        buttonSelectAll: "Select All",
+			        buttonDeselectAll: "Deselect All",
+			        buttonShowSelected: "Show Selected",
+			        buttonShowAll: "Show All",
+			        summaryBoxResult: "{1} best results for {0}",
+			        summaryBoxNoResult: "No results for {0}",
+			        searchText: "Enter a friend's name",
+			        fbConnectError: "You must connect to Facebook to see this. Please go to your Settings and enable Facebook connection.",
+			        selectedCountResult: "You have choosen {0} potential new challengers, awesome!",
+			        selectedLimitResult: "Limit is {0} people.",
+			        facebookInviteMessage: "I am using Challenge your Friends and it's awesome! This website allows me to send and receive challenges on almost ANY games! It gives me new way to play and I like it. Please join me and let's throw challenges to each others, it's FUN!"
+			      },
+			      facebookInvite: true,
+			      onSubmit: function(response) {
+						var target = {					
+							list: response
+						}
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(target),
+							contentType: 'application/json',
+							url: './invitedFriends',						
+							success: function(data) {
+								$('#friendLength').text(data);
+								$('#successModal').modal('show');
+							}
+						});	
+				},
+				onClose: function(response) {
+				}
+		    });
+
 			function offsetArray (arr,lie,val) {
-				var cL = arr.length;
+				var cL = arr.length-1;
 				var val = val?val:0;
-				if (lie) {
+				var lie = lie?lie:cL;
+				if(arr.length <= 1){
+					return arr.length === 1 ? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+				}
+				else {
 					for (var i = cL; i < lie; i++) {
 						arr.push(val)
 					};
-					arr.reverse();
-					// console.log(arr)
 					return arr;
-				} else
-				return arr.length === 1? [val,arr[0]]: (arr.length === 0 ? [val,val]: arr);
+				}
 			}
 			// return an array composed of a list of the days' number from 1 month ago until today, not included.
 			function getAllDays() {
 				var e = moment();
-				var s = moment().subtract('months', 1);
+				var s = moment().subtract('months', 1); // PREMIUM
+				// var s = moment().subtract('days', 5);
 				var a = [];
 
 				while(s.isBefore(e)) {
@@ -220,7 +496,26 @@
 				}
 				return a;
 			}
+			$('.gameSync').on('click', function(e){
+				e.preventDefault();
+				_this = $(this)
+				_this.addClass('spinning');
+				$.ajax({
+					type: 'POST',
+					contentType: 'application/json',
+					url: './syncLoLGames',						
+					success: function(data) {
+						_this.removeClass('spinning').fadeOut('slow', function() {
+						if(data === false)
+							_this.html('<i class="fa fa-check-square-o"></i> Up to date').fadeIn('slow');
+						else
+							_this.html('<i class="fa fa-info"></i> Updated').fadeIn('slow');
 
+						});
+					}
+				});	
+
+			})
 			$('.badggies img').hover(function(e){
 				$(this).tooltip('show')
 			},function(){
@@ -252,75 +547,80 @@
 			, warcraft4 = []
 			, dailyR = []
 			, weeklyR = []
-			, monthlyR = [];
-			var dataLabels = getAllDays();
+			, monthlyR = []
+			, rankLabels = []
+			, rankLabelsW = []
+			, rankLabelsM = [];
+			var dataLabels = [];//getAllDays();
 
 			//Load our data
-			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>').reverse();
-			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>').reverse()
-			var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>').reverse();
-			var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>').reverse();
+			var historic = JSON.parse('<%-JSON.stringify(currentUser.xpHistoric)%>');
+			var rHistDaily = JSON.parse('<%-JSON.stringify(currentUser.dailyArchives)%>');
+			// var rHistWeekly = JSON.parse('<%-JSON.stringify(currentUser.weeklyArchives)%>');
+			// var rHistMonthly = JSON.parse('<%-JSON.stringify(currentUser.monthlyArchives)%>');
 
+			// Add the current rank!
 			<% if(currentUser.dailyRank > 0) {%>
-
-				rHistDaily.push({'rank': <%=currentUser.dailyRank %>});
+				rHistDaily.push({'rank': <%=currentUser.dailyRank %>,'date': moment()});
 			<%} %>
+
 			<% if(currentUser.weeklyRank > 0) {%>
-				rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>});
+				// rHistWeekly.push({'rank': <%=currentUser.weeklyRank %>,'date': moment()});
+			<%} if(currentUser.monthlyRank > 0) {%>
+				// rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>,'date': moment()});
 			<%} %>
-			<% if(currentUser.monthlyRank > 0) {%>
-				rHistMonthly.push({'rank': <%=currentUser.monthlyRank %>});
-			<%} %>
 
-			// position our start at the end of the graph by reversing it.
-			for (var i = 0; i < dataLabels.length; i++) {
-				// Reverse the value of our historic
-				thisOne = historic[i] ? historic[i].xp : 0;
-				thatOne = historic[i] ? historic[i].level : 0;
-				thisdaily = rHistDaily[i] ? (rHistDaily[i].rank == 0 ? false:rHistDaily[i].rank) : false;
-				thisWeekly = rHistWeekly[i] ? (rHistWeekly[i].rank == 0 ? false:rHistWeekly[i].rank) : false;
-				thisMonthly = rHistMonthly[i] ? (rHistMonthly[i].rank == 0 ? false:rHistMonthly[i].rank) : false;
+			historic = historic.reverse();
+			rHistDaily = rHistDaily.reverse();
+			// rHistWeekly = rHistWeekly.reverse();
+			// rHistMonthly = rHistMonthly.reverse();
 
-				if(thisOne > 0)
-					dota2.push(thisOne);
+			for (var key = 30; key >= 0; key--) {
 
-				if(thatOne > 0)		
-					warcraft4.push(thatOne);
+				if(historic[key]){
+					dota2.push(historic[key].xp);
+					warcraft4.push(historic[key].level);
+					dataLabels.push(moment(historic[key].date).format("MMM Do a"))
+				}
 
-				if(thisdaily)	
-					dailyR.push(thisdaily);
+				if(rHistDaily[key]){
+					rankLabels.push(moment(rHistDaily[key].date).subtract('days', 1).format("MMM Do"))
+					dailyR.push(rHistDaily[key].rank);
+				}
 
-				if(thisWeekly)	
-					weeklyR.push(thisWeekly);
+				// if(rHistWeekly[key]) {
+				// 	rankLabelsW.push(moment(rHistWeekly[key].date).subtract('weeks', 1).format("MMM Do"))
+				// 	weeklyR.push(rHistWeekly[key].rank);
+				// }
 
-				if(thisMonthly)	
-					monthlyR.push(thisMonthly);
-			};
+				// if(rHistMonthly[key]) {
+				// 	rankLabelsM.push(moment(rHistMonthly[key].date).subtract('months', 1).format("MMM Do"))
+				// 	monthlyR.push(rHistMonthly[key].rank);
+				// }
 
+			}
 			// We need at LEAST 2 values (it's a graph, yep)
-			dota2 = offsetArray(dota2).reverse();
-			warcraft4 = offsetArray(warcraft4).reverse();
+			dota2 = offsetArray(dota2,dota2.length-1);
+			warcraft4 = offsetArray(warcraft4,warcraft4.length-1);
 
-			// determine the length (X) we need for our ranking's array
-			var whichLongest=rHistDaily.length>rHistWeekly.length?rHistDaily.length>rHistMonthly.length?rHistDaily:rHistMonthly:rHistWeekly.length>rHistMonthly.length?rHistWeekly:rHistMonthly
-
+			whatCanIDoToday = _.max(dailyR)
 			// Put all our ranking graph to the same length
-			dailyR = offsetArray(dailyR,whichLongest.length,9999);
-			weeklyR = offsetArray(weeklyR,whichLongest.length,9999);
-			monthlyR = offsetArray(monthlyR,whichLongest.length,9999);
+
+			dailyR = offsetArray(dailyR,dailyR.length-1,whatCanIDoToday);
+			//  TBReactivated
+			// if(weeklyR.length > 0)
+			// 	weeklyR = offsetArray(weeklyR,dailyR.length-1,whatCanIDoToday);
+			// if(monthlyR.length > 0)
+			// 	monthlyR = offsetArray(monthlyR,dailyR.length-1,whatCanIDoToday);
+
 			// Now take the labels to the same length (slice or take the last X ones)
 			var rankLab=dailyR.length<dataLabels.length?dataLabels.slice(dataLabels.length-dailyR.length,dataLabels.length):dataLabels;
 
 			// =========================
 			//BUILD CHARTS
 			// =========================
-			var spec = []
-			for (var i = 0; i < dataLabels.length; i++) {
-				spec.push(dataLabels[i]+' AM');
-				spec.push(dataLabels[i]+' PM');
-			};
-			var xpLab = dota2.length < spec.length ? spec.slice(spec.length - dota2.length,spec.length) : spec;
-			console.log(xpLab);
+			var xpLab = dota2.length < dataLabels.length ? dataLabels.slice(dataLabels.length - dota2.length,dataLabels.length) : dataLabels;
+
 			var dataXp = {
 				labels : xpLab,
 				datasets : [
@@ -337,7 +637,7 @@
 			var lvlLab = warcraft4.length < dataLabels.length ? dataLabels.slice(dataLabels.length - warcraft4.length,dataLabels.length) : dataLabels;
 			var optLvl = {
 					scaleOverride : true,
-					scaleSteps : <%- currentUser.level*2 %>,
+					scaleSteps : <%= currentUser.level+1 %>,
 					scaleStepWidth : 1,
 					scaleStartValue : 0
 			}
@@ -355,11 +655,16 @@
 			}
 			//Ranks Graph
 			var optRk = {
-				datasetFill : false,
-				bezierCurve : false
+				datasetFill: true,
+				bezierCurve : false,
+				scaleOverride : true,
+				scaleSteps : dailyR[dailyR.length-1]+1,
+				scaleStepWidth : 1,
+				scaleStartValue : 0
 			}
+
 			var dataRanks = {
-				labels : rankLab,
+				labels : rankLabels,
 				datasets : [
 					{
 						fillColor : "rgba(237,85,101,0.3)",
@@ -367,7 +672,10 @@
 						pointColor : "rgba(237,85,101,0.8)",
 						pointStrokeColor : "#fff",
 						data : dailyR
-					},
+					}
+				]
+			}
+			/*,
 					{
 						fillColor : "rgba(255,206,84,0.3)",
 						strokeColor : "rgba(255,206,84,0.6)",
@@ -381,9 +689,7 @@
 						pointColor : "rgba(79,193,233,0.8)",
 						pointStrokeColor : "#fff",
 						data : monthlyR
-					}
-				]
-			}
+					}*/
 			// Build Canvas
 			var desiredRatio = $("#historygraph").parent().width(); // Used for all graphs
 			var canvasXp = $("#historygraph")[0];

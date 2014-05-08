@@ -3,7 +3,7 @@
 <head>
 	<% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
@@ -13,9 +13,9 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="article"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Launch a challenge to one of your <%= userList.length > 1 ? userList.length+" friends" : "friends" %>">
     <meta name="twitter:description" content="Launching a challenge is the last step to prove that only you can manage to complete a designed challenge!">
@@ -137,11 +137,13 @@
 							</div> -->					
 						</h3>
 						<div class="row challenge">
-							<% for(var i=0; i< challenges.length; i++) { 
+							<% 
+								if(challenges && challenges.length > 0 ) {
+								for(var i=0; i< challenges.length; i++) { 
 								%>
-								<div class="col-lg-6 col-xs-6 imInABox animated fadeInDown  challenge-card hover-me" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+								<div class="col-lg-6 col-xs-6 imInABox animated fadeInDown  challenge-card hover-me" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game.title %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
 									<div class="rounded-2 well">
-										<span class="badge"><%= challenges[i].game %></span>
+										<span class="badge <%= challenges[i].game.type %>"><%= challenges[i].game.title %></span>
 
 										<h3 class="hidden-xs"><%= challenges[i].title %></h3>
 										<h5 class="visible-xs"><%= challenges[i].title %></h5>
@@ -159,18 +161,19 @@
 										</span>
 									</div>
 								</div>
-								<% } %>
+								<% }
+								} %>
 							</div>
 						</div>
 						<div class="col-md-6">
-							<h3>target a friend
+							<h3>And select a friend to challenge
 								<!-- <div class="pull-right filter">
 									<input type="search" class="form-control" placeholder="Search a friend">
 								</div> -->
 							</h3>
 							<div class="row friends">
 
-								<% if(userList.length > 0) { %>
+								<% if(userList && userList.length > 0) { %>
 								<% for(var i=0; i< userList.length; i++) { %>
 								<div class="col-lg-3 col-xs-3 col-sm-3 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 boxy rounded-2 animated flipInX" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
 									<div class="flatty">
@@ -199,7 +202,6 @@
 
 					$(function() {
 						var cStartDate, cEndDate;
-
 						$('#DTPKStart')
 						.datetimepicker({
 							format: "MM dd yyyy, hh:ii",
@@ -254,6 +256,8 @@
 							, challengedPseudo      = uBox.attr('data-pseudo')
 							, launchAt = $('#DTPKStart_formated').val();
 
+							console.log(moment(launchAt));
+							console.log(moment());
 							if(moment(launchAt).isAfter()) {
 
 								var target = {};

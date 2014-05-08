@@ -3,7 +3,7 @@
 <head>
 <% include statics/headers %>
     <!-- Start General metas -->
-    <meta name="url" content="http://www.challenge-friends.herokuapp.com">
+    <meta name="url" content="http://www.cyf-app.co">
     <meta name="language" content="EN">
     <meta name="reply-to" content="cyf.app@gmail.com">
     <meta name="rating" content="General">
@@ -13,9 +13,9 @@
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="article"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://www.challenge-friends.herokuapp.com">
+    <meta property="og:url" content="http://www.cyf-app.co">
     <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
@@ -25,7 +25,7 @@
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="http://www.challenge-friends.herokuapp.com/icon_big.png">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Discover Challenge your Friends">
     <meta name="twitter:description" content="Launch challenge to your friends and players around the world, on any game at any time and from anywhere! Become a true champion and find back your initial enjoyement of playing games.">
@@ -34,26 +34,8 @@
 <title>Discover - Challenge your Friends</title>
 </head>
 <body>
-<div class="navbar navbar-default navbar-static-top" id="headNav" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <i class="fa fa-ellipsis-v"></i>
-      </button>
-      <a class="navbar-brand animated flipInX" href="./">
-      <img src="./img/logo.png" alt="go home">
-      </a>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="animated fadeInX"><a href="/signup">Become a challenger</a></li>
-        <li class="animated fadeInX"><a href="/login">Challenger entrance</a></li>
-      </ul>
-    </div>
-    <!--/.nav-collapse -->
-  </div>
-</div>
+  <% include statics/navTop %>
+  
 <section id="slide-1" class="container">
 <div class="row animated fadeIn">
   <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
@@ -229,6 +211,8 @@
   </div>
 </div>
 </section>
+    <!--  FOOTER -->
+    <% include statics/footers %>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">

@@ -92,6 +92,10 @@
           type: Number,
           "default": 0
         },
+        score: {
+          type: Number,
+          "default": 0
+        },
         xp: {
           type: Number,
           "default": 0
@@ -162,7 +166,7 @@
           type: Number,
           "default": 0
         },
-        week: {
+        date: {
           type: Date,
           "default": Date.now
         }
@@ -216,7 +220,7 @@
           type: Number,
           "default": 0
         },
-        month: {
+        date: {
           type: Date,
           "default": Date.now
         }
@@ -255,6 +259,7 @@
         "default": Date.now
       }
     },
+    sessionKey: String,
     leagueoflegend: {
       confirmed: {
         type: Boolean,
@@ -277,8 +282,117 @@
       linkedOnce: {
         type: Boolean,
         "default": true
-      }
+      },
+      lastGames: [
+        {
+          championId: Number,
+          createDate: String,
+          championInfos: {
+            id: Number,
+            title: String,
+            name: String,
+            key: String
+          },
+          fellowPlayers: [
+            {
+              championId: Number,
+              summonerId: Number,
+              teamId: Number
+            }
+          ],
+          gameId: Number,
+          gameMode: String,
+          gameType: String,
+          invalid: Boolean,
+          ipEarned: Number,
+          level: Number,
+          mapId: Number,
+          spell1: Number,
+          spell2: Number,
+          stats: {
+            assists: Number,
+            barracksKilled: Number,
+            championsKilled: Number,
+            combatPlayerScore: Number,
+            consumablesPurchased: Number,
+            damageDealtPlayer: Number,
+            doubleKills: Number,
+            firstBlood: Number,
+            gold: Number,
+            goldEarned: Number,
+            goldSpent: Number,
+            item0: Number,
+            item1: Number,
+            item2: Number,
+            item3: Number,
+            item4: Number,
+            item5: Number,
+            item6: Number,
+            itemsPurchased: Number,
+            killingSprees: Number,
+            largestCriticalStrike: Number,
+            largestKillingSpree: Number,
+            largestMultiKill: Number,
+            legendaryItemsCreated: Number,
+            level: Number,
+            magicDamageDealtPlayer: Number,
+            magicDamageDealtToChampions: Number,
+            magicDamageTaken: Number,
+            minionsDenied: Number,
+            minionsKilled: Number,
+            neutralMinionsKilled: Number,
+            neutralMinionsKilledEnemyJungle: Number,
+            neutralMinionsKilledYourJungle: Number,
+            nexusKilled: Number,
+            nodeCapture: Number,
+            nodeCaptureAssist: Number,
+            nodeNeutralize: Number,
+            nodeNeutralizeAssist: Number,
+            numDeaths: Number,
+            numItemsBought: Number,
+            objectivePlayerScore: Number,
+            pentaKills: Number,
+            physicalDamageDealtPlayer: Number,
+            physicalDamageDealtToChampions: Number,
+            physicalDamageTaken: Number,
+            quadraKills: Number,
+            sightWardsBought: Number,
+            spell1Cast: Number,
+            spell2Cast: Number,
+            spell3Cast: Number,
+            spell4Cast: Number,
+            summonSpell1Cast: Number,
+            summonSpell2Cast: Number,
+            superMonsterKilled: Number,
+            team: Number,
+            teamObjective: Number,
+            timePlayed: Number,
+            totalDamageDealt: Number,
+            totalDamageDealtToChampions: Number,
+            totalDamageTaken: Number,
+            totalHeal: Number,
+            totalPlayerScore: Number,
+            totalScoreRank: Number,
+            totalTimeCrowdControlDealt: Number,
+            totalUnitsHealed: Number,
+            tripleKills: Number,
+            trueDamageDealtPlayer: Number,
+            trueDamageDealtToChampions: Number,
+            trueDamageTaken: Number,
+            turretsKilled: Number,
+            unrealKills: Number,
+            victoryPointTotal: Number,
+            visionWardsBought: Number,
+            wardKilled: Number,
+            wardPlaced: Number,
+            win: Boolean
+          },
+          subType: String,
+          teamId: Number
+        }
+      ]
     },
+    fbInvitedFriends: [Number],
     facebook: {
       id: String,
       token: String,
@@ -352,6 +466,28 @@
         isSeen: {
           type: Boolean,
           "default": false
+        }
+      }
+    ],
+    games: [
+      {
+        _idGame: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Game"
+        },
+        title: {
+          type: String
+        },
+        type: {
+          type: String
+        },
+        favorite: {
+          type: Boolean,
+          "default": false
+        },
+        date: {
+          type: Date,
+          "default": Date.now
         }
       }
     ],

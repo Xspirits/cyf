@@ -1,13 +1,14 @@
-# config/auth.js
+# config/auth.js 
 
 # expose our config directly to our application using module.exports
 module.exports =
   app_config:
     email_confirm: true
     twitterPushNews: true
+    facebookPushNews: true
   cyf :
     app_domain: "http://www.cyf-app.co"
-    # domain: "http://localhost:8080"
+    # app_domain: "http://localhost:8080"
   mandrill_key: "w_F27RXK5GmLNtZoePLczA"
   support :
     email: "cyf.app@gmail.com"
@@ -15,6 +16,9 @@ module.exports =
     name: "CyF validator"
   express_sid_key: "chachompcha.sid"
   cookie_secret: "oneDoesNotSimplychompi"
+  aws:
+    key: 'AKIAIYPYHIXS2GGY2FDQ'
+    secret: '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'
   steam:
     key: "02130312F2CCF046E4710C189E8481BA"
     domain: "challenge-friends.herokuapp.com"

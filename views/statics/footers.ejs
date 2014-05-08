@@ -10,7 +10,10 @@
             | <a href="https://twitter.com/cyf_app" title="Follow us on Twitter!" target="_blank">Twitter</a>
             | <a href="https://www.facebook.com/cyfapp" title="Like us on Facebook!" target="_blank">Facebook</a>
 
-            <a href="./about" class="pull-right" title="Like us on Facebook!">About</a>            
+            <span class="pull-right">
+              | <a href="./contact" title="Contact">Contact</a> 
+              | <a href="./about" title="About Cyf">About</a> 
+            </span>              
           </section>
         </div>        
       </div>
@@ -18,60 +21,133 @@
 <!-- 
 <canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(18,18,18); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas> -->
 <div id="fb-root"></div>
-
 <script type="text/javascript">
-(function(e,t,n){var r,i=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;r=e.createElement(t);r.id=n;r.src="//connect.facebook.net/en_US/all.js#xfbml=1&appId=624902070914410";i.parentNode.insertBefore(r,i)})(document,"script","facebook-jssdk");(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/platform.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/plusone.js?publisherid=109925245483936264439";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();!function(e,t,n){var r,i=e.getElementsByTagName(t)[0],s=/^http:/.test(e.location)?"http":"https";if(!e.getElementById(n)){r=e.createElement(t);r.id=n;r.src=s+"://platform.twitter.com/widgets.js";i.parentNode.insertBefore(r,i)}}(document,"script","twitter-wjs")</script>
+(function(e,t,n){var r,i=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;r=e.createElement(t);r.id=n;r.src="//connect.facebook.net/en_US/all.js#xfbml=true&cookie=true&status=true&appId=624902070914410";i.parentNode.insertBefore(r,i)})(document,"script","facebook-jssdk");(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/platform.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/plusone.js?publisherid=109925245483936264439";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();!function(e,t,n){var r,i=e.getElementsByTagName(t)[0],s=/^http:/.test(e.location)?"http":"https";if(!e.getElementById(n)){r=e.createElement(t);r.id=n;r.src=s+"://platform.twitter.com/widgets.js";i.parentNode.insertBefore(r,i)}}(document,"script","twitter-wjs")</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-50004810-1', 'cyf-app.co');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
 <script src="/socket.io/socket.io.js"></script>
 
-<script src="/js/init.js"></script>
-<script type="text/javascript">
-	$(function() {
-    	moment().zone('+0200').format();
+<!-- <script src="/js/init.js"></script> -->
 
-		var isMobile = ($(window).width() < 800) ? true : false;
-		var url = window.location.href;
-		var arr = url.split("/");
-		var resultURL = arr[0] + "//" + arr[2];
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/moment.min.js"></script>
+<script type="text/javascript" src="/js/countdown.min.js"></script>
+<script type="text/javascript" src="/js/moment-cd.js"></script>
+<script type="text/javascript" src="/js/file-input.js"></script>
+<script type="text/javascript" src="/js/underscore.min.js"></script>
+<script type="text/javascript" src="/js/navmenu.js"></script>
+<script type="text/javascript" src="/js/alertify.min.js"></script>
+<script type="text/javascript" src="/js/spin.min.js"></script>
+<script type="text/javascript" src="/js/ladda.min.js"></script>
+<script type="text/javascript" src="/js/datePicker.js"></script>
+<script type="text/javascript" src="/js/touchspin.js"></script>
+<script type="text/javascript" src="/js/nouislider.min.js"></script>
+<script type="text/javascript" src="/js/odometer.min.js"></script>
+<script type="text/javascript" src="/js/nprogress.js"></script>
+<script type="text/javascript" src="/js/later.js"></script>
+<script type="text/javascript" src="/js/bootstrap.switch.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+<script type="text/javascript" src="./js/facebook-import.js"></script>
+
+
+<script type="text/javascript">
+
+	$(function() {
+
+		moment.utc().format();
+		alertify.set({ delay : 12000 });
+
+		isMobile = ($(window).width() < 800) ? true : false;
+		url = window.location.href;
+		arr = url.split("/");
+		resultURL = arr[0] + "//" + arr[2];
+
 		//Socket 
-		//http://localhost:8080/leaderboard
 		socket = io.connect(resultURL);
-		// socket = io.connect('http://challenge-friends.herokuapp.com');
+		chat = io.connect(resultURL + '/chat');
+		// socket = io.connect('http://www.cyf-app.co');
 
 		socket.on('alive', function (data) {
 			console.log('Challenger alive: '+data.date);
 		});
+		socket.on('onlineUsers', function (data) {
+			console.log(data);
+			$('#onlineCounter').html(data.number);
+		});
+
+
+		chat.on('chatLogs', function (data) {
+			// Clean the  chat
+			$('#chat').html();
+			var mess=data.messages
+			, messbuff;
+
+			for (var i = 0; i < mess.length; i++) {
+        		messbuff = {       			
+			      user: mess[i].user_from,
+			      message: mess[i].message,
+			      date: mess[i].dateSent
+        		}
+				pushChat(messbuff);
+			};
+		});
+		chat.on('newUser', function (data) {
+			pushChat(data, 'chat-log-event');
+		});
+		chat.on('message', function (message) {
+			pushChat(message);
+		})
+		// CHAT FUNCTIONS
+
+		$('#chat-message').bind("enterKey",function(e){
+			e.preventDefault();
+			console.log('sending: ' + $(this).val())
+		  	chat.emit('message', $(this).val());
+		  	$(this).val('');
+		});
+
+		$('#chat-message').keyup(function(e){
+		    if(e.keyCode == 13)
+		    {
+		        $(this).trigger("enterKey");
+		    }
+		});
+
+		// NOTIFICATIONS
+
 		<% if (currentUser) { %>
-
+			// Only if logged in
 			socket.on('globalevent', function (data) {
-
-				console.log(data);
 				pushStream(data);
 			});
+
+			// nprogress Is disabled for now, could be using it in the future though.
+			<% if (currentUser.xp > 0 ) { %>
+				var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
+				var flatten = Math.round((myLevel * .8)*100);
+				$('#user-xpbar').width(flatten + '%');
+
+			<% } else { %>
+				$('#user-xpbar').width('1%');
 			<% } %>
-			var pushStream = function(data) {
-				var target = $('#streams')
-				, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
+			// NOTIFICATIONS =========================
+			var queue = [];
+			var hasCSuccess = [];
 
-				target.prepend(template);
-
-			}
-
-		// nprogress Is disabled for now, could be using it in the future though.
-		var myLevel = Math.round((<%= currentUser.xp/ (currentUser.xp + currentUser.xpNext) %>)*100)/100;
-		var flatten = Math.round((myLevel * .8)*100);
-		$('#user-xpbar').width(flatten + '%')
-		
-		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
-		// NProgress.set( myLevel );
-
-		// NOTIFICATIONS =========================
-		alertify.set({ delay : 12000 });
-		var queue = [];
-		var hasCSuccess = [];
-
-		<% if (currentUser) {
-
-			if(currentUser.notifications && currentUser.notifications.length > 0) { 
+			<% if(currentUser.notifications && currentUser.notifications.length > 0) { 
 
 				var notif = currentUser.notifications
 				, limit = 9;
@@ -80,15 +156,15 @@
 					if(notif[i].isSeen == false) { 
 						--limit;
 
-						if(notif[i].type == 'challengeSuccess' && !isMobile){ %>
+						if(notif[i].type == 'challengeSuccess') { %>
+
 							var obj_<%= i %> = {
 								title : '<%= notif[i].to %>',
 								link : '<%= notif[i].link2 %>',
 								message : '<%= notif[i].title %>'
 							}
 							hasCSuccess.push(obj_<%= i %>);
-							<%
-						} %>
+						<% } %>
 
 						queue.push(['<i class="<%= notif[i].icon %>"></i> <a href="<%= notif[i].link1 %>" title="<%= notif[i].title %>"><strong><%= notif[i].title %></strong></a> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %>','<%= notif[i]._id %>', <%= notif[i].persist ? false : true %>, true]);
 						// <%= (notif[i].persist && currentUser.allowDeskNotif) ? true : false %>
@@ -96,13 +172,56 @@
 						<% 
 					} 
 				}
-			}
-		} %>
+			} %>
+			
+		<% } %>
+
+		
+		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
+		// NProgress.set( myLevel );
+
+		$('.show-chat').hover(function(){
+			if(!$('.liveChat').hasClass('sticked'))
+				$('.liveChat').addClass('active');
+			},function(){
+			if(!$('.liveChat').hasClass('sticked'))
+				$('.liveChat').removeClass('active');
+		});
+
+		$('.show-chat').on('click', function(){
+			$('.liveChat').toggleClass('sticked');
+		});
+		$('.show-logs').hover(function(){
+			if(!$('.liveFeed').hasClass('sticked'))
+				$('.liveFeed').addClass('active');
+			},function(){
+			if(!$('.liveFeed').hasClass('sticked'))
+				$('.liveFeed').removeClass('active');
+		});
+
+		$('.show-logs').on('click', function(){
+			$('.liveFeed').toggleClass('sticked');
+		});
+
+		// $('#dismissBoxChall').click(function(e){
+		// 	e.preventDefault();
+		// 	$('#gotchaChallenge,#gotaBoxContent')
+		// 	.removeClass('flipInX')
+		// 	.addClass('flipOutX');
+
+		// 	$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+
+		// 		$('#gotchaChallenge,#gotaBoxContent')
+		// 		.remove();
+		// 	});
+		// });
 
 		notif(queue, queue.length -1); 
-		// challengeAlert(); 
+		timeFromUp();
 		readability();
+		readabilityMin();
 		readabilityAgo();
+		animateProgress();
 
 		setTimeout(function(){
 			$('.odometer').each(function(){
@@ -111,89 +230,95 @@
 				$(this).html(number);
 			});
 		}, 1000);
-
-			// Progress animation
-			(function animateProgress() {
-				$('.tinyProgress').each(function(){
-					var w   = $(this).attr('data-percent');
-					$(this).width(w + '%');
-				});	
-			})();
-				
-			function notif (queue,i) {     
-
-				setTimeout(function () {  
-					if(queue[i]) {
-						sendNotif(queue[i][0],queue[i][1],queue[i][2])
-						if (--i) notif(queue, i);  
-					}    			
-				}, 220)
-			} 
-			$('.righty').hover(function(){
-				if(!$('.liveFeed').hasClass('sticked'))
-					$('.liveFeed').addClass('active');
-			},function(){
-				if(!$('.liveFeed').hasClass('sticked'))
-					$('.liveFeed').removeClass('active');
-			});
-			$('.righty').on('click', function(){
-				$('.liveFeed').toggleClass('sticked');
-			})
-			$('#dismissBoxChall').click(function(e){
-				e.preventDefault();
-				$('#gotchaChallenge,#gotaBoxContent')
-				.removeClass('flipInX')
-				.addClass('flipOutX');
-
-				$('#gotchaChallenge').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-
-					$('#gotchaChallenge,#gotaBoxContent')
-					.remove();
-				});
-			})
-			function challengeAlert (){
-				var number = hasCSuccess.length;
-
-				if(number >= 1 ){
-
-					var template = '<div id="gotaBoxContent" class="animated" style="margin: 0; position: relative;z-index:99999991;height: 100%; width:100%;display: block;top: 50%;padding: 50px 0;"><div style="width: 50%; height: 50%; overflow: auto; margin: auto; position: relative;"><h1 style="color: white">Congratulation!</h1><p><hr><h3 style="color: rgb(255, 248, 81)">'+hasCSuccess[0].message+'</h3></p><hr><p><a href="#" id="dismissBoxChall" title="dissmiss this!">Dissmiss</a></p></div></div>';
-					$("#gotchaChallenge").html(template);
-    				// popChallengeSuccessbox();
-
-    				$('#gotchaChallenge').fadeIn('slow').removeClass('hidden');
-
-
-    			}
-    		}
-			// Launch some fun timers
+		setInterval(function(){
 			timeFromUp();
-			setInterval(function(){
-				timeFromUp();
-			},60000);
-		});
-var sendNotif= function(msg, idNotif, del) {
+		},60000);
 
-	alertify.log(msg, 'info');
+		setInterval(function(){
+			readability();
+			updateUp();
+			updateEnd();
+		},1000);
+		//  FUNCTIONS
+		function pushStream(data) {
+			var target = $('#streams')
+			, template = '<li class="mepUp animated bounceInRight"><h5><i class="'+(data.icon ? data.icon : 'fa fa-circle-o') + '"></i> <span>'+data.message+'</span></h5><p class="text-right"><small>'+(data.desc?data.desc:'')+'</small></p> <span class="dateFrom"><span class="timeFromUp" data-date="'+data.date+'">1 second</span> ago</span></li>';
 
-	var target = {					
-		del : del,
-		id : idNotif
-	}
-	$.ajax({
-		type: 'POST',
-		data: JSON.stringify(target),
-		contentType: 'application/json',
-		url: './markNotifRead',						
-		success: function(data) {
-			console.log(data);
+			target.prepend(template);
 		}
-	});				
-}
-var timeFromUp = function(){
-	$('.timeFromUp').each( function () {
-		var start = $(this).attr('data-date');
-		var converted = moment(start).countdown().toString();
-		$(this).text(converted);
-	})
-}
+		function pushChat(data,claass) {
+			var date = moment(data.date).format('hh:mm:ss');
+			var target = $('#chat')
+			, template = '<li class="mepUp animated rubberBand '+(claass?claass:'')+'"><span class="chat-date">'+date+'  | </span><small>' + (data.icon ? '<i class="'+data.icon + '"></i> ': '') + '<a href="/u/'+data.user.idCool+'" title="see profile">'+data.user.pseudo+'</a>:</small> '+data.message+'</li>';
+
+			target.prepend(template);
+		}
+		function animateProgress() {
+			$('.tinyProgress').each(function(){
+				var w   = $(this).attr('data-percent') - 2;
+				$(this).width(w + '%');
+			});	
+		};
+		function notif(queue,i) {     
+			setTimeout(function () {  
+				if(queue[i]) {
+					sendNotif(queue[i][0],queue[i][1],queue[i][2])
+					if (--i) notif(queue, i);  
+				}    			
+			}, 220)
+		};
+		function readability(){
+			$('.dateReadability').each( function () {
+				var date = $(this).attr('data-date');
+				var converted = moment(date).utc().format('dddd DD MMMM HH[h]mm');
+				$(this).text(converted);
+			})
+		};
+		function updateUp(){
+			$('.convertUp').each( function () {
+				var start = $(this).attr('data-tStart');
+				var converted = moment(start).utc().countdown().toString();
+				if(moment(start).utc().isBefore(moment().utc()))
+					$(this).text('Started!');			
+				else
+					$(this).text('Start in ' +converted);
+			})
+		};
+		function updateEnd(){
+			$('.convertEnd').each( function () {
+				var end = $(this).attr('data-tEnd');
+				var converted = moment(end).countdown().toString();
+				if(moment(end).utc().isBefore(moment().utc()))
+					$(this).text('Ended!');			
+				else
+					$(this).text('End in ' +converted);
+			})
+		};
+		function timeFromUp(){
+			$('.timeFromUp').each( function () {
+				var start = $(this).attr('data-date');
+				var converted = moment(start).utc().countdown().toString();
+				$(this).text(converted);
+			})
+		};
+		function sendNotif(msg, idNotif, del) {
+
+			alertify.log(msg, 'info');
+
+			var target = {					
+				del : del,
+				id : idNotif
+			}
+			$.ajax({
+				type: 'POST',
+				data: JSON.stringify(target),
+				contentType: 'application/json',
+				url: './markNotifRead',						
+				success: function(data) {
+					console.log(data);
+				} 
+			});				
+		};
+	});
+
 </script>
