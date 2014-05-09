@@ -33,7 +33,7 @@
   background: #E9573F;
   border: 1px solid #FC6E51;
 }
-.bittersweet-color {
+.bittersweet-color, a.bittersweet-color, .bittersweet-color a {
   color: #FC6E51;
 }
 .bittersweet-color:hover,.bittersweet-color:active,.bittersweet-color:visited {

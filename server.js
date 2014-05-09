@@ -86,7 +86,7 @@
 
   relations = require("./config/relations")(mailer);
 
-  games = require("./config/game")(moment);
+  games = require("./config/game")(ent, moment);
 
   users = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment);
 

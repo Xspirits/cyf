@@ -69,39 +69,69 @@
 				<div class="row">
 
 					<div class="col-md-8 col-md-offset-2">
-						<div class="alert alert-warning">
-							<h3>Important guidelines</h3>
-							<p>
-								Please note that challenges will be posted live in order to allows challengers to enjoy it immediatly. Nonetheless please be aware that new challenges will be reviewed and if they do not meet the guidelines they will be removed. Finally, challengers who abuse the system will be permanently banned, without warning.
-							</p>
-						</div>
-						<div class="alert alert-info">
-								
-							<dl class="dl-horizontal">
-								<dt>The title</dt>
-								<dd>Be sure to put a clear title which allows challengers to identify immediatly what your challenge is about (ie: Killing spree of 5 with X). Keep it <strong>short</strong>.</dd>
-								<dt>The description</dt>
-								<dd>Enter a complete description, don't forget to include: <strong>how to proove the challenger succeed</strong> (screenshot? answer?), <strong>any important details</strong> (such as "use this character, don't do this while doing this challenge). <br> <strong>tips:</strong>: many games offer a chat where you can activate/desactivate the times of messages which are posted. This is a good way to proove the start and end of a challenge.</dd>
-								<dt>Duration</dt>
-								<dd>Remember, we are here to take up challenges! But, be realistic, ain't nobody to kill the last boss of a game like skyrim or Zelda in 5min.</dd>
-								<dt>Keep it simple</dt>
-								<dd> Don't forget: you can create multiples challenges so keep them as simple as possible to make people enjoy them! Tip: create challenges you would like to do yourself :)</dd>
-							</dl>
-							
-						</div>
-						<div class="alert alert-danger">
-							<h3>Do and don't do</h3>
-							<ul class="list-unstyled">
-								<li><i class="fa fa-check"></i> <strong>Do:</strong> Use a clean and clear language</li>
-								<li><i class="fa fa-check"></i> <strong>Do:</strong> Be realistic for the allowed timeframe</li>
 
-								<li><i class="fa fa-ban"></i> <strong>Don't:</strong> Duplicate a challenge if you don't bring something new.</li>
-								<li><i class="fa fa-ban"></i> <strong>Don't:</strong> Put anything which may enfrain any law</li>
+						<div class="panel-group panel-group-lists collapse in" id="accordion2" style="height: auto;">
+			              <div class="panel">
+			                <div class="panel-heading">
+			                  <h4 class="panel-title">
+			                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFour" class="collapsed">
+			                      About creating a challlenge
+			                    </a>
+			                  </h4>
+			                </div>
+			                <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
+			                  <div class="panel-body">
+			                    Creating challenge allows you to be able to to launche what you estimate as challenging! It also add new content to Cyf and will give to others challengers new options when time to lauch a challenge comes.
+			                  </div>
+			                </div>
+			              </div>
+			              <div class="panel">
+			                <div class="panel-heading">
+			                  <h4 class="panel-title">
+			                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFive" class="collapsed">
+			                      Important guidelines
+			                    </a>
+			                  </h4>
+			                </div>
+			                <div id="collapseFive" class="panel-collapse collapse">
+			                  <div class="panel-body">
+								<dl class="dl-horizontal">
+									<dt>The title</dt>
+									<dd>Be sure to put a clear title which allows challengers to identify immediatly what your challenge is about (ie: Killing spree of 5 with X). Keep it <strong>short</strong>.</dd>
+									<dt>The description</dt>
+									<dd>Enter a complete description, don't forget to include: <strong>how to proove the challenger succeed</strong> (screenshot? answer?), <strong>any important details</strong> (such as "use this character, don't do this while doing this challenge). <br> <strong>tips:</strong>: many games offer a chat where you can activate/desactivate the times of messages which are posted. This is a good way to proove the start and end of a challenge.</dd>
+									<dt>Duration</dt>
+									<dd>Remember, we are here to take up challenges! But, be realistic, ain't nobody to kill the last boss of a game like skyrim or Zelda in 5min.</dd>
+									<dt>Keep it simple</dt>
+									<dd> Don't forget: you can create multiples challenges so keep them as simple as possible to make people enjoy them! Tip: create challenges you would like to do yourself :)</dd>
+								</dl>
+			                  </div>
+			                </div>
+			              </div>
+			              <div class="panel">
+			                <div class="panel-heading">
+			                  <h4 class="panel-title">
+			                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSix" class="collapsed">
+			                      How to ?
+			                    </a>
+			                  </h4>
+			                </div>
+			                <div id="collapseSix" class="panel-collapse collapse">
+			                  <div class="panel-body">
+			                    <ul class="list-unstyled">
+									<li><i class="fa fa-check"></i> <strong>Do:</strong> Use a clean and clear language</li>
+									<li><i class="fa fa-check"></i> <strong>Do:</strong> Be realistic for the allowed timeframe</li>
 
-							</ul>
-						</div>
-						
-					</div>
+									<li><i class="fa fa-ban"></i> <strong>Don't:</strong> Duplicate a challenge if you don't bring something new.</li>
+									<li><i class="fa fa-ban"></i> <strong>Don't:</strong> Put anything which may enfrain any law</li>
+
+								</ul>
+			                  </div>
+			                </div>
+			              </div>
+			            </div>
+			           </div>
+
 					<div class="form-group col-md-8 col-md-offset-2">
 						<form action="/newChallenge" method="post">
 							<div class="form-group col-md-6">
@@ -112,6 +142,7 @@
 								<label>Pick a Game</label>
 								<input id="gamePicked" type="text" class="form-control" name="game" autocomplete="off"  >
 								<input id="idGame" type="hidden" name="idGame"  value="">
+								<a href="/newGame"><small>Can't find your game ?</small></a>
 							</div>
 							<div class="form-group col-md-6">
 								<label>Description</label>
@@ -162,34 +193,34 @@
 			 			data: request,  // request is the value of search input
 			 			success: function (data) {
 						// Map response values to fiedl label and value
-						response($.map(data, function (el) {
-							return {
-								label: el.title,
-								idGame: el._id,
-								value: el.type
-							};
-						}));
-					}
-				});
-					},
-					// The minimum number of characters a user must type before a search is performed.
-					minLength: 3, 					
-					// set an onFocus event to show the result on input field when result is focused
-					focus: function (event, ui) { 
+							response($.map(data, function (el) {
+								return {
+									label: _.unescape(el.title),
+									idGame: el._id,
+									value: el.type 
+								};
+							}));
+						}
+					});
+						},
+						// The minimum number of characters a user must type before a search is performed.
+						minLength: 3, 					
+						// set an onFocus event to show the result on input field when result is focused
+						focus: function (event, ui) { 
 
-						this.value = ui.item.label; 
-					// Prevent other event from not being execute
-					event.preventDefault();
-				},
-				select: function (event, ui) {
-					// Prevent value from being put in the input:
-					this.value = ui.item.label;
-					// Set the id to the next input hidden field
-					// $('#gamePicked').val(ui.item.label); 
-					$('#idGame').val(ui.item.idGame); 
-					// Prevent other event from not being execute		
-					event.preventDefault();
-				}
+							this.value = ui.item.label; 
+						// Prevent other event from not being execute
+						event.preventDefault();
+					},
+					select: function (event, ui) {
+						// Prevent value from being put in the input:
+						this.value = ui.item.label;
+						// Set the id to the next input hidden field
+						// $('#gamePicked').val(ui.item.label); 
+						$('#idGame').val(ui.item.idGame); 
+						// Prevent other event from not being execute		
+						event.preventDefault();
+					}
 			});
 $("#durationH").TouchSpin({
 	min: 0,

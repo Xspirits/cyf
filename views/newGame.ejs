@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+	<% include statics/headers %>
+    <!-- Start General metas -->
+    <meta name="url" content="http://www.cyf-app.co">
+    <meta name="language" content="EN">
+    <meta name="reply-to" content="cyf.app@gmail.com">
+    <meta name="rating" content="General">
+    <meta name="keywords" content="create, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+    <meta name="title" content="Submit a new challenge - Challenge your Friends">
+    <meta name="description" content="Add a game to Cyf library!">
+    <!-- End General metas -->
+    <!-- Start Open Graph metas -->
+    <meta property="og:type" content="article"> <!-- website/article/profile -->
+    <meta property="og:url" content="http://www.cyf-app.co">
+    <meta property="og:site_name" content="Challenge your Friends"/>
+    <meta property="og:image" content="http://cyf-app.co/img/icon_big.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="750">
+    <meta property="og:image:height" content="315">
+    <meta property="og:title" content="Submit a new challenge - Challenge your Friends">
+    <meta property="og:description" content="Add a game to Cyf library!">
+    <!-- End Open Graph -->
+    <!-- Start Twitter Card Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@cyf_app">
+    <meta name="twitter:image" content="http://cyf-app.co/img/icon_big.png">
+    <meta name="twitter:image:width" content="750">
+    <meta name="twitter:title" content="Submit a new challenge - Challenge your Friends">
+    <meta name="twitter:description" content="Add a game to Cyf library!">
+    <!-- Twitter card end -->
+	<title>Register a new game - Challenge your Friends</title>
+</head>
+<body>
+
+	<% include statics/navTop %>
+
+	<div class="canvas">
+		
+		<div class="container">
+
+			<div class="page-header text-center">
+				<h1>Add a game to the library</h1>
+			</div>
+
+			<div class="row">
+
+				<div class="form-group col-md-8 col-md-offset-2">
+				<% if(!isSuccess) { %>
+					<form action="/addGame" method="post">
+						<label>Title of the game</label>
+						<input type="text" class="form-control" name="title">
+
+						<label>Type of Game</label>
+						<select class="form-control" name="type">
+							<option>2D Medieval</option>
+							<option>2D Historical</option>
+							<option>2D Fantasy</option>
+							<option>2D Sci-Fi</option>
+							<option>2.5D/2D Fantasy</option>
+							<option>3D Historical</option>
+							<option>3D Medieval</option>
+							<option>3D Music/Dancing</option>
+							<option>Augmented Reality</option>
+							<option>Board</option>
+							<option>Fantasy</option>
+							<option>FPS</option>
+							<option>Fighting</option>
+							<option>Hack and slash</option>
+							<option>MOBA</option>
+							<option>Plateform</option>
+							<option>Puzzle</option>
+							<option>Racing</option>
+							<option>RPG</option>
+							<option>RTS</option>
+							<option>Sandbox</option>
+							<option>Sci-Fi</option>
+							<option>Simulation</option>
+							<option>Sports</option>
+							<option>Strategy</option>
+							<option>Text Based Fantasy</option>
+							<option>Tower Defense</option>
+							<option>Turn-based</option>
+							<option>N/A</option>
+						</select>
+						<br>
+						<button type="submit" class="btn btn-punch btn-success btn-block">Add this game to the library</button>
+					</form>
+				<% } else { %>
+					<% if(isSuccess === 'true') { %>
+					<div class="alert alert-success">
+						<strong>
+						Your game has been added, you can now use it to create and launch challenges
+						</strong>
+					</div>
+					<% } else { %>
+					<div class="alert alert-danger">
+						<strong>
+						Error:
+						</strong>
+						<%= isSuccess %>
+					</div>
+					<% } %>
+				<% } %>
+				</div>
+			</div>
+
+		</div>
+
+		<% include statics/footers %>
+		<script type="text/javascript">
+
+			$(function(){
+   
+			});
+		</script>
+</body>
+</html>

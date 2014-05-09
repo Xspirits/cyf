@@ -42,7 +42,7 @@
 		<div class="container">
 			<div class="row">
 			<div class="bittersweet-color col-lg-12 no-games-alert">
-	            <strong>Hey Listen!</strong> You haven't specified which games you are playing, let other challengers now on which game they can challenge you by <a href="./settings" title="add an game" ><strong>adding some now</strong></a>!
+	            <strong>Hey Listen!</strong> You haven't specified which games you are playing, let other challengers know on which game they should challenge you by <a href="./settings" title="add an game"><strong>adding some now</strong></a>!
 	        </div>
 	        </div>
 	        </div>
@@ -100,6 +100,9 @@
 							</div>
 							<div class="col-lg-12">	
 								<h4>Invite friends: </h4>
+								<% if (currentUser.friends.length < 3) { %>
+									<h6>You should <a href="/users">find some friends</a> in order to get challenged!</h6>
+								<% } %>
 								<% if (currentUser.facebook.token) { %>
 								<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
 								<small>(xp: 75 per Friends invite)</small>
@@ -112,6 +115,9 @@
 							</div>
 							<div class="col-lg-12 gamelist" id="myGamesList">
 								<h4>Playing: </h4>
+								<% if (currentUser.friends.length < 3) { %>
+									<h6>You should <a href="/settings">let people know what game you play</a>, so they will now on which game them can challenge you!</h6>
+								<% } %>
 							<% if(currentUser.games.length > 0) {
 								 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
 								%>
@@ -200,8 +206,8 @@
 											<div class="text-left">
 												
 											Last daily rank <i class="fa fa-square grapefruit-color "></i>
-											Last Week <i class="fa fa-square sunflower-color"></i>
-											Last Month <i class="fa fa-square aqua-color"></i>
+											<!-- Last Week <i class="fa fa-square sunflower-color"></i>
+											Last Month <i class="fa fa-square aqua-color"></i> -->
 											</div>
 											</div>
 											<div class="text-right">

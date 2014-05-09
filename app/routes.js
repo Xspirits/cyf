@@ -192,6 +192,21 @@
         });
       });
     });
+    app.get("/newGame/:done?", isLoggedIn, function(req, res) {
+      return res.render("newGame.ejs", {
+        currentUser: req.user,
+        isSuccess: req.params.done ? req.params.done : false
+      });
+    });
+    app.post("/addGame", isLoggedIn, function(req, res) {
+      return games.create(req, function(result) {
+        if (result === true) {
+          return res.redirect('/newGame/true');
+        } else {
+          return res.redirect('/newGame/' + result[1]);
+        }
+      });
+    });
     app.get("/newChallenge", isLoggedIn, function(req, res) {
       return res.render("newChallenge.ejs", {
         currentUser: req.user,
