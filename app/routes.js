@@ -703,11 +703,15 @@
         }
       };
       return relations.acceptRelation(obj.from, obj.to, function(result) {
-        xp.xpReward(result[0], "user.newFriend");
-        xp.xpReward(result[1], "user.newFriend");
-        notifs.nowFriends(result);
-        sio.glob("fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!");
-        return res.send(true);
+        if (!result) {
+          return res.send(false);
+        } else {
+          xp.xpReward(result[0], "user.newFriend");
+          xp.xpReward(result[1], "user.newFriend");
+          notifs.nowFriends(result);
+          sio.glob("fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!");
+          return res.send(true);
+        }
       });
     });
     app.post("/cancelFriend", isLoggedIn, function(req, res) {

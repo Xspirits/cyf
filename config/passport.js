@@ -168,7 +168,7 @@
               if (!user.facebook.token) {
                 user.facebook.token = token;
                 user.facebook.name = profile.name.givenName + " " + profile.name.familyName;
-                user.facebook.email = profile.emails[0].value;
+                user.facebook.email = profile.emails[0].value ? profile.emails[0].value : '';
                 user.save(function(err) {
                   if (err) {
                     mailer.cLog('Error at ' + __filename, err);
@@ -182,7 +182,7 @@
               newUser.facebook.id = profile.id;
               newUser.facebook.token = token;
               newUser.facebook.name = profile.name.givenName + " " + profile.name.familyName;
-              newUser.facebook.email = profile.emails[0].value;
+              newUser.facebook.email = profile.emails[0].value ? profile.emails[0].value : '';
               newUser.save(function(err) {
                 if (err) {
                   mailer.cLog('Error at ' + __filename, err);
@@ -196,7 +196,7 @@
           user.facebook.id = profile.id;
           user.facebook.token = token;
           user.facebook.name = profile.name.givenName + " " + profile.name.familyName;
-          user.facebook.email = profile.emails[0].value;
+          user.facebook.email = profile.emails[0].value ? profile.emails[0].value : '';
           return user.save(function(err) {
             if (err) {
               mailer.cLog('Error at ' + __filename, err);

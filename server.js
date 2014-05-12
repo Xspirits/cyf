@@ -84,7 +84,7 @@
 
   xp = require("./app/functions/xp")(_, mailer, notifs, sio);
 
-  relations = require("./config/relations")(mailer);
+  relations = require("./config/relations")(_, mailer);
 
   games = require("./config/game")(ent, moment);
 

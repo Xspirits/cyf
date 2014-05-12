@@ -228,7 +228,7 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 			sio.glob "fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>."
 
 			games.getGame done.game, (game)->
-
+				
 				if appKeys.app_config.twitterPushNews == true
 
 					# push on twitter
@@ -665,11 +665,14 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				userName: req.user.local.pseudo
 
 		relations.acceptRelation obj.from, obj.to, (result) ->
-			xp.xpReward result[0], "user.newFriend"
-			xp.xpReward result[1], "user.newFriend"
-			notifs.nowFriends result
-			sio.glob "fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!"
-			res.send true
+			if !result
+				res.send false
+			else
+				xp.xpReward result[0], "user.newFriend"
+				xp.xpReward result[1], "user.newFriend"
+				notifs.nowFriends result
+				sio.glob "fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!"
+				res.send true
 
 	app.post "/cancelFriend", isLoggedIn, (req, res) ->
 		idFriend = req.body.id

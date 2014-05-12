@@ -245,9 +245,6 @@ span.gameSync {
   margin: 10px;
   color: #FFF;
 }
-.panel-group .panel-title a {
-  padding: 10px;
-}
 .modal-backdrop {background: #f7f7f7;}
 .modal-content {background: #EBECEE; border: 0;}
 .modal-header {
@@ -1117,9 +1114,12 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 .panel-title{
   color: #FFFFFF;
 }
-.panel-title:hover a {
-  color: #FFFFFF;
-  text-shadow: 0 1px 0 #3378CF;
+.panel-group .panel-title a {
+  padding: 10px;
+}
+.panel-group .panel-title:hover a,.panel-title:hover a {
+  color: #2CABCE;
+  text-shadow: none;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
   background-color: rgb(37,141,170);
@@ -1251,6 +1251,10 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
   .navbar-default .navbar-collapse, .navbar-default .navbar-form {
     border: none;
   }
+
+ul.nav li.dropdown:hover > ul.dropdown-menu {
+    display: block;    
+}
 @media (max-width: 767px) {
 
   .c-center {

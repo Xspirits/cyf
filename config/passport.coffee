@@ -173,7 +173,7 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
             unless user.facebook.token
               user.facebook.token = token
               user.facebook.name = profile.name.givenName + " " + profile.name.familyName
-              user.facebook.email = profile.emails[0].value
+              user.facebook.email = if profile.emails[0].value then profile.emails[0].value else ''
               user.save (err) ->
                 mailer.cLog 'Error at '+__filename,err if err
                 done null, user
@@ -186,7 +186,7 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
             newUser.facebook.id = profile.id
             newUser.facebook.token = token
             newUser.facebook.name = profile.name.givenName + " " + profile.name.familyName
-            newUser.facebook.email = profile.emails[0].value
+            newUser.facebook.email = if profile.emails[0].value then profile.emails[0].value else ''
             newUser.save (err) ->
               mailer.cLog 'Error at '+__filename,err if err
               done null, newUser
@@ -200,7 +200,7 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
         user.facebook.id = profile.id
         user.facebook.token = token
         user.facebook.name = profile.name.givenName + " " + profile.name.familyName
-        user.facebook.email = profile.emails[0].value
+        user.facebook.email = if profile.emails[0].value then profile.emails[0].value else ''
         user.save (err) ->
           mailer.cLog 'Error at '+__filename,err if err
           done null, user

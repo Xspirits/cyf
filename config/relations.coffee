@@ -2,7 +2,7 @@
 # load up the user model
 User = require("../app/models/user")
 Challenge = require("../app/models/challenge")
-module.exports = (mailer)->
+module.exports = (_, mailer)->
   
   ###
   Return the current pending requests for a given user
@@ -74,36 +74,57 @@ module.exports = (mailer)->
   @return {[type]}        [description]
   ###
   acceptRelation: (from, to, done) ->
-    User.findByIdAndUpdate from.id,
-      $pull:
-        sentRequests:
-          idUser: to.id
 
-      $push:
-        friends:
-          idUser: to.id
-          idCool: to.idCool
-          userName: to.userName
-    , (err, relationFrom) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      console.log relationFrom
-      User.findByIdAndUpdate to.id,
-        $pull:
-          pendingRequests:
-            idUser: from.id
+    User.findById from.id, (err, user) ->
 
-        $push:
-          friends:
-            idUser: from.id
-            idCool: to.idCool
-            userName: from.userName
-      , (err, relationTo) ->
-        mailer.cLog 'Error at '+__filename,err if err
-        newRelation = [
-          relationFrom
-          relationTo
-        ]
-        done newRelation
+      # does the request exist ?
+      
+      testReq = _.map(user.sentRequests, (u)-> u.idUser.toString() );
+      console.log testReq,to.id
+      testReq = _.contains(testReq, to.id.toString());
+      console.log testReq
+
+
+      testUnit = _.pluck(user.friends, 'idCool');
+      console.log testUnit,to.idCool
+      testUnit = _.contains(testUnit, to.idCool);
+      console.log testUnit
+      if testReq
+        if !testUnit
+          User.findByIdAndUpdate from.id,
+            $pull:
+              sentRequests:
+                idUser: to.id
+
+            $push:
+              friends:
+                idUser: to.id
+                idCool: to.idCool
+                userName: to.userName
+          , (err, relationFrom) ->
+            mailer.cLog 'Error at '+__filename,err if err
+            console.log relationFrom
+            User.findByIdAndUpdate to.id,
+              $pull:
+                pendingRequests:
+                  idUser: from.id
+
+              $push:
+                friends:
+                  idUser: from.id
+                  idCool: to.idCool
+                  userName: from.userName
+            , (err, relationTo) ->
+              mailer.cLog 'Error at '+__filename,err if err
+              newRelation = [
+                relationFrom
+                relationTo
+              ]
+              done newRelation
+        else
+          done false,'relation already exists'
+      else
+        done false,'relation is not pending.'
 
   cancelRelation: (from, to, done) ->
     User.findByIdAndUpdate from.id,

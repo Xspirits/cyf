@@ -58,7 +58,7 @@ sio             = require("./app/functions/sio")(io, db_chat, ent, moment)
 notifs          = require("./app/functions/notifications")(_, appKeys, social, mailer)
 xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
-relations       = require("./config/relations")(mailer)
+relations       = require("./config/relations")(_, mailer)
 games           = require("./config/game")(ent, moment)
 users           = require("./config/users")(_, mailer, appKeys, genUID, social, relations, notifs, moment)
 challenge       = require("./config/challenge")(_, mailer, social, moment, genUID, users)

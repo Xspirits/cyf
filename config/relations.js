@@ -6,7 +6,7 @@
 
   Challenge = require("../app/models/challenge");
 
-  module.exports = function(mailer) {
+  module.exports = function(_, mailer) {
     return {
 
       /*
@@ -94,45 +94,66 @@
       @return {[type]}        [description]
        */
       acceptRelation: function(from, to, done) {
-        return User.findByIdAndUpdate(from.id, {
-          $pull: {
-            sentRequests: {
-              idUser: to.id
-            }
-          },
-          $push: {
-            friends: {
-              idUser: to.id,
-              idCool: to.idCool,
-              userName: to.userName
-            }
-          }
-        }, function(err, relationFrom) {
-          if (err) {
-            mailer.cLog('Error at ' + __filename, err);
-          }
-          console.log(relationFrom);
-          return User.findByIdAndUpdate(to.id, {
-            $pull: {
-              pendingRequests: {
-                idUser: from.id
-              }
-            },
-            $push: {
-              friends: {
-                idUser: from.id,
-                idCool: to.idCool,
-                userName: from.userName
-              }
-            }
-          }, function(err, relationTo) {
-            var newRelation;
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            newRelation = [relationFrom, relationTo];
-            return done(newRelation);
+        return User.findById(from.id, function(err, user) {
+          var testReq, testUnit;
+          testReq = _.map(user.sentRequests, function(u) {
+            return u.idUser.toString();
           });
+          console.log(testReq, to.id);
+          testReq = _.contains(testReq, to.id.toString());
+          console.log(testReq);
+          testUnit = _.pluck(user.friends, 'idCool');
+          console.log(testUnit, to.idCool);
+          testUnit = _.contains(testUnit, to.idCool);
+          console.log(testUnit);
+          if (testReq) {
+            if (!testUnit) {
+              return User.findByIdAndUpdate(from.id, {
+                $pull: {
+                  sentRequests: {
+                    idUser: to.id
+                  }
+                },
+                $push: {
+                  friends: {
+                    idUser: to.id,
+                    idCool: to.idCool,
+                    userName: to.userName
+                  }
+                }
+              }, function(err, relationFrom) {
+                if (err) {
+                  mailer.cLog('Error at ' + __filename, err);
+                }
+                console.log(relationFrom);
+                return User.findByIdAndUpdate(to.id, {
+                  $pull: {
+                    pendingRequests: {
+                      idUser: from.id
+                    }
+                  },
+                  $push: {
+                    friends: {
+                      idUser: from.id,
+                      idCool: to.idCool,
+                      userName: from.userName
+                    }
+                  }
+                }, function(err, relationTo) {
+                  var newRelation;
+                  if (err) {
+                    mailer.cLog('Error at ' + __filename, err);
+                  }
+                  newRelation = [relationFrom, relationTo];
+                  return done(newRelation);
+                });
+              });
+            } else {
+              return done(false, 'relation already exists');
+            }
+          } else {
+            return done(false, 'relation is not pending.');
+          }
         });
       },
       cancelRelation: function(from, to, done) {

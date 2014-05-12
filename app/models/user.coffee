@@ -4,6 +4,9 @@ bcrypt = require("bcrypt-nodejs")
 
 # define the schema for our user model
 userSchema = mongoose.Schema(
+  tutorialCompleted:
+    type: Boolean
+    default: false
   verfiy_hash:
     type: String
     required: true
@@ -441,6 +444,15 @@ userSchema = mongoose.Schema(
       type: Boolean
       default: false
     date:
+      type: Date
+      default: Date.now
+  ]
+  badges: [
+    idBadge:
+      type: mongoose.Schema.Types.ObjectId
+      index: true
+      ref: "Badge"
+    dateUnlocked:
       type: Date
       default: Date.now
   ]
