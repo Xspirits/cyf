@@ -73,9 +73,12 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
 					ongoingChall.push data[key]
 
-			res.render "profile.ejs",
-				ongoings: ongoingChall
-				currentUser: req.user
+			users.getFriendList req.user._id, (fList) ->
+				res.render "profile.ejs",
+					ongoings: ongoingChall
+					currentUser: req.user
+					friends: fList.friends
+
 
 	app.get "/settings", isLoggedIn, (req, res) ->
 		res.render "setting.ejs",

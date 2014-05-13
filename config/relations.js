@@ -37,8 +37,6 @@
        */
       create: function(from, to, thisIsSend, done) {
         var pushing, query;
-        query = void 0;
-        pushing = void 0;
         if (thisIsSend) {
           pushing = "sentRequests";
           query = {
@@ -167,6 +165,7 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
+          console.log(relation.pendingRequests, err);
           return User.findByIdAndUpdate(to.id, {
             $pull: {
               sentRequests: {
@@ -177,6 +176,7 @@
             if (err) {
               mailer.cLog('Error at ' + __filename, err);
             }
+            console.log(relation.sentRequests, err);
             return done(true);
           });
         });
@@ -200,6 +200,7 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
+          console.log(relation.sentRequests, err);
           return done(true);
         });
       }

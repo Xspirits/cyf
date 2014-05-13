@@ -91,9 +91,12 @@
             return ongoingChall.push(data[key]);
           }
         });
-        return res.render("profile.ejs", {
-          ongoings: ongoingChall,
-          currentUser: req.user
+        return users.getFriendList(req.user._id, function(fList) {
+          return res.render("profile.ejs", {
+            ongoings: ongoingChall,
+            currentUser: req.user,
+            friends: fList.friends
+          });
         });
       });
     });

@@ -1245,9 +1245,6 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
   font-weight: bold;
   background-color: transparent;
 }
-.navbar-nav>li>.dropdown-menu{
-  background: #248DA9;
-}
   .navbar-default .navbar-collapse, .navbar-default .navbar-form {
     border: none;
   }

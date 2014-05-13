@@ -75,65 +75,64 @@
 		arr = url.split("/");
 		resultURL = arr[0] + "//" + arr[2];
 
-		//Socket 
-		socket = io.connect(resultURL);
-		chat = io.connect(resultURL + '/chat');
-		// socket = io.connect('http://www.cyf-app.co');
-
-		socket.on('alive', function (data) {
-			console.log('Challenger alive: '+data.date);
-		});
-		socket.on('onlineUsers', function (data) {
-			console.log(data);
-			$('#onlineCounter').html(data.number);
-		});
-		$.ajax({
-			type: 'GET',
-			contentType: 'application/json',
-			url: './chat_historic',						
-			success: function(messages) {
-				console.log(messages);
-				// Clean the  chat
-				$('#chat').html();
-				var messbuff;
-
-				for (var i = 0; i < messages.length; i++) {
-	        		messbuff = {       			
-				      user: messages[i].user_from,
-				      message: messages[i].message,
-				      date: messages[i].dateSent
-	        		}
-					pushChat(messbuff);
-				};
-			} 
-		});	
-
-		chat.on('newUser', function (data) {
-			pushChat(data, 'chat-log-event');
-		});
-		chat.on('message', function (message) {
-			pushChat(message);
-		})
-		// CHAT FUNCTIONS
-
-		$('#chat-message').bind("enterKey",function(e){
-			e.preventDefault();
-			console.log('sending: ' + $(this).val())
-		  	chat.emit('message', $(this).val());
-		  	$(this).val('');
-		});
-
-		$('#chat-message').keyup(function(e){
-		    if(e.keyCode == 13)
-		    {
-		        $(this).trigger("enterKey");
-		    }
-		});
-
-		// NOTIFICATIONS
-
 		<% if (currentUser) { %>
 			// Only if logged in
+
+			//Socket 
+			socket = io.connect(resultURL);
+			chat = io.connect(resultURL + '/chat');
+			// socket = io.connect('http://www.cyf-app.co');
+
+			socket.on('alive', function (data) {
+				console.log('Challenger alive: '+data.date);
+			});
+			socket.on('onlineUsers', function (data) {
+				console.log(data);
+				$('#onlineCounter').html(data.number);
+			});
+			$.ajax({
+				type: 'GET',
+				contentType: 'application/json',
+				url: './chat_historic',						
+				success: function(messages) {
+					console.log(messages);
+					// Clean the  chat
+					$('#chat').html();
+					var messbuff;
+
+					for (var i = 0; i < messages.length; i++) {
+		        		messbuff = {       			
+					      user: messages[i].user_from,
+					      message: messages[i].message,
+					      date: messages[i].dateSent
+		        		}
+						pushChat(messbuff);
+					};
+				} 
+			});	
+
+			chat.on('newUser', function (data) {
+				pushChat(data, 'chat-log-event');
+			});
+			chat.on('message', function (message) {
+				pushChat(message);
+			})
+			// CHAT FUNCTIONS
+
+			$('#chat-message').bind("enterKey",function(e){
+				e.preventDefault();
+				console.log('sending: ' + $(this).val())
+			  	chat.emit('message', $(this).val());
+			  	$(this).val('');
+			});
+
+			$('#chat-message').keyup(function(e){
+			    if(e.keyCode == 13)
+			    {
+			        $(this).trigger("enterKey");
+			    }
+			});
+
 			socket.on('globalevent', function (data) {
 				pushStream(data);
 			});
@@ -184,7 +183,22 @@
 		
 		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
 		// NProgress.set( myLevel );
+		
 
+		// Javascript to enable link to tab
+		var url = document.location.toString();
+		if (url.match('#')) {
+		    $('.nav-tabs a[href='+url.split('/')[3]+']').tab('show') ;
+		} 
+
+		// Change hash for page-reload
+		$('.nav-tabs a').on('shown.bs.tab', function (e) {
+		    if(history.pushState) {
+		        history.pushState(null, null, e.target); 
+		    } else {
+		        window.location = e.target; //Polyfill for old browsers
+		    }
+		})
 		$('.show-chat').hover(function(){
 			if(!$('.liveChat').hasClass('sticked'))
 				$('.liveChat').addClass('active');

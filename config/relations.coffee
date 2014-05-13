@@ -29,9 +29,6 @@ module.exports = (_, mailer)->
   create: (from, to, thisIsSend, done) ->
     
     #Check if the relation exist or not.
-    #For an unknown reason, couldn't addtoset or upsert document :(.
-    query = undefined
-    pushing = undefined
     if thisIsSend
       pushing = "sentRequests"
       query = $push:
@@ -133,12 +130,14 @@ module.exports = (_, mailer)->
           idUser: to.id
     , (err, relation) ->
       mailer.cLog 'Error at '+__filename,err if err
+      console.log relation.pendingRequests,err
       User.findByIdAndUpdate to.id,
         $pull:
           sentRequests:
             idUser: from.id
       , (err, relation) ->
         mailer.cLog 'Error at '+__filename,err if err
+        console.log relation.sentRequests,err
         done true
 
   
@@ -156,4 +155,5 @@ module.exports = (_, mailer)->
           idUser: from.id
     , (err, relation) ->
       mailer.cLog 'Error at '+__filename,err if err
+      console.log relation.sentRequests,err
       done true

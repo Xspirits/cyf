@@ -115,15 +115,12 @@
 							</div>
 							<div class="col-lg-12 gamelist" id="myGamesList">
 								<h4>Playing: </h4>
-								<% if (currentUser.friends.length < 3) { %>
-									<h6>You should <a href="/settings">let people know what game you play</a>, so they will now on which game them can challenge you!</h6>
-								<% } %>
-							<% if(currentUser.games.length > 0) {
-								 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
-								%>
-								<span id="<%= currentUser.games[i]._idGame %>" class="label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %></span>
-							<% }
-							} %>
+									<% if(currentUser.games.length > 0) {
+										 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
+										%>
+										<span id="<%= currentUser.games[i]._idGame %>" class="label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %></span>
+									<% }
+									} %>
 								<a href="./settings" title="add an game" id="t_addGames" class="label label-default">
 									<span class="fa fa-plus"></span>
 									Add Games
@@ -226,6 +223,52 @@
 							<div class="panel-group panel-group-lists collapse in"  id="tabsProfile" style="height: auto;">
 				              <div class="panel">
 				                <div class="panel-heading">
+				                  <h4 class="panel-title"  id="t_league">
+							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_friends">
+							        	Friends
+				                    	<span class="badge badge-success pull-right"><%= friends.length %></span>
+							        </a>
+				                  </h4>
+				                </div>
+				                <div id="tab_friends" class="panel-collapse collapse">
+				                  <div class="panel-body">
+				                  	<div class="row"> 
+										<% if(friends.length > 0) {
+											for(var i=0; i< friends.length; i++) { 
+											var currFriend = friends[i].idUser;
+											if(currFriend._id.toString() != currentUser._id.toString()) { %>
+											<div class="col-md-12">
+												<a class="pull-left pull-left col-md-3" href="/u/<%= currFriend.idCool %>">
+													<img src="<%= currFriend.icon %>" class="img-rounded img-responsive">
+												</a>
+
+												<div class="media-body">
+													<h4 class="media-heading col-lg-12">
+														<a href="/u/<%= currFriend.idCool %>"> 
+															<%= currFriend.local.pseudo %>
+														</a>
+														<span class="<%= (currFriend.isOnline === true) ? "online" : "offline" %>"></span>
+													</h4>
+													<div class="col-lg-12">
+														<span class="badge alert-warning">level <%= currFriend.level %></span>
+														<span class="badge alert-warning"><%= currFriend.friends.length %> friends</span>	
+													</div>
+												</div>
+												
+											</div>
+											<% } 
+											} 
+										} %>	
+										<div class="col-md-12">
+											<br>
+											<a href="/users" class="btn btn-block btn-default">Find friends</a>			
+										</div>	
+				                  	</div>				
+				                  </div>
+				                </div>
+				              </div>
+				              <div class="panel">
+				                <div class="panel-heading">
 				                  <h4 class="panel-title" id="t_oChall">
 				                    <a data-toggle="collapse" data-parent="#tabsProfile" href="#ongoingsChalls">
 				                       Challenges in progress 
@@ -306,6 +349,7 @@
 									<% } %>
 							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#lol_games">
 							          Last 10 League of legend games
+				                       <span class="badge badge-warning pull-right"><%= currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ? currentUser.leagueoflegend.lastGames.length : 0 %></span>
 							        </a>
 				                  </h4>
 				                </div>

@@ -14,15 +14,15 @@
 				<div class="col-md-12 col-lg-12">
 					<div class="panel settingsTab">
 						<div class="tabbable tabs-left clearfix">
-							<ul id="myTab1" class="nav nav-tabs nav-justified">
-								<li class="active"><a href="#sharingSocial" data-toggle="tab">Sharing</a></li>
-								<li><a href="#connectNetworks" data-toggle="tab">Connect accounts</a></li>
-								<li><a href="#linkGames" data-toggle="tab">Games</a></li>
-								<li><a href="#userData" data-toggle="tab">My Account</a></li>
+							<ul class="nav nav-tabs nav-justified">
+								<li class="active"><a href="settings#tab_sharingSocial" data-toggle="tab">Sharing</a></li>
+								<li><a href="settings#tab_connectNetworks" data-toggle="tab">Connect accounts</a></li>
+								<li><a href="settings#tab_linkGames" data-toggle="tab">Games</a></li>
+								<li><a href="settings#tab_userData" data-toggle="tab">My Account</a></li>
 
 							</ul>
-							<div id="myTabContent" class="tab-content">
-								<div class="tab-pane fade active in " id="sharingSocial">
+							<div class="tab-content">
+								<div class="tab-pane fade active in " id="tab_sharingSocial">
 									<div class="row">
 										<div class="col-md-6">
 											<p>
@@ -54,8 +54,7 @@
 										</div>
 									</div>
 								</div>
-
-								<div class="tab-pane fade in" id="connectNetworks">
+								<div class="tab-pane fade" id="tab_connectNetworks">
 									<div class="row">
 										<div class="col-md-6 col-xs-6 col-lg-5">
 											<h4><i class="fa fa-facebook"></i> Facebook</h4>
@@ -102,7 +101,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="tab-pane fade in" id="linkGames">
+								<div class="tab-pane fade" id="tab_linkGames">
 									<div class="row">
 										<div class="col-md-12 col-xs-12">
 											<h3>Which games do you play?</h3>
@@ -119,7 +118,8 @@
 											</div>
 											<div class="form-group col-md-6">
 												<label>Pick a Game</label>
-												<input id="gamePicker" type="text" class="form-control" name="game" autocomplete="off"  >
+												<input id="gamePicker" type="text" class="form-control" name="game" autocomplete="off">
+												<a href="/newGame"><small>Can't find your game ?</small></a>
 											</div>
 										</div>
 									</div>
@@ -194,8 +194,7 @@
 										</div>
 									</div>
 								</div>
-
-								<div class="tab-pane fade in " id="userData">
+								<div class="tab-pane fade " id="tab_userData">
 									<div class="row">
 										<div class="col-md-12">
 											<h3>Change your password</h3>
