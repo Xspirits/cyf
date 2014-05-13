@@ -230,12 +230,11 @@
 									e.preventDefault();
 
 									var sDate = $('#DTPKStart').find("input").val();
-									console.log(sDate);
-							// console.log(eDate);
-							populateModal(sDate,function() {
-								$('#lastStep').modal('show');
-							});
-						});
+										// console.log(eDate);
+									populateModal(sDate,function() {
+											$('#lastStep').modal('show');
+										});
+								});
 
 							} else {
 								$('#DTPKStart').addClass('has-warning').append('<i class="fa fa-warning form-control-feedback" style="float: left;font-size: 2em;margin: 0 15px;"></i>');
@@ -332,17 +331,17 @@ upFriends();
 		}
 
 		fStart = $('#DTPKStart_formated').val();
-		fEnd = moment(fStart).add(query); //.format('YYYY-MM-DDTHH:mm:ss.SSSZZ'
+		fEnd = moment.utc(fStart).add(query); //.format('YYYY-MM-DDTHH:mm:ss.SSSZZ'
 
-			$('#DTPKEnd_formated').val(fEnd.format("YYYY-MM-DDTHH:mm:ssZZ"));
+		$('#DTPKEnd_formated').val(fEnd.format("YYYY-MM-DDTHH:mm:ssZZ"));
 
-			var challengeTitle = cBox.attr('data-title'),
-			challengeDesc      = cBox.attr('data-description'),
-			challengeId        = cBox.attr('id'),
-			challengeGame      = cBox.attr('data-game'),
-			uName              = uBox.attr('data-pseudo'),
-		dateStart          = sDate, // moment(sDate,'MMMM Do YYYY, h:mm:ss a'),
-		dateEnd            = fEnd.format('MMMM Do YYYY, hh:mm');
+		var challengeTitle = cBox.attr('data-title'),
+		challengeDesc      = cBox.attr('data-description'),
+		challengeId        = cBox.attr('id'),
+		challengeGame      = cBox.attr('data-game'),
+		uName              = uBox.attr('data-pseudo'),
+		dateStart          = moment(sDate).format('MMMM Do YYYY, HH[h]mm'), // moment(sDate,'MMMM Do YYYY, h:mm:ss a'),
+		dateEnd            = fEnd.format('MMMM Do YYYY, HH[h]mm');
 
 		console.log('Start: ' +$('#DTPKStart_formated').val()+ ' End ' + $('#DTPKEnd_formated').val())
 

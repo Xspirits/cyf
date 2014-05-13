@@ -88,27 +88,39 @@
 			});
 			socket.on('onlineUsers', function (data) {
 				console.log(data);
-				$('#onlineCounter').html(data.number);
+				$('.onlineCounter')
+				.attr('data-number', data.number)
+				.html(data.number);
 			});
-			$.ajax({
-				type: 'GET',
+			
+			$.ajax({ type: 'GET',
 				contentType: 'application/json',
-				url: './chat_historic',						
-				success: function(messages) {
-					console.log(messages);
-					// Clean the  chat
-					$('#chat').html();
-					var messbuff;
+				url: './getMyChallenges'
+			})
+			.done(function(data) {
+				var sum = <%= currentUser.pendingRequests.length + currentUser.sentRequests.length %> + data.length;
+				$('.requestCounterTotal')
+				.attr('data-number', sum)
+				.text(sum);
+			});
 
-					for (var i = 0; i < messages.length; i++) {
-		        		messbuff = {       			
+			$.ajax({ type: 'GET',
+				contentType: 'application/json',
+				url: './chat_historic'
+			})
+			.done(function(messages) {
+				// Clean the  chat
+				$('#chat').html();
+				var messbuff;
+
+				for (var i = 0; i < messages.length; i++) {
+			       	messbuff = {       			
 					      user: messages[i].user_from,
 					      message: messages[i].message,
 					      date: messages[i].dateSent
-		        		}
-						pushChat(messbuff);
-					};
-				} 
+			       	}
+					pushChat(messbuff);
+				};
 			});	
 
 			chat.on('newUser', function (data) {
@@ -237,6 +249,7 @@
 
 		timeFromUp();
 		readability();
+		dateTiny();
 		readabilityMin();
 		readabilityAgo();
 		animateProgress();
@@ -253,7 +266,6 @@
 		},60000);
 
 		setInterval(function(){
-			readability();
 			updateUp();
 			updateEnd();
 		},1000);
@@ -289,6 +301,13 @@
 			$('.dateReadability').each( function () {
 				var date = $(this).attr('data-date');
 				var converted = moment(date).utc().format('dddd DD MMMM HH[h]mm');
+				$(this).text(converted);
+			})
+		};
+		function dateTiny(){
+			$('.dateTiny').each( function () {
+				var date = $(this).attr('data-date');
+				var converted = moment(date).utc().format('dd DD/MM Ha');
 				$(this).text(converted);
 			})
 		};

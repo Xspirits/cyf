@@ -14,7 +14,7 @@
 
   grvtr = require('grvtr');
 
-  module.exports = function(passport, challenge, social, appKeys, mailer, genUID, xp, notifs, shortUrl) {
+  module.exports = function(passport, challenge, social, appKeys, _, mailer, genUID, xp, notifs, shortUrl) {
     passport.serializeUser(function(user, done) {
       done(null, user.id);
     });
@@ -55,9 +55,8 @@
                 return done(null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena."));
               }
             }
-            console.log('logged');
-            req.session.isLogged = true;
             req.session.user = userfound;
+            req.session.isLogged = true;
             userfound.isOnline = true;
             return userfound.save(function(err) {
               if (err) {

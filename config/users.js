@@ -378,40 +378,6 @@
       },
 
       /*
-      Confirm a friend relationship with another user
-      @param  {Object}   data [From, id, to, id]
-      @param  {Function} done [callback]
-      @return {Boolean}        [true/false]
-       */
-      confirmFriend: function(data, done) {
-        var from, uTo;
-        from = data.from;
-        uTo = data.to;
-        relations.accept(from, uTo, function(result) {
-          if (result) {
-            relations.accept(uTo, from, done);
-          }
-        });
-      },
-
-      /*
-      Confirm a friend relationship with another user
-      @param  {Object}   data [From, id, to, id]
-      @param  {Function} done [callback]
-      @return {Boolean}        [true/false]
-       */
-      denyFriend: function(data, done) {
-        var from, uTo;
-        from = data.from;
-        uTo = data.to;
-        relations.deny(from, uTo, function(result) {
-          if (result) {
-            relations.deny(uTo, from, done);
-          }
-        });
-      },
-
-      /*
       Delete the rate request and add an item in challengeRateHistoric
       @param  {[type]}   data [description]
       @param  {Function} done [description]

@@ -264,41 +264,6 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
       else
         done false, " desired user not found"
   
-  ###
-  Confirm a friend relationship with another user
-  @param  {Object}   data [From, id, to, id]
-  @param  {Function} done [callback]
-  @return {Boolean}        [true/false]
-  ###
-  confirmFriend: (data, done) ->
-    
-    # check if the desired user exist, then launch the request
-    from = data.from
-    uTo = data.to
-    relations.accept from, uTo, (result) ->
-      relations.accept uTo, from, done  if result
-      return
-
-    return
-
-  
-  ###
-  Confirm a friend relationship with another user
-  @param  {Object}   data [From, id, to, id]
-  @param  {Function} done [callback]
-  @return {Boolean}        [true/false]
-  ###
-  denyFriend: (data, done) ->
-    
-    # check if the desired user exist, then launch the request
-    from = data.from
-    uTo = data.to
-    relations.deny from, uTo, (result) ->
-      relations.deny uTo, from, done  if result
-      return
-
-    return
-
   
   ###
   Delete the rate request and add an item in challengeRateHistoric

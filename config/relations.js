@@ -22,7 +22,6 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          console.log(data);
           return done(data.pendingRequests);
         });
       },
@@ -74,7 +73,6 @@
             mailer.cLog('Error at ' + __filename, err);
           }
           if (!relation) {
-            console.log("Lets update");
             return User.findByIdAndUpdate(from.id, query).exec(function(err, updated) {
               done(true);
             });
@@ -97,13 +95,9 @@
           testReq = _.map(user.sentRequests, function(u) {
             return u.idUser.toString();
           });
-          console.log(testReq, to.id);
           testReq = _.contains(testReq, to.id.toString());
-          console.log(testReq);
           testUnit = _.pluck(user.friends, 'idCool');
-          console.log(testUnit, to.idCool);
           testUnit = _.contains(testUnit, to.idCool);
-          console.log(testUnit);
           if (testReq) {
             if (!testUnit) {
               return User.findByIdAndUpdate(from.id, {
@@ -123,7 +117,6 @@
                 if (err) {
                   mailer.cLog('Error at ' + __filename, err);
                 }
-                console.log(relationFrom);
                 return User.findByIdAndUpdate(to.id, {
                   $pull: {
                     pendingRequests: {
@@ -143,42 +136,55 @@
                     mailer.cLog('Error at ' + __filename, err);
                   }
                   newRelation = [relationFrom, relationTo];
-                  return done(newRelation);
+                  return done([true, newRelation]);
                 });
               });
             } else {
-              return done(false, 'relation already exists');
+              return done([false, 'relation already exists']);
             }
           } else {
-            return done(false, 'relation is not pending.');
+            return done([false, 'relation is not pending.']);
           }
         });
       },
-      cancelRelation: function(from, to, done) {
-        return User.findByIdAndUpdate(from.id, {
-          $pull: {
-            pendingRequests: {
-              idUser: to.id
-            }
-          }
-        }, function(err, relation) {
-          if (err) {
-            mailer.cLog('Error at ' + __filename, err);
-          }
-          console.log(relation.pendingRequests, err);
-          return User.findByIdAndUpdate(to.id, {
-            $pull: {
-              sentRequests: {
-                idUser: from.id
-              }
-            }
-          }, function(err, relation) {
-            if (err) {
-              mailer.cLog('Error at ' + __filename, err);
-            }
-            console.log(relation.sentRequests, err);
-            return done(true);
+      unFriend: function(from, to, done) {
+        return User.findById(from.id, function(err, user) {
+          var testFriends;
+          testFriends = _.map(user.friends, function(u) {
+            return u.idUser.toString();
           });
+          console.log(testFriends, to.id);
+          testFriends = _.contains(testFriends, to.id.toString());
+          console.log(testFriends);
+          if (testFriends) {
+            return User.findByIdAndUpdate(from.id, {
+              $pull: {
+                pendingRequests: {
+                  idUser: to.id
+                }
+              }
+            }, function(err, relation) {
+              if (err) {
+                mailer.cLog('Error at ' + __filename, err);
+              }
+              console.log(relation.pendingRequests, err);
+              return User.findByIdAndUpdate(to.id, {
+                $pull: {
+                  sentRequests: {
+                    idUser: from.id
+                  }
+                }
+              }, function(err, relation) {
+                if (err) {
+                  mailer.cLog('Error at ' + __filename, err);
+                }
+                console.log(relation.sentRequests, err);
+                return done([true, '']);
+              });
+            });
+          } else {
+            return done([false, 'You are not friends.']);
+          }
         });
       },
 
@@ -190,18 +196,31 @@
       @return {[type]}        [description]
        */
       denyRelation: function(from, to, done) {
-        return User.findByIdAndUpdate(to.id, {
-          $pull: {
-            sentRequests: {
-              idUser: from.id
-            }
+        return User.findById(from.id, function(err, user) {
+          var testReq;
+          testReq = _.map(user.sentRequests, function(u) {
+            return u.idUser.toString();
+          });
+          console.log(testReq, to.id);
+          testReq = _.contains(testReq, to.id.toString());
+          console.log(testReq);
+          if (testFriends) {
+            return User.findByIdAndUpdate(to.id, {
+              $pull: {
+                sentRequests: {
+                  idUser: from.id
+                }
+              }
+            }, function(err, relation) {
+              if (err) {
+                mailer.cLog('Error at ' + __filename, err);
+              }
+              console.log(relation.sentRequests, err);
+              return done([true, '']);
+            });
+          } else {
+            return done([false, 'This relation is not existing.']);
           }
-        }, function(err, relation) {
-          if (err) {
-            mailer.cLog('Error at ' + __filename, err);
-          }
-          console.log(relation.sentRequests, err);
-          return done(true);
         });
       }
     };

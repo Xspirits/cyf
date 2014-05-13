@@ -46,8 +46,6 @@ module.exports = (_, mailer, social, moment, genUID, users) ->
   @param  {Function} done [callback]
   @return {mixed}        [true or error]
   ###
-  edit: (data, done) ->
-
   
   ###
   Favorite a challenge.
@@ -56,8 +54,6 @@ module.exports = (_, mailer, social, moment, genUID, users) ->
   @param  {Function} done [description]
   @return {mixed}        [true or error]
   ###
-  favorite: (data, done) ->
-
   
   ###
   User evaluation of an existing challenge
@@ -66,8 +62,6 @@ module.exports = (_, mailer, social, moment, genUID, users) ->
   @param  {Function} done [callback]
   @return {mixed}        [true or error]
   ###
-  rate: (data, done) ->
-
   
   ###
   Delete a challenge
@@ -362,7 +356,29 @@ module.exports = (_, mailer, social, moment, genUID, users) ->
       mailer.cLog 'Error at '+__filename,err if err
       # else we return the data
       callback(data)
-  
+
+  ###
+  Return all the challenges (request and received) for a given user
+  @param  {ObjectId}   id  [_id of the creator]
+  @param  {Function} done [callback]
+  @return {Object}        [List of challenges]
+  ###
+  challengesUser: (id, done) ->
+    Ongoing.find(
+      $or: [
+        {
+          _idChallenger: id
+        }
+        {
+          _idChallenged: id
+        }
+      ]
+    ).where('accepted').ne(true).populate("_idChallenge _idChallenger _idChallenged").exec (err, data) ->
+      # if there are any errors, return the error
+      mailer.cLog 'Error at '+__filename,err if err
+      # else we return the data
+      done data
+
   ###
   Return all the challenges (request and received) for a given user
   @param  {ObjectId}   id  [_id of the creator]
@@ -441,9 +457,9 @@ module.exports = (_, mailer, social, moment, genUID, users) ->
         chall.accepted = true
         chall.save (err) ->
           mailer.cLog 'Error at '+__filename,err if err
-          done passing
+          done [true,passing]
       else
-        done false, "you are not the person challenged on this challenge"
+        done [false, "you are not the person challenged on this challenge"]
 
   ###
   Deny an ongoing challenge's request by deleting it.
@@ -462,9 +478,9 @@ module.exports = (_, mailer, social, moment, genUID, users) ->
       console.log (chall._idChallenged.toString() is idUser.toString())
       if chall._idChallenged.toString() is idUser.toString()
         chall.remove()
-        done true
+        done [true]
       else
-        done false, "you are not the person challenged on this challenge"
+        done [false, "you are not the person challenged on this challenge"]
 
   requestValidation: (data, done) ->
     Ongoing.findOne(

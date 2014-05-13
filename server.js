@@ -96,7 +96,7 @@
 
   eApi = require('./config/api')(app, appKeys, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google);
 
-  require("./config/passport")(passport, challenge, social, appKeys, mailer, genUID, xp, notifs, google);
+  require("./config/passport")(passport, challenge, social, appKeys, _, mailer, genUID, xp, notifs, google);
 
   app.configure(function() {
     app.use(express.bodyParser());

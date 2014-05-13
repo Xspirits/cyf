@@ -486,6 +486,12 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 		db_chat.find({}).limit(100).sort('dateSent').exec (err, messages)->
 			res.send messages
 
+	app.get "/getMyChallenges", (req, res) ->
+		# send the user challenges
+		challenge.challengesUser req.user._id, (challenges)->
+			console.log(challenges.length)
+			res.send challenges
+
 	# Game autocomplete research
 	app.get "/search_game", (req, res) ->
 		lookFor = req.query["term"]
@@ -668,14 +674,14 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				userName: req.user.local.pseudo
 
 		relations.acceptRelation obj.from, obj.to, (result) ->
-			if !result
-				res.send false
+			if !result[0]
+				res.send [false, result[1]]
 			else
-				xp.xpReward result[0], "user.newFriend"
-				xp.xpReward result[1], "user.newFriend"
-				notifs.nowFriends result
-				sio.glob "fa fa-users", "<a href=\"/u/" + result[0].idCool + "\" title=\"" + result[0].local.pseudo + "\">" + result[0].local.pseudo + "</a> and <a href=\"/u/" + result[1].idCool + "\" title=\"" + result[1].local.pseudo + "\">" + result[1].local.pseudo + "</a> are now friends!"
-				res.send true
+				xp.xpReward result[1][0], "user.newFriend"
+				xp.xpReward result[1][1], "user.newFriend"
+				notifs.nowFriends result[1]
+				sio.glob "fa fa-users", "<a href=\"/u/" + result[1][0].idCool + "\" title=\"" + result[1][0].local.pseudo + "\">" + result[1][0].local.pseudo + "</a> and <a href=\"/u/" + result[1][1].idCool + "\" title=\"" + result[1][1].local.pseudo + "\">" + result[1][1].local.pseudo + "</a> are now friends!"
+				res.send [true]
 
 	app.post "/cancelFriend", isLoggedIn, (req, res) ->
 		idFriend = req.body.id
@@ -689,8 +695,11 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				id: idFriend
 				userName: nameFriend
 
-		relations.cancelRelation obj.from, obj.to, (result) ->
-			res.send true
+		relations.unFriend obj.from, obj.to, (result) ->
+			if !result[0]
+				res.send [false, result[1]]
+			else
+				res.send [true]
 
 	app.post "/denyFriend", isLoggedIn, (req, res) ->
 		idFriend = req.body.id
@@ -705,7 +714,10 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				userName: req.user.local.pseudo
 
 		relations.denyRelation obj.from, obj.to, (result) ->
-			res.send true
+			if !result[0]
+				res.send [false, result[1]]
+			else
+				res.send [true]
 
 	app.post "/acceptChallenge", isLoggedIn, (req, res) ->
 		obj =
@@ -713,13 +725,16 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 			idUser: req.user._id
 
 		challenge.accept obj, (result) ->
-			xp.xpReward result._idChallenged, "ongoing.accept"
-			xp.xpReward result._idChallenger, "ongoing.accept"
-			notifs.acceptChall result._idChallenger, result._idChallenged
-			ioText = '<a href="/u/' + result._idChallenged.idCool + '" title=" ' + result._idChallenged.local.pseudo + ' ">'
-			ioText += result._idChallenged.local.pseudo + '</a> accepted <a href="/c/' + result._idChallenge.idCool + '" title="See details">the challenge</a> of <a href="/u/' + result._idChallenger.idCool + '" title="' + result._idChallenger.local.pseudo + '">' + result._idChallenger.local.pseudo + '</a>.'
-			sio.glob "fa fa-gamepad", ioText
-			res.send true
+			if result[0] == false
+				res.send [false, result[1]]
+			else
+				xp.xpReward result[1]._idChallenged, "ongoing.accept"
+				xp.xpReward result[1]._idChallenger, "ongoing.accept"
+				notifs.acceptChall result[1]._idChallenger, result[1]._idChallenged
+				ioText = '<a href="/u/' + result[1]._idChallenged.idCool + '" title=" ' + result[1]._idChallenged.local.pseudo + ' ">'
+				ioText += result[1]._idChallenged.local.pseudo + '</a> accepted <a href="/c/' + result[1]._idChallenge.idCool + '" title="See details">the challenge</a> of <a href="/u/' + result[1]._idChallenger.idCool + '" title="' + result[1]._idChallenger.local.pseudo + '">' + result[1]._idChallenger.local.pseudo + '</a>.'
+				sio.glob "fa fa-gamepad", ioText
+				res.send [true]
 
 	app.post "/denyChallenge", isLoggedIn, (req, res) ->
 		obj =
@@ -727,10 +742,10 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 			idUser: req.user._id
 
 		challenge.deny obj, (result) ->
-			if result
-				res.send true
+			if !result[0]
+				res.send [false, result[1]]
 			else
-				res.send result
+				res.send [true]
 
 	app.get "/lostPassword", (req, res) ->
 		res.render "lostPassword.ejs",
@@ -747,11 +762,15 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 		res.render "login.ejs",
 			message: req.flash("loginMessage")
 
-	app.post "/login", passport.authenticate("local-login",
-		successRedirect: "/profile"
-		failureRedirect: "/login"
-		failureFlash: true
-	)
+	app.post "/login", (req, res, next) ->
+		passport.authenticate("local-login", (err, user, info) ->
+			return next(err)  if err
+			return res.redirect("/login")  unless user
+			req.logIn user, (err) ->
+				return next(err)  if err
+				res.redirect '/profile'
+			) req, res, next
+
 	app.get "/signup/:done?", (req, res) ->
 		nowConfirm = (if req.params.done is "great" then true else false)
 		if nowConfirm && appKeys.app_config.email_confirm == true

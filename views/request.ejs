@@ -11,42 +11,39 @@
 	<div class="canvas">
 		
 		<div class="container">
-
-			<div class="page-header text-center">
-				<h1>Current requests</h1>
-			</div>
-
 			<div class="row">
+				<div class="col-md-6">
+					<h3>Friends Requests</h3>
+				</div>
+				<div class="col-md-6">
+					<h3>Challenges Requests</h3>
+				</div>
 				<div class="col-md-3">
-					<div class="panel panel-default">
+					<div class="panel panel-success">
 						<div class="panel-heading">
-							<h3 class="panel-title">Pending requests</h3>
+							<h3 class="panel-title">Received</h3>
 						</div>
 						<div class="panel-body">
-							<ul class="list-group">
-								<% if ( currentUser.pendingRequests.length > 0 ) { %>
-								<% for(var i=0; i< currentUser.pendingRequests.length; i++) { %>
-								<li class="list-group-item">
-									<a href='/u/<%= currentUser.pendingRequests[i].idCool %>'>
-										<%= currentUser.pendingRequests[i].userName %>
-									</a> 
-									<small>
-										<span class="dateReadability" data-date="<%= currentUser.pendingRequests[i].date %>"></span>
-									</small>
-
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">confirm</a>
+							<% if ( currentUser.pendingRequests.length > 0 ) { %>
+							<% for(var i=0; i< currentUser.pendingRequests.length; i++) { %>
+							<div class="col-md-12">
+								<a href='/u/<%= currentUser.pendingRequests[i].idCool %>'>
+									<%= currentUser.pendingRequests[i].userName %>
+								</a> <small class="dateTiny" data-date="<%= currentUser.pendingRequests[i].date %>"></small>
+								<div class="btn-group pull-right">
+									<a href="#" class="btn btn-punch btn-success btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">confirm</a>
 									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">delete</a>
-								</li>
-								<% } %>
-								<% } %>
-							</ul>
+								</div>
+							</div>
+							<% } %>
+							<% } %>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-3">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">Sent requests</h3>
+							<h3 class="panel-title">Sent</h3>
 						</div>
 						<div class="panel-body">
 							<ul class="list-group">
@@ -66,39 +63,11 @@
 					</div>
 				</div>
 
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Challenges sent</h3>
-						</div>
-						<div class="panel-body">
-							<ul class="list-group">
-								<% if ( challenges.sent.length > 0 ) { %>
-
-								<% for(var i=0; i< challenges.sent.length; i++) { %>
-								<% if ( challenges.sent[i].accepted === false ) { %>
-								
-
-								<li class="list-group-item">
-									<span class="<%= challenges.sent[i]._idChallenge.icon %>"></span>
-									<strong> <%= challenges.sent[i]._idChallenge.title %></strong>
-									<a href='/u/<%= challenges.sent[i]._idChallenged.idCool %>'>
-										<%= challenges.sent[i]._idChallenged.local.pseudo %>
-									</a>
-								</li>
-								<% } %>
-								<% } %>
-
-								<% } %>
-							</ul>
-						</div>
-					</div>
-				</div>
 
 				<div class="col-md-3">
-					<div class="panel panel-default">
+					<div class="panel panel-success">
 						<div class="panel-heading">
-							<h3 class="panel-title">Challenges received</h3>
+							<h3 class="panel-title">Received</h3>
 						</div>
 						<div class="panel-body">
 							<ul class="list-group">
@@ -115,6 +84,34 @@
 									</a>
 									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="confirmChallenge" data-idCool="<%= challenges.request[i]._idChallenge.idCool %>" data-from="<%= challenges.request[i]._idChallenger.local.pseudo %>" data-fromCool="<%= challenges.request[i]._idChallenger.idCool %>" data-id="<%= challenges.request[i]._id %>">Accept</a>
 									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-idCool="<%= challenges.request[i]._idChallenge.idCool %>" data-action="rejectChallenge" data-from="<%= challenges.request[i]._idChallenger.local.pseudo %>" data-fromCool="<%= challenges.request[i]._idChallenger.idCool %>" data-id="<%= challenges.request[i]._id %>">Deny</a>
+								</li>
+								<% } %>
+								<% } %>
+
+								<% } %>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Sent</h3>
+						</div>
+						<div class="panel-body">
+							<ul class="list-group">
+								<% if ( challenges.sent.length > 0 ) { %>
+
+								<% for(var i=0; i< challenges.sent.length; i++) { %>
+								<% if ( challenges.sent[i].accepted === false ) { %>
+								
+
+								<li class="list-group-item">
+									<span class="<%= challenges.sent[i]._idChallenge.icon %>"></span>
+									<strong> <%= challenges.sent[i]._idChallenge.title %></strong>
+									<a href='/u/<%= challenges.sent[i]._idChallenged.idCool %>'>
+										<%= challenges.sent[i]._idChallenged.local.pseudo %>
+									</a>
 								</li>
 								<% } %>
 								<% } %>
@@ -178,15 +175,13 @@
 					else
 						going = 'denyFriend';
 
-					console.log(target);
-
-					$.ajax({
-						type: 'POST',
-						data: JSON.stringify(target),
-						contentType: 'application/json',
-						url: './' + going,						
-						success: function(data) {
-
+					$.ajax({ url: './' + going
+					   , type: 'POST'
+					   , data: JSON.stringify(target)
+					   , contentType: 'application/json'
+					})
+					.done(function(data) {
+						if(data[0] == true) {
 							//Animate
 							_this.removeClass('btn-default').addClass('btn-success');
 							_this
@@ -194,12 +189,15 @@
 							.addClass('list-group-item-success animated flipOutX');
 
 							setTimeout(function(){ _this.parent('li').remove(); }, 800);
+						} else {
+							//Animate error
+							_this
+							.parent('li')
+							.addClass('list-group-item-danger');
 						}
 					});
-
-						});	
-		});
-
-</script>
+				});	
+			});
+	</script>
 </body>
 </html>

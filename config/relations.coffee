@@ -13,8 +13,6 @@ module.exports = (_, mailer)->
   getPending: (idUser, done) ->
     Relation.findOne(idUser: idUser).exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
-      console.log data
-      
       #return an array of objects
       done data.pendingRequests
   
@@ -54,9 +52,10 @@ module.exports = (_, mailer)->
         }
       ]
     ).exec (err, relation) ->
+
       mailer.cLog 'Error at '+__filename,err if err
+
       unless relation
-        console.log "Lets update"
         User.findByIdAndUpdate(from.id, query).exec (err, updated) ->
           done true
           return
@@ -77,17 +76,20 @@ module.exports = (_, mailer)->
       # does the request exist ?
       
       testReq = _.map(user.sentRequests, (u)-> u.idUser.toString() );
-      console.log testReq,to.id
+      # console.log testReq,to.id
       testReq = _.contains(testReq, to.id.toString());
-      console.log testReq
+      # console.log testReq
 
 
       testUnit = _.pluck(user.friends, 'idCool');
-      console.log testUnit,to.idCool
+      # console.log testUnit,to.idCool
       testUnit = _.contains(testUnit, to.idCool);
-      console.log testUnit
+      # console.log testUnit
+      
       if testReq
+
         if !testUnit
+
           User.findByIdAndUpdate from.id,
             $pull:
               sentRequests:
@@ -99,8 +101,9 @@ module.exports = (_, mailer)->
                 idCool: to.idCool
                 userName: to.userName
           , (err, relationFrom) ->
+
             mailer.cLog 'Error at '+__filename,err if err
-            console.log relationFrom
+
             User.findByIdAndUpdate to.id,
               $pull:
                 pendingRequests:
@@ -112,33 +115,49 @@ module.exports = (_, mailer)->
                   idCool: to.idCool
                   userName: from.userName
             , (err, relationTo) ->
+
               mailer.cLog 'Error at '+__filename,err if err
               newRelation = [
                 relationFrom
                 relationTo
               ]
-              done newRelation
+              done [true, newRelation]
         else
-          done false,'relation already exists'
+          done [false,'relation already exists']
       else
-        done false,'relation is not pending.'
+        done [false,'relation is not pending.']
 
-  cancelRelation: (from, to, done) ->
-    User.findByIdAndUpdate from.id,
-      $pull:
-        pendingRequests:
-          idUser: to.id
-    , (err, relation) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      console.log relation.pendingRequests,err
-      User.findByIdAndUpdate to.id,
-        $pull:
-          sentRequests:
-            idUser: from.id
-      , (err, relation) ->
-        mailer.cLog 'Error at '+__filename,err if err
-        console.log relation.sentRequests,err
-        done true
+  # Unfriend
+  unFriend: (from, to, done) ->
+
+    User.findById from.id, (err, user) ->
+      testFriends = _.map(user.friends, (u)-> u.idUser.toString() );
+      console.log testFriends,to.id
+      testFriends = _.contains(testFriends, to.id.toString());
+      console.log testFriends
+
+      if testFriends
+
+        User.findByIdAndUpdate from.id,
+          $pull:
+            pendingRequests:
+              idUser: to.id
+        , (err, relation) ->
+
+          mailer.cLog 'Error at '+__filename,err if err
+          console.log relation.pendingRequests,err
+
+          User.findByIdAndUpdate to.id,
+            $pull:
+              sentRequests:
+                idUser: from.id
+          , (err, relation) ->
+
+            mailer.cLog 'Error at '+__filename,err if err
+            console.log relation.sentRequests,err
+            done [true, '']
+      else
+        done [false,'You are not friends.']
 
   
   ###
@@ -149,11 +168,21 @@ module.exports = (_, mailer)->
   @return {[type]}        [description]
   ###
   denyRelation: (from, to, done) ->
-    User.findByIdAndUpdate to.id,
-      $pull:
-        sentRequests:
-          idUser: from.id
-    , (err, relation) ->
-      mailer.cLog 'Error at '+__filename,err if err
-      console.log relation.sentRequests,err
-      done true
+
+    User.findById from.id, (err, user) ->
+      testReq = _.map(user.sentRequests, (u)-> u.idUser.toString() );
+      console.log testReq,to.id
+      testReq = _.contains(testReq, to.id.toString());
+      console.log testReq
+
+      if testFriends
+        User.findByIdAndUpdate to.id,
+          $pull:
+            sentRequests:
+              idUser: from.id
+        , (err, relation) ->
+          mailer.cLog 'Error at '+__filename,err if err
+          console.log relation.sentRequests,err
+          done [true, '']
+      else
+        done [false,'This relation is not existing.']

@@ -50,7 +50,6 @@
       @param  {Function} done [callback]
       @return {mixed}        [true or error]
        */
-      edit: function(data, done) {},
 
       /*
       Favorite a challenge.
@@ -59,7 +58,6 @@
       @param  {Function} done [description]
       @return {mixed}        [true or error]
        */
-      favorite: function(data, done) {},
 
       /*
       User evaluation of an existing challenge
@@ -68,7 +66,6 @@
       @param  {Function} done [callback]
       @return {mixed}        [true or error]
        */
-      rate: function(data, done) {},
 
       /*
       Delete a challenge
@@ -405,6 +402,29 @@
       @param  {Function} done [callback]
       @return {Object}        [List of challenges]
        */
+      challengesUser: function(id, done) {
+        return Ongoing.find({
+          $or: [
+            {
+              _idChallenger: id
+            }, {
+              _idChallenged: id
+            }
+          ]
+        }).where('accepted').ne(true).populate("_idChallenge _idChallenger _idChallenged").exec(function(err, data) {
+          if (err) {
+            mailer.cLog('Error at ' + __filename, err);
+          }
+          return done(data);
+        });
+      },
+
+      /*
+      Return all the challenges (request and received) for a given user
+      @param  {ObjectId}   id  [_id of the creator]
+      @param  {Function} done [callback]
+      @return {Object}        [List of challenges]
+       */
       challengerRequests: function(id, done) {
         return Ongoing.find({
           _idChallenger: id
@@ -497,10 +517,10 @@
               if (err) {
                 mailer.cLog('Error at ' + __filename, err);
               }
-              return done(passing);
+              return done([true, passing]);
             });
           } else {
-            return done(false, "you are not the person challenged on this challenge");
+            return done([false, "you are not the person challenged on this challenge"]);
           }
         });
       },
@@ -525,9 +545,9 @@
           console.log(chall._idChallenged.toString() === idUser.toString());
           if (chall._idChallenged.toString() === idUser.toString()) {
             chall.remove();
-            return done(true);
+            return done([true]);
           } else {
-            return done(false, "you are not the person challenged on this challenge");
+            return done([false, "you are not the person challenged on this challenge"]);
           }
         });
       },

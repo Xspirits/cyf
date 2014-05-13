@@ -9,7 +9,7 @@ User = require("../app/models/user")
 grvtr = require('grvtr')
 
 # load the auth variables
-module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notifs,shortUrl) ->
+module.exports = (passport,challenge, social, appKeys, _, mailer, genUID, xp, notifs,shortUrl) ->
   
   # =========================================================================
   # passport session setup ==================================================
@@ -58,9 +58,9 @@ module.exports = (passport,challenge, social, appKeys, mailer, genUID, xp, notif
           if appKeys.app_config.email_confirm          
             unless userfound.verified
               return done null, false, req.flash("loginMessage", "Please confirm your email adress before entering the arena.")
-          console.log 'logged'
-          req.session.isLogged = true
+
           req.session.user = userfound
+          req.session.isLogged = true
           userfound.isOnline = true
           userfound.save (err) ->
             mailer.cLog 'Error at '+__filename,err if err

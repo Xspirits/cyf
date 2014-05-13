@@ -1107,12 +1107,8 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 .righty.navbar-text {
   color: #fafafa;
 }
-.panel-default>.panel-heading {
-  background-color: #2CABCE;
-  border-color: #248DA9;
-}
-.panel-title{
-  color: #FFFFFF;
+.panel-primary>.panel-heading {
+  background-color: #2CAACC;
 }
 .panel-group .panel-title a {
   padding: 10px;

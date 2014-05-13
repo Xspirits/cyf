@@ -67,7 +67,7 @@ ladder          = require("./config/ladder")(async, scheduler, mailer, _,  sio, 
 # Api
 eApi      = require('./config/api') app,appKeys, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
-require("./config/passport") passport,challenge, social, appKeys, mailer, genUID, xp, notifs, google # pass passport for configuration
+require("./config/passport") passport,challenge, social, appKeys, _, mailer, genUID, xp, notifs, google # pass passport for configuration
 
 app.configure ->
   

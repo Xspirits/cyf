@@ -16,33 +16,43 @@
 			<ul class="nav navbar-nav">
 				<li class="animated fadeInDown"><a href="/leaderboard">LeaderBoard</a></li>
 				<li class="animated fadeInDown" id="t_menuChall"><a href="/users">Challengers</a></li>
-				<li class="animated fadeInDown show-chat" id="t_chat">
-				 <a href="javascript:void(0);">
-				 	<span id="onlineCounter" class="odometer pull-right" data-number="0">0</span>
-				 	<span class="fa fa-comments-o hidden-xs"></span>
-				 	<span class="visible-xs">Challengers chat</span>
-
-					
-				 </a>					
-				</li>
 				<li class="animated fadeInDown show-logs" id="t_logs">
 				 <a href="javascript:void(0);">
 				 	<span class="fa fa-bullhorn  hidden-xs"></span>
 				 	<span class="visible-xs">Activity Log</span>
 				 </a>					
 				</li>
-
-
+				<li class="animated fadeInDown show-chat" id="t_chat">
+					<a href="javascript:void(0);">					
+						<span class="hidden-xs hidden-sm">
+							<i class="fa fa-comments-o"></i> 
+							<span class="onlineCounter odometer" data-number="0">0</span>
+						</span>	
+						<span class="visible-xs visible-sm">
+						 	<span class="onlineCounter odometer pull-right" data-number="0">0</span>
+						 	<span class="visible-xs">Challengers chat</span>
+						</span>						
+					</a>					
+				</li>
+				<li class="animated fadeInDown" id="t_requests">
+					<a href="/request" title="See you pending requests: Friends and Challenges">						
+						<span  class="hidden-xs hidden-sm">
+							<i class="fa fa-inbox"></i>  
+							<span class="requestCounterTotal odometer" data-number="0">0</span>
+						</span>
+						<span class="visible-xs visible-sm">
+						 	<span class="requestCounterTotal odometer pull-right" data-number="0">0</span>
+						 	<span class="visible-xs">Requests</span>
+						</span>						
+					</a>				
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"> 
 					<a href="#" class="dropdown-toggle animated fadeInDown" data-toggle="dropdown">
 						Challenges 
-						<% if(currentUser.challengeRate.length > 0 || currentUser.tribunal.length > 0 || currentUser.pendingRequests.length > 0 ) { %>
-						<span class="badge alert-info"><%= currentUser.challengeRate.length + currentUser.tribunal.length + currentUser.pendingRequests.length %></span>
-						<% } %>
 						<b class="caret"></b>
-						</a>
+					</a>
 					<ul class="dropdown-menu">
 						<li>
 							<a href="/launchChallenge"><i class="fa fa-crosshairs hidden-xs hidden-sm"></i> <strong>Launch</strong></a>
@@ -75,18 +85,13 @@
 					</ul>
 				</li>
 				<li class="dropdown">
-					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInDown" data-toggle="dropdown" ><%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %> <% if(currentUser.pendingRequests.length > 0 ) { %>(<%= currentUser.pendingRequests.length %>)<% } %><b class="caret"></b></a>
+					<a href="#" id="userdropdown" class="dropdown-toggle animated fadeInDown" data-toggle="dropdown" >
+						<%= currentUser.local.pseudo %>, Lvl. <%= currentUser.level %><b class="caret"></b>
+					</a>
 					<div id="user-xpbar" class="hidden-xs hidden-sm"></div>
 					<ul class="dropdown-menu">
 						<li>
 							<a href="/profile"><i class="fa fa-user hidden-xs hidden-sm"></i>  Profile</a>
-						</li>
-						<li>
-							<a href="/request"><i class="fa fa-inbox hidden-xs hidden-sm"></i>  Requests
-								<% if(currentUser.pendingRequests.length > 0 ) { %>
-								<span class="badge alert-info"><%= currentUser.pendingRequests.length %></span>
-								<% } %>
-							</a>
 						</li>
 						<li class="divider"></li>
 						<li>
