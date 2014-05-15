@@ -683,6 +683,7 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				sio.glob "fa fa-users", "<a href=\"/u/" + result[1][0].idCool + "\" title=\"" + result[1][0].local.pseudo + "\">" + result[1][0].local.pseudo + "</a> and <a href=\"/u/" + result[1][1].idCool + "\" title=\"" + result[1][1].local.pseudo + "\">" + result[1][1].local.pseudo + "</a> are now friends!"
 				res.send [true]
 
+	# Cancel a request sent by the user to a challenger
 	app.post "/cancelFriend", isLoggedIn, (req, res) ->
 		idFriend = req.body.id
 		nameFriend = req.body.pseudo
@@ -695,7 +696,7 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				id: idFriend
 				userName: nameFriend
 
-		relations.unFriend obj.from, obj.to, (result) ->
+		relations.denyRelation obj.from, obj.to, (result) ->
 			if !result[0]
 				res.send [false, result[1]]
 			else

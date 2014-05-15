@@ -737,7 +737,7 @@
           userName: nameFriend
         }
       };
-      return relations.unFriend(obj.from, obj.to, function(result) {
+      return relations.denyRelation(obj.from, obj.to, function(result) {
         if (!result[0]) {
           return res.send([false, result[1]]);
         } else {

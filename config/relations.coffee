@@ -117,10 +117,7 @@ module.exports = (_, mailer)->
             , (err, relationTo) ->
 
               mailer.cLog 'Error at '+__filename,err if err
-              newRelation = [
-                relationFrom
-                relationTo
-              ]
+              newRelation = [relationFrom,relationTo]
               done [true, newRelation]
         else
           done [false,'relation already exists']
@@ -145,7 +142,7 @@ module.exports = (_, mailer)->
         , (err, relation) ->
 
           mailer.cLog 'Error at '+__filename,err if err
-          console.log relation.pendingRequests,err
+          # console.log relation.pendingRequests,err
 
           User.findByIdAndUpdate to.id,
             $pull:
@@ -171,18 +168,31 @@ module.exports = (_, mailer)->
 
     User.findById from.id, (err, user) ->
       testReq = _.map(user.sentRequests, (u)-> u.idUser.toString() );
-      console.log testReq,to.id
+      # console.log testReq,to.id
       testReq = _.contains(testReq, to.id.toString());
-      console.log testReq
+      # console.log testReq
+      # console.log user.sentRequests
 
-      if testFriends
-        User.findByIdAndUpdate to.id,
+      if testReq
+        User.findByIdAndUpdate from.id
+        ,
           $pull:
             sentRequests:
-              idUser: from.id
-        , (err, relation) ->
-          mailer.cLog 'Error at '+__filename,err if err
-          console.log relation.sentRequests,err
-          done [true, '']
+              idUser: to.id
+        ,
+          safe: true
+        , (err, user) ->
+          # console.log user.local.pseudo,user.sentRequests,err
+          User.findByIdAndUpdate to.id
+          ,
+            $pull:
+              pendingRequests:
+                idUser: from.id
+          ,
+            safe: true
+          , (err, user) ->
+            mailer.cLog 'Error at '+__filename,err if err
+            # console.log user.local.pseudo,user.pendingRequests,err
+            done [true, '']
       else
         done [false,'This relation is not existing.']

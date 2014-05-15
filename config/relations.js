@@ -167,7 +167,6 @@
               if (err) {
                 mailer.cLog('Error at ' + __filename, err);
               }
-              console.log(relation.pendingRequests, err);
               return User.findByIdAndUpdate(to.id, {
                 $pull: {
                   sentRequests: {
@@ -201,22 +200,31 @@
           testReq = _.map(user.sentRequests, function(u) {
             return u.idUser.toString();
           });
-          console.log(testReq, to.id);
           testReq = _.contains(testReq, to.id.toString());
-          console.log(testReq);
-          if (testFriends) {
-            return User.findByIdAndUpdate(to.id, {
+          if (testReq) {
+            return User.findByIdAndUpdate(from.id, {
               $pull: {
                 sentRequests: {
-                  idUser: from.id
+                  idUser: to.id
                 }
               }
-            }, function(err, relation) {
-              if (err) {
-                mailer.cLog('Error at ' + __filename, err);
-              }
-              console.log(relation.sentRequests, err);
-              return done([true, '']);
+            }, {
+              safe: true
+            }, function(err, user) {
+              return User.findByIdAndUpdate(to.id, {
+                $pull: {
+                  pendingRequests: {
+                    idUser: from.id
+                  }
+                }
+              }, {
+                safe: true
+              }, function(err, user) {
+                if (err) {
+                  mailer.cLog('Error at ' + __filename, err);
+                }
+                return done([true, '']);
+              });
             });
           } else {
             return done([false, 'This relation is not existing.']);
