@@ -221,7 +221,7 @@ cursor: default;
 }
 @media only screen and (max-width: 900px) {
   .transi-slide{
-    background: url('../../img/landing/px_bg_@2.png') repeat;
+    background: url('../../img/px_bg_@2X.png') repeat;
     }
 	section .container {
 		opacity: 1;

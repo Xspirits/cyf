@@ -246,6 +246,9 @@ body.modal-open .canvas{
     -webkit-backface-visibility: hidden;
     overflow-x:hidden;
   }
+  #menu-bar > ul > li > a > i {
+    color: #fff !important;
+  }
   .canvas {
     -webkit-box-shadow:none;
     -moz-box-shadow:none;

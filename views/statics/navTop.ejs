@@ -138,15 +138,19 @@
 		<a href="/">
 		  <img class="menu-head-logo" src="./img/logo.png" >
 		</a>
+		<% if (currentUser) { %>
 		<h3 class="text-center"><small>L.<%= currentUser.level %></small><%= currentUser.local.pseudo %></h3>
 		<a href="/profile">
 			<img class="img-circle img-responsive" src="<%= currentUser.icon %>" >
-		</a>	 	
+		</a>	
+		<% } %> 	
 	</div>
 
 	<ul class="list-unstyled">
-		<li><a href="/leaderboard"><i class="fa fa-list-ul"></i> <span class="pull-right"><i class="fa fa-star"></i><%= currentUser.dailyRank %></span>LeaderBoard</a></li> 
+		<li><a href="/leaderboard"><i class="fa fa-list-ul"></i><% if (currentUser) { %> <span class="pull-right"><i class="fa fa-star"></i><%= currentUser.dailyRank %></span><% } %> LeaderBoard</a></li> 
 		<li><a href="/users"><i class="fa fa-search"></i> Challengers</a></li>
+
+		<% if (currentUser) { %>
 		<li><a href="/friends"><i class="fa fa-users"></i> <span class="odometer pull-right" data-number="<%= currentUser.friends.length %>">0</span> friends</a></li>
 		<li><a href="/request"><i class="fa fa-inbox"></i> <span class="requestCounterTotal odometer pull-right" data-number="0">0</span> Requests</a></li> 
 		<li>
@@ -177,6 +181,10 @@
 		<li>
 			<a href="/settings"><i class="fa fa-sliders"></i> Settings</a>
 		</li>
+		<% }  else { %> 
+		<li><a href="/signup">Become a challenger</a></li>
+		<li><a href="/login">Challenger entrance</a></li>
+		<% } %> 		
 	</ul>
 </div>
 	
