@@ -54,7 +54,7 @@
 <script type="text/javascript" src="/js/touchspin.js"></script>
 <script type="text/javascript" src="/js/nouislider.min.js"></script>
 <script type="text/javascript" src="/js/odometer.min.js"></script>
-<script type="text/javascript" src="/js/nprogress.js"></script>
+<!-- <script type="text/javascript" src="/js/nprogress.js"></script> -->
 <script type="text/javascript" src="/js/later.js"></script>
 <script type="text/javascript" src="/js/bootstrap.switch.js"></script>
 <script type="text/javascript" src="/js/main.js"></script>
@@ -192,12 +192,7 @@
 		notif(queue, queue.length -1); 
 		<% } %>
 
-		
-		// NProgress.configure({ ease: 'ease-in-out', speed: 2239, showSpinner: false  });
-		// NProgress.set( myLevel );
-		
-
-		// Javascript to enable link to tab
+		// Javascript to enable direct link to tab
 		var url = document.location.toString();
 		if (url.match('#')) {
 		    $('.nav-tabs a[href='+url.split('/')[3]+']').tab('show') ;
@@ -256,20 +251,20 @@
         $("[rel='tooltip']").tooltip();
 
 		setTimeout(function(){
-			$('.odometer').each(function(){
+			var buff = $('.odometer');
+			return $.each(buff, function () {
 				var number = Math.floor(parseInt($(this).attr('data-number')));
-
-				$(this).html(number);
+				return $(this).html(number);
 			});
 		}, 1000);
 		setInterval(function(){
 			timeFromUp();
 		},60000);
-
 		setInterval(function(){
 			updateUp();
 			updateEnd();
 		},1000);
+	});
 		//  FUNCTIONS
 		function pushStream(data) {
 			var target = $('#streams')
@@ -284,79 +279,82 @@
 
 			target.prepend(template);
 		}
-		function animateProgress() {
-			$('.tinyProgress').each(function(){
-				var w   = $(this).attr('data-percent') - 2;
-				$(this).width(w + '%');
-			});	
-		};
 		function notif(queue,i) {     
 			setTimeout(function () {  
 				if(queue[i]) {
 					sendNotif(queue[i][0],queue[i][1],queue[i][2])
 					if (--i) notif(queue, i);  
 				}    			
-			}, 220)
+			}, 220);
+		};
+		function animateProgress() {
+			$('.tinyProgress').each(function(){
+				var w   = $(this).attr('data-percent') - 2;
+				$(this).width(w + '%');
+			});	
 		};
 		function readability(){
-			$('.dateReadability').each( function () {
+			var buff = $('.dateReadability');
+			return $.each(buff, function () {
 				var date = $(this).attr('data-date');
 				var converted = moment(date).utc().format('dddd DD MMMM HH[h]mm');
-				$(this).text(converted);
+				return $(this).text(converted);
 			})
 		};
 		function dateTiny(){
-			$('.dateTiny').each( function () {
+			var buff = $('.dateTiny');
+			return $.each(buff, function () {
 				var date = $(this).attr('data-date');
 				var converted = moment(date).utc().format('dd DD/MM Ha');
-				$(this).text(converted);
+				return $(this).text(converted);
 			})
 		};
 		function updateUp(){
-			$('.convertUp').each( function () {
+			var buff = $('.convertUp');
+			return $.each(buff, function () {
 				var start = $(this).attr('data-tStart');
 				var converted = moment(start).utc().countdown().toString();
 				if(moment(start).utc().isBefore(moment().utc()))
-					$(this).text('Started!');			
+					return $(this).text('Started!');			
 				else
-					$(this).text('Start in ' +converted);
+					return$(this).text('Start in ' +converted);
 			})
 		};
 		function updateEnd(){
-			$('.convertEnd').each( function () {
+			var buff = $('.convertEnd');
+			return $.each(buff, function () {
 				var end = $(this).attr('data-tEnd');
 				var converted = moment(end).countdown().toString();
 				if(moment(end).utc().isBefore(moment().utc()))
-					$(this).text('Ended!');			
+					return $(this).text('Ended!');			
 				else
-					$(this).text('End in ' +converted);
+					return $(this).text('End in ' +converted);
 			})
 		};
 		function timeFromUp(){
-			$('.timeFromUp').each( function () {
+			var buff = $('.timeFromUp');
+			return $.each(buff, function () {
 				var start = $(this).attr('data-date');
 				var converted = moment(start).utc().countdown().toString();
-				$(this).text(converted);
+				return $(this).text(converted);
 			})
-		};
+		}; 
+		function filterThis(cards, query){
+		 	return $.each(cards, function (index, data) {
+				if($(this)[0].className.indexOf(query) > -1)
+					return $(this).removeClass('animated flipOutX flipInX fadeInRight fadeInLeft fadeInDown fadeInUp bounce').show().addClass('animated bounce');
+			});
+		}
 		function sendNotif(msg, idNotif, del) {
 
 			alertify.log(msg, 'info');
 
-			var target = {					
-				del : del,
-				id : idNotif
-			}
+			var target = {del : del,id : idNotif};
 			$.ajax({
 				type: 'POST',
 				data: JSON.stringify(target),
 				contentType: 'application/json',
-				url: './markNotifRead',						
-				success: function(data) {
-					console.log(data);
-				} 
-			});				
+				url: './markNotifRead'
+			}).done(function (data) {console.log(data);});				
 		};
-	});
-
 </script>

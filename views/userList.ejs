@@ -56,54 +56,78 @@
 
 		<div class="container">
 			<div class="row">
-				<ul class="userlist col-lg-12">
-					<div class="row">						
-						<% for(var i=0; i< users.length; i++) { 
-							if(users[i]._id.toString() != currentUser._id) { %>
-							<li class="media col-md-4">
+				<div class=" col-lg-3 col-md-3 col-sm-6 col-xs-12">
+					<input type="search" class="form-control" id="filterUsers" placeholder="Search." rel="tooltip" data-placement="bottom" data-title="try 'friends' or 'league' or 'moba'">
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<br>
+				<br>
+					<ul class="userlist container">
+						<div class="row">						
+							<% for(var i=0; i< users.length; i++) { 
+								if(users[i]._id.toString() != currentUser._id) { %>
+								
+								<li class="media col-md-4 col-xs-6 card-user <%= users[i].local.pseudo.replace(/\s+/g, '').toLowerCase() %> <% if(users[i].games && users[i].games.length > 0) {for (var g = users[i].games.length - 1; g >= 0; g--) {%><%= users[i].games[g].title.replace(/\s+/g, '').toLowerCase() %> <%= users[i].games[g].type.replace(/\s+/g, '').toLowerCase() %><% }} %> <%= _friendList.indexOf(users[i]._id.toString()) > -1 ? 'friend' :'' %>">
 
-									<a class="pull-left" href="/u/<%= users[i].idCool %>">
-										<img src="<%= users[i].icon %>" class="img-rounded">
-									</a>
+										<a class="pull-left" href="/u/<%= users[i].idCool %>">
+											<img src="<%= users[i].icon %>" class="img-rounded">
+										</a>
 
-									<div class="media-body">
-										<h4 class="media-heading col-lg-12"> 
-											<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-											<span class="<%= (users[i].isOnline === true) ? "online" : "offline" %>"></span>
-											<% } %>
-											<a href="/u/<%= users[i].idCool %>">
-												<%= users[i].local.pseudo %>
-											</a>
-										</h4>
-										<div class="col-lg-12">
-											<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-											<span class="badge alert-success">Friend</span>
-											<% } %>
+										<div class="media-body">
+											<h4 class="media-heading col-lg-12"> 
+												<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
+												<span class="<%= (users[i].isOnline === true) ? "online" : "offline" %>"></span>
+												<% } %>
+												<a href="/u/<%= users[i].idCool %>">
+													<%= users[i].local.pseudo %>
+												</a>
+											</h4>
+											<div class="col-lg-12">
+												<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
+												<span class="badge alert-success">Friend</span>
+												<% } %>
 
 
-											<span class="badge alert-warning">level <%= users[i].level %></span>
-											<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-											<span class="badge alert-warning"><%= users[i].friends.length %> friends</span>		
-											<% } %>	
+												<span class="badge alert-warning">level <%= users[i].level %></span>
+												<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
+												<span class="badge alert-warning"><%= users[i].friends.length %> friends</span>		
+												<% } %>	
+											</div>
+											<div class="col-lg-12">	
+												<% if(users[i].games && users[i].games.length > 0) {
+													 for (var g = users[i].games.length - 1; g >= 0; g--) { 
+													%>
+													<!-- <span id="<%= users[i].games[g]._idGame %>"></span>  -->
+													<small class="color-<%= users[i].games[g].type %>"><%= users[i].games[g].title %>,</small>
+												<% }
+												} %>
+											</div>
 										</div>
-										<div class="col-lg-12">	
-											<% if(users[i].games && users[i].games.length > 0) {
-												 for (var g = users[i].games.length - 1; g >= 0; g--) { 
-												%>
-												<!-- <span id="<%= users[i].games[g]._idGame %>"></span>  -->
-												<small class="color-<%= users[i].games[g].type %>"><%= users[i].games[g].title %>,</small>
-											<% }
-											} %>
-										</div>
-									</div>
-							</li>
-							<% } 
-						} %>
-					</div>
-				</ul>
+								</li>
+								<% } 
+							} %>
+						</div>
+					</ul>	
+				</div>
+
 			</div>
 
 		</div>
 		<% include statics/footers %>
+		<script type="text/javascript">
+		$(function () {
+			$("#filterUsers").on('input', function () {
+				var query = $(this).val()
+				,	cards = $('.card-user');
+				if($(this).val().length <= 1)
+					cards.show();
+				else {
+			  	cards.hide();
+			  	return filterThis(cards,query);
+				}
+			});
+		});
+
+		</script>
 	</body>
 	</html>

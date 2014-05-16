@@ -40,16 +40,15 @@
 
 		<div class="container">
 			<div class="row">
-				<ul class="userlist col-lg-12">
-					<div class="row">				
+				<ul class="userlist">			
 					<% if(friends.length > 0) {
 						for(var i=0; i< friends.length; i++) { 
 						var currFriend = friends[i].idUser;
 						if(currFriend._id.toString() != currentUser._id.toString()) { %>
-						<li class="media col-md-4">
+						<li class="media col-md-4 col-xs-6">
 
 								<a class="pull-left" href="/u/<%= currFriend.idCool %>">
-									<img src="<%= currFriend.icon %>" class="img-rounded">
+									<img src="<%= currFriend.icon %>" class="img-rounded img-responsive">
 								</a>
 
 								<div class="media-body">
@@ -76,7 +75,6 @@
 						</div>
 
 					<% } %>
-			</div>
 				</ul>
 			</div>
 

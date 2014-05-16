@@ -149,7 +149,7 @@
 
 				$(".answerCall").click( function(e){
 					e.preventDefault();
-
+					console.log('answering')
 					// Create a new instance of ladda for the specified button
 					var _this = $(this);
 					//var l = Ladda.create( _this );
@@ -188,7 +188,7 @@
 					})
 					.done(function(data) {
 						console.log(data,_this,(data[0] === true))
-						if(data[0] === true ) {
+						if(data[0] === true) {
 							//Animate
 							_this.addClass('btn-success');
 							_this

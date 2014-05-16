@@ -19,8 +19,7 @@
     message: String,
     dateSent: {
       type: Date,
-      "default": Date.now,
-      expires: 86400
+      "default": Date.now
     }
   });
 

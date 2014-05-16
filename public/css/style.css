@@ -233,6 +233,69 @@ body.modal-open .canvas{
 .canvas > .container > .row {
   margin-top: 10px;
 }
+
+@media (max-width: 767px) {
+  html,body {
+    background: #2CAACC;
+  }
+  body {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transition: all 420ms ease;
+    -webkit-backface-visibility: hidden;
+    overflow-x:hidden;
+  }
+  .canvas {
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    -ms-box-shadow:none;
+    -o-box-shadow:none;
+    box-shadow:none;
+  }
+  #headNav > div > div.navbar-header > i {
+    max-width: 6em;
+    margin: .5em 1em;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  #headNav > div > div.navbar-header > a.pull-right.visible-xs > img {
+    max-width: 6em;
+    margin: .5em 2em;
+  }
+  .slider-active {
+    -webkit-transform: translateX(250px);
+  }
+  #menu-bar{
+    position: absolute;
+    width: 250px;
+    height: 100%;
+    top: 0;
+    /* For sharper text, we'll translate left when closed so that the menu is at translate(0) when opened */
+    -webkit-transform: translateX(-250px);
+    padding-top: 1em;
+  }
+  #menu-bar > div > a > img {
+    margin: 0 4em;
+    /* width: 100%; */
+    max-width: 8em;
+  }
+  #menu-bar > ul {
+    margin: 1em auto;
+  }
+  #menu-bar > ul >li {
+    border-bottom: 1px solid white;
+  }
+
+  #menu-bar > ul > li > a {
+    color: white;
+    font-size: 20px;
+    width: 100%;
+    padding: .5em;
+    display: block;
+  }
+}
 /* Usefull class to center canvas */
 .c-center {
     padding: 0;
@@ -1307,8 +1370,6 @@ hr {
   border: 0;
   background: #D8D8D8;
 }
-
-@media (min-width: 0) {
   /* line 302, ../../sass/style.scss */
   .navbar-toggle.lefty {
     display: block;
@@ -1343,15 +1404,6 @@ hr {
   background-color: transparent;
 }
 
-}
-@media (min-width: 992px) {
-  /* line 308, ../../sass/style.scss */
-  body {
-    padding: 0;
-  }
-
-  /* line 311, ../../sass/style.scss */
-}
 
 /* FORM UPDATE */
 /* line 607, ../../sass/style.scss */

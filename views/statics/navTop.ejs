@@ -3,47 +3,46 @@
 <div class="navbar navbar-default navbar-static-top" id="headNav" role="navigation">
 	<div class="container">
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+
+
+		 	<i class="fa fa-bars fa-2x visible-xs pull-left" onclick="document.body.classList.toggle('slider-active')"></i> 
+			
+			<a class="pull-right visible-xs" href="./">			
+                <img src="./img/logo.png" alt="go home">
+			</a>
+			<button type="button" class="navbar-toggle hidden-xs" data-toggle="collapse" data-target=".navbar-collapse">
 				<span class="sr-only">Toggle navigation</span>
 				<i class="fa fa-ellipsis-v"></i>
 			</button>
-			<a class="navbar-brand animated flipInX" href="./">			
-                <img src="./img/logo.png" alt="go home">
+			<a class="navbar-brand animated flipInX hidden-xs" href="./">			
+                <img src="./img/logo.png" alt="go home" class=" ">
 			</a>
 		</div>
-		<div class="navbar-collapse collapse">
+		<div class="navbar-collapse collapse hidden-xs">
 			<% if (currentUser) { %>
 			<ul class="nav navbar-nav">
 				<li class="animated fadeInDown"><a href="/leaderboard">LeaderBoard</a></li>
 				<li class="animated fadeInDown" id="t_menuChall"><a href="/users">Challengers</a></li>
-				<li class="animated fadeInDown show-logs" id="t_logs">
+				<li class="animated fadeInDown show-logs hidden-sm" id="t_logs">
 				 <a href="javascript:void(0);">
-				 	<span class="fa fa-bullhorn  hidden-xs"></span>
+				 	<span class="fa fa-bullhorn"></span>
 				 	<span class="visible-xs">Activity Log</span>
 				 </a>					
 				</li>
-				<li class="animated fadeInDown show-chat" id="t_chat">
+				<li class="animated fadeInDown show-chat hidden-sm" id="t_chat">
 					<a href="javascript:void(0);">					
-						<span class="hidden-xs hidden-sm">
+						<span>
 							<i class="fa fa-comments-o"></i> 
 							<span class="onlineCounter odometer" data-number="0">0</span>
-						</span>	
-						<span class="visible-xs visible-sm">
-						 	<span class="onlineCounter odometer pull-right" data-number="0">0</span>
-						 	<span class="visible-xs">Challengers chat</span>
 						</span>						
 					</a>					
 				</li>
 				<li class="animated fadeInDown" id="t_requests">
 					<a href="/request" title="See you pending requests: Friends and Challenges">						
-						<span  class="hidden-xs hidden-sm">
+						<span >
 							<i class="fa fa-inbox"></i>  
 							<span class="requestCounterTotal odometer" data-number="0">0</span>
-						</span>
-						<span class="visible-xs visible-sm">
-						 	<span class="requestCounterTotal odometer pull-right" data-number="0">0</span>
-						 	<span class="visible-xs">Requests</span>
-						</span>						
+						</span>				
 					</a>				
 				</li>
 			</ul>
@@ -55,7 +54,7 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="/launchChallenge"><i class="fa fa-crosshairs hidden-xs hidden-sm"></i> <strong>Launch</strong></a>
+							<a href="/launchChallenge"><i class="fa fa-paper-plane hidden-xs hidden-sm"></i> <strong>Launch</strong></a>
 						</li>
 						<li class="divider hidden-xs hidden-sm"></li>
 						<li>
@@ -107,7 +106,7 @@
 					</ul>
 				</li>
 				<li>
-					<a href="/settings" class="hidden-sm hidden-xs"><i class="fa fa-cogs"></i></a>
+					<a href="/settings" class="hidden-sm hidden-xs"><i class="fa fa-sliders"></i></a>
 				</li>
 				<a href="/profile" class="navbar-text profile-icon hidden-xs hidden-sm"><img src="<%= currentUser.icon %>" class="img-responsive img-rounded"></a>
 			</ul>
@@ -125,12 +124,59 @@
 
 </div>
 
-<div class="liveFeed navmenu navmenu-fixed-right">
+<div class="liveFeed navmenu navmenu-fixed-right hidden-xs">
 	<ul class="list-group list-unstyled" id="streams">
 	</ul>
 </div>
 
-<div class="liveChat navmenu navmenu-fixed-left">
+<div class="liveChat navmenu navmenu-fixed-left hidden-xs">
 	<input type="text" id="chat-message" placeholder="Say something..." >
 	<ul class="list-unstyled" id="chat"></ul>
 </div>
+<div class="visible-xs" id="menu-bar">
+	<div class="menu-head">
+		<a href="/">
+		  <img class="menu-head-logo" src="./img/logo.png" >
+		</a>
+		<h3 class="text-center"><small>L.<%= currentUser.level %></small><%= currentUser.local.pseudo %></h3>
+		<a href="/profile">
+			<img class="img-circle img-responsive" src="<%= currentUser.icon %>" >
+		</a>	 	
+	</div>
+
+	<ul class="list-unstyled">
+		<li><a href="/leaderboard"><i class="fa fa-list-ul"></i> <span class="pull-right"><i class="fa fa-star"></i><%= currentUser.dailyRank %></span>LeaderBoard</a></li> 
+		<li><a href="/users"><i class="fa fa-search"></i> Challengers</a></li>
+		<li><a href="/friends"><i class="fa fa-users"></i> <span class="odometer pull-right" data-number="<%= currentUser.friends.length %>">0</span> friends</a></li>
+		<li><a href="/request"><i class="fa fa-inbox"></i> <span class="requestCounterTotal odometer pull-right" data-number="0">0</span> Requests</a></li> 
+		<li>
+			<a href="/launchChallenge"><i class="fa fa-paper-plane"></i> <strong>Launch a challenge</strong></a>
+		</li>
+		<li>
+			<a href="/challenges"><i class="fa fa-book"></i> All challenges</a>
+		</li>
+		<li>
+			<a href="/ongoing"><i class="glyphicon glyphicon-flash"></i>My challenges</a>
+		</li>
+		<li><a href="/newChallenge"><i class="fa fa-pencil"></i> Create</a></li>
+		<li><a href="/myChallenges"><i class="fa fa-list-ul"></i> Challenges created</a></li>
+		<li>
+			<a href="/rateChallenges"><i class="fa fa-bar-chart-o"></i> Rate challenges
+				<% if(currentUser.challengeRate.length > 0 ) { %>
+				<span class="badge alert-info"><%= currentUser.challengeRate.length %></span>
+				<% } %>
+			</a>
+		</li>
+		<li>
+			<a href="/tribunal"><i class="fa fa-gavel"></i>  Tribunal
+				<% if(currentUser.tribunal.length > 0 ) { %>
+				<span class="badge alert-info"><%= currentUser.tribunal.length %></span>
+				<% } %>
+			</a>
+		</li>
+		<li>
+			<a href="/settings"><i class="fa fa-sliders"></i> Settings</a>
+		</li>
+	</ul>
+</div>
+	

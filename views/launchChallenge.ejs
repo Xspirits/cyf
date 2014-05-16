@@ -132,16 +132,15 @@
 
 					<div class="col-md-6">
 						<h3>Select a challenge
-							<!-- <div class="pull-right filter">
-								<input type="search" class="form-control" placeholder="Search a game">
-							</div> -->					
+							<div class="pull-right filter">
+								<input type="search" class="form-control" id="filterGame" placeholder="Game title/Type">
+							</div>					
 						</h3>
 						<div class="row challenge">
-							<% 
-								if(challenges && challenges.length > 0 ) {
+							<% if(challenges && challenges.length > 0 ) {
 								for(var i=0; i< challenges.length; i++) { 
 								%>
-								<div class="col-lg-6 col-xs-6 imInABox animated fadeInDown  challenge-card hover-me" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game.title %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+								<div class="col-lg-6 col-xs-6 imInABox animated flipInX challenge-card hover-me <%= challenges[i].game.type.replace(/\s+/g, '').toLowerCase() %> <%= challenges[i].game.title.replace(/\s+/g, '').toLowerCase() %>" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game.title %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
 									<div class="rounded-2 well">
 										<span class="badge <%= challenges[i].game.type %>"><%= challenges[i].game.title %></span>
 
@@ -162,20 +161,19 @@
 									</div>
 								</div>
 								<% }
-								} %>
+							} %>
 							</div>
 						</div>
 						<div class="col-md-6">
-							<h3>And select a friend to challenge
-								<!-- <div class="pull-right filter">
-									<input type="search" class="form-control" placeholder="Search a friend">
-								</div> -->
+							<h3>Select a friend
+								<div class="pull-right filter">
+									<input type="search" class="form-control" id="filterUsers" placeholder="Search a friend">
+								</div>
 							</h3>
 							<div class="row friends">
-
-								<% if(userList && userList.length > 0) { %>
-								<% for(var i=0; i< userList.length; i++) { %>
-								<div class="col-lg-3 col-xs-3 col-sm-3 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 boxy rounded-2 animated flipInX" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
+							<% if(userList && userList.length > 0) {
+							for(var i=0; i< userList.length; i++) { %>
+								<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 boxy rounded-2 animated card-user flipInX <%= userList[i].idUser.local.pseudo.replace(/\s+/g, '').toLowerCase() %>" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
 									<div class="flatty">
 										<span class="level"><%= userList[i].idUser.level %></span>
 										<div class="vh-center">
@@ -186,8 +184,8 @@
 									<img src="<%= userList[i].idUser.icon %>" class="img-responsive img-rounded">
 
 								</div>
-								<% } %>
-								<% } %>
+							<% } 
+							} %>
 							</div>
 						</div>
 
@@ -201,6 +199,30 @@
 				<script type="text/javascript">
 
 					$(function() {
+						//  JS Filtering
+						$("#filterGame").on('input', function () {
+							var query = $(this).val()
+							,	cards = $('.challenge-card');
+							if($(this).val().length <= 1)
+								cards.show();
+							else {
+						  	cards.hide();
+						  	return filterThis(cards,query);
+							}
+						});
+						$("#filterUsers").on('input', function () {
+							var query = $(this).val()
+							,	cards = $('.card-user');
+							if($(this).val().length <= 1)
+								cards.show();
+							else {
+						  	cards.hide();
+						  	return filterThis(cards,query);
+							}
+						});
+
+
+						//  Launch Challenge
 						var cStartDate, cEndDate;
 						$('#DTPKStart')
 						.datetimepicker({
@@ -366,7 +388,7 @@ upFriends();
 
 		$('#timeModal').modal('show');
 	}
-	var upFriends = function (){
+function upFriends(){
 
 		var numCa = $(".imInABox.active").length,
 		numFa = $(".friends .boxy.active").length;
@@ -384,9 +406,7 @@ upFriends();
 			populateTimeModal();
 
 		}
-	};
-
-
+};
 
 </script>
 </body>
