@@ -2,9 +2,9 @@
 (function() {
   var COOKIE_SECRET, CronJob, EXPRESS_SID_KEY, app, appKeys, async, challenge, configDB, cookieParser, db_chat, eApi, ent, express, flash, games, genUID, google, grvtr, http, io, ladder, mailer, mandrill, mandrill_client, moment, mongoose, nodemailer, notifs, passport, path, ping, port, redis, relations, scheduler, server, sessionStore, sio, social, socket, users, xp, _;
 
-  express = require("express");
-
   http = require("http");
+
+  express = require("express");
 
   socket = require("socket.io");
 

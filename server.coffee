@@ -1,7 +1,12 @@
 
 # Imports       ======================================================================
-express         = require("express")
+
+# Uncomment bellow to switch to SSL connexion
+# fs              = require("fs") 
 http            = require("http")
+# Uncomment bellow to switch to SSL connexion
+# https           = require("https")
+express         = require("express")
 socket          = require("socket.io")
 
 appKeys         = require("./config/auth")
@@ -11,9 +16,16 @@ EXPRESS_SID_KEY = appKeys.express_sid_key
 COOKIE_SECRET   = appKeys.cookie_secret
 cookieParser    = express.cookieParser(COOKIE_SECRET)
 
+# Uncomment bellow to switch to SSL connexion
+# confOptions = 
+#   key: fs.readFileSync('privatekey.pem')
+#   cert: fs.readFileSync('ryans-cert.pem')
+
 # Create a new store in memory for the Express sessions
 sessionStore    = new express.session.MemoryStore()
 app             = express()
+# Uncomment bellow to switch to SSL connexion
+# server          = https.createServer(confOptions,app)
 server          = http.createServer(app)
 io              = socket.listen(server)
 io.set "log level", 1
@@ -129,4 +141,4 @@ console.log '==========================================================='
 console.log "I challenge you to watch on port " + port
 console.log 'Current Application time : '+moment().utc().format()
 console.log '==========================================================='
-# mailer.cLog '[Cyf-Start] Current Application time : '+moment().utc().format(),''
+# mailer.cLog '[Cyf-Start] Current Application time : '+moment().utc().format(),
