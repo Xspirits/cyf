@@ -133,14 +133,14 @@
 					<div class="col-md-6">
 						<h3>Select a challenge
 							<div class="pull-right filter">
-								<input type="search" class="form-control" id="filterGame" placeholder="Game title/Type">
+								<input type="search" class="form-control filterGame" placeholder="Game title/Type">
 							</div>					
 						</h3>
 						<div class="row challenge">
 							<% if(challenges && challenges.length > 0 ) {
 								for(var i=0; i< challenges.length; i++) { 
 								%>
-								<div class="col-lg-6 col-xs-6 imInABox animated flipInX challenge-card hover-me <%= challenges[i].game.type.replace(/\s+/g, '').toLowerCase() %> <%= challenges[i].game.title.replace(/\s+/g, '').toLowerCase() %>" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game.title %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+								<div class="col-lg-6 col-xs-6 imInABox animated flipInX challenge-card hover-me <%= challenges[i].game.type.replace(/\s+/g, '').toLowerCase() %> <%= challenges[i].game.title.replace(/\s+/g, '').toLowerCase() %> <%= challenges[i].title.replace(/\s+/g, '').toLowerCase() %>" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game.title %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
 									<div class="rounded-2 well">
 										<span class="badge <%= challenges[i].game.type %>"><%= challenges[i].game.title %></span>
 
@@ -167,7 +167,7 @@
 						<div class="col-md-6">
 							<h3>Select a friend
 								<div class="pull-right filter">
-									<input type="search" class="form-control" id="filterUsers" placeholder="Search a friend">
+									<input type="search" class="form-control filterUsers" placeholder="Search a friend">
 								</div>
 							</h3>
 							<div class="row friends">
@@ -199,28 +199,6 @@
 				<script type="text/javascript">
 
 					$(function() {
-						//  JS Filtering
-						$("#filterGame").on('input', function () {
-							var query = $(this).val()
-							,	cards = $('.challenge-card');
-							if($(this).val().length <= 1)
-								cards.show();
-							else {
-						  	cards.hide();
-						  	return filterThis(cards,query);
-							}
-						});
-						$("#filterUsers").on('input', function () {
-							var query = $(this).val()
-							,	cards = $('.card-user');
-							if($(this).val().length <= 1)
-								cards.show();
-							else {
-						  	cards.hide();
-						  	return filterThis(cards,query);
-							}
-						});
-
 
 						//  Launch Challenge
 						var cStartDate, cEndDate;

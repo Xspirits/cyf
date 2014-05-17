@@ -229,6 +229,27 @@
 			$('.liveFeed').toggleClass('sticked');
 		});
 
+		//  JS Filtering
+		$(".filterGame").on('input', function () {
+			var query = $(this).val()
+			,	cards = $('.challenge-card');
+			if($(this).val().length <= 1)
+				cards.show();
+			else {
+		  	cards.hide();
+		  	return filterThis(cards,query);
+			}
+		});
+		$(".filterUsers").on('input', function () {
+			var query = $(this).val()
+			,	cards = $('.card-user');
+			if($(this).val().length <= 1)
+				cards.show();
+			else {
+		  	cards.hide();
+		  	return filterThis(cards,query);
+			}
+		});
 		// $('#dismissBoxChall').click(function(e){
 		// 	e.preventDefault();
 		// 	$('#gotchaChallenge,#gotaBoxContent')

@@ -57,7 +57,7 @@
 		<div class="container">
 			<div class="row">
 				<div class=" col-lg-3 col-md-3 col-sm-6 col-xs-12">
-					<input type="search" class="form-control" id="filterUsers" placeholder="Search." rel="tooltip" data-placement="bottom" data-title="try 'friends' or 'league' or 'moba'">
+					<input type="search" class="form-control filterUsers" placeholder="Search." rel="tooltip" data-placement="bottom" data-title="try 'friends' or 'league' or 'moba'">
 				</div>
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<br>
@@ -116,16 +116,6 @@
 		<% include statics/footers %>
 		<script type="text/javascript">
 		$(function () {
-			$("#filterUsers").on('input', function () {
-				var query = $(this).val()
-				,	cards = $('.card-user');
-				if($(this).val().length <= 1)
-					cards.show();
-				else {
-			  	cards.hide();
-			  	return filterThis(cards,query);
-				}
-			});
 		});
 
 		</script>

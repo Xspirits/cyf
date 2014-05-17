@@ -48,41 +48,47 @@
 					<div class="clearfix">
 						The challenges are classed from the most valuated to the least one.
 						<div class="pull-right filter">
-							<input type="search" class="form-control" placeholder="Search a challenge">
+							<input type="search" class="form-control filterGame" placeholder="Search a challenge">
 						</div>	
 					</div>
 					<hr>
 					<div class="row">
 						<% if(challenges && challenges.length > 0) {
 						for(var i=0; i< challenges.length; i++) { %>
-						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 challenge-card hover-me animated fadeInDown" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
+						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 challenge-card hover-me animated fadeInDown <%= challenges[i].game.type.replace(/\s+/g, '').toLowerCase() %> <%= challenges[i].game.title.replace(/\s+/g, '').toLowerCase() %> <%= challenges[i].title.replace(/\s+/g, '').toLowerCase() %>" id="<%= challenges[i]._id %>" data-game="<%= challenges[i].game %>" data-durationD="<%= challenges[i].durationD %>" data-durationH="<%= challenges[i].durationH %>" data-title="<%= challenges[i].title %> " data-description="<%= challenges[i].description %>">								
 							<div class="rounded-2 well">
 								<a href="./c/<%= challenges[i].idCool %>">
+								<h3 class="hidden-xs"><%= challenges[i].title %></h3>
+								<h5 class="visible-xs"><%= challenges[i].title %></h5>
 									
-									<h4><%= challenges[i].title %></h4>
+									<span class="badge <%= challenges[i].game.type %>"><%= challenges[i].game.title %></span>
+
+								<p class="hidden-xs"><%= challenges[i].description %></p>
 								</a>
-									<h6 class="color-<%= challenges[i].game.type %>"><%= challenges[i].game.title %></h6>
-									<p><%= challenges[i].description %></p>
-									<hr class="subtle-divider hr-white">
-									<i class="fa fa-clock-o"></i>
-									<strong><%= challenges[i].durationH %></strong> Hours
-									<% if (challenges[i].durationD > 0 ) { %> 
-									<strong><%= challenges[i].durationD %></strong> Days
-									<% } %>
-									<span class="valueChall pull-right"><span class="label label-info">Value <i class="fa fa-fire"></i><%= challenges[i].value %></span></span>
-									<% if(challenges[i].completedBy.length > 0) { %>
-									<hr>
-									<div class="completedByList">
-										<h6>Completed by <%- challenges[i].completedBy.length %> challengers</h6>
-										<span class="hidden">
-											<% for(var z=0; z< challenges[i].completedBy.length; z++) { %>
-												<a href="/u/<%= challenges[i].completedBy[z].idCool %>">
-													<%= challenges[i].completedBy[z].local.pseudo %>
-												</a>
-											<% } %>
-										</span>
-									</div>
-									<% } %>
+								
+								<hr class="subtle-divider">
+								<i class="fa fa-clock-o"></i>
+								<strong><%= challenges[i].durationH %></strong> Hours
+								<% if (challenges[i].durationD > 0 ) { %> 
+								<strong><%= challenges[i].durationD %></strong> Days
+								<% } %>
+								<span class="pull-right">
+									<i class="fa fa-fire text-danger"></i> <%= challenges[i].value %>
+								</span>
+								<% if(challenges[i].completedBy.length > 0) { %>
+								<hr>
+								<div class="completedByList hidden-xs">
+									<h6>Completed by <%- challenges[i].completedBy.length %> challengers</h6>
+									<span class="hidden">
+										<% for(var z=0; z< challenges[i].completedBy.length; z++) { %>
+											<a href="/u/<%= challenges[i].completedBy[z].idCool %>">
+												<%= challenges[i].completedBy[z].local.pseudo %>
+											</a>
+										<% } %>
+									</span>
+								</div>
+								<% } %>
+
 							</div>
 						</div>
 						<% }

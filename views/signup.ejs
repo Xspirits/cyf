@@ -38,44 +38,51 @@
 		<div class="container">
 			<div class="col-sm-8 col-sm-offset-2">
 
-				<h1>Well met, <span id="whoAmI">challenger</span></h1>
-
 				<% if (message) { %>
-				<div class="alert alert-danger"><%= message %></div>
+				<div class="bittersweet-color well"><%= message %></div>
 				<% } %>
 				<% if (waitingConfirm) {
 
 					if(currentUser) {
 				 %>
-				 <div class="alert alert-success">
-				 	<h2>Welcome <%= currentUser.local.pseudo%></h2>
+				 <h3>Account created &amp; activated, welcome <%= currentUser.local.pseudo%></h3>
+				 <div class="well">
 				 	<p>
-				 		Your account has been created: <strong>enjoy!</strong>
+				 		Cyf is funnier with real friends, but you can find people who play the same games as you on the <a href="/users" class="grapefruit-color" target="_blank"> challenger list</a>. 
+				 	</p>
+				 	<p>
+				 		<em class="grapefruit-color">you may need to send some friend requests in order to launch and receive challenges</em>!<br>
+						Be sure to specify which <em class="grapefruit-color">games you are playing</em>, thus people may add you as friends and launch you challenges too!<br>
+				 		You can also create challenges, look at the challenges list etc.
+				 	</p>
+				 	<p>
+				 		We will show you some things in the next page, please click the following button:<br>
+				 		<a href="/profile" class="btn btn-block sunflower">Ok, take me to my profile now!</a>
 				 	</p>
 				 </div>
 				 <%
 						} else {
 				 %>
-
-				<div class="alert alert-success"><strong>One last step!</strong> We sent you an email, please check your inbox and confirm your adress to enter the arena!</div>
+				<div class="well grass-color"><strong>One last step!</strong> We sent you an email, please check your inbox and confirm your adress to enter the arena! <small>Be sure to check your spam folder if the message doesn't shows up.</small></div>
 				<% } 
 				} else { %>
 
 
+				<h1>Welcome, <span id="whoAmI">challenger</span></h1>
 
 				<form action="/signup" id="rockstar" method="post">
 					<div class="form-group">
 						<label>Pseudo</label>
-						<input type="text" class="form-control" name="pseudo">
+						<input type="text" class="form-control" placeholder="Pseudo" name="pseudo" pattern="\w{3,}" required>
 					</div>
 					<div class="form-group" id="emailVerify">
 						<label>Email</label>
-						<input type="text" class="form-control" id="txtEmail" name="email">
-						<small>we will send you a confirmation email</small>
+						<input type="email" class="form-control" id="txtEmail" placeholder="Email address" name="email" required>
+						<small>We will send you an email to confirm it.</small>
 					</div>
 					<div class="form-group">
 						<label>Password</label>
-						<input type="password" class="form-control" name="password"  placeholder="Password" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,12}$" data-validation-msg="Password must be 2-12 characters" required >
+						<input type="password" class="form-control" name="password"  placeholder="Password" pattern=".{6,}" data-validation-msg="Password must be 2-12 characters" required >
 					</div>
 
 					<button type="submit" id="createAccount" class="btn btn-block mint btn-lg">Signup</button>

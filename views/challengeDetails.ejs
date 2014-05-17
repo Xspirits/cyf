@@ -9,7 +9,7 @@
     <meta name="rating" content="General">
     <meta name="keywords" content="<%= challenge.title %>, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
     <meta name="title" content="Challenge: <%= challenge.title %> details">
-    <meta name="description" content="Challenge <%= challenge.title %>, value <%= challenge.value %>, rated <%= challenge.rateValue %> overall. <%= challenge.description %>">
+    <meta name="description" content="Challenge <%= challenge.title %>, value <%= challenge.value %>, rated <%= challenge.rateValue ? challenge.rateValue : 0 %> overall. <%= challenge.description %>">
     <!-- End General metas -->
     <!-- Start Open Graph metas -->
     <meta property="og:type" content="profile:<%= challenge.idCool %>"> <!-- website/article/profile -->
@@ -20,7 +20,7 @@
     <meta property="og:image:width" content="750">
     <meta property="og:image:height" content="315">
     <meta property="og:title" content="Challenge: <%= challenge.title %> details">
-    <meta property="og:description" content="Challenge <%= challenge.title %>, value <%= challenge.value %>, rated <%= challenge.rateValue %> overall. <%= challenge.description %>">
+    <meta property="og:description" content="Challenge <%= challenge.title %>, value <%= challenge.value %>, rated <%= challenge.rateValue ? challenge.rateValue : 0 %> overall. <%= challenge.description %>">
     <!-- End Open Graph -->
     <!-- Start Twitter Card Meta -->
     <meta name="twitter:card" content="summary">
@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="http://www.cyf-app.co/img/icon_big.png">
     <meta name="twitter:image:width" content="750">
     <meta name="twitter:title" content="Challenge: <%= challenge.title %> details">
-    <meta name="twitter:description" content="Challenge <%= challenge.title %>, value <%= challenge.value %>, rated <%= challenge.rateValue %> overall. <%= challenge.description %>">
+    <meta name="twitter:description" content="Challenge <%= challenge.title %>, value <%= challenge.value %>, rated <%= challenge.rateValue ? challenge.rateValue : 0 %> overall. <%= challenge.description %>">
     <!-- Twitter card end -->
 
 	<title>Challenge <%= challenge.title %> details - Challenge your friends</title>
@@ -40,15 +40,66 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<h2 class="col-md-12"><%= challenge.title %> <small> <a href="/c/<%= challenge.idCool %>"> <i class="fa fa-chain"></i> <%= challenge.idCool %> </a></small></h2> 
+				<div class="col-md-6">
+					<h1>
+						<%= challenge.title %> 
+						<a href="/c/<%= challenge.idCool %>"><small><i class="fa fa-chain"></i> <%= challenge.idCool %> </small></a>
+					</h1> 
+				</div>
+				<% if(!currentUser) { %>
+				<div class="col-md-6 text-center log-box-req">
+					<div class="well">
 
+						<form action="/signup" id="rockstar" method="post" class="hidden">
+							<div class="row">
+								<h6 class="col-xs-12 col-md-12 text-left">
+									<button class="col-xs-2 col-md-2 pull-right btn btn-xs aqua show-login" tabindex="5">login</button>
+									Create your account
+								</h6>
+								<div class="col-xs-12 col-md-12">
+									<input type="email" class="form-control" autofocus placeholder="Your email adress" name="email" tabindex="1" required>
+								</div>
+								<div class="col-xs-12 col-md-6">
+									<input type="text" class="form-control" placeholder="Pseudo" name="pseudo"  pattern="\w{3,}" tabindex="2" required>
+								</div>
+								<div class="col-xs-12 col-md-6">
+									<input type="password" class="form-control" name="password"  placeholder="Password" pattern=".{6,}" data-validation-msg="Password must be 6 characters long minimum" required  tabindex="3">
+								</div>
+								<div class="col-xs-12 col-md-12">
+									<button type="submit" id="createAccount" class="btn btn-block btn-info btn-md" tabindex="4">Signup</button>
+								</div>
+							</div>
+						</form>
+						<form action="/login" method="post" id="superstar" class="hidden">
+							<div class="row">
+								<h6 class="col-xs-12 col-md-12 text-left">
+									<button class="col-xs-2 col-md-2 pull-right btn btn-xs bittersweet show-create" tabindex="4" >register</button>
+									Sign in
+								</h6>
+								<div class="col-xs-12 col-md-6">
+									<input type="email" class="form-control" placeholder="Email" name="email" tabindex="1"  required autofocus>
+								</div>
+								<div class="col-xs-12 col-md-6">
+									<input type="password" class="form-control" placeholder="Password" name="password" tabindex="2" pattern="[a-zA-Z0-9]{6,}"  required>
+								</div>
+								<div class="col-xs-12 col-md-12">
+									<button type="submit" class="btn btn-block btn-primary btn-md" tabindex="3" >Enter the Arena</button>
+								</div>
+							</div>			
+						</form>
+						<div id="wannabe">
+							<button class="btn bittersweet btn-block show-create">Register now and throw this challenge!</button>
+							<button class="btn aqua btn-block show-login">Login!</button>
+						</div>
+					</div>
+				</div> 
+				<% } %> 
 				<section class="col-md-12">
-						<h4 class="valueChall pull-left"><span class="label label-info">Value <i class="fa fa-fire"></i><%= challenge.value %></span></h4>
-						<div class="fb-share-button" data-href="http://www.cyf-app.co/c/<%= challenge.idCool %>" data-type="button_count"></div>
-						<div class="g-plus" data-action="share" data-annotation="bubble"></div>
-						<a href="https://twitter.com/share" class="twitter-share-button" data-text="Look at this challenge: <%= challenge.title %> with a value of <%= challenge.value %>, rated <%= challenge.rateValue %> overall by  <%= challenge.rateNumber %> #challengers" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
+					<h4 class="valueChall pull-left"><span class="label label-info">Value <i class="fa fa-fire"></i><%= challenge.value %></span></h4>
+					<div class="fb-share-button" data-href="http://www.cyf-app.co/c/<%= challenge.idCool %>" data-type="button_count"></div>
+					<div class="g-plus" data-action="share" data-annotation="bubble"></div>
+					<a href="https://twitter.com/share" class="twitter-share-button" data-text="Look at this challenge: <%= challenge.title %> with a value of <%= challenge.value %>, rated <%= challenge.rateValue ? challenge.rateValue : 0 %> overall by  <%= challenge.rateNumber %> #challengers" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
 				</section>
-				<hr>
 			</div>
 			<div class="row">
 				<div class="col-xs-12 col-md-6">
@@ -59,7 +110,7 @@
 							</p>
 					<div class="row">
 							<div class="col-md-12">
-								<h4>Rated <span class="odometer" data-number="<%= challenge.rateNumber %>">0</span> times, overall <%= challenge.rateValue %></h4>
+								<h4>Rated <span class="odometer" data-number="<%= challenge.rateNumber %>">0</span> times, overall  <span class="odometer" data-number="<%= challenge.rateValue ? challenge.rateValue : 0 %>">0</span></h4>
 								<div class="well clearfix">
 									<canvas id="detailsChart" class="c-center"></canvas>
 									<div class="text-center" >
@@ -97,6 +148,20 @@
 
 		$(function() {
 
+			$('.show-login').on('click', function (e) {
+				e.preventDefault();
+				console.log('fired login');
+				$('#wannabe').addClass('hidden');
+				$('#rockstar').addClass('hidden');
+				$('#superstar').removeClass('hidden');
+			});
+			$('.show-create').on('click', function (e) {
+				e.preventDefault();
+				console.log('fired create');
+				$('#wannabe').addClass('hidden');
+				$('#superstar').addClass('hidden');
+				$('#rockstar').removeClass('hidden');
+			});
 			// Difficulty, quick and fun chart
 			var desiredRatio = $("#detailsChart").parent().width()*0.5;
 			var canvas = $("#detailsChart")[0];
