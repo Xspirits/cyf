@@ -23,6 +23,7 @@
     "moment": "~2.5.1",
     "moment-timezone": "0.0.3",
     "mongoose": "~3.8.1",
+    "mongoose-auto-increment": "^3.0.2",
     "node-schedule": "~0.1.13",
     "nodemailer": "^0.6.2",
     "passport": "~0.1.17",

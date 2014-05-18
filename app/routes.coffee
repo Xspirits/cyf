@@ -1,11 +1,11 @@
-User = require("../app/models/user")
+ser = require("../app/models/user")
 
 isLoggedIn = (req, res, next) ->
-	return next()  if req.isAuthenticated()
+	return next() if req.isAuthenticated()
 	res.redirect "/"
 	return
 	
-module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
+module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, badge, xp, notifs, moment, challenge, users, relations, games, social, ladder, shortUrl) ->
 
 	app.get "/about", (req,res) ->
 		res.render "about.ejs",
@@ -14,7 +14,6 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 	app.get "/contact", (req,res) ->
 		res.render "contact.ejs",
 			currentUser: if req.isAuthenticated() then req.user else false
-
 	# show the home page (will also have our login links)
 	app.get "/", (req, res) ->
 		if req.isAuthenticated()
@@ -73,12 +72,10 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
 					ongoingChall.push data[key]
 
-			users.getFriendList req.user._id, (fList) ->
+			users.populateProfile req.user._id, (populated) ->
 				res.render "profile.ejs",
 					ongoings: ongoingChall
-					currentUser: req.user
-					friends: fList.friends
-
+					currentUser: populated
 
 	app.get "/settings", isLoggedIn, (req, res) ->
 		res.render "setting.ejs",

@@ -449,7 +449,7 @@ userSchema = mongoose.Schema(
   ]
   badges: [
     idBadge:
-      type: mongoose.Schema.Types.ObjectId
+      type: Number
       index: true
       ref: "Badge"
     dateUnlocked:

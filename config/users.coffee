@@ -1,5 +1,6 @@
 # load up the user model
 User = require("../app/models/user")
+Badge = require("../app/models/badge")
 Challenge = require("../app/models/challenge")
 
 module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment) ->
@@ -96,10 +97,20 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
     else
       done false
 
+  populateProfile:  (id, done) ->
+    User.findById(id).populate('friends.idUser badges.idBadge', '-notifications').exec (err, user) ->
+      mailer.cLog 'Error at '+__filename,err if err
+      done user
+
   getFriendList: (id, done) ->
     User.findById(id).populate({path: 'friends.idUser', select: '-notifications' }).exec (err, user) ->
-        mailer.cLog 'Error at '+__filename,err if err
-        done user
+      mailer.cLog 'Error at '+__filename,err if err
+      done user
+
+  getBadgesList: (id, done) ->
+    User.findById(id).populate({path: 'badges.idBadge' }).exec (err, user) ->
+      mailer.cLog 'Error at '+__filename,err if err
+      done user
 
   setOffline: (user, done) ->
     User.findByIdAndUpdate user._id,

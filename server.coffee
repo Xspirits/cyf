@@ -57,6 +57,7 @@ moment.utc().format()
 genUID.seed 664
 mandrill_client = new mandrill.Mandrill(appKeys.mandrill_key);
 mongoose.connect configDB.url # connect to our database
+
 # Grid.mongo  = mongoose.mongo
 # Grid configDB.url
 
@@ -68,6 +69,8 @@ google          = require("./config/google")
 social          = require("./config/social")
 sio             = require("./app/functions/sio")(io, db_chat, ent, moment)
 notifs          = require("./app/functions/notifications")(_, appKeys, social, mailer)
+
+badge          = require("./app/functions/badge")(async, _, mailer, notifs, sio)
 xp              = require("./app/functions/xp")(_, mailer, notifs, sio)
 
 relations       = require("./config/relations")(_, mailer)
@@ -123,7 +126,7 @@ app.configure ->
       next();
 
 # routes ======================================================================
-require("./app/routes") app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
+require("./app/routes") app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, genUID, badge, xp, notifs, moment, challenge, users, relations, games, social, ladder, google 
 
 # Schedules, for the rankings
 require("./app/schedule") CronJob,scheduler, mailer, _,  sio, ladder, moment, social, appKeys, xp, notifs

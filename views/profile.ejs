@@ -226,16 +226,16 @@
 				                  <h4 class="panel-title"  id="t_league">
 							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_friends">
 							        	Friends
-				                    	<span class="badge badge-success pull-right"><%= friends.length %></span>
+				                    	<span class="badge grass pull-right"><%= currentUser.friends.length %></span>
 							        </a>
 				                  </h4>
 				                </div>
 				                <div id="tab_friends" class="panel-collapse collapse">
 				                  <div class="panel-body">
 				                  	<div class="row"> 
-										<% if(friends.length > 0) {
-											for(var i=0; i< friends.length; i++) { 
-											var currFriend = friends[i].idUser;
+										<% if(currentUser.friends.length > 0) {
+											for(var i=0; i< currentUser.friends.length; i++) { 
+											var currFriend = currentUser.friends[i].idUser;
 											if(currFriend._id.toString() != currentUser._id.toString()) { %>
 											<div class="col-md-12">
 												<a class="pull-left pull-left col-md-3" href="/u/<%= currFriend.idCool %>">
@@ -342,21 +342,22 @@
 				              <div class="panel">
 				                <div class="panel-heading">
 				                  <h4 class="panel-title"  id="t_league">
-				                   <% if (currentUser.leagueoflegend.confirmed === true)  { %>
-							        <span class="pull-right gameSync">
-											<i class="fa fa-refresh"></i> 
-									</span>
-									<% } %>
+
 							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#lol_games">
-							          Last 10 League of legend games
-				                       <span class="badge badge-warning pull-right"><%= currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ? currentUser.leagueoflegend.lastGames.length : 0 %></span>
+							        	Last 10 League of legend games
+				                   		<span class="badge badge-warning pull-right">
+				                   			<%= currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ? currentUser.leagueoflegend.lastGames.length : 0 %>
+				                   		</span>
+				                   		<% if (currentUser.leagueoflegend.confirmed === true)  { %>
+								        <span class="pull-right gameSync">
+											<i class="fa fa-refresh"></i> 
+										</span>
+										<% } %>
 							        </a>
 				                  </h4>
 				                </div>
 				                <div id="lol_games" class="panel-collapse collapse">
 				                  <div class="panel-body">
-
-										
 									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
 									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
 										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
@@ -392,6 +393,34 @@
 											</div>
 
 										<% } %>
+				                  </div>
+				                </div>
+				              </div>
+				              <div class="panel">
+				                <div class="panel-heading">
+				                  <h4 class="panel-title"  id="t_badges">
+							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_badges">
+							        	My Badges
+				                   		<span class="badge bittersweet pull-right"><%= currentUser.badges && currentUser.badges.length > 0 ? currentUser.badges.length : 0 %></span>
+							        </a>
+				                  </h4>
+				                </div>
+				                <div id="tab_badges" class="panel-collapse collapse">
+				                  <div class="panel-body">
+
+									<div class="badgeList row">
+									<p>
+										Soon.
+									</p>
+										<% if(currentUser.badges && currentUser.badges.length > 0) {
+											for(var i=0; i< currentUser.badges.length; i++) { 
+											var badge = currentUser.badges[i]; %>
+										<a href="/badge/<%= badge.idBadge._id %>" class="popbadge col-xs-2 col-md-3" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
+											<img src="/img/badges/daily_ranked_1.png" class="img-responsive hover-me" >
+										</a>
+										<% }
+										}%>
+									</div> 
 				                  </div>
 				                </div>
 				              </div>

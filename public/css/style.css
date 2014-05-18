@@ -304,7 +304,6 @@ body.modal-open .canvas{
 }
 span.gameSync {
   cursor: pointer;
-  margin: 10px;
   color: #FFF;
 }
 .modal-backdrop {background: #f7f7f7;}
@@ -1746,8 +1745,7 @@ input.gStyle:focus {
 }
 .challenge-card > div{
   border: 1px solid transparent;
-  min-height: 250px;
-  max-height: 360px;
+
 }
 .hover-me.challenge-card:hover > div{
   border-radius: 5px;

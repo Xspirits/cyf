@@ -131,21 +131,6 @@
 			$(function() {
 
 				readability();
-				$('.popmeout').popover({ 
-						animation: 'fadeInLeft',
-				    html : true,
-				    title: function() {
-				    	var title = '<h4>' + $(this).attr('data-title') + '</h4>';
-				      return title;
-				    },
-				    content: function() {
-				    	var content;
-				    	content = '<p>' + $(this).attr('data-description');
-				    	content += '</p><h6>Start Date</h6><p> ' + moment($(this).attr('data-start')).format('dddd DD MMMM HH[h]mm');
-				    	content += '</p><h6>Deadline</h6><p> ' + moment($(this).attr('data-end')).format('dddd DD MMMM HH[h]mm') + '</p>';
-				      return content;
-				    }
-				});
 
 				$(".answerCall").click( function(e){
 					e.preventDefault();

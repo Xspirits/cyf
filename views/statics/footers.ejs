@@ -19,7 +19,7 @@
       </div>
     </footer>
 <!-- 
-<canvas id="gotchaChallenge" class="hidden" width="100%" height="100%" style="overflow:hidden;margin:0;background: rgb(18,18,18); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas> -->
+<canvas id="gotchaChallenge" class="hidden" width="100%" heighttool="100%" style="overflow:hidden;margin:0;background: rgb(18,18,18); position:absolute; top:0; left:0;bottom:0;right:0; z-index:9999999;height: 110%; width:110%"></canvas> -->
 <div id="fb-root"></div>
 <script type="text/javascript">
 (function(e,t,n){var r,i=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;r=e.createElement(t);r.id=n;r.src="//connect.facebook.net/en_US/all.js#xfbml=true&cookie=true&status=true&appId=624902070914410";i.parentNode.insertBefore(r,i)})(document,"script","facebook-jssdk");(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/platform.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://apis.google.com/js/plusone.js?publisherid=109925245483936264439";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();!function(e,t,n){var r,i=e.getElementsByTagName(t)[0],s=/^http:/.test(e.location)?"http":"https";if(!e.getElementById(n)){r=e.createElement(t);r.id=n;r.src=s+"://platform.twitter.com/widgets.js";i.parentNode.insertBefore(r,i)}}(document,"script","twitter-wjs")</script>
@@ -250,6 +250,35 @@
 		  	return filterThis(cards,query);
 			}
 		});
+		$('.popmeout').popover({ 
+				animation: 'fadeInLeft',
+		    html : true,
+		    title: function() {
+		    	var title = '<h4>' + $(this).attr('data-title') + '</h4>';
+		      return title;
+		    },
+		    content: function() {
+		    	var content;
+		    	content = '<p>' + $(this).attr('data-description');
+		    	content += '</p><h6>Start Date</h6><p> ' + moment($(this).attr('data-start')).format('dddd DD MMMM HH[h]mm');
+		    	content += '</p><h6>Deadline</h6><p> ' + moment($(this).attr('data-end')).format('dddd DD MMMM HH[h]mm') + '</p>';
+		      return content;
+		    }
+		});
+		$('.popbadge').popover({ 
+			animation: 'fadeInLeft',
+		    html : true,
+		    title: function() {
+		    	var title = '<h4>' + $(this).attr('data-title') + '</h4>';
+		      return title;
+		    },
+		    content: function() {
+		    	var content;
+		    	content = '<p>' + $(this).attr('data-description')+ '</p>';
+		    	content += '<p>Unlocked: ' + moment($(this).attr('data-date')).format() + '</p>';
+		      return content;
+		    }
+		});
 		// $('#dismissBoxChall').click(function(e){
 		// 	e.preventDefault();
 		// 	$('#gotchaChallenge,#gotaBoxContent')
@@ -286,6 +315,7 @@
 			updateEnd();
 		},1000);
 	});
+
 		//  FUNCTIONS
 		function pushStream(data) {
 			var target = $('#streams')
