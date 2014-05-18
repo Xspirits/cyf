@@ -107,7 +107,7 @@
 								<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
 								<small>(xp: 75 per Friends invite)</small>
 								<% } else { %>
-								<a href="./settings" title="Connect Facebook first" id="t_addFriends" class="label label-default">
+								<a href="./settings#tab_connectNetworks" title="Connect Facebook first" id="t_addFriends" class="label label-default">
 									<span class="fa fa-plus"></span>
 									Connect Facebook first
 								</a>
@@ -121,7 +121,7 @@
 										<span id="<%= currentUser.games[i]._idGame %>" class="label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %></span>
 									<% }
 									} %>
-								<a href="./settings" title="add an game" id="t_addGames" class="label label-default">
+								<a href="./settings#tab_linkGames" title="add an game" id="t_addGames" class="label label-default">
 									<span class="fa fa-plus"></span>
 									Add Games
 								</a>
@@ -358,7 +358,7 @@
 				                </div>
 				                <div id="lol_games" class="panel-collapse collapse">
 				                  <div class="panel-body">
-									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
+									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.confirmed === true && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
 									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
 										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
 										for (var i = lolilength; i >= 0; i--) { %>
@@ -383,13 +383,13 @@
 										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
 
 											<div class="media-body text-center">
-												<button type="button" class="btn btn-info gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
+												<button type="button" class="btn mint gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
 											</div>
 
 										<% } else { %>	
 
 											<div class="media-body text-center">
-												<a href="./settings" class="btn btn-info"> <i class="fa fa-link"></i> Link your Account now!</a>
+												<a href="./settings#tab_linkGames" class="btn aqua"> <i class="fa fa-link"></i> Link your Account now!</a>
 											</div>
 
 										<% } %>
@@ -414,11 +414,14 @@
 									</p>
 										<% if(currentUser.badges && currentUser.badges.length > 0) {
 											for(var i=0; i< currentUser.badges.length; i++) { 
-											var badge = currentUser.badges[i]; %>
+											var badge = currentUser.badges[i]; 
+											if(badge.idBadge) {
+											%>
 										<a href="/badge/<%= badge.idBadge._id %>" class="popbadge col-xs-2 col-md-3" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
 											<img src="/img/badges/daily_ranked_1.png" class="img-responsive hover-me" >
 										</a>
 										<% }
+										}
 										}%>
 									</div> 
 				                  </div>

@@ -16,7 +16,8 @@
     host: 'prod.api.pvp.net',
     path: '/api/lol/',
     key: auth.leagueoflegend.key,
-    debug: true
+    debug: true,
+    secure: true
   });
 
   exports.lol_champion_list = function() {
