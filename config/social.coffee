@@ -20,6 +20,7 @@ exports.findSummonerLol = (region, name, callback) ->
 exports.getLastGames = (region, summonerId, callback)->
   riotApi.getRecentGamesBySummonerId region,summonerId, (err, object) ->
     console.log err if err
+    callback false if err
     callback object.games
 
 exports.getFbData = (accessToken, apiPath, callback) ->

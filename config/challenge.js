@@ -40,7 +40,10 @@
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
-          return done(newChallenge);
+          if (err) {
+            done([false, err.toString()]);
+          }
+          return done([true, newChallenge]);
         });
       },
 

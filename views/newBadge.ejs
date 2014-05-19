@@ -41,52 +41,53 @@
 		<div class="container">
 
 			<div class="page-header text-center">
-				<h1>Add a game to the library</h1>
+				<h1>Add a new badge</h1>
 			</div>
 
 			<div class="row">
 
 				<div class="form-group col-md-8 col-md-offset-2">
 				<% if(!isSuccess) { %>
-					<form action="/addGame" method="post">
-						<label>Title of the game</label>
-						<input type="text" class="form-control" name="title" autofocus>
+					<form action="/addBadge" method="post">
+					<div class="row">
+					  <div class="col-xs-6">
+					    <label>Title</label>
+						<input type="text" class="form-control" name="title" required autofocus>
+					  </div>
+					  <div class="col-xs-6">
+					    <label>Description</label>
+						<input type="text" class="form-control" name="description" required>
+					  </div>
+					  <div class="col-xs-6">
+					    <label>Icon</label>
+						<input type="text" class="form-control" name="icon" placeholder="image.png">
+					  </div>
+					  <div class="col-xs-6">
+					    <label>Required Badges</label>
+						<select class="form-control" name="reqBadges" multiple>
 
-						<label>Type of Game</label>
-						<select class="form-control" name="type">
-							<option>2D Medieval</option>
-							<option>2D Historical</option>
-							<option>2D Fantasy</option>
-							<option>2D Sci-Fi</option>
-							<option>2.5D/2D Fantasy</option>
-							<option>3D Historical</option>
-							<option>3D Medieval</option>
-							<option>3D Music/Dancing</option>
-							<option>Augmented Reality</option>
-							<option>Board</option>
-							<option>Fantasy</option>
-							<option>FPS</option>
-							<option>Fighting</option>
-							<option>Hack and slash</option>
-							<option>MOBA</option>
-							<option>MMORPG</option>
-							<option>Plateform</option>
-							<option>Puzzle</option>
-							<option>Racing</option>
-							<option>RPG</option>
-							<option>RTS</option>
-							<option>Sandbox</option>
-							<option>Sci-Fi</option>
-							<option>Simulation</option>
-							<option>Sports</option>
-							<option>Strategy</option>
-							<option>Text Based Fantasy</option>
-							<option>Tower Defense</option>
-							<option>Turn-based</option>
-							<option>N/A</option>
+							<% if(badges.length > 0 ) {
+								for(var i=0; i< badges.length; i++) { %>
+							<option value="<%= badges[i]._id %>"><%= badges[i].title %></option>
+							<% } 
+							} %>
 						</select>
-						<br>
-						<button type="submit" class="btn btn-punch btn-success btn-block">Add this game to the library</button>
+					  </div>
+					  <div class="col-xs-6">
+					    <label>Required, type:</label>
+						<select class="form-control" name="reqType" multiple>
+							<option value="friend">Friends</option>
+							<option value="level">Level</option>
+						</select>
+					  </div>
+					  <div class="col-xs-6">
+					    <label>Required, value:</label>
+						<input type="number" class="form-control" name="reqValue" required>
+					  </div>
+					  <div class="col-xs-12">
+						<button type="submit" class="btn btn-punch btn-success btn-block">Add this badge</button>
+					  </div>
+					</div>			
 					</form>
 				<% } else { %>
 					<% if(isSuccess === 'true') { %>
@@ -113,7 +114,16 @@
 		<script type="text/javascript">
 
 			$(function(){
-   
+				$("select[multiple] option").mousedown(function(){
+				   var $self = $(this);
+
+				   if ($self.prop("selected"))
+				          $self.prop("selected", false);
+				   else
+				       $self.prop("selected", true);
+
+				   return false;
+				});
 			});
 		</script>
 </body>

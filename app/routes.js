@@ -80,21 +80,27 @@
       });
     });
     app.get("/profile", isLoggedIn, function(req, res) {
-      return challenge.userAcceptedChallenge(req.user._id, false, function(data) {
-        var ongoingChall;
-        ongoingChall = [];
-        _.each(data, function(value, key) {
-          var cEnd, cStart;
-          cStart = data[key].launchDate;
-          cEnd = data[key].deadLine;
-          if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
-            return ongoingChall.push(data[key]);
-          }
-        });
-        return users.populateProfile(req.user._id, function(populated) {
-          return res.render("profile.ejs", {
-            ongoings: ongoingChall,
-            currentUser: populated
+      return badge.getNonUnlocked(req.user, function(badges) {
+        var allBadges;
+        allBadges = _.pluck(badges, '_id');
+        return badge.tryUnlock(allBadges, req.user, function(result) {
+          return challenge.userAcceptedChallenge(req.user._id, false, function(data) {
+            var ongoingChall;
+            ongoingChall = [];
+            _.each(data, function(value, key) {
+              var cEnd, cStart;
+              cStart = data[key].launchDate;
+              cEnd = data[key].deadLine;
+              if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+                return ongoingChall.push(data[key]);
+              }
+            });
+            return users.populateProfile(req.user._id, function(populated) {
+              return res.render("profile.ejs", {
+                ongoings: ongoingChall,
+                currentUser: populated
+              });
+            });
           });
         });
       });
@@ -194,6 +200,56 @@
         });
       });
     });
+    app.get("/newBadge/:done?", isLoggedIn, function(req, res) {
+      var allowed;
+      allowed = ['eX7mji', '-7SYri', 'iTmoBP'];
+      if (allowed.indexOf(req.user.idCool) > -1) {
+        return badge.getList(function(badges) {
+          return res.render("newBadge.ejs", {
+            currentUser: req.user,
+            badges: badges,
+            isSuccess: req.params.done ? req.params.done : false
+          });
+        });
+      } else {
+        return res.redirect('/profile');
+      }
+    });
+    app.post("/addBadge", isLoggedIn, function(req, res) {
+      var buffBadgeReq, data, description, icon, reqBadges, reqType, reqValue, title;
+      data = req.body;
+      reqBadges = data['reqBadges'];
+      title = data['title'];
+      description = data['description'];
+      icon = data['icon'];
+      reqType = data['reqType'];
+      reqValue = data['reqValue'];
+      buffBadgeReq = [];
+      if (reqBadges && reqBadges.length > 0) {
+        if (_.isArray(reqBadges)) {
+          _.each(reqBadges, function(badge) {
+            return buffBadgeReq.push(badge);
+          });
+        } else {
+          buffBadgeReq.push(reqBadges);
+        }
+      }
+      console.log(reqBadges, title, description, icon, buffBadgeReq, {
+        reqType: reqType,
+        reqValue: reqValue
+      });
+      return badge.create(title, description, icon, buffBadgeReq, {
+        reqType: reqType,
+        reqValue: reqValue
+      }, function(result) {
+        if (result[0] === true) {
+          console.log(result[1]);
+          return res.redirect('/newBadge/true');
+        } else {
+          return res.redirect('/newBadge/' + result[1]);
+        }
+      });
+    });
     app.get("/newGame/:done?", isLoggedIn, function(req, res) {
       return res.render("newGame.ejs", {
         currentUser: req.user,
@@ -215,49 +271,45 @@
         challenge: false
       });
     });
-    app.post("/newChallenge", isLoggedIn, function(req, res) {
+    app.post("/newChallenge/:done?", isLoggedIn, function(req, res) {
       return challenge.create(req, function(done) {
-        notifs.createdChallenge(req.user, done.idCool);
-        xp.xpReward(req.user, "challenge.create");
-        sio.glob("fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>.");
-        return games.getGame(done.game, function(game) {
-          var fbAcc, tweet;
-          if (appKeys.app_config.twitterPushNews === true) {
-            if (typeof req.user.twitter.token !== 'undefined' && req.user.share.twitter === true) {
-              fbAcc = '@' + req.user.twitter.username;
-            } else {
-              fbAcc = req.user.local.pseudo;
-            }
-            tweet = 'New Challenge: ' + done.title + ' for #' + game.title.replace(/\s+/g, '') + ' by ' + fbAcc + ' http://www.cyf-app.co/c/' + done.idCool;
-            return social.postTwitter(false, tweet, function() {
-              if (appKeys.app_config.facebookPushNews === true) {
+        if (done[0] === true) {
+          notifs.createdChallenge(req.user, done.idCool);
+          xp.xpReward(req.user, "challenge.create");
+          sio.glob("fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>.");
+          if (appKeys.app_config.twitterPushNews === true || appKeys.app_config.facebookPushNews === true) {
+            return games.getGame(done.game, function(game) {
+              var fbAcc, tweet;
+              if (appKeys.app_config.twitterPushNews === true) {
+                if (typeof req.user.twitter.token !== 'undefined' && req.user.share.twitter === true) {
+                  fbAcc = '@' + req.user.twitter.username;
+                } else {
+                  fbAcc = req.user.local.pseudo;
+                }
+                tweet = 'New Challenge: ' + done.title + ' for #' + game.title.replace(/\s+/g, '') + ' by ' + fbAcc + ' http://www.cyf-app.co/c/' + done.idCool;
+                return social.postTwitter(false, tweet, function() {
+                  if (appKeys.app_config.facebookPushNews === true) {
+                    return social.updateWall(tweet, false, function(dataFB) {
+                      return res.redirect('/newChallenge/true');
+                    });
+                  } else {
+                    return res.redirect('/newChallenge/true');
+                  }
+                });
+              } else if (appKeys.app_config.facebookPushNews === true) {
                 return social.updateWall(tweet, false, function(dataFB) {
-                  return res.render("newChallenge.ejs", {
-                    currentUser: req.user,
-                    challenge: done
-                  });
+                  return res.redirect('/newChallenge/true');
                 });
               } else {
-                return res.render("newChallenge.ejs", {
-                  currentUser: req.user,
-                  challenge: done
-                });
+                return res.redirect('/newChallenge/true');
               }
             });
-          } else if (appKeys.app_config.facebookPushNews === true) {
-            return social.updateWall(tweet, false, function(dataFB) {
-              return res.render("newChallenge.ejs", {
-                currentUser: req.user,
-                challenge: done
-              });
-            });
           } else {
-            return res.render("newChallenge.ejs", {
-              currentUser: req.user,
-              challenge: done
-            });
+            return res.redirect('/newChallenge/true');
           }
-        });
+        } else {
+          return res.redirect('/newChallenge/' + done[1]);
+        }
       });
     });
     app.post("/validateChallenge", isLoggedIn, function(req, res) {

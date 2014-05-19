@@ -62,20 +62,23 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 	# PROFILE SECTION ===========================
 	app.get "/profile", isLoggedIn, (req, res) ->
 
-		challenge.userAcceptedChallenge req.user._id, false, (data) ->
-			ongoingChall = []
-			_.each data, (value, key) ->
-				cStart = data[key].launchDate
-				cEnd = data[key].deadLine
+		badge.getNonUnlocked req.user, (badges)->
+			allBadges = _.pluck badges, '_id'
+			badge.tryUnlock allBadges,req.user, (result)->
+				challenge.userAcceptedChallenge req.user._id, false, (data) ->
+					ongoingChall = []
+					_.each data, (value, key) ->
+						cStart = data[key].launchDate
+						cEnd = data[key].deadLine
 
-				# Start has been reached but not end
-				if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
-					ongoingChall.push data[key]
+						# Start has been reached but not end
+						if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+							ongoingChall.push data[key]
 
-			users.populateProfile req.user._id, (populated) ->
-				res.render "profile.ejs",
-					ongoings: ongoingChall
-					currentUser: populated
+					users.populateProfile req.user._id, (populated) ->
+						res.render "profile.ejs",
+							ongoings: ongoingChall
+							currentUser: populated
 
 	app.get "/settings", isLoggedIn, (req, res) ->
 		res.render "setting.ejs",
@@ -200,6 +203,45 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 				currentUser: if req.isAuthenticated() then req.user else false
 				challenge: data
 
+	# BADGE CREATE SECTION =============================
+	app.get "/newBadge/:done?", isLoggedIn, (req, res) ->
+
+		allowed = ['eX7mji', '-7SYri', 'iTmoBP']
+		if allowed.indexOf(req.user.idCool) > -1
+			badge.getList (badges)->
+				res.render "newBadge.ejs",
+					currentUser: req.user
+					badges: badges
+					isSuccess: if req.params.done then req.params.done else false
+		else
+			res.redirect '/profile'
+
+	app.post "/addBadge", isLoggedIn, (req, res) ->
+		data = req.body
+		reqBadges = data['reqBadges']
+		title = data['title']
+		description = data['description']
+		icon = data['icon']
+		reqType = data['reqType']
+		reqValue = data['reqValue']
+
+		buffBadgeReq = []
+		if(reqBadges && reqBadges.length > 0)
+			if(_.isArray(reqBadges))
+				_.each reqBadges, (badge)->
+					buffBadgeReq.push badge
+			else
+				buffBadgeReq.push reqBadges
+
+		console.log reqBadges,title,description,icon, buffBadgeReq,{reqType:reqType, reqValue:reqValue}
+		# create 'testout','lolielol', false,{reqType:reqType, reqValue:reqValue}, (done)->
+		badge.create title,description,icon, buffBadgeReq,{reqType:reqType, reqValue:reqValue}, (result)->
+			if result[0] == true
+				console.log result[1]
+				res.redirect '/newBadge/true'
+			else 
+				res.redirect '/newBadge/' + result[1]
+
 	# GAME CREATE SECTION =============================
 	app.get "/newGame/:done?", isLoggedIn, (req, res) ->
 		res.render "newGame.ejs",
@@ -219,44 +261,42 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 			currentUser: req.user
 			challenge: false
 
-	app.post "/newChallenge", isLoggedIn, (req, res) ->
+	app.post "/newChallenge/:done?", isLoggedIn, (req, res) ->
 		challenge.create req, (done) ->
-			notifs.createdChallenge req.user, done.idCool
 
-			xp.xpReward req.user, "challenge.create"
+			if done[0] == true
+				notifs.createdChallenge req.user, done.idCool
 
-			sio.glob "fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>."
+				xp.xpReward req.user, "challenge.create"
 
-			games.getGame done.game, (game)->
-				
-				if appKeys.app_config.twitterPushNews == true
+				sio.glob "fa fa-plus-square-o", "<a href=\"/u/" + req.user.idCool + "\" title=\"" + req.user.local.pseudo + "\">" + req.user.local.pseudo + "</a> created a <a href=\"/c/" + done.idCool + "\" title=\"" + done.title + "\">new challenge</a>."
 
-					# push on twitter
-					if typeof req.user.twitter.token != 'undefined' and req.user.share.twitter == true
-						fbAcc = '@' + req.user.twitter.username
-					else
-						fbAcc = req.user.local.pseudo
+				if appKeys.app_config.twitterPushNews == true or appKeys.app_config.facebookPushNews == true
+					games.getGame done.game, (game)->
 
-					tweet = 'New Challenge: ' + done.title + ' for #' + game.title.replace(/\s+/g, '') + ' by ' + fbAcc + ' http://www.cyf-app.co/c/' + done.idCool
-					social.postTwitter false, tweet, ()->
-						if appKeys.app_config.facebookPushNews == true
+						if appKeys.app_config.twitterPushNews == true
+							# push on twitter
+							if typeof req.user.twitter.token != 'undefined' and req.user.share.twitter == true
+								fbAcc = '@' + req.user.twitter.username
+							else
+								fbAcc = req.user.local.pseudo
+
+							tweet = 'New Challenge: ' + done.title + ' for #' + game.title.replace(/\s+/g, '') + ' by ' + fbAcc + ' http://www.cyf-app.co/c/' + done.idCool
+							social.postTwitter false, tweet, ()->
+								if appKeys.app_config.facebookPushNews == true
+									social.updateWall tweet, false, (dataFB) ->
+										res.redirect '/newChallenge/true'
+								else
+									res.redirect '/newChallenge/true'
+						else if appKeys.app_config.facebookPushNews == true
 							social.updateWall tweet, false, (dataFB) ->
-								res.render "newChallenge.ejs",
-									currentUser: req.user
-									challenge: done
+								res.redirect '/newChallenge/true'
 						else
-							res.render "newChallenge.ejs",
-								currentUser: req.user
-								challenge: done
-				else if appKeys.app_config.facebookPushNews == true
-					social.updateWall tweet, false, (dataFB) ->
-						res.render "newChallenge.ejs",
-							currentUser: req.user
-							challenge: done
+							res.redirect '/newChallenge/true'
 				else
-					res.render "newChallenge.ejs",
-						currentUser: req.user
-						challenge: done
+					res.redirect '/newChallenge/true'
+			else 
+				res.redirect '/newChallenge/' + done[1]
 
 	app.post "/validateChallenge", isLoggedIn, (req, res) ->
 		data =
