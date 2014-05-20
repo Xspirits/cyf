@@ -38,186 +38,187 @@
 	<% include statics/navTop %>
 	<% xpPer = Math.round((currentUser.xp/ ( currentUser.xp + currentUser.xpNext) )*100); %>
 
-		<% if(!currentUser.games  || (currentUser.games.length == 0)) { %>
-		<div class="container">
-			<div class="row">
-			<div class="bittersweet-color col-md-12 no-games-alert">
-	            <strong>Hey Listen!</strong> You haven't specified which games you are playing, let other challengers know on which game they should challenge you by <a href="./settings" title="add an game"><strong>adding some now</strong></a>!
-	        </div>
-	        </div>
-	        </div>
-		<% } %>
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-8">
+				<div id="user_header" class="col-lg-8 col-md-8 col-sm-12 col-xs-12 clearfix">
 						<div class="row">
-							<h2 class="col-lg-10 animated fadeInRight">
-							<div class="col-md-2 col-xs-3 animated fadeInLeft pull-left" href="#">
-									<img src="<%= currentUser.icon %>" class="img-responsive img-rounded">
-							</div>
-								<%= currentUser.local.pseudo %> 
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
 
-								<span id="scorebox">
-									<span class="level text-center">
-										<span class="odometer" data-number="<%= currentUser.level %>">
-											0
-										</span>
-									</span>
-								</span>
-								<small id="t_idCool"> <a href="/u/<%= currentUser.idCool %>"> <i class="fa fa-chain"></i> <%= currentUser.idCool %> </a></small>
-							</h2>
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-								<div class="loaderProgress animated fadeInRight" id="t_xpBar">
-									<div class="tinyProgress tinySimpleBlue" style="width: 0%" data-percent="<%= xpPer %>"></div>
-
-									<div class="xp text-center">
-										<%= currentUser.xp %>/<%= (currentUser.xp + currentUser.xpNext) %>
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<img src="<%= currentUser.icon %>" class="img-rounded animated fadeInLeft">
 									</div>
+									
+									<div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 col-lg-offset-0 col-md-offset-0 col-sm-offset-0 col-xs-offset-1 card clearfix">
+										<h5 id="scorebox" class="pull-right">
+											Level.
+											<span class="level aqua-color">
+												<span class="odometer" data-number="<%= currentUser.level %>">
+													0
+												</span>
+											</span>
+										</h5>
+										<h2>
+											<%= currentUser.local.pseudo %> 
+											<a href="/u/<%= currentUser.idCool %>" id="t_idCool"><small class="aqua-color" ><%= currentUser.idCool %></small></a>
+										</h2>
+										<div class="loaderProgress" id="t_xpBar">
+											<div class="tinyProgress aqua" style="width: 0%" data-percent="<%= xpPer %>"></div>
+										</div>
+										<div class="xp text-right">
+											<%= currentUser.xp %> xp <i class="fa fa-caret-right"></i> <%= (currentUser.xp + currentUser.xpNext) %> xp
+										</div>	
+									</div>
+									
 								</div>
 							</div>
-							<div class="col-md-12">	
-								<h4>Linked accounts: </h4>
-								<% if (currentUser.local.pseudo) { %>
-								<span class="label label-default">CyF</span>
-								<% } %>
-								<% if (currentUser.facebook.token) { %>
-								<a href="https://www.facebook.com/profile.php?id=/<%= currentUser.facebook.id %>" title="see <%= currentUser.facebook.name %> on Facebook" target="_blank" class="label label-primary">Facebook</a>
-								<% } %>
-								<% if (currentUser.google.token) { %>
-								<span class="label label-danger">Google</span>
-								<% } %>
-								<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed) { %>
-								<span class="label label-info">League of Legend</span>
-								<% } %>
-								<% if (currentUser.twitter.token) { %>
-								<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= currentUser.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
-								<% } %>
-								<a href="./settings" title="add an account" id="t_linkacc" class="label label-default">
-									<span class="fa fa-plus"></span>
-									Add
-								</a>
-							</div>
-							<div class="col-md-12">	
-								<h4>Invite friends: </h4>
-								<% if (currentUser.friends.length < 3) { %>
-									<h6>You should <a href="/users">find some friends</a> in order to get challenged!</h6>
-								<% } %>
-								<% if (currentUser.facebook.token) { %>
-								<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
-								<small>(xp: 75 per Friends invite)</small>
-								<% } else { %>
-								<a href="./settings#tab_connectNetworks" title="Connect Facebook first" id="t_addFriends" class="label label-default">
-									<span class="fa fa-plus"></span>
-									Connect Facebook first
-								</a>
-								<% } %>
-							</div>
-							<div class="col-md-12 gamelist" id="myGamesList">
-								<h4>Playing: </h4>
+
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 gamelist" id="myGamesList">
+								<h3>Playing</h3>
+								<div class="card">
 									<% if(currentUser.games.length > 0) {
 										 for (var i = currentUser.games.length - 1; i >= 0; i--) { 
 										%>
 										<span id="<%= currentUser.games[i]._idGame %>" class="label label-info <%= currentUser.games[i].type %>"><%= currentUser.games[i].title %></span>
 									<% }
 									} %>
-								<a href="./settings#tab_linkGames" title="add an game" id="t_addGames" class="label label-default">
-									<span class="fa fa-plus"></span>
-									Add Games
-								</a>
+									<a href="./settings#tab_linkGames" title="add an game" id="t_addGames" class="label label-default">
+										<span class="fa fa-plus"></span>
+										Add Games
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">	
+								<h3>Linked accounts</h3>
+								<div class="card">
+									<% if (currentUser.local.pseudo) { %>
+									<span class="label label-default">CyF</span>
+									<% } %>
+									<% if (currentUser.facebook.token) { %>
+									<a href="https://www.facebook.com/profile.php?id=/<%= currentUser.facebook.id %>" title="see <%= currentUser.facebook.name %> on Facebook" target="_blank" class="label label-primary">Facebook</a>
+									<% } %>
+									<% if (currentUser.google.token) { %>
+									<span class="label label-danger">Google</span>
+									<% } %>
+									<% if (currentUser.leagueoflegend.idProfile && currentUser.leagueoflegend.confirmed) { %>
+									<span class="label label-info">League of Legend</span>
+									<% } %>
+									<% if (currentUser.twitter.token) { %>
+									<a href="https://www.twitter.com/<%= currentUser.twitter.username %>" title="see <%= currentUser.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+									<% } %>
+									<a href="./settings" title="add an account" id="t_linkacc" class="label label-default">
+										<span class="fa fa-plus"></span>
+										Add
+									</a>
+									
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">	
+								<h3>Invite friends</h3>
+								<div class="card">
+									<% if (currentUser.facebook.token) { %>
+									<a href="javascript:{}" class="bt-fs-dialog label label-primary">From Facebook</a>
+									<small>(xp: 75 per Friends invite)</small>
+									<% } else { %>
+									<a href="./settings#tab_connectNetworks" title="Connect Facebook first" id="t_addFriends" class="label label-default">
+										<span class="fa fa-plus"></span>
+										Connect Facebook first
+									</a>
+									<% } %>
+								</div>
 							</div>
 
-							<div class="col-md-12">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<h3>Ladders ranking</h3>	
-								<table class="table table-striped text-center">
-									<thead>
-										<tr>
-											<th class="text-center" id="t_lastDaily">Last Daily rank</th>
-											<th class="text-center" id="t_lastWeek">Last Week</th>
-											<th class="text-center" id="t_lastMonth">Last Month</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><%= currentUser.dailyRank === 0 ? 'not ranked yet!' : currentUser.dailyRank %></td>
-											<td><%= currentUser.weeklyRank === 0 ? 'not ranked yet!' : currentUser.weeklyRank %></td>
-											<td><%= currentUser.monthlyRank === 0 ? 'not ranked yet!' : currentUser.monthlyRank %></td>
-										</tr>
-									</tbody>
-								</table>
-								<table class="table table-striped text-center">
-									<thead>
-										<tr>
-											<th class="text-center"></th>
-											<th class="text-center">Daily</th>
-											<th class="text-center">Weekly</th>
-											<th class="text-center">Monthly</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<th>XP</th>
-											<td><%= currentUser.daily.xp %></td>
-											<td><%= currentUser.weekly.xp %></td>
-											<td><%= currentUser.monthly.xp %></td>
-										</tr>
-										<tr>
-											<th>level</th>
-											<td><%= currentUser.daily.level %></td>
-											<td><%= currentUser.weekly.level %></td>
-											<td><%= currentUser.monthly.level %></td>
-										</tr>
-										<tr>
-											<th>Facebook share</th>
-											<td><%= currentUser.daily.shareFB %></td>
-											<td><%= currentUser.weekly.shareFB %></td>
-											<td><%= currentUser.monthly.shareFB %></td>
-										</tr>
-										<tr>
-											<th>Facebook share</th>
-											<td><%= currentUser.daily.shareTW %></td>
-											<td><%= currentUser.weekly.shareTW %></td>
-											<td><%= currentUser.monthly.shareTW %></td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="card">
+									<table class="table table-striped text-center">
+										<thead>
+											<tr>
+												<th class="text-center" id="t_lastDaily">Last Daily rank</th>
+												<th class="text-center" id="t_lastWeek">Last Week</th>
+												<th class="text-center" id="t_lastMonth">Last Month</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td><%= currentUser.dailyRank === 0 ? 'not ranked yet!' : currentUser.dailyRank %></td>
+												<td><%= currentUser.weeklyRank === 0 ? 'not ranked yet!' : currentUser.weeklyRank %></td>
+												<td><%= currentUser.monthlyRank === 0 ? 'not ranked yet!' : currentUser.monthlyRank %></td>
+											</tr>
+										</tbody>
+									</table>
+									<table class="table table-striped text-center">
+										<thead>
+											<tr>
+												<th class="text-center"></th>
+												<th class="text-center">Daily</th>
+												<th class="text-center">Weekly</th>
+												<th class="text-center">Monthly</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th>XP</th>
+												<td><%= currentUser.daily.xp %></td>
+												<td><%= currentUser.weekly.xp %></td>
+												<td><%= currentUser.monthly.xp %></td>
+											</tr>
+											<tr>
+												<th>level</th>
+												<td><%= currentUser.daily.level %></td>
+												<td><%= currentUser.weekly.level %></td>
+												<td><%= currentUser.monthly.level %></td>
+											</tr>
+											<tr>
+												<th>Facebook share</th>
+												<td><%= currentUser.daily.shareFB %></td>
+												<td><%= currentUser.weekly.shareFB %></td>
+												<td><%= currentUser.monthly.shareFB %></td>
+											</tr>
+											<tr>
+												<th>Facebook share</th>
+												<td><%= currentUser.daily.shareTW %></td>
+												<td><%= currentUser.weekly.shareTW %></td>
+												<td><%= currentUser.monthly.shareTW %></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 
-							<div class="col-md-12 col-md-12 col-xs-1O col-sm-1O hidden-xs hidden-sm">
-								<div class="panel">
-									<div class="tabbable tabs-left clearfix">
-										<ul id="tabbyTab" class="nav nav-tabs nav-justified">
-											<li class="active"><a href="#xpTab" data-toggle="tab">XP Progression</a></li>
-											<li><a href="#levelTab" data-toggle="tab">Level Progression</a></li>
-											<li><a href="#ranksTab" data-toggle="tab">Ranks Historic</a></li>
-										</ul>
-										<div id="tabby" class="tab-content">
-											<div class="tab-pane active" id="xpTab">
-												<canvas id="historygraph"></canvas>
-											</div>
-											<div class="tab-pane" id="levelTab">
-												<canvas id="levelgraph"></canvas>
-											</div>
-											<div class="tab-pane" id="ranksTab">
-												<canvas id="ranksgraph"></canvas>
-											<div class="text-left">
-												
-											Last daily rank <i class="fa fa-square grapefruit-color "></i>
-											<!-- Last Week <i class="fa fa-square sunflower-color"></i>
-											Last Month <i class="fa fa-square aqua-color"></i> -->
-											</div>
-											</div>
-											<div class="text-right">
-												<small class="timer"></small>
-											</div>	
-										</div
+							<div class="col-md-12 col-lg-12 hidden-xs hidden-sm">
+								<div class="tabbable tabs-left clearfix">
+									<ul id="tabbyTab" class="nav nav-tabs nav-justified">
+										<li class="active"><a href="#xpTab" data-toggle="tab">XP Progression</a></li>
+										<li><a href="#levelTab" data-toggle="tab">Level Progression</a></li>
+										<li><a href="#ranksTab" data-toggle="tab">Ranks Historic</a></li>
+									</ul>
+									<div id="tabby" class="tab-content card">
+										<div class="tab-pane active" id="xpTab">
+											<canvas id="historygraph"></canvas>
+										</div>
+										<div class="tab-pane" id="levelTab">
+											<canvas id="levelgraph"></canvas>
+										</div>
+										<div class="tab-pane" id="ranksTab">
+											<canvas id="ranksgraph"></canvas>
+										<div class="text-left">
+											
+										Last daily rank <i class="fa fa-square grapefruit-color "></i>
+										<!-- Last Week <i class="fa fa-square sunflower-color"></i>
+										Last Month <i class="fa fa-square aqua-color"></i> -->
+										</div>
+										</div>
+										<div class="text-right">
+											<small class="timer"></small>
+										</div>	
 									</div>
 								</div>
 							</div>
 						</div>
-						</div>
 				</div>
-				<div class="col-lg-4">
+				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 					<div class="row">		
 						<div class="col-md-12">	
 							<div class="panel-group panel-group-lists collapse in"  id="tabsProfile" style="height: auto;">
@@ -261,7 +262,11 @@
 										} %>	
 										<div class="col-md-12">
 											<br>
-											<a href="/users" class="btn btn-block btn-default">Find friends</a>			
+											<a href="/users" class="btn btn-block btn-default">Find friends</a>	
+
+											<% if (currentUser.friends.length < 3) { %>
+											<h6>You should <a href="/users">find some friends</a> in order to get challenged!</h6>
+											<% } %>		
 										</div>	
 				                  	</div>				
 				                  </div>

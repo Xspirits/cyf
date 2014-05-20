@@ -26,7 +26,6 @@
 				<li class="animated fadeInDown show-logs hidden-sm" id="t_logs">
 				 <a href="javascript:void(0);">
 				 	<span class="fa fa-bullhorn"></span>
-				 	<span class="visible-xs">Activity Log</span>
 				 </a>					
 				</li>
 				<li class="animated fadeInDown show-chat hidden-sm" id="t_chat">
@@ -139,7 +138,7 @@
 		  <img class="menu-head-logo" src="./img/logo.png" >
 		</a>
 		<% if (currentUser) { %>
-		<h3 class="text-center"><small>L.<%= currentUser.level %></small><%= currentUser.local.pseudo %></h3>
+		<h3 class="text-center aqua-color"><small>L.<%= currentUser.level %></small><%= currentUser.local.pseudo %></h3>
 		<a href="/profile">
 			<img class="img-circle img-responsive" src="<%= currentUser.icon %>" >
 		</a>	

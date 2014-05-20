@@ -37,148 +37,216 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-8">
+				<div id="user_header" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2">
 						<div class="row">
-							<div class="col-lg-2 col-xs-2 animated fadeInUp" href="#">
-									<img src="<%= user.icon %>" class="img-responsive img-rounded">
-							</div>
-							<h2 class="col-lg-10 animated bounceInUp">
-								<%= user.local.pseudo %> 
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
 
-								<span id="scorebox">
-									<span class="level text-center">
-										<span class="odometer" data-number="<%= user.level %>">
-											0
-										</span>
-									</span>
-								</span>
-								<small> <a href="/u/<%= user.idCool %>"> <i class="fa fa-chain"></i> <%= user.idCool %> </a></small>
-								<% if (currentUser) { %>
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<img src="<%= user.icon %>" class="img-rounded animated fadeInLeft">
+									</div>
+									
+									<div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 col-lg-offset-0 col-md-offset-0 col-sm-offset-0 col-xs-offset-1 card clearfix">
+										<% if (currentUser) { %>
 
-								<%
-								// Check if already friends
-								var lookupFriends = {};
-								for (var i = 0, len = currentUser.friends.length; i < len; i++) {
-									lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
-								}
+										<%
+										// Check if already friends
+										var lookupFriends = {};
+										for (var i = 0, len = currentUser.friends.length; i < len; i++) {
+											lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
+										}
 
-								// Check if already sent an Invite
-								var lookupSent = {};
-								for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
-									lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
-								}
+										// Check if already sent an Invite
+										var lookupSent = {};
+										for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
+											lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
+										}
 
-								// Check if already received an Invite from this user
-								var lookupPendings = {};
-								for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
-									lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
-								}
+										// Check if already received an Invite from this user
+										var lookupPendings = {};
+										for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
+											lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
+										}
 
-								%>
-								<% if (currentUser._id.toString() === user._id.toString()) { %>
-								<p>
-									<button class="ladda-button btn btn-punch btn-default disabled" >
-										<span class="ladda-label">
-											<span class="glyphicon glyphicon-info-sign"></span> It's you!
-										</span>
-									</button>
-								</p>
-								<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
+										%>
+										<% if (currentUser._id.toString() === user._id.toString()) { %>
+										<p>
+											<button class="ladda-button btn btn-punch btn-default disabled" >
+												<span class="ladda-label">
+													<span class="glyphicon glyphicon-info-sign"></span> It's you!
+												</span>
+											</button>
+										</p>
+										<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
 
-								<p>
-									<button class="ladda-button btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
-										<span class="ladda-label">
-											<span class="glyphicon glyphicon-time"></span> Pending, see your requests
-										</span>
-									</button>
-								</p> 
-								<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
+										<p>
+											<button class="ladda-button btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
+												<span class="ladda-label">
+													<span class="glyphicon glyphicon-time"></span> Pending, see your requests
+												</span>
+											</button>
+										</p> 
+										<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
 
-								<p>
-									<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
-										<span class="ladda-label">
-											<span class="glyphicon glyphicon-plus"></span> Add Friend
-										</span>
-									</button>
-								</p>
-								<% } else { %>
-								<div class="btn btn-punch btn-success" >
-									<span class="ladda-label">
-										<span class="glyphicon glyphicon-ok"></span> Friend
-									</span>
+										<p>
+											<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
+												<span class="ladda-label">
+													<span class="glyphicon glyphicon-plus"></span> Add Friend
+												</span>
+											</button>
+										</p>
+										<% } else { %>
+										<div class="btn btn-punch btn-success" >
+											<span class="ladda-label">
+												<span class="glyphicon glyphicon-ok"></span> Friend
+											</span>
+										</div>
+										<% } %>
+										<% } %>
+										<h5 id="scorebox" class="pull-right">
+											Level.
+											<span class="level aqua-color">
+												<span class="odometer" data-number="<%= user.level %>">
+													0
+												</span>
+											</span>
+										</h5>
+										<h1>
+											<%= user.local.pseudo %> 
+										</h1>
+										<div class="loaderProgress" id="t_xpBar">
+											<div class="tinyProgress aqua" style="width: 0%" data-percent="<%= xpPer %>"></div>
+										</div>
+										<div class="xp text-right">
+											<%= user.xp %> xp <i class="fa fa-caret-right"></i> <%= (user.xp + user.xpNext) %> xp
+										</div>	
+									</div>
+									
 								</div>
-								<% } %>
-								<% } %>
+							</div>
 
-							</h2>
-							<div class="col-lg-12">	
-								<h4>Linked accounts: </h4>
-								<% if (user.local.pseudo) { %>
-								<span class="label label-default">CyF</span>
-								<% } %>
-								<% if (user.facebook.name) { %>
-								<span class="label label-primary">Facebook</span>
-								<% } %>
-								<% if (user.google.name) { %>
-								<span class="label label-danger">Google</span>
-								<% } %>
-								<% if (user.twitter.username) { %>
-								<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
-								<% } %>
-								<section class="pull-right">
-									<div class="fb-share-button" data-href="http://www.cyf-app.co/u/<%= user.idCool %>" data-type="button_count"></div>
-									<div class="g-plus" data-action="share" data-annotation="bubble"></div>
-									<a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= user.local.pseudo %> is a challenger level <%= user.level %>! He/She has <%= user.friends.length %> friend(s).<%= user.twitter.username ? 'find him on twitter @'+user.twitter.username :'' %>" data-via="cyf_app" data-hashtags="challenge">Tweet</a>
-								</section>
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">	
+								<h3>Linked accounts</h3>
+								<div class="card">
+									<% if (user.local.pseudo) { %>
+									<span class="label label-default">CyF</span>
+									<% } %>
+									<% if (user.facebook.token) { %>
+									<a href="https://www.facebook.com/profile.php?id=/<%= user.facebook.id %>" title="see <%= user.facebook.name %> on Facebook" target="_blank" class="label label-primary">Facebook</a>
+									<% } %>
+									<% if (user.google.token) { %>
+									<span class="label label-danger">Google</span>
+									<% } %>
+									<% if (user.leagueoflegend.idProfile && user.leagueoflegend.confirmed) { %>
+									<span class="label label-info">League of Legend</span>
+									<% } %>
+									<% if (user.twitter.token) { %>
+									<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
+									<% } %>
+									
+								</div>
 							</div>
-							<div class="col-lg-12" id="myGamesList">	
-								<h4>Playing: </h4>
-								<% if(user.games && user.games.length > 0) {
-									 for (var i = user.games.length - 1; i >= 0; i--) { 
-									%>
-									<span id="<%= user.games[i]._idGame %>" class="label label-info <%= user.games[i].type %>"><%= user.games[i].title %></span>
-								<% }
-								} %>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 gamelist" id="myGamesList">
+								<h3>Playing</h3>
+								<div class="card">
+									<% if(user.games.length > 0) {
+										 for (var i = user.games.length - 1; i >= 0; i--) { 
+										%>
+										<span id="<%= user.games[i]._idGame %>" class="label label-info <%= user.games[i].type %>"><%= user.games[i].title %></span>
+									<% }
+									} %>
+								</div>
 							</div>
-							<div class="col-lg-12">
+
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 gamelist" id="myGamesList">
+								<h3>Badges</h3>
+								<div class="badgeList card clearfix">
+									<% if(user.badges && user.badges.length > 0) {
+										for(var i=0; i< user.badges.length; i++) { 
+										var badge = user.badges[i]; 
+										if(badge.idBadge) {
+										%>
+									<a href="/badge/<%= badge.idBadge._id %>" class="popbadge col-xs-2 col-sm-2 col-md-2 col-lg-2" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
+										<img src="/img/badges/daily_ranked_1.png" class="hover-me" >
+									</a>
+									<% }
+									}
+									}%>
+								</div> 
+							</div>
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<h3>Ladders ranking</h3>	
-								<table class="table table-striped text-center">
-									<thead>
-										<tr>
-											<th class="text-center">Yesterday's</th>
-											<th class="text-center">Last Week</th>
-											<th class="text-center">Last Month</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><%= user.dailyRank === 0 ? 'not ranked' : user.dailyRank %></td>
-											<td><%= user.weeklyRank === 0 ? 'not ranked' : user.weeklyRank %></td>
-											<td><%= user.monthlyRank === 0 ? 'not ranked' : user.monthlyRank %></td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="card">
+									<table class="table table-striped text-center">
+										<thead>
+											<tr>
+												<th class="text-center" id="t_lastDaily">Last Daily rank</th>
+												<th class="text-center" id="t_lastWeek">Last Week</th>
+												<th class="text-center" id="t_lastMonth">Last Month</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td><%= user.dailyRank === 0 ? 'not ranked yet!' : user.dailyRank %></td>
+												<td><%= user.weeklyRank === 0 ? 'not ranked yet!' : user.weeklyRank %></td>
+												<td><%= user.monthlyRank === 0 ? 'not ranked yet!' : user.monthlyRank %></td>
+											</tr>
+										</tbody>
+									</table>
+									<table class="table table-striped text-center">
+										<thead>
+											<tr>
+												<th class="text-center"></th>
+												<th class="text-center">Daily</th>
+												<th class="text-center">Weekly</th>
+												<th class="text-center">Monthly</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th>XP</th>
+												<td><%= user.daily.xp %></td>
+												<td><%= user.weekly.xp %></td>
+												<td><%= user.monthly.xp %></td>
+											</tr>
+											<tr>
+												<th>level</th>
+												<td><%= user.daily.level %></td>
+												<td><%= user.weekly.level %></td>
+												<td><%= user.monthly.level %></td>
+											</tr>
+											<tr>
+												<th>Facebook share</th>
+												<td><%= user.daily.shareFB %></td>
+												<td><%= user.weekly.shareFB %></td>
+												<td><%= user.monthly.shareFB %></td>
+											</tr>
+											<tr>
+												<th>Facebook share</th>
+												<td><%= user.daily.shareTW %></td>
+												<td><%= user.weekly.shareTW %></td>
+												<td><%= user.monthly.shareTW %></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
+
 							<% if (currentUser) { %>
 							<% if (lookupFriends[user._id]) {
 								%>
-
-							<div class="col-lg-12" id="ranksTab">
-								<h3>Daily ranking progression</h3>
+							<h4>Daily ranking progression</h4>
+							<div class="col-md-12 col-md-12 col-xs-12 col-sm-12" id="ranksTab">
 								<canvas id="ranksgraph"></canvas>
 								<div class="text-left">
 								<%= user.local.pseudo %> <i class="fa fa-square grapefruit-color "></i>
 								You <i class="fa fa-square sunflower-color"></i>
 								</div>
 							</div>
-								<% } %>
-								<% } %>
+							<% } %>
+							<% } %>
 						</div>
 				</div>
-				<div class="col-lg-4">
-					<h4>Badges</h4>
-				</div>
-
 			</div>
 		</div>
 		<% include statics/footers %>
