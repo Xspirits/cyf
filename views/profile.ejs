@@ -2,32 +2,32 @@
 <html>
 <head>
 	<% include statics/headers %>
-    <!-- Start General metas -->
-    <meta name="url" content="http://www.cyf-app.co">
-    <meta name="language" content="EN">
-    <meta name="reply-to" content="cyf.app@gmail.com">
-    <meta name="rating" content="General">
-    <meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
-    <meta name="title" content="Profile - Challenge your Friends">
-    <meta name="description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s).<%= currentUser.twitter.username ? 'twitter @'+currentUser.twitter.username :'' %> ">
-    <!-- End General metas -->
-    <!-- Start Open Graph metas -->
-    <meta property="og:type" content="profile:<%= currentUser.local.idCool %>"> <!-- website/article/profile -->
-    <meta property="og:url" content="http://cyf-app.co/u/<%= currentUser.idCool %>">
-    <meta property="og:site_name" content="Challenge your Friends"/>
-    <meta property="og:image" content="<%= currentUser.icon %>.png">
-    <meta property="og:image:width" content="200">
-    <meta property="og:title" content="Profile - Challenge your Friends">
-    <meta property="og:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
-    <!-- End Open Graph -->
-    <!-- Start Twitter Card Meta -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@cyf_app">
-    <meta name="twitter:image" content="<%= currentUser.icon %>.png">
-    <meta name="twitter:image:width" content="200">
-    <meta name="twitter:title" content="Profile - Challenge your Friends">
-    <meta name="twitter:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
-    <!-- Twitter card end -->
+	<!-- Start General metas -->
+	<meta name="url" content="http://www.cyf-app.co">
+	<meta name="language" content="EN">
+	<meta name="reply-to" content="cyf.app@gmail.com">
+	<meta name="rating" content="General">
+	<meta name="keywords" content="profile, challenge, challenge friends, cyf, gaming, competition, e-sport, league of legend, dota, dota 2, champion">
+	<meta name="title" content="Profile - Challenge your Friends">
+	<meta name="description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s).<%= currentUser.twitter.username ? 'twitter @'+currentUser.twitter.username :'' %> ">
+	<!-- End General metas -->
+	<!-- Start Open Graph metas -->
+	<meta property="og:type" content="profile:<%= currentUser.local.idCool %>"> <!-- website/article/profile -->
+	<meta property="og:url" content="http://cyf-app.co/u/<%= currentUser.idCool %>">
+	<meta property="og:site_name" content="Challenge your Friends"/>
+	<meta property="og:image" content="<%= currentUser.icon %>.png">
+	<meta property="og:image:width" content="200">
+	<meta property="og:title" content="Profile - Challenge your Friends">
+	<meta property="og:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
+	<!-- End Open Graph -->
+	<!-- Start Twitter Card Meta -->
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@cyf_app">
+	<meta name="twitter:image" content="<%= currentUser.icon %>.png">
+	<meta name="twitter:image:width" content="200">
+	<meta name="twitter:title" content="Profile - Challenge your Friends">
+	<meta name="twitter:description" content="<%= currentUser.local.pseudo %> is a challenger level <%= currentUser.level %> at Challenge your Friends. He/She has <%= currentUser.friends.length %> friend(s) <%= currentUser.twitter.username ? 'find him on twitter @'+currentUser.twitter.username :'' %>  ">
+	<!-- Twitter card end -->
 	<title>This is your profile, <%= currentUser.local.pseudo %> - Challenge your Friends</title>
 	<link rel="stylesheet" href="./css/facebook-import.css">
 	<link rel="stylesheet" href="./css/timeline.css">
@@ -41,39 +41,184 @@
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-8 col-md-8 col-sm-12 col-xs-12 clearfix">
-						<div class="row">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
-
-								<div class="row">
-									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-										<img src="<%= currentUser.icon %>" class="img-rounded animated fadeInLeft">
-									</div>
-									
-									<div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 col-lg-offset-0 col-md-offset-0 col-sm-offset-0 col-xs-offset-1 card clearfix">
-										<h5 id="scorebox" class="pull-right">
-											Level.
-											<span class="level aqua-color">
-												<span class="odometer" data-number="<%= currentUser.level %>">
-													0
-												</span>
-											</span>
-										</h5>
-										<h2>
-											<%= currentUser.local.pseudo %> 
-											<a href="/u/<%= currentUser.idCool %>" id="t_idCool"><small class="aqua-color" ><%= currentUser.idCool %></small></a>
-										</h2>
-										<div class="loaderProgress" id="t_xpBar">
-											<div class="tinyProgress aqua" style="width: 0%" data-percent="<%= xpPer %>"></div>
-										</div>
-										<div class="xp text-right">
-											<%= currentUser.xp %> xp <i class="fa fa-caret-right"></i> <%= (currentUser.xp + currentUser.xpNext) %> xp
-										</div>	
-									</div>
-									
+				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+					<div class="user-card card text-center">
+							<a href="/u/<%= currentUser.idCool %>" class="animated fadeInLeft"><img src="<%= currentUser.icon %>" class="img-rounded avatar "></a>
+							<h4><%= currentUser.local.pseudo %></h4>
+							<div class="text-center infos row">
+								<div class="col-xs-4">
+									<a href="/friends">
+										<strong><%= currentUser.friends.length %></strong>
+										<span>Friends</span>
+									</a>									
 								</div>
+								<div class="col-xs-4">
+									<strong><%= currentUser.level %></strong>
+									<span>Level</span>	
+								</div>
+								<div class="col-xs-4">
+									<a href="/leaderboard">
+										<strong><%= currentUser.dailyRank %></strong>
+										<span>Rank</span>
+									</a>				
+								</div>								
 							</div>
+							<div class="loaderProgress popmeout" id="t_xpBar" data-placement="bottom" data-title="Experience bar - level <%= currentUser.level %>" data-description="Next Level: <%= (currentUser.xp + currentUser.xpNext) %> xp | Remaining: <%= (currentUser.xpNext) %>">
+								<div class="tinyProgress aqua" style="width: 0%" data-percent="<%= xpPer %>"></div>
+							</div>
+					</div>
+					<div class="card">
+						<div class="panel-group panel-group-lists collapse in"  id="tabsProfile" style="height: auto;">
+							<div class="panel">
+								  <div class="panel-heading">
+									<h4 class="panel-title" id="t_oChall">
+									  <a data-toggle="collapse" data-parent="#tabsProfile" href="#ongoingsChalls">
+										 <%= ongoings.length %> Challenges in progress 
+									  </a>
+									</h4>
+								  </div>
+								  <div id="ongoingsChalls" class="panel-collapse collapse <%= ongoings.length > 0 ? 'in' : '' %>">
+									<div class="panel-body">
+										<% if ( ongoings.length > 0 ) {
+											for (var i = ongoings.length - 1; i >= 0; i--) { %>
+											<div class="panel panel-<%= ((ongoings[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
+												<div class="panel-body">
 
+													<h5>
+														<a href='/o/<%= ongoings[i].idCool %>'>
+															<%= ongoings[i]._idChallenge.title %>
+														</a>
+													</h5>
+													<div class="row">
+														<div class="col-sm-12">
+															<p>
+																<%= ongoings[i]._idChallenge.description  %>
+															</p>		
+
+															<p>
+
+																<span class="glyphicon glyphicon-star-empty"></span>
+																<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
+																	<%= ongoings[i]._idChallenger.local.pseudo  %>
+																</a>
+																<span class="glyphicon glyphicon-flash"></span>
+																<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
+																	<%= ongoings[i]._idChallenged.local.pseudo  %>
+																</a>
+
+															</p>	
+														</div>						
+													</div>
+													<div class="row">
+														<div class="col-sm-6">
+															<p>
+																<span class="glyphicon glyphicon-calendar"></span>
+																<span class="dateReadability" data-date="<%= ongoings[i].launchDate %>"></span>
+															</p>
+															<p>
+																<span class="glyphicon glyphicon-calendar"></span>
+																<span class="dateReadability" data-date="<%= ongoings[i].deadLine %>"></span>
+															</p>										
+														</div>
+														<div class="col-sm-6 text-right">
+															Value: <%= ongoings[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
+														</div>									
+													</div>								
+												</div>
+												<div class="panel-footer">
+													<% if(ongoings[i].waitingConfirm === true) { %>
+													<%= ((ongoings[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  ongoings[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= ongoings[i].confirmAsk %>"></span>
+
+													<% } else { %>
+													<strong class="convertEnd" data-tEnd="<%= ongoings[i].deadLine %>"></strong>
+													<% } %>
+												</div>
+											</div>
+											<% } %>
+										<% } %>
+									</div>
+								  </div>
+							</div>
+							<div class="panel">
+								  <div class="panel-heading">
+									<h4 class="panel-title"  id="t_league">
+									  <a data-toggle="collapse" data-parent="#tabsProfile" href="#lol_games">
+										<%= currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ? currentUser.leagueoflegend.lastGames.length : 0 %> Last games
+										<% if (currentUser.leagueoflegend.confirmed === true)  { %>
+											<span class="pull-right gameSync">
+												<i class="fa fa-refresh mint-color"></i> 
+											</span>
+										<% } %>
+									  </a>
+									</h4>
+								  </div>
+								  <div id="lol_games" class="panel-collapse collapse">
+										<div class="panel-body">
+										<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.confirmed === true && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
+										<%  var games = currentUser.leagueoflegend.lastGames.reverse();
+										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
+										for (var i = lolilength; i >= 0; i--) { %>
+											<div class="col-md-12 col-sm-12 ">	
+												<div class="media">
+													<div class="media-body">
+														<h4 class="media-heading"><%= games[i].subType %></h4>	
+														<h6 class="pull-right text-center <%= games[i].stats.win ? 'grass': 'grapefruit' %>"><%= games[i].stats.win ? 'won': 'lost' %>
+														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
+														</h6>
+														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">
+														<p><%= games[i].createDate %></p>
+													</div>
+												</div>
+											</div>
+								
+										<% } %>
+										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
+
+											<div class="media-body text-center">
+												<button type="button" class="btn mint gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
+											</div>
+
+										<% } else { %>	
+
+											<div class="media-body text-center">
+												<a href="./settings#tab_linkGames" class="btn aqua"> <i class="fa fa-link"></i> Link your Account now!</a>
+											</div>
+
+										<% } %>
+										</div>
+								  </div>
+							</div>
+							<div class="panel">
+								  <div class="panel-heading">
+									<h4 class="panel-title"  id="t_badges">
+									  <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_badges">
+										<%= currentUser.badges && currentUser.badges.length > 0 ? currentUser.badges.length : 0 %> My Badges
+									  </a>
+									</h4>
+								  </div>
+								  <div id="tab_badges" class="panel-collapse collapse">
+									<div class="panel-body">
+										<div class="badgeList">
+											<% if(currentUser.badges && currentUser.badges.length > 0) {
+												for(var i=0; i< currentUser.badges.length; i++) { 
+												var badge = currentUser.badges[i]; 
+												if(badge.idBadge) {
+												%>
+											<a href="/badge/<%= badge.idBadge._id %>" class="popbadge" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
+												<img src="/img/badges/daily_ranked_1.png" class="img-responsive hover-me" >
+											</a>
+											<% }
+											}
+											}%>
+										</div> 
+									</div>
+								  </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 clearfix">
+						<div class="row">
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 gamelist" id="myGamesList">
 								<h3>Playing</h3>
 								<div class="card">
@@ -89,7 +234,7 @@
 									</a>
 								</div>
 							</div>
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">	
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">	
 								<h3>Linked accounts</h3>
 								<div class="card">
 									<% if (currentUser.local.pseudo) { %>
@@ -114,7 +259,7 @@
 									
 								</div>
 							</div>
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">	
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">	
 								<h3>Invite friends</h3>
 								<div class="card">
 									<% if (currentUser.facebook.token) { %>
@@ -216,263 +361,38 @@
 									</div>
 								</div>
 							</div>
-						</div>
-				</div>
-				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-					<div class="row">		
-						<div class="col-md-12">	
-							<div class="panel-group panel-group-lists collapse in"  id="tabsProfile" style="height: auto;">
-				              <div class="panel">
-				                <div class="panel-heading">
-				                  <h4 class="panel-title"  id="t_league">
-							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_friends">
-							        	Friends
-				                    	<span class="badge grass pull-right"><%= currentUser.friends.length %></span>
-							        </a>
-				                  </h4>
-				                </div>
-				                <div id="tab_friends" class="panel-collapse collapse in">
-				                  <div class="panel-body">
-				                  	<div class="row"> 
-										<% if(currentUser.friends.length > 0) {
-											for(var i=0; i< currentUser.friends.length; i++) { 
-											var currFriend = currentUser.friends[i].idUser;
-											if(currFriend._id.toString() != currentUser._id.toString()) { %>
-											<div class="col-md-12">
-												<a class="pull-left pull-left col-md-3" href="/u/<%= currFriend.idCool %>">
-													<img src="<%= currFriend.icon %>" class="img-rounded img-responsive">
-												</a>
-
-												<div class="media-body">
-													<h4 class="media-heading col-md-12">
-														<a href="/u/<%= currFriend.idCool %>"> 
-															<%= currFriend.local.pseudo %>
-														</a>
-														<span class="<%= (currFriend.isOnline === true) ? "online" : "offline" %>"></span>
-													</h4>
-													<div class="col-md-12">
-														<span class="badge alert-warning">level <%= currFriend.level %></span>
-														<span class="badge alert-warning"><%= currFriend.friends.length %> friends</span>	
-													</div>
-												</div>
-												
-											</div>
-											<% } 
-											} 
-										} %>	
-										<div class="col-md-12">
-											<br>
-											<a href="/users" class="btn btn-block btn-default">Find friends</a>	
-
-											<% if (currentUser.friends.length < 3) { %>
-											<h6>You should <a href="/users">find some friends</a> in order to get challenged!</h6>
-											<% } %>		
-										</div>	
-				                  	</div>				
-				                  </div>
-				                </div>
-				              </div>
-				              <div class="panel">
-				                <div class="panel-heading">
-				                  <h4 class="panel-title" id="t_oChall">
-				                    <a data-toggle="collapse" data-parent="#tabsProfile" href="#ongoingsChalls">
-				                       Challenges in progress 
-				                       <span class="badge badge-primary pull-right"><%= ongoings.length %></span>
-				                    </a>
-				                  </h4>
-				                </div>
-				                <div id="ongoingsChalls" class="panel-collapse collapse <%= ongoings.length > 0 ? 'in' : '' %>">
-				                  <div class="panel-body">
-
-									<% if ( ongoings.length > 0 ) {
-										for (var i = ongoings.length - 1; i >= 0; i--) { %>
-										<div class="panel panel-<%= ((ongoings[i].waitingConfirm === true) ? 'warning' : 'primary')%>  animated <%- i % 2 ? 'fadeInLeft' : 'fadeInRight' %>">
-											<div class="panel-body">
-
-												<h5>
-													<a href='/o/<%= ongoings[i].idCool %>'>
-														<%= ongoings[i]._idChallenge.title %>
-													</a>
-												</h5>
-												<div class="row">
-													<div class="col-sm-12">
-														<p>
-															<%= ongoings[i]._idChallenge.description  %>
-														</p>		
-
-														<p>
-
-															<span class="glyphicon glyphicon-star-empty"></span>
-															<a href='/u/<%= ongoings[i]._idChallenger.idCool %>'>
-																<%= ongoings[i]._idChallenger.local.pseudo  %>
-															</a>
-															<span class="glyphicon glyphicon-flash"></span>
-															<a href='/u/<%= ongoings[i]._idChallenged.idCool %>'>
-																<%= ongoings[i]._idChallenged.local.pseudo  %>
-															</a>
-
-														</p>	
-													</div>						
-												</div>
-												<div class="row">
-													<div class="col-sm-6">
-														<p>
-															<span class="glyphicon glyphicon-calendar"></span>
-															<span class="dateReadability" data-date="<%= ongoings[i].launchDate %>"></span>
-														</p>
-														<p>
-															<span class="glyphicon glyphicon-calendar"></span>
-															<span class="dateReadability" data-date="<%= ongoings[i].deadLine %>"></span>
-														</p>										
-													</div>
-													<div class="col-sm-6 text-right">
-														Value: <%= ongoings[i]._idChallenge.value %> <span class="glyphicon glyphicon-certificate"></span>
-													</div>									
-												</div>								
-											</div>
-											<div class="panel-footer">
-												<% if(ongoings[i].waitingConfirm === true) { %>
-												<%= ((ongoings[i]._idChallenged._id.toString() === currentUser._id.toString()) ? 'You' :  ongoings[i]._idChallenged.local.pseudo)%> asked for the validation of this challenge : <span class="dateReadability" data-date="<%= ongoings[i].confirmAsk %>"></span>
-
-												<% } else { %>
-												<strong class="convertEnd" data-tEnd="<%= ongoings[i].deadLine %>"></strong>
-												<% } %>
-											</div>
-										</div>
-										<% } %>
-									<% } %>
-				                  </div>
-				                </div>
-				              </div>
-				              <div class="panel">
-				                <div class="panel-heading">
-				                  <h4 class="panel-title"  id="t_league">
-
-							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#lol_games">
-							        	Last 10 League of legend games
-				                   		<span class="badge badge-warning pull-right">
-				                   			<%= currentUser.leagueoflegend && currentUser.leagueoflegend.lastGames.length > 0 ? currentUser.leagueoflegend.lastGames.length : 0 %>
-				                   		</span>
-				                   		<% if (currentUser.leagueoflegend.confirmed === true)  { %>
-								        <span class="pull-right gameSync">
-											<i class="fa fa-refresh"></i> 
-										</span>
-										<% } %>
-							        </a>
-				                  </h4>
-				                </div>
-				                <div id="lol_games" class="panel-collapse collapse">
-				                  <div class="panel-body">
-									<% if ( currentUser.leagueoflegend && currentUser.leagueoflegend.confirmed === true && currentUser.leagueoflegend.lastGames.length > 0 ) { %>
-									<%  var games = currentUser.leagueoflegend.lastGames.reverse();
-										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
-										for (var i = lolilength; i >= 0; i--) { %>
-											<div class="col-md-12 col-sm-12 ">	
-
-												<div class="media">
-													<div class="pull-left">
-														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">											
-													</div>
-													<div class="media-body">
-														<h6 class="pull-right text-center <%= games[i].stats.win ? 'grass': 'grapefruit' %>"><%= games[i].stats.win ? 'won': 'lost' %>
-
-														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
-														</h6>
-														<h4 class="media-heading"><%= games[i].subType %></h4>
-														<p><small><%= games[i].createDate %></small></p>
-													</div>
-												</div>
-											</div>
-							
-										<% } %>
-										<% } else if (currentUser.leagueoflegend.confirmed === true) { %>	
-
-											<div class="media-body text-center">
-												<button type="button" class="btn mint gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
-											</div>
-
-										<% } else { %>	
-
-											<div class="media-body text-center">
-												<a href="./settings#tab_linkGames" class="btn aqua"> <i class="fa fa-link"></i> Link your Account now!</a>
-											</div>
-
-										<% } %>
-				                  </div>
-				                </div>
-				              </div>
-				              <div class="panel">
-				                <div class="panel-heading">
-				                  <h4 class="panel-title"  id="t_badges">
-							        <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_badges">
-							        	My Badges
-				                   		<span class="badge bittersweet pull-right"><%= currentUser.badges && currentUser.badges.length > 0 ? currentUser.badges.length : 0 %></span>
-							        </a>
-				                  </h4>
-				                </div>
-				                <div id="tab_badges" class="panel-collapse collapse">
-				                  <div class="panel-body">
-
-									<div class="badgeList row">
-										<% if(currentUser.badges && currentUser.badges.length > 0) {
-											for(var i=0; i< currentUser.badges.length; i++) { 
-											var badge = currentUser.badges[i]; 
-											if(badge.idBadge) {
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+								<ul class="timeline">
+									<% var notif = currentUser.notifications;
+									for (var i = notif.length - 1; i >= 0; i--) {
+										if(notif[i].persist === true) { 
+											var isOdd =  (i % 2) ? '' : 'timeline-inverted'
+											, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
 											%>
-										<a href="/badge/<%= badge.idBadge._id %>" class="popbadge col-xs-2 col-md-3" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
-											<img src="/img/badges/daily_ranked_1.png" class="img-responsive hover-me" >
-										</a>
-										<% }
-										}
-										}%>
-									</div> 
-				                  </div>
-				                </div>
-				              </div>
-				            </div>
+											<li class="<%= isOdd %> ">
+												<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
+												<div class="timeline-panel glow-shad ">
+													<div class="timeline-heading">
+														<h4 class="timeline-title"><%= notif[i].title %></h4>
+														<p>
+															<small class="text-muted">
+																<i class="glyphicon glyphicon-time"></i>
+																<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
+															</small>
+														</p>
+													</div>
+													<div class="timeline-body">
+														<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
+													</div>
+												</div>
+											</li>
+											<% } 
+									} %>
+								</ul>	
+							</div>		
 						</div>
-					</div>
-					<!-- <h4>My Badges</h4
-					<div class="badggies">
-
-					<section class="badgeList">
-						BADGES ARE COMMING SOON
-						<img src="TBD" class="img-responsive hover-me x2" data-toggle="tooltip" data-placement="bottom" title="Tooltip on left">
-					</section> 
-					</div>-->
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<ul class="timeline">
-						<% var notif = currentUser.notifications;
-						for (var i = notif.length - 1; i >= 0; i--) {
-							if(notif[i].persist === true) { 
-								var isOdd =  (i % 2) ? '' : 'timeline-inverted'
-								, type = (notif[i].type == 'challengeSuccess') ? 'success' : ((notif[i].type == 'challengeReceive') ? 'danger' : 'info');
-								%>
-								<li class="<%= isOdd %> ">
-									<div class="timeline-badge <%= type %>"><span class="<%= notif[i].icon %>"></span></div>
-									<div class="timeline-panel glow-shad ">
-										<div class="timeline-heading">
-											<h4 class="timeline-title"><%= notif[i].title %></h4>
-											<p>
-												<small class="text-muted">
-													<i class="glyphicon glyphicon-time"></i>
-													<span class="timeAgo" data-date="<%= notif[i].date %>"></span>
-												</small>
-											</p>
-										</div>
-										<div class="timeline-body">
-											<p> <a href="<%= notif[i].link2 %>" ><%= notif[i].to %></a> <%= notif[i].message %></p>
-										</div>
-									</div>
-								</li>
-								<% } 
-						} %>
-					</ul>	
-				</div>		
-			</div>	
 		</div>
 	</div>
 
@@ -487,14 +407,14 @@
 				</div>
 				<div class="panel-body">
 					<div class="media">
-                        <div class="pull-left">
-                        	<div class="lol-p-icon642"></div>
-                        </div>
-                        <div class="media-body">
-                          <h4 class="media-heading">You invited <span id="friendLength"></span>!</h4>
-                          <p>Congratulation, you have successfully invited your friends, and you gained 75xp <strong>per invitation</strong>!</p>
-                        </div>
-                    </div>
+						<div class="pull-left">
+							<div class="lol-p-icon642"></div>
+						</div>
+						<div class="media-body">
+						  <h4 class="media-heading">You invited <span id="friendLength"></span>!</h4>
+						  <p>Congratulation, you have successfully invited your friends, and you gained 75xp <strong>per invitation</strong>!</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -522,85 +442,85 @@
 				  element: "#t_menuChall",
 				  title: "Find some friends",
 				  content: "Cyf works with friends, you'll find people here to add as friends. <br> You <strong>need</strong> some to launch and receive challenges. Pro tip: add people who play the same games as you ;).",
-	  				placement: "bottom"
+					placement: "bottom"
 				},
 				{
 				  element: "#t_chat",
 				  title: "Live Chat",
 				  content: "Hover to show the global chat, you can click to fix the chat !",
-	  				placement: "bottom"
+					placement: "bottom"
 				},
 				{
 				  element: "#t_logs",
 				  title: "Activity logs",
 				  content: "You can see what happens on Cyf in real time! hover to show, click to stick it visible.",
-	  				placement: "bottom"
+					placement: "bottom"
 				},
 				{
 				  element: "#scorebox",
 				  title: "This is your level",
 				  content: "Each action you make on Cyf will reward you of experience.<br>Make enough experience to reach highers level and unlock cool features!",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_idCool",
 				  title: "Your personal ID!",
 				  content: "Each challenger have its own id, this is yours!",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_xpBar",
 				  title: "Experience bar.",
 				  content: "This bar shows your progress through the next level, based on your xp.",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_linkacc",
 				  title: "Link your social accounts",
 				  content: "You can link your Facebook and Twitter accounts, you can also link your League of Legend account to show your last 10 games.<br><br> this will allow you to share easily and gain more xp!",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_addGames",
 				  title: "Let others challengers know what you play!",
 				  content: "It's really important to let people know on which game they can challenge you.",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_lastDaily",
 				  title: "This is your ranking for yesterday!",
 				  content: "Leaderboard are generated on a daily basis to let you enjoy every second on cyf.<br><br>Need more competition? Click Next",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_lastWeek",
 				  title: "This will be your weekly ranking.",
 				  content: "There is a ladder generated each week, launch and complete as many challenges as you can in order to be ranked amongst the top challengers!<br><br>Need more? Click next.",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#t_lastMonth",
 				  title: "This will be your monthy rank.",
 				  content: "Each month challengers are ranked based on what they have been able to accomplish during the past month.<br>This is like the daily and weekly ranking but over an entire month.",
-	  				placement: "right"
+					placement: "right"
 				},
 				{
 				  element: "#tabby",
 				  title: "Dedicated graphs!",
 				  content: "You can see your evolution through 3 differents graphs here: <ul><li>The first tab shows your cumulated experience you have been able to gather, it's updated twice a day.</li><li>The second time shows your level curve over time. Updated twice a day.</li><li>The third tab shows the evolution of your daily rank over time, updated once a day.</li></ul><br><br> Don't worry, the two first day may show an empty graph as we are processing your data!",
-	  				placement: "top"
+					placement: "top"
 				},
 				{
 				  element: "#t_oChall",
 				  title: "Your ongoing challenges",
 				  content: "Ongoing challenges are listed here. <br> You can launch challenges to the friends you have on Cyf.<br><br> You will need friends on cyf to receive some challenges, so you should add some as soon as possible!",
-	  				placement: "bottom"
+					placement: "bottom"
 				},
 				{
 				  element: "#t_league",
 				  title: "Your last League of Legend games",
 				  content: "This is still an alpha feature which allows you to see your last 10 games on League of Legend.<br><br> You will need to connect your account on your settings.",
-	  				placement: "bottom"
+					placement: "bottom"
 				}			  
 			]});
 
@@ -612,28 +532,28 @@
 
 		<% } %>
 
-		    $(".bt-fs-dialog").fSelector({
-		    	// excludeIds: [<%= currentUser.fbInvitedFriends.length >0 ? currentUser.fbInvitedFriends : '' %>],
-			      closeOnSubmit: true,
-			      max: 50,
-			      lang: {
-			        title: "Invite more friends!",
-			        buttonSubmit: "Invite",
-			        buttonCancel: "Cancel",
-			        buttonSelectAll: "Select All",
-			        buttonDeselectAll: "Deselect All",
-			        buttonShowSelected: "Show Selected",
-			        buttonShowAll: "Show All",
-			        summaryBoxResult: "{1} best results for {0}",
-			        summaryBoxNoResult: "No results for {0}",
-			        searchText: "Enter a friend's name",
-			        fbConnectError: "You must connect to Facebook to see this. Please go to your Settings and enable Facebook connection.",
-			        selectedCountResult: "You have choosen {0} potential new challengers, awesome!",
-			        selectedLimitResult: "Limit is {0} people.",
-			        facebookInviteMessage: "I am using Challenge your Friends and it's awesome! This website allows me to send and receive challenges on almost ANY games! It gives me new way to play and I like it. Please join me and let's throw challenges to each others, it's FUN!"
-			      },
-			      facebookInvite: true,
-			      onSubmit: function(response) {
+			$(".bt-fs-dialog").fSelector({
+				// excludeIds: [<%= currentUser.fbInvitedFriends.length >0 ? currentUser.fbInvitedFriends : '' %>],
+				  closeOnSubmit: true,
+				  max: 50,
+				  lang: {
+					title: "Invite more friends!",
+					buttonSubmit: "Invite",
+					buttonCancel: "Cancel",
+					buttonSelectAll: "Select All",
+					buttonDeselectAll: "Deselect All",
+					buttonShowSelected: "Show Selected",
+					buttonShowAll: "Show All",
+					summaryBoxResult: "{1} best results for {0}",
+					summaryBoxNoResult: "No results for {0}",
+					searchText: "Enter a friend's name",
+					fbConnectError: "You must connect to Facebook to see this. Please go to your Settings and enable Facebook connection.",
+					selectedCountResult: "You have choosen {0} potential new challengers, awesome!",
+					selectedLimitResult: "Limit is {0} people.",
+					facebookInviteMessage: "I am using Challenge your Friends and it's awesome! This website allows me to send and receive challenges on almost ANY games! It gives me new way to play and I like it. Please join me and let's throw challenges to each others, it's FUN!"
+				  },
+				  facebookInvite: true,
+				  onSubmit: function(response) {
 						var target = {					
 							list: response
 						}
@@ -650,7 +570,7 @@
 				},
 				onClose: function(response) {
 				}
-		    });
+			});
 
 			$('.gameSync').on('click', function(e){
 				e.preventDefault();

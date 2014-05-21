@@ -138,6 +138,10 @@ html, body {
   -ms-overflow-scrolling: touch;
   overflow-scrolling: touch;
 }
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+font-weight: 500;
+line-height: 1.32;
+}
 body.modal-open .canvas{
   -webkit-filter: blur(15px);
   -moz-filter: blur(15px);
@@ -505,7 +509,10 @@ hr.subtle-divider {
   margin-top: 24px;
 }
 .badgeList img {
-  max-width: 5em;
+  max-width: 4em;
+}
+#newFriend { 
+  cursor: pointer;
 }
 .challenge .card {
   cursor: pointer;
@@ -790,13 +797,39 @@ margin-top: -8px;
 /**
  * Profile
  */
+.user-card img.avatar {
+  max-width: 85px;
+}
+.user-card h4 {
+  text-transform: capitalize;
+}
+
+.user-card .infos {
+  border-top: 1px solid #e1e1e1;
+}
+
+.user-card .infos>div:first-child {
+  border-right: 1px solid #e1e1e1;
+}
+.user-card .infos>div:last-child {
+  border-left: 1px solid #e1e1e1;
+}
+.user-card .infos>div {
+  padding: .5em;
+  border-radius: 0;
+}
+.user-card .infos>div strong,
+.user-card .infos>div span {
+  color: #48504B;
+  display: block;
+}
 .no-games-alert {
   margin: 1em auto;
 }
  .badggies img {
   max-width: 65px;
 }
-#user_header .loaderProgress {
+.loaderProgress {
   padding: 0;
   background: rgba(36, 39, 48, 0.83);
   -webkit-border-radius: 3px;
@@ -819,8 +852,7 @@ margin-top: -8px;
   width: 100%;
   padding:0;
   margin:0;
-  height: 1em;
-  border-left: 2px solid #081E5F;
+  height: .45em;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -835,8 +867,6 @@ margin-top: -8px;
   border-width: 0 0 1px;
   background-color: #242730;
   border-color: #090909;
-  padding-top: .3em;
-  padding-bottom: .3em;
 }
 
 #headNav > .container {
@@ -927,9 +957,6 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
   background:transparent;
   box-shadow: none;
 }
-.panel-group-lists .panel .panel-heading {
-  border-bottom: 2px solid rgba(33, 40, 48, 0.61);
-}
 .panel-primary>.panel-heading {
   background: #2CAACC;
 }
@@ -939,21 +966,6 @@ ul.nav.navbar-nav.navbar-right > a > canvas {
 }
 .panel-group .panel-heading+.panel-collapse .panel-body {
   border:0;
-}
-.panel-group .panel-heading+.panel-collapse.card {
-  border-radius: 0;
-  color: rgb(250,250,250);
-  background: #242730;
-}
-.panel-group .panel-title a {
-  padding: .5em 0;
-}
-.panel-group .panel-title:hover a,.panel-title:hover a {
-  color: rgb(38,38,38);
-  text-shadow: none;
-}
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
-  background-color: rgb(37,141,170);
 }
 /* line 288, ../../sass/style.scss */
 .liveChat {

@@ -33,99 +33,171 @@
 <body>
 
 	<% include statics/navTop %>
-
 	<div class="canvas">
 		<div class="container">
 			<div class="row">
-				<div id="user_header" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2">
-						<div class="row">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+				<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+					<div class="user-card card text-center">
+						<a href="/u/<%= user.idCool %>" class="animated fadeInLeft"><img src="<%= user.icon %>" class="img-rounded avatar "></a>
+						<h4><%= user.local.pseudo %>
+							<% if (currentUser) { 
+								// Check if already friends
+								var lookupFriends = {};
+								for (var i = 0, len = currentUser.friends.length; i < len; i++) {
+									lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
+								}
 
-								<div class="row">
-									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-										<img src="<%= user.icon %>" class="img-rounded animated fadeInLeft">
-									</div>
-									
-									<div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 col-lg-offset-0 col-md-offset-0 col-sm-offset-0 col-xs-offset-1 card clearfix">
-										<% if (currentUser) { %>
+								// Check if already sent an Invite
+								var lookupSent = {};
+								for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
+									lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
+								}
 
-										<%
-										// Check if already friends
-										var lookupFriends = {};
-										for (var i = 0, len = currentUser.friends.length; i < len; i++) {
-											lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
-										}
+								// Check if already received an Invite from this user
+								var lookupPendings = {};
+								for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
+									lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
+								}
 
-										// Check if already sent an Invite
-										var lookupSent = {};
-										for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
-											lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
-										}
+								%>
+								<% if (currentUser._id.toString() === user._id.toString()) { %>
+								<i id="newFriend"class="fa fa-info" rel="tooltip" title="Pending request sent, or received, check your requests page!"></i>
+								<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
 
-										// Check if already received an Invite from this user
-										var lookupPendings = {};
-										for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
-											lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
-										}
+								<i id="newFriend"class="fa fa-history sunflower-color" rel="tooltip" title="Pending request sent, or received, check your requests page!"></i>
+								<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
 
-										%>
-										<% if (currentUser._id.toString() === user._id.toString()) { %>
-										<p>
-											<button class="ladda-button btn btn-punch btn-default disabled" >
-												<span class="ladda-label">
-													<span class="glyphicon glyphicon-info-sign"></span> It's you!
-												</span>
-											</button>
-										</p>
-										<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
-
-										<p>
-											<button class="ladda-button btn btn-punch btn-warning disabled"  id="newFriend" data-color="blue" data-style="slide-left">
-												<span class="ladda-label">
-													<span class="glyphicon glyphicon-time"></span> Pending, see your requests
-												</span>
-											</button>
-										</p> 
-										<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
-
-										<p>
-											<button class="ladda-button btn btn-punch btn-info"  id="newFriend" data-color="blue" data-style="slide-left">
-												<span class="ladda-label">
-													<span class="glyphicon glyphicon-plus"></span> Add Friend
-												</span>
-											</button>
-										</p>
-										<% } else { %>
-										<div class="btn btn-punch btn-success" >
-											<span class="ladda-label">
-												<span class="glyphicon glyphicon-ok"></span> Friend
+								<i id="newFriend"class="fa fa-plus-square aqua-color" rel="tooltip" title="Add Friend"></i>
+								<% } else { %>
+								<i class="fa fa-heart-o grass-color"></i>
+								<% } %>
+							<% } %>
+						</h4>
+						<div class="text-center infos row">
+							<div class="col-xs-4">
+								<a href="/friends">
+									<strong><%= user.friends.length %></strong>
+									<span>Friends</span>
+								</a>									
+							</div>
+							<div class="col-xs-4">
+								<strong><%= user.level %></strong>
+								<span>Level</span>	
+							</div>
+							<div class="col-xs-4">
+								<a href="/leaderboard">
+									<strong><%= user.dailyRank %></strong>
+									<span>Rank</span>
+								</a>				
+							</div>								
+						</div>
+						<div class="loaderProgress popmeout" id="t_xpBar" data-placement="bottom" data-title="Experience bar - level <%= user.level %>" data-description="Next Level: <%= (user.xp + user.xpNext) %> xp | Remaining: <%= (user.xpNext) %>">
+							<div class="tinyProgress aqua" style="width: 0%" data-percent="<%= xpPer %>"></div>
+						</div>
+					</div>
+					<div class="card">
+							<div class="panel-group panel-group-lists collapse in"  id="tabsProfile" style="height: auto;">
+								<div class="panel">
+								  <div class="panel-heading">
+									<h4 class="panel-title"  id="t_league">
+									  <a data-toggle="collapse" data-parent="#tabsProfile" href="#lol_games">
+										<%= user.leagueoflegend && user.leagueoflegend.lastGames.length > 0 ? user.leagueoflegend.lastGames.length : 0 %> Last games
+										<% if (user.leagueoflegend.confirmed === true)  { %>
+											<span class="pull-right gameSync">
+												<i class="fa fa-refresh mint-color"></i> 
 											</span>
-										</div>
 										<% } %>
+									  </a>
+									</h4>
+								  </div>
+								  <div id="lol_games" class="panel-collapse collapse">
+										<div class="panel-body">
+										<% if ( user.leagueoflegend && user.leagueoflegend.confirmed === true && user.leagueoflegend.lastGames.length > 0 ) { %>
+										<%  var games = user.leagueoflegend.lastGames.reverse();
+										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
+										for (var i = lolilength; i >= 0; i--) { %>
+											<div class="col-md-12 col-sm-12 ">	
+
+												<div class="media">
+													<div class="pull-left">
+														<img class="media-object img-rounded img-responsive" src="./img/assets_lol/champions/<%= games[i].championInfos.key %>.jpg">											
+													</div>
+													<div class="media-body">
+														<h6 class="pull-right text-center <%= games[i].stats.win ? 'grass': 'grapefruit' %>"><%= games[i].stats.win ? 'won': 'lost' %>
+
+														<p><span class="minutesReadability" data-date="<%= games[i].stats.timePlayed %>"></span></p>
+														</h6>
+														<h4 class="media-heading"><%= games[i].subType %></h4>
+														<p><small><%= games[i].createDate %></small></p>
+													</div>
+												</div>
+											</div>
+								
 										<% } %>
-										<h5 id="scorebox" class="pull-right">
-											Level.
-											<span class="level aqua-color">
-												<span class="odometer" data-number="<%= user.level %>">
-													0
-												</span>
-											</span>
-										</h5>
-										<h1>
-											<%= user.local.pseudo %> 
-										</h1>
-										<div class="loaderProgress" id="t_xpBar">
-											<div class="tinyProgress aqua" style="width: 0%" data-percent="<%= xpPer %>"></div>
+										<% } else if (user.leagueoflegend.confirmed === true) { %>	
+
+											<div class="media-body text-center">
+												<button type="button" class="btn mint gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
+											</div>
+
+										<% } else { %>	
+
+											<div class="media-body text-center">
+												<a href="./settings#tab_linkGames" class="btn aqua"> <i class="fa fa-link"></i> Link your Account now!</a>
+											</div>
+
+										<% } %>
 										</div>
-										<div class="xp text-right">
-											<%= user.xp %> xp <i class="fa fa-caret-right"></i> <%= (user.xp + user.xpNext) %> xp
-										</div>	
+								  </div>
+								</div>
+								<div class="panel">
+								  <div class="panel-heading">
+									<h4 class="panel-title"  id="t_badges">
+									  <a data-toggle="collapse" data-parent="#tabsProfile" href="#tab_badges">
+										<%= user.badges && user.badges.length > 0 ? user.badges.length : 0 %> My Badges
+									  </a>
+									</h4>
+								  </div>
+								  <div id="tab_badges" class="panel-collapse collapse">
+									<div class="panel-body">
+										<div class="badgeList">
+											<% if(user.badges && user.badges.length > 0) {
+												for(var i=0; i< user.badges.length; i++) { 
+												var badge = user.badges[i]; 
+												if(badge.idBadge) {
+												%>
+											<a href="/badge/<%= badge.idBadge._id %>" class="popbadge" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
+												<img src="/img/badges/daily_ranked_1.png" class="img-responsive hover-me" >
+											</a>
+											<% }
+											}
+											}%>
+										</div> 
 									</div>
-									
+								  </div>
 								</div>
 							</div>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 clearfix">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 gamelist" id="myGamesList">
 
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">	
+								<h3>Playing</h3>
+								<div class="card">
+									<% if(user.games.length > 0) {
+										 for (var i = user.games.length - 1; i >= 0; i--) { 
+										%>
+										<span id="<%= user.games[i]._idGame %>" class="label label-info <%= user.games[i].type %>"><%= user.games[i].title %></span>
+									<% }
+									} %>
+									<a href="./settings#tab_linkGames" title="add an game" id="t_addGames" class="label label-default">
+										<span class="fa fa-plus"></span>
+										Add Games
+									</a>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">	
 								<h3>Linked accounts</h3>
 								<div class="card">
 									<% if (user.local.pseudo) { %>
@@ -143,36 +215,12 @@
 									<% if (user.twitter.token) { %>
 									<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
 									<% } %>
+									<a href="./settings" title="add an account" id="t_linkacc" class="label label-default">
+										<span class="fa fa-plus"></span>
+										Add
+									</a>
 									
 								</div>
-							</div>
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 gamelist" id="myGamesList">
-								<h3>Playing</h3>
-								<div class="card">
-									<% if(user.games.length > 0) {
-										 for (var i = user.games.length - 1; i >= 0; i--) { 
-										%>
-										<span id="<%= user.games[i]._idGame %>" class="label label-info <%= user.games[i].type %>"><%= user.games[i].title %></span>
-									<% }
-									} %>
-								</div>
-							</div>
-
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 gamelist" id="myGamesList">
-								<h3>Badges</h3>
-								<div class="badgeList card clearfix">
-									<% if(user.badges && user.badges.length > 0) {
-										for(var i=0; i< user.badges.length; i++) { 
-										var badge = user.badges[i]; 
-										if(badge.idBadge) {
-										%>
-									<a href="/badge/<%= badge.idBadge._id %>" class="popbadge col-xs-2 col-sm-2 col-md-2 col-lg-2" data-title="<%= badge.idBadge.title %>" data-description="<%= badge.idBadge.description %>" data-date="<%= badge.dateUnlocked %>" data-req="<%= badge.idBadge.reqType %>"  data-placement="bottom" data-trigger="hover">
-										<img src="/img/badges/daily_ranked_1.png" class="hover-me" >
-									</a>
-									<% }
-									}
-									}%>
-								</div> 
 							</div>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<h3>Ladders ranking</h3>	
@@ -231,12 +279,11 @@
 									</table>
 								</div>
 							</div>
-
-							<% if (currentUser) { %>
+						<% if (currentUser) { %>
 							<% if (lookupFriends[user._id]) {
 								%>
 							<h4>Daily ranking progression</h4>
-							<div class="col-md-12 col-md-12 col-xs-12 col-sm-12" id="ranksTab">
+							<div class="col-md-12 col-lg-12 hidden-xs hidden-sm">
 								<canvas id="ranksgraph"></canvas>
 								<div class="text-left">
 								<%= user.local.pseudo %> <i class="fa fa-square grapefruit-color "></i>
@@ -249,6 +296,8 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
 		<% include statics/footers %>
 		<script type="text/javascript" src="../js/chart.min.js"></script>
 		<script type="text/javascript">
@@ -258,13 +307,11 @@
 				e.preventDefault();
 				
 				var target = {},
-				_this = $(this),
-				pendingRequestshtml = '<span class="glyphicon glyphicon-time"></span> Pending, see your requests';
+				_this = $(this);
 
 				target.id = '<%= user._id %>';
 				target.idCool = '<%= user.idCool %>';
 				target.pseudo = '<%= user.local.pseudo %>';
-				console.log(target);
 
 				$.ajax({
 					type: 'POST',
@@ -273,8 +320,8 @@
 					url: './askFriend',						
 					success: function(data) {
 						console.log('success');
-						_this.removeClass().addClass('btn btn-punch btn-warning disabled');
-						_this.find('.ladda-label').html(pendingRequestshtml);
+						_this.removeClass().addClass('fa fa-history sunflower-color');
+						_this.attr('title','Pending request sent, or received, check your requests page!');
 
 					}
 				});
