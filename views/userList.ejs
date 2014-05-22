@@ -78,8 +78,7 @@
 							}
 						}
 					%>
-					<% for(var i=0; i< users.length; i++) { 
-						if(users[i]._id.toString() != currentUser._id) { %>
+					<% for(var i=0; i< users.length; i++) { %>
 						<div class="col-xs-12 col-sm-5 col-md-4 user-card <%= users[i].local.pseudo.replace(/\s+/g, '').toLowerCase() %> <% if(users[i].games && users[i].games.length > 0) {for (var g = users[i].games.length - 1; g >= 0; g--) {%><%= users[i].games[g].title.replace(/\s+/g, '').toLowerCase() %> <%= users[i].games[g].type.replace(/\s+/g, '').toLowerCase() %><% }} %> <%= _friendList.indexOf(users[i]._id.toString()) > -1 ? 'friend' :'' %>">
 						    <div class="card text-center">
 						        <a class="main text-hide" href="/u/<%= users[i].idCool %>"><%= users[i].local.pseudo %></a>
@@ -128,8 +127,7 @@
 						        </div>
 						    </div>
 						</div>
-						<% } 
-					} %>
+					<% } %>
 					</div>
 				
 					
