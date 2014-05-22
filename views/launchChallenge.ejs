@@ -173,7 +173,7 @@
 							<div class="row friends">
 							<% if(userList && userList.length > 0) {
 							for(var i=0; i< userList.length; i++) { %>
-								<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 boxy rounded-2 animated card-user flipInX <%= userList[i].idUser.local.pseudo.replace(/\s+/g, '').toLowerCase() %>" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
+								<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 boxy  user-card card <%= userList[i].idUser.local.pseudo.replace(/\s+/g, '').toLowerCase() %>" id="<%= userList[i].idUser._id %>" data-pseudo="<%= userList[i].idUser.local.pseudo %>" data-idCool="<%= userList[i].idUser.idCool %>">
 									<div class="flatty">
 										<span class="level"><%= userList[i].idUser.level %></span>
 										<div class="vh-center">
