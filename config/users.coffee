@@ -226,7 +226,7 @@ module.exports =  (_, mailer, appKeys, genUID, social, relations, notifs, moment
       qs = '-userRand -verfiy_hash -local.email -local.password -sessionKey -facebook.email -google.email -twitter.tokenSecret -notifications -sentRequests -pendingRequests -tribunal -tribunalHistoric -challengeRateHistoric'
     else
       qs = ''
-    User.find({}).select(qs).sort("-_id").exec (err, data) ->
+    User.find({}).select(qs).sort("_id").exec (err, data) ->
       mailer.cLog 'Error at '+__filename,err if err
       done data
   ###

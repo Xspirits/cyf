@@ -62,60 +62,114 @@
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<br>
 				<br>
-					<ul class="userlist container">
-						<div class="row">						
-							<% for(var i=0; i< users.length; i++) { 
-								if(users[i]._id.toString() != currentUser._id) { %>
-								
-								<li class="media col-md-4 col-xs-6 card-user <%= users[i].local.pseudo.replace(/\s+/g, '').toLowerCase() %> <% if(users[i].games && users[i].games.length > 0) {for (var g = users[i].games.length - 1; g >= 0; g--) {%><%= users[i].games[g].title.replace(/\s+/g, '').toLowerCase() %> <%= users[i].games[g].type.replace(/\s+/g, '').toLowerCase() %><% }} %> <%= _friendList.indexOf(users[i]._id.toString()) > -1 ? 'friend' :'' %>">
+					<div class="row userlist">
+					<% if (currentUser) { 
+						var lookupFriends = {};
+						var lookupSent = {};
+						var lookupPendings = {};
+							for (var i = 0, len = currentUser.friends.length; i < len; i++) {
+								lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
+							}
+							for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
+								lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
+							}
+							for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
+								lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
+							}
+						}
+					%>
+					<% for(var i=0; i< users.length; i++) { 
+						if(users[i]._id.toString() != currentUser._id) { %>
+						<div class="col-xs-12 col-sm-5 col-md-4 user-card <%= users[i].local.pseudo.replace(/\s+/g, '').toLowerCase() %> <% if(users[i].games && users[i].games.length > 0) {for (var g = users[i].games.length - 1; g >= 0; g--) {%><%= users[i].games[g].title.replace(/\s+/g, '').toLowerCase() %> <%= users[i].games[g].type.replace(/\s+/g, '').toLowerCase() %><% }} %> <%= _friendList.indexOf(users[i]._id.toString()) > -1 ? 'friend' :'' %>">
+						    <div class="card text-center">
+						        <a class="main text-hide" href="/u/<%= users[i].idCool %>"><%= users[i].local.pseudo %></a>
+						        <div class="user-avatar">
+						            <img src="<%= users[i].icon %>" class="img-rounded">
+						        </div>
+						        <h4 class="name">
+						        	<%= users[i].local.pseudo %> 
+									<small>
 
-										<a class="pull-left" href="/u/<%= users[i].idCool %>">
-											<img src="<%= users[i].icon %>" class="img-rounded">
-										</a>
+										<%  if(!lookupFriends[users[i]._id] && !lookupPendings[users[i]._id] && !lookupSent[users[i]._id] ) { %>
 
-										<div class="media-body">
-											<h4 class="media-heading col-lg-12"> 
-												<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-												<span class="<%= (users[i].isOnline === true) ? "online" : "offline" %>"></span>
-												<% } %>
-												<a href="/u/<%= users[i].idCool %>">
-													<%= users[i].local.pseudo %>
-												</a>
-											</h4>
-											<div class="col-lg-12">
-												<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-												<span class="badge alert-success">Friend</span>
-												<% } %>
-
-
-												<span class="badge alert-warning">level <%= users[i].level %></span>
-												<% if(_friendList.indexOf(users[i]._id.toString()) > -1) { %>
-												<span class="badge alert-warning"><%= users[i].friends.length %> friends</span>		
-												<% } %>	
-											</div>
-											<div class="col-lg-12">	
-												<% if(users[i].games && users[i].games.length > 0) {
-													 for (var g = users[i].games.length - 1; g >= 0; g--) { 
-													%>
-													<!-- <span id="<%= users[i].games[g]._idGame %>"></span>  -->
-													<small class="color-<%= users[i].games[g].type %>"><%= users[i].games[g].title %>,</small>
-												<% }
-												} %>
-											</div>
-										</div>
-								</li>
-								<% } 
-							} %>
+										<i class="newFriend cursor fa fa-plus-square aqua-color" rel="tooltip" title="Add Friend" data-uId="<%= users[i]._id %>" data-uIdCool="<%= users[i].idCool %>" data-pseudo="<%= users[i].local.pseudo %>"></i>
+										<% } else if(lookupPendings[users[i]._id] || lookupSent[users[i]._id]) { %>
+										<i class="fa fa-history sunflower-color" rel="tooltip" title="Pending request sent, or received, check your requests page!"></i>
+										<% } else { %>
+										<i class="fa fa-heart grapefruit-color" rel="tooltip" title="You and are <%= users[i].local.pseudo %> friends!"></i>
+										<% } %>
+									</small>
+								</h4>
+								<div class="text-center infos row">
+									<div class="col-xs-4">
+										<strong><%= users[i].friends.length %></strong>
+										<span>Friends</span>			
+									</div>
+									<div class="col-xs-4">
+										<strong><%= users[i].level %></strong>
+										<span>Level</span>	
+									</div>
+									<div class="col-xs-4">
+										<a href="/leaderboard">
+											<strong><%= users[i].dailyRank %></strong>
+											<span>Rank</span>
+										</a>				
+									</div>								
+								</div>
+						        <div class="game-list">
+									<i class="fa fa-gamepad  grapefruit-color"></i>
+									<% if(users[i].games.length > 0) { %>
+									<% for (var x = users[i].games.length - 1; x >= 0; x--) { %>
+										<span id="<%= users[i].games[x]._idGame %>" class="aqua-color"><%= users[i].games[x].title %></span>
+									<% }
+									} else { %>
+									<span class="">Nothing yet.</span>
+									<% } %>
+						        </div>
+						    </div>
 						</div>
-					</ul>	
+						<% } 
+					} %>
+					</div>
+				
+					
 				</div>
-
 			</div>
-
 		</div>
 		<% include statics/footers %>
 		<script type="text/javascript">
 		$(function () {
+
+			var $sameHeightChildren = $('.game-list');
+			var maxHeight = 0;
+
+			_.each($sameHeightChildren, function(el) {
+			    maxHeight = Math.max(maxHeight, $(el).outerHeight());
+			});
+			$sameHeightChildren.css({ height: maxHeight + 'px'});
+
+			$(".newFriend").click( function(e){
+				e.preventDefault();
+				
+				var target = {},
+				_this = $(this);
+
+				target.id = _this.attr('data-uId');
+				target.idCool = _this.attr('data-uIdCool');
+				target.pseudo = _this.attr('data-pseudo');
+
+				$.ajax({
+					type: 'POST',
+					data: JSON.stringify(target),
+					contentType: 'application/json',
+					url: './askFriend',						
+					success: function(data) {
+						_this.removeClass().addClass('fa fa-history sunflower-color');
+						_this.attr('title','Pending request sent, or received, check your requests page!');
+
+					}
+				});
+			});
 		});
 
 		</script>

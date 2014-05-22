@@ -41,36 +41,34 @@
 						<a href="/u/<%= user.idCool %>" class="animated fadeInLeft"><img src="<%= user.icon %>" class="img-rounded avatar "></a>
 						<h4><%= user.local.pseudo %>
 							<% if (currentUser) { 
-								// Check if already friends
 								var lookupFriends = {};
+								var lookupSent = {};
+								var lookupPendings = {};
+
 								for (var i = 0, len = currentUser.friends.length; i < len; i++) {
 									lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
 								}
 
-								// Check if already sent an Invite
-								var lookupSent = {};
 								for (var i = 0, len = currentUser.sentRequests.length; i < len; i++) {
 									lookupSent[currentUser.sentRequests[i].idUser] = currentUser.sentRequests[i];
 								}
 
-								// Check if already received an Invite from this user
-								var lookupPendings = {};
 								for (var i = 0, len = currentUser.pendingRequests.length; i < len; i++) {
 									lookupPendings[currentUser.pendingRequests[i].idUser] = currentUser.pendingRequests[i];
 								}
 
 								%>
-								<% if (currentUser._id.toString() === user._id.toString()) { %>
-								<i id="newFriend"class="fa fa-info" rel="tooltip" title="Pending request sent, or received, check your requests page!"></i>
-								<% } else if(lookupPendings[user._id] || lookupSent[user._id]) { %>
+								<small>
+									<%  if(lookupPendings[user._id] || lookupSent[user._id]) { %>
+									<i class="newFriendfa fa-history sunflower-color" rel="tooltip" title="Pending request sent, or received, check your requests page!"></i>
 
-								<i id="newFriend"class="fa fa-history sunflower-color" rel="tooltip" title="Pending request sent, or received, check your requests page!"></i>
-								<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
+									<% } else if(!lookupFriends[user._id] && !lookupPendings[user._id] && !lookupSent[user._id] ) { %>
 
-								<i id="newFriend"class="fa fa-plus-square aqua-color" rel="tooltip" title="Add Friend"></i>
-								<% } else { %>
-								<i class="fa fa-heart-o grass-color"></i>
-								<% } %>
+									<i class="newFriendfa fa-plus-square aqua-color" rel="tooltip" title="Add Friend" data-uId="<%= user._id %>" data-uIdCool="<%= user.idCool %>" data-pseudo="<%= user.local.pseudo %>"></i>
+									<% } else { %>
+									<i class="fa fa-heart grapefruit-color"></i>
+									<% } %>
+								</small>
 							<% } %>
 						</h4>
 						<div class="text-center infos row">
@@ -112,9 +110,9 @@
 								  </div>
 								  <div id="lol_games" class="panel-collapse collapse">
 										<div class="panel-body">
-										<% if ( user.leagueoflegend && user.leagueoflegend.confirmed === true && user.leagueoflegend.lastGames.length > 0 ) { %>
-										<%  var games = user.leagueoflegend.lastGames.reverse();
-										var lolilength = games.length-1 > 10 ? 10 : games.length-1;
+										<% if ( user.leagueoflegend && user.leagueoflegend.confirmed === true && user.leagueoflegend.lastGames.length > 0 ) { 
+											var games = user.leagueoflegend.lastGames.reverse();
+											var lolilength = games.length-1 > 10 ? 10 : games.length-1;
 										for (var i = lolilength; i >= 0; i--) { %>
 											<div class="col-md-12 col-sm-12 ">	
 
@@ -133,20 +131,8 @@
 												</div>
 											</div>
 								
-										<% } %>
-										<% } else if (user.leagueoflegend.confirmed === true) { %>	
-
-											<div class="media-body text-center">
-												<button type="button" class="btn mint gameSync"> <i class="fa fa-refresh"></i> Sync my last games now</button>
-											</div>
-
-										<% } else { %>	
-
-											<div class="media-body text-center">
-												<a href="./settings#tab_linkGames" class="btn aqua"> <i class="fa fa-link"></i> Link your Account now!</a>
-											</div>
-
-										<% } %>
+										<% } 
+										} %>
 										</div>
 								  </div>
 								</div>
@@ -191,10 +177,6 @@
 										<span id="<%= user.games[i]._idGame %>" class="label label-info <%= user.games[i].type %>"><%= user.games[i].title %></span>
 									<% }
 									} %>
-									<a href="./settings#tab_linkGames" title="add an game" id="t_addGames" class="label label-default">
-										<span class="fa fa-plus"></span>
-										Add Games
-									</a>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">	
@@ -214,12 +196,7 @@
 									<% } %>
 									<% if (user.twitter.token) { %>
 									<a href="https://www.twitter.com/<%= user.twitter.username %>" title="see <%= user.twitter.username %> on twitter" target="_blank" class="label label-info">Twitter</a>
-									<% } %>
-									<a href="./settings" title="add an account" id="t_linkacc" class="label label-default">
-										<span class="fa fa-plus"></span>
-										Add
-									</a>
-									
+									<% } %>									
 								</div>
 							</div>
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -282,9 +259,11 @@
 						<% if (currentUser) { %>
 							<% if (lookupFriends[user._id]) {
 								%>
-							<h4>Daily ranking progression</h4>
+							<h4 class="hidden-xs hidden-sm">Daily ranking progression</h4>
 							<div class="col-md-12 col-lg-12 hidden-xs hidden-sm">
-								<canvas id="ranksgraph"></canvas>
+								<div class="card">
+									<canvas id="ranksgraph"></canvas>
+								</div>
 								<div class="text-left">
 								<%= user.local.pseudo %> <i class="fa fa-square grapefruit-color "></i>
 								You <i class="fa fa-square sunflower-color"></i>

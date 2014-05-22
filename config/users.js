@@ -321,7 +321,7 @@
         } else {
           qs = '';
         }
-        return User.find({}).select(qs).sort("-_id").exec(function(err, data) {
+        return User.find({}).select(qs).sort("_id").exec(function(err, data) {
           if (err) {
             mailer.cLog('Error at ' + __filename, err);
           }
