@@ -63,10 +63,12 @@
 				<br>
 				<br>
 					<div class="row userlist">
-					<% if (currentUser) { 
+					<% 
 						var lookupFriends = {};
 						var lookupSent = {};
 						var lookupPendings = {};
+						
+					if (currentUser) { 
 							for (var i = 0, len = currentUser.friends.length; i < len; i++) {
 								lookupFriends[currentUser.friends[i].idUser] = currentUser.friends[i];
 							}
