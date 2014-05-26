@@ -59,7 +59,7 @@
 										<div class="col-md-6 col-xs-6 col-lg-5">
 											<h4><i class="fa fa-facebook"></i> Facebook</h4>
 											<% if (currentUser.facebook.token) { %>
-											<span class="linked label label-default">
+											<span class="linked label blacky">
 												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.facebook.name %>
 												<a href="/unlink/facebook" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
 											</span>
@@ -73,7 +73,7 @@
 										<div class="col-md-6 col-xs-6 col-lg-5">
 											<h4><i class="fa fa-google-plus"></i> Google+</h4>
 											<% if (currentUser.google.token) { %>
-											<span class="linked label label-default">
+											<span class="linked label blacky">
 												<i class="fa fa-check-square meany"></i> Connected as <%= currentUser.google.name %>
 												<a href="/unlink/google" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
 											</span>
@@ -88,7 +88,7 @@
 										<div class="col-md-6 col-xs-6 col-lg-5">
 											<h4><i class="fa fa-twitter"></i> Twitter</h4>
 											<% if (currentUser.twitter.token) { %>
-											<span class="linked label label-default">
+											<span class="linked label blacky">
 												<i class="fa fa-twitter"></i> <i class="fa fa-check-square meany"></i> Connected as <%= currentUser.twitter.username %>
 												<a href="/unlink/twitter" class="hidden"> [ <span class="fa fa-ban"></span> unlink]</a>
 											</span>
@@ -154,7 +154,7 @@
 														<input type="text" class="form-control" id="lol_name" placeholder="Summoner name">
 													</div>
 													<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-														<button type="button" id="lol_link" class="btn btn-default">Link!</button>
+														<button type="button" id="lol_link" class="btn blacky">Link!</button>
 													</div>
 												</div>
 												<div id="step-2" class="hidden col-md-12">

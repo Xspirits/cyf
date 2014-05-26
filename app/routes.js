@@ -80,25 +80,28 @@
       });
     });
     app.get("/profile", isLoggedIn, function(req, res) {
-      return badge.getNonUnlocked(req.user, function(badges) {
-        var allBadges;
-        allBadges = _.pluck(badges, '_id');
-        return badge.tryUnlock(allBadges, req.user, function(result) {
-          return challenge.userAcceptedChallenge(req.user._id, false, function(data) {
-            var ongoingChall;
-            ongoingChall = [];
-            _.each(data, function(value, key) {
-              var cEnd, cStart;
-              cStart = data[key].launchDate;
-              cEnd = data[key].deadLine;
-              if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
-                return ongoingChall.push(data[key]);
-              }
-            });
-            return users.populateProfile(req.user._id, function(populated) {
-              return res.render("profile.ejs", {
-                ongoings: ongoingChall,
-                currentUser: populated
+      return users.getUserList(false, function(userList) {
+        return badge.getNonUnlocked(req.user, function(badges) {
+          var allBadges;
+          allBadges = _.pluck(badges, '_id');
+          return badge.tryUnlock(allBadges, req.user, function(result) {
+            return challenge.userAcceptedChallenge(req.user._id, false, function(data) {
+              var ongoingChall;
+              ongoingChall = [];
+              _.each(data, function(value, key) {
+                var cEnd, cStart;
+                cStart = data[key].launchDate;
+                cEnd = data[key].deadLine;
+                if (moment(cStart).isBefore() && !moment(cEnd).isBefore() && data[key].progress < 100) {
+                  return ongoingChall.push(data[key]);
+                }
+              });
+              return users.populateProfile(req.user._id, function(populated) {
+                return res.render("profile.ejs", {
+                  ongoings: ongoingChall,
+                  currentUser: populated,
+                  users: userList
+                });
               });
             });
           });

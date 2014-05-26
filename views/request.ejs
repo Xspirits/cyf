@@ -32,7 +32,7 @@
 								</a> <small class="dateTiny" data-date="<%= currentUser.pendingRequests[i].date %>"></small>
 								<span class="btn-group pull-right">
 									<a href="#" class="btn btn-punch btn-success btn-xs answerCall" data-action="confirmFriend" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">confirm</a>
-									<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-action="deny" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">delete</a>
+									<a href="#" class="btn btn-punch blacky btn-xs answerCall" data-action="deny" data-idFrom="<%= currentUser.pendingRequests[i].idUser %>" data-idCool="<%= currentUser.pendingRequests[i].idCool %>" data-nameFrom="<%= currentUser.pendingRequests[i].userName %>">delete</a>
 								</span>
 							</p>
 							<% } %>
@@ -82,7 +82,7 @@
 										</a>
 										<span class="btn-group pull-right">
 											<a href="#" class="btn btn-punch btn-success btn-xs answerCall" data-action="confirmChallenge" data-idCool="<%= thisReq._idChallenge.idCool %>" data-from="<%= thisReq._idChallenger.local.pseudo %>" data-fromCool="<%= thisReq._idChallenger.idCool %>" data-id="<%= thisReq._id %>">Accept</a>
-											<a href="#" class="btn btn-punch btn-default btn-xs answerCall" data-idCool="<%= thisReq._idChallenge.idCool %>" data-action="rejectChallenge" data-from="<%= thisReq._idChallenger.local.pseudo %>" data-fromCool="<%= thisReq._idChallenger.idCool %>" data-id="<%= thisReq._id %>">Reject</a>
+											<a href="#" class="btn btn-punch blacky btn-xs answerCall" data-idCool="<%= thisReq._idChallenge.idCool %>" data-action="rejectChallenge" data-from="<%= thisReq._idChallenger.local.pseudo %>" data-fromCool="<%= thisReq._idChallenger.idCool %>" data-id="<%= thisReq._id %>">Reject</a>
 										</span>
 									</p>
 								<% } %>

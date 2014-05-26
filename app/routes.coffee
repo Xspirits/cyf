@@ -62,23 +62,27 @@ module.exports = (app, appKeys, eApi, db_chat, mailer, _, grvtr, sio, passport, 
 	# PROFILE SECTION ===========================
 	app.get "/profile", isLoggedIn, (req, res) ->
 
-		badge.getNonUnlocked req.user, (badges)->
-			allBadges = _.pluck badges, '_id'
-			badge.tryUnlock allBadges,req.user, (result)->
-				challenge.userAcceptedChallenge req.user._id, false, (data) ->
-					ongoingChall = []
-					_.each data, (value, key) ->
-						cStart = data[key].launchDate
-						cEnd = data[key].deadLine
+		# todo: test if user first connect or not to pop user list
+		# 
+		users.getUserList false, (userList) ->
+			badge.getNonUnlocked req.user, (badges)->
+				allBadges = _.pluck badges, '_id'
+				badge.tryUnlock allBadges,req.user, (result)->
+					challenge.userAcceptedChallenge req.user._id, false, (data) ->
+						ongoingChall = []
+						_.each data, (value, key) ->
+							cStart = data[key].launchDate
+							cEnd = data[key].deadLine
 
-						# Start has been reached but not end
-						if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
-							ongoingChall.push data[key]
+							# Start has been reached but not end
+							if moment(cStart).isBefore() and not moment(cEnd).isBefore() and data[key].progress < 100
+								ongoingChall.push data[key]
 
-					users.populateProfile req.user._id, (populated) ->
-						res.render "profile.ejs",
-							ongoings: ongoingChall
-							currentUser: populated
+						users.populateProfile req.user._id, (populated) ->
+							res.render "profile.ejs",
+								ongoings: ongoingChall
+								currentUser: populated
+								users: userList
 
 	app.get "/settings", isLoggedIn, (req, res) ->
 		res.render "setting.ejs",
