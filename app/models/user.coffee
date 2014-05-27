@@ -222,11 +222,11 @@ userSchema = mongoose.Schema(
   share:
     facebook:
       type: Boolean
-      default: true
+      default: false
 
     twitter:
       type: Boolean
-      default: true
+      default: false
 
   local:
     email: String
